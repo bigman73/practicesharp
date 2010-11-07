@@ -131,7 +131,6 @@ namespace BigMansStuff.PracticeSharp.UI
         // TODO: Create/Find a hover button control that switches images from Regular image to hot image
         // FIXED: Play does not work properly when current play time is in the end after stopping - it should jump to 0 or startMarker
         // TODO: Add another track bar for transposing voice up/down 
-        // MAJOR BUG: NAudio crashes with AcmNotPossible when moving current time - http://naudio.codeplex.com/Thread/View.aspx?ThreadId=208085
         // TODO: SoundTouch Release DLL crashes. Check why Debug works but Release does not.
 
         #region Destruction

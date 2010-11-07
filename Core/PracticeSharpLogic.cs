@@ -676,8 +676,7 @@ namespace BigMansStuff.PracticeSharp.Core
             if (filename.ToLower().EndsWith(".mp3"))
             {
                 m_mp3Reader = new Mp3FileReader(filename);
-                m_pcmStream = WaveFormatConversionStream.CreatePcmStream(m_mp3Reader);
-                m_blockAlignedStream = new BlockAlignReductionStream(m_pcmStream);
+                m_blockAlignedStream = new BlockAlignReductionStream(m_mp3Reader);
                 // Wave channel - reads from file and returns raw wave blocks
                 m_waveChannel = new WaveChannel32(m_blockAlignedStream);
             }
@@ -749,12 +748,6 @@ namespace BigMansStuff.PracticeSharp.Core
                 m_blockAlignedStream = null;
             }
 
-            if (m_pcmStream != null)
-            {
-                m_pcmStream.Dispose();
-                m_pcmStream = null;
-            }
-
             if (m_mp3Reader != null)
             {
                 m_mp3Reader.Dispose();
@@ -810,9 +803,7 @@ namespace BigMansStuff.PracticeSharp.Core
         private IWavePlayer m_waveOutDevice;
         private AdvancedBufferedWaveProvider m_inputProvider;
 
-
         private WaveStream m_mp3Reader = null;
-        private WaveStream m_pcmStream = null;
         private WaveStream m_blockAlignedStream = null;
         private WaveFileReader m_waveReader = null;
         private WaveChannel32 m_waveChannel = null;
@@ -845,6 +836,5 @@ namespace BigMansStuff.PracticeSharp.Core
         private object m_currentPlayTimeLock = new object();
 
         #endregion
-
     }
 }
