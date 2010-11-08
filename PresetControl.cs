@@ -33,13 +33,27 @@ using BigMansStuff.PracticeSharp.Core;
 
 namespace BigMansStuff.PracticeSharp.UI
 {
+    /// <summary>
+    /// PresetControl contains the UI and logic needed for a preset "switch" button
+    /// The user interface concept is similar to commerical sound effect modules (e.g. Boss ME-70)
+    /// </summary>
     public partial class PresetControl : UserControl
     {
+        #region Construction
+
+        /// <summary>
+        /// Default constructor
+        /// </summary>
         public PresetControl()
         {
             InitializeComponent();
         }
 
+        /// <summary>
+        /// Load event - initializes the control
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void PresetControl_Load(object sender, EventArgs e)
         {
             ChangeState(PresetStates.Off);
@@ -47,6 +61,13 @@ namespace BigMansStuff.PracticeSharp.UI
             presetDescLabel.Text = Resources.PresetNoDesc;
         }
 
+        #endregion
+
+        #region Public Methods
+
+        /// <summary>
+        /// Resets the controls state to default
+        /// </summary>
         public void Reset()
         {
             PresetData.Reset();
@@ -56,7 +77,14 @@ namespace BigMansStuff.PracticeSharp.UI
 
             PresetDescription = string.Empty;
         }
+        
+        #endregion
 
+        #region Properties
+
+        /// <summary>
+        /// Property for getting/setting the Preset State
+        /// </summary>
         public PresetStates State
         {
             get
@@ -92,58 +120,62 @@ namespace BigMansStuff.PracticeSharp.UI
             set;
         }
 
+        /// <summary>
+        /// Property for Preset Description
+        /// </summary>
+        public string PresetDescription
+        {
+            get
+            {
+                if (presetDescLabel.Tag != null)
+                    return presetDescLabel.Text;
+                else
+                    return string.Empty;
+            }
+            set
+            {
+                PresetData.Description = value;
+                if (value == string.Empty)
+                {
+                    presetDescLabel.Text = Resources.PresetNoDesc;
+                    presetDescLabel.Tag = null;
+                }
+                else
+                {
+                    presetDescLabel.Text = value;
+                    presetDescLabel.Tag = "HasValue";
+                }
+            }
+        }
+
+
+        /// <summary>
+        /// Property for the Preset Data that contains the actual preset values
+        /// </summary>
         public PresetData PresetData
         {
             get;
             set;
         }
 
-        private void ChangeState(PresetStates value)
-        {
-            m_state = value;
-
-            switch (m_state)
-            {
-                case PresetStates.Selected:
-                {
-                    ShowSelectedLed();
-                    if (PresetSelected != null)
-                    {
-                        PresetSelected(this, EventArgs.Empty);
-                    }
-                   
-                    break;
-                }
-                case PresetStates.WaitForSave:
-                {
-                    ledPictureBox.Image = Resources.red_on_16;
-
-                    break;
-                }
-                case PresetStates.Saving:
-                {
-                    BlinkLed(Resources.red_off_16, Resources.red_on_16, 2, 200);
-
-                    if (PresetSaveSelected != null)
-                    {
-                        PresetSaveSelected(this, EventArgs.Empty);
-                    }
-
-                    this.State = PresetControl.PresetStates.Selected;
-
-                    break;
-                }
-
-                default:
-                    ShowRegularLed();
-                    break;
-            }
-
-            
-        }
-
         public enum PresetStates { Off, Selected, WaitForSave, Saving };
+        
+        #endregion  
 
+        #region Events
+        public event EventHandler PresetSelected;
+        public event EventHandler PresetSaveSelected;
+        public event EventHandler PresetDescriptionChanged;
+
+        #endregion
+
+        #region Event Handlers
+
+        /// <summary>
+        /// Click event handler for the preset button
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void presetButton_Click(object sender, EventArgs e)
         {
             if ( m_state == PresetStates.Off || m_state == PresetStates.Selected )
@@ -155,9 +187,41 @@ namespace BigMansStuff.PracticeSharp.UI
             }
         }
 
-        public event EventHandler PresetSelected;
-        public event EventHandler PresetSaveSelected;
+        /// <summary>
+        /// Click event handler for Preset Description - Allows changing the description of a preset
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void presetDescLabel_Click(object sender, EventArgs e)
+        {
+            PresetTextInputDialog inputDialog = new PresetTextInputDialog();
+            if (presetDescLabel.Tag != null)
+            {
+                inputDialog.PresetText = presetDescLabel.Text;
+            }
 
+            if (DialogResult.OK == inputDialog.ShowDialog(this))
+            {
+                PresetDescription = inputDialog.PresetText.Trim();
+            }
+
+            // Raise a save event - Renaming the description of a preset should be persisted immediately
+            if (PresetDescriptionChanged != null)
+            {
+                PresetDescriptionChanged(this, new EventArgs());
+            }
+        }
+
+        #endregion
+
+        #region Private Methods
+        /// <summary>
+        /// Blinks the preset led for several times (defined by blinkCount) with a pause duration (defined by duration)
+        /// </summary>
+        /// <param name="image1"></param>
+        /// <param name="image2"></param>
+        /// <param name="blinkCount"></param>
+        /// <param name="duration"></param>
         private void BlinkLed(Image image1, Image image2, int blinkCount, int duration)
         {
             for (int i = 0; i < blinkCount; i++)
@@ -172,54 +236,76 @@ namespace BigMansStuff.PracticeSharp.UI
             }
         }
 
+        /// <summary>
+        /// Shows the regular led
+        /// </summary>
         private void ShowRegularLed()
         {
             ledPictureBox.Image = Resources.green_off_16;
         }
 
+        /// <summary>
+        /// Shows the selected led
+        /// </summary>
         private void ShowSelectedLed()
         {
             ledPictureBox.Image = Resources.green_on_16;
         }
 
+        /// <summary>
+        /// Changes states of the Preset Control
+        /// </summary>
+        /// <param name="value"></param>
+        private void ChangeState(PresetStates value)
+        {
+            m_state = value;
+
+            switch (m_state)
+            {
+                case PresetStates.Selected:
+                    {
+                        ShowSelectedLed();
+                        if (PresetSelected != null)
+                        {
+                            PresetSelected(this, EventArgs.Empty);
+                        }
+
+                        break;
+                    }
+                case PresetStates.WaitForSave:
+                    {
+                        ledPictureBox.Image = Resources.red_on_16;
+
+                        break;
+                    }
+                case PresetStates.Saving:
+                    {
+                        BlinkLed(Resources.red_off_16, Resources.red_on_16, 2, 200);
+
+                        if (PresetSaveSelected != null)
+                        {
+                            PresetSaveSelected(this, EventArgs.Empty);
+                        }
+
+                        this.State = PresetControl.PresetStates.Selected;
+
+                        break;
+                    }
+
+                default:
+                    ShowRegularLed();
+                    break;
+            }
+
+
+        }
+    
+        #endregion
+
+        #region Private members
+
         private PresetStates m_state;
 
-        private void presetDescLabel_Click(object sender, EventArgs e)
-        {
-            PresetTextInputDialog inputDialog = new PresetTextInputDialog();
-            if ( presetDescLabel.Tag != null )
-            {
-                inputDialog.PresetText = presetDescLabel.Text;
-            }
-
-            if (DialogResult.OK == inputDialog.ShowDialog(this))
-            {
-                PresetDescription = inputDialog.PresetText.Trim();
-            }
-        }
-
-        public string PresetDescription
-        {
-            get
-            {
-                if (presetDescLabel.Tag != null)
-                    return presetDescLabel.Text;
-                else
-                    return string.Empty;
-            }
-            set
-            {
-                if (value == string.Empty)
-                {
-                    presetDescLabel.Text = Resources.PresetNoDesc;
-                    presetDescLabel.Tag = null;
-                }
-                else
-                {
-                    presetDescLabel.Text = value;
-                    presetDescLabel.Tag = "HasValue";
-                }
-            }
-        }
+        #endregion
     }
 }

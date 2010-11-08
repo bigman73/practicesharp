@@ -106,6 +106,10 @@ namespace BigMansStuff.PracticeSharp.UI
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.resetBankButton = new System.Windows.Forms.Button();
             this.presetPanel = new System.Windows.Forms.Panel();
+            this.presetControl3 = new BigMansStuff.PracticeSharp.UI.PresetControl();
+            this.presetControl1 = new BigMansStuff.PracticeSharp.UI.PresetControl();
+            this.presetControl2 = new BigMansStuff.PracticeSharp.UI.PresetControl();
+            this.presetControl4 = new BigMansStuff.PracticeSharp.UI.PresetControl();
             this.resetBankTimer = new System.Windows.Forms.Timer(this.components);
             this.openFileButton = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
@@ -134,10 +138,6 @@ namespace BigMansStuff.PracticeSharp.UI
             this.label16 = new System.Windows.Forms.Label();
             this.label17 = new System.Windows.Forms.Label();
             this.pitchTrackBar = new System.Windows.Forms.TrackBar();
-            this.presetControl3 = new BigMansStuff.PracticeSharp.UI.PresetControl();
-            this.presetControl1 = new BigMansStuff.PracticeSharp.UI.PresetControl();
-            this.presetControl2 = new BigMansStuff.PracticeSharp.UI.PresetControl();
-            this.presetControl4 = new BigMansStuff.PracticeSharp.UI.PresetControl();
             ((System.ComponentModel.ISupportInitialize)(this.tempoTrackBar)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.volumeTrackBar)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.playTimeTrackBar)).BeginInit();
@@ -647,6 +647,102 @@ namespace BigMansStuff.PracticeSharp.UI
             this.presetPanel.Size = new System.Drawing.Size(576, 125);
             this.presetPanel.TabIndex = 9;
             // 
+            // presetControl3
+            // 
+            this.presetControl3.Id = "3";
+            this.presetControl3.Location = new System.Drawing.Point(336, 3);
+            this.presetControl3.Name = "presetControl3";
+            presetData1.Cue = System.TimeSpan.Parse("00:00:00");
+            presetData1.CurrentPlayTime = System.TimeSpan.Parse("00:00:00");
+            presetData1.Description = "";
+            presetData1.EndMarker = System.TimeSpan.Parse("00:00:00");
+            presetData1.Loop = false;
+            presetData1.Pitch = 0F;
+            presetData1.StartMarker = System.TimeSpan.Parse("00:00:00");
+            presetData1.Tempo = 1F;
+            presetData1.Volume = 0.25F;
+            this.presetControl3.PresetData = presetData1;
+            this.presetControl3.PresetDescription = "";
+            this.presetControl3.Size = new System.Drawing.Size(101, 118);
+            this.presetControl3.State = BigMansStuff.PracticeSharp.UI.PresetControl.PresetStates.Off;
+            this.presetControl3.TabIndex = 4;
+            this.presetControl3.Title = "Preset 3";
+            this.presetControl3.PresetSelected += new System.EventHandler(this.presetControl_PresetSelected);
+            this.presetControl3.PresetSaveSelected += new System.EventHandler(this.presetControl_PresetSaveSelected);
+            this.presetControl3.PresetDescriptionChanged += new System.EventHandler(this.presetControl_PresetDescriptionChanged);
+            // 
+            // presetControl1
+            // 
+            this.presetControl1.Id = "1";
+            this.presetControl1.Location = new System.Drawing.Point(83, 3);
+            this.presetControl1.Name = "presetControl1";
+            presetData2.Cue = System.TimeSpan.Parse("00:00:00");
+            presetData2.CurrentPlayTime = System.TimeSpan.Parse("00:00:00");
+            presetData2.Description = "";
+            presetData2.EndMarker = System.TimeSpan.Parse("00:00:00");
+            presetData2.Loop = false;
+            presetData2.Pitch = 0F;
+            presetData2.StartMarker = System.TimeSpan.Parse("00:00:00");
+            presetData2.Tempo = 1F;
+            presetData2.Volume = 0.25F;
+            this.presetControl1.PresetData = presetData2;
+            this.presetControl1.PresetDescription = "";
+            this.presetControl1.Size = new System.Drawing.Size(101, 118);
+            this.presetControl1.State = BigMansStuff.PracticeSharp.UI.PresetControl.PresetStates.Off;
+            this.presetControl1.TabIndex = 2;
+            this.presetControl1.Title = "Preset 1";
+            this.presetControl1.PresetSelected += new System.EventHandler(this.presetControl_PresetSelected);
+            this.presetControl1.PresetSaveSelected += new System.EventHandler(this.presetControl_PresetSaveSelected);
+            this.presetControl1.PresetDescriptionChanged += new System.EventHandler(this.presetControl_PresetDescriptionChanged);
+            // 
+            // presetControl2
+            // 
+            this.presetControl2.Id = "2";
+            this.presetControl2.Location = new System.Drawing.Point(209, 3);
+            this.presetControl2.Name = "presetControl2";
+            presetData3.Cue = System.TimeSpan.Parse("00:00:00");
+            presetData3.CurrentPlayTime = System.TimeSpan.Parse("00:00:00");
+            presetData3.Description = "";
+            presetData3.EndMarker = System.TimeSpan.Parse("00:00:00");
+            presetData3.Loop = false;
+            presetData3.Pitch = 0F;
+            presetData3.StartMarker = System.TimeSpan.Parse("00:00:00");
+            presetData3.Tempo = 1F;
+            presetData3.Volume = 0.25F;
+            this.presetControl2.PresetData = presetData3;
+            this.presetControl2.PresetDescription = "";
+            this.presetControl2.Size = new System.Drawing.Size(101, 118);
+            this.presetControl2.State = BigMansStuff.PracticeSharp.UI.PresetControl.PresetStates.Off;
+            this.presetControl2.TabIndex = 3;
+            this.presetControl2.Title = "Preset 2";
+            this.presetControl2.PresetSelected += new System.EventHandler(this.presetControl_PresetSelected);
+            this.presetControl2.PresetSaveSelected += new System.EventHandler(this.presetControl_PresetSaveSelected);
+            this.presetControl2.PresetDescriptionChanged += new System.EventHandler(this.presetControl_PresetDescriptionChanged);
+            // 
+            // presetControl4
+            // 
+            this.presetControl4.Id = "4";
+            this.presetControl4.Location = new System.Drawing.Point(464, 3);
+            this.presetControl4.Name = "presetControl4";
+            presetData4.Cue = System.TimeSpan.Parse("00:00:00");
+            presetData4.CurrentPlayTime = System.TimeSpan.Parse("00:00:00");
+            presetData4.Description = "";
+            presetData4.EndMarker = System.TimeSpan.Parse("00:00:00");
+            presetData4.Loop = false;
+            presetData4.Pitch = 0F;
+            presetData4.StartMarker = System.TimeSpan.Parse("00:00:00");
+            presetData4.Tempo = 1F;
+            presetData4.Volume = 0.25F;
+            this.presetControl4.PresetData = presetData4;
+            this.presetControl4.PresetDescription = "";
+            this.presetControl4.Size = new System.Drawing.Size(101, 118);
+            this.presetControl4.State = BigMansStuff.PracticeSharp.UI.PresetControl.PresetStates.Off;
+            this.presetControl4.TabIndex = 5;
+            this.presetControl4.Title = "Preset 4";
+            this.presetControl4.PresetSelected += new System.EventHandler(this.presetControl_PresetSelected);
+            this.presetControl4.PresetSaveSelected += new System.EventHandler(this.presetControl_PresetSaveSelected);
+            this.presetControl4.PresetDescriptionChanged += new System.EventHandler(this.presetControl_PresetDescriptionChanged);
+            // 
             // resetBankTimer
             // 
             this.resetBankTimer.Interval = 1000;
@@ -941,98 +1037,6 @@ namespace BigMansStuff.PracticeSharp.UI
             this.pitchTrackBar.TickFrequency = 8;
             this.pitchTrackBar.TickStyle = System.Windows.Forms.TickStyle.Both;
             this.pitchTrackBar.ValueChanged += new System.EventHandler(this.pitchTrackBar_ValueChanged);
-            // 
-            // presetControl3
-            // 
-            this.presetControl3.Id = "3";
-            this.presetControl3.Location = new System.Drawing.Point(336, 3);
-            this.presetControl3.Name = "presetControl3";
-            presetData1.Cue = System.TimeSpan.Parse("00:00:00");
-            presetData1.CurrentPlayTime = System.TimeSpan.Parse("00:00:00");
-            presetData1.Description = "";
-            presetData1.EndMarker = System.TimeSpan.Parse("00:00:00");
-            presetData1.Loop = false;
-            presetData1.Pitch = 0F;
-            presetData1.StartMarker = System.TimeSpan.Parse("00:00:00");
-            presetData1.Tempo = 1F;
-            presetData1.Volume = 0.25F;
-            this.presetControl3.PresetData = presetData1;
-            this.presetControl3.PresetDescription = "";
-            this.presetControl3.Size = new System.Drawing.Size(101, 118);
-            this.presetControl3.State = BigMansStuff.PracticeSharp.UI.PresetControl.PresetStates.Off;
-            this.presetControl3.TabIndex = 4;
-            this.presetControl3.Title = "Preset 3";
-            this.presetControl3.PresetSelected += new System.EventHandler(this.presetControl_PresetSelected);
-            this.presetControl3.PresetSaveSelected += new System.EventHandler(this.presetControl_PresetSaveSelected);
-            // 
-            // presetControl1
-            // 
-            this.presetControl1.Id = "1";
-            this.presetControl1.Location = new System.Drawing.Point(83, 3);
-            this.presetControl1.Name = "presetControl1";
-            presetData2.Cue = System.TimeSpan.Parse("00:00:00");
-            presetData2.CurrentPlayTime = System.TimeSpan.Parse("00:00:00");
-            presetData2.Description = "";
-            presetData2.EndMarker = System.TimeSpan.Parse("00:00:00");
-            presetData2.Loop = false;
-            presetData2.Pitch = 0F;
-            presetData2.StartMarker = System.TimeSpan.Parse("00:00:00");
-            presetData2.Tempo = 1F;
-            presetData2.Volume = 0.25F;
-            this.presetControl1.PresetData = presetData2;
-            this.presetControl1.PresetDescription = "";
-            this.presetControl1.Size = new System.Drawing.Size(101, 118);
-            this.presetControl1.State = BigMansStuff.PracticeSharp.UI.PresetControl.PresetStates.Off;
-            this.presetControl1.TabIndex = 2;
-            this.presetControl1.Title = "Preset 1";
-            this.presetControl1.PresetSelected += new System.EventHandler(this.presetControl_PresetSelected);
-            this.presetControl1.PresetSaveSelected += new System.EventHandler(this.presetControl_PresetSaveSelected);
-            // 
-            // presetControl2
-            // 
-            this.presetControl2.Id = "2";
-            this.presetControl2.Location = new System.Drawing.Point(209, 3);
-            this.presetControl2.Name = "presetControl2";
-            presetData3.Cue = System.TimeSpan.Parse("00:00:00");
-            presetData3.CurrentPlayTime = System.TimeSpan.Parse("00:00:00");
-            presetData3.Description = "";
-            presetData3.EndMarker = System.TimeSpan.Parse("00:00:00");
-            presetData3.Loop = false;
-            presetData3.Pitch = 0F;
-            presetData3.StartMarker = System.TimeSpan.Parse("00:00:00");
-            presetData3.Tempo = 1F;
-            presetData3.Volume = 0.25F;
-            this.presetControl2.PresetData = presetData3;
-            this.presetControl2.PresetDescription = "";
-            this.presetControl2.Size = new System.Drawing.Size(101, 118);
-            this.presetControl2.State = BigMansStuff.PracticeSharp.UI.PresetControl.PresetStates.Off;
-            this.presetControl2.TabIndex = 3;
-            this.presetControl2.Title = "Preset 2";
-            this.presetControl2.PresetSelected += new System.EventHandler(this.presetControl_PresetSelected);
-            this.presetControl2.PresetSaveSelected += new System.EventHandler(this.presetControl_PresetSaveSelected);
-            // 
-            // presetControl4
-            // 
-            this.presetControl4.Id = "4";
-            this.presetControl4.Location = new System.Drawing.Point(464, 3);
-            this.presetControl4.Name = "presetControl4";
-            presetData4.Cue = System.TimeSpan.Parse("00:00:00");
-            presetData4.CurrentPlayTime = System.TimeSpan.Parse("00:00:00");
-            presetData4.Description = "";
-            presetData4.EndMarker = System.TimeSpan.Parse("00:00:00");
-            presetData4.Loop = false;
-            presetData4.Pitch = 0F;
-            presetData4.StartMarker = System.TimeSpan.Parse("00:00:00");
-            presetData4.Tempo = 1F;
-            presetData4.Volume = 0.25F;
-            this.presetControl4.PresetData = presetData4;
-            this.presetControl4.PresetDescription = "";
-            this.presetControl4.Size = new System.Drawing.Size(101, 118);
-            this.presetControl4.State = BigMansStuff.PracticeSharp.UI.PresetControl.PresetStates.Off;
-            this.presetControl4.TabIndex = 5;
-            this.presetControl4.Title = "Preset 4";
-            this.presetControl4.PresetSelected += new System.EventHandler(this.presetControl_PresetSelected);
-            this.presetControl4.PresetSaveSelected += new System.EventHandler(this.presetControl_PresetSaveSelected);
             // 
             // MainForm
             // 

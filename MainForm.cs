@@ -474,6 +474,10 @@ namespace BigMansStuff.PracticeSharp.UI
             ApplyPresetValueUIControls(presetData);
         }
 
+        /// <summary>
+        /// Applies the preset values to UI controls - Effectively loads the UI controls with preset values
+        /// </summary>
+        /// <param name="presetData"></param>
         private void ApplyPresetValueUIControls(PresetData presetData)
         {
             // Apply preset values
@@ -500,7 +504,18 @@ namespace BigMansStuff.PracticeSharp.UI
         }
 
         /// <summary>
-        /// PresetSaveSelected Event handle - Handles a preset save request (user clicks on preset when Write Mode is on, i.e. Red Leds are turned on)
+        /// PresetDescriptionChanged Event handler - When a preset description changed the preset bank has to be rewritten to persist the change
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void presetControl_PresetDescriptionChanged(object sender, EventArgs e)
+        {
+            // (Re-)Write preset bank file
+            WritePresetsBank();
+        }
+
+        /// <summary>
+        /// PresetSaveSelected Event handler - Handles a preset save request (user clicks on preset when Write Mode is on, i.e. Red Leds are turned on)
         /// As a result the preset is saved into the preset bank file
         /// </summary>
         /// <param name="sender"></param>
