@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Yuval Naveh")]
 [assembly: AssemblyProduct("PracticeSharp")]
-[assembly: AssemblyCopyright("Copyright © Yuval Naveh 2010")]
+[assembly: AssemblyCopyright("Copyright © Yuval Naveh 2010 (http://code.google.com/p/practicesharp)")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -32,5 +32,5 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("0.0.10.0")]
-[assembly: AssemblyFileVersion("0.0.10.0")]
+[assembly: AssemblyVersion("0.0.11.0")]
+[assembly: AssemblyFileVersion("0.0.11.0")]
