@@ -66,6 +66,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="HoverLabel.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Core\AdvancedBufferedWaveProvider.cs" />
     <Compile Include="Core\PracticeSharpLogic.cs" />
     <Compile Include="Core\SoundTouchSharp.cs" />
