@@ -80,11 +80,11 @@ namespace BigMansStuff.PracticeSharp.UI
             this.playPauseButton = new System.Windows.Forms.Button();
             this.startLoopNowButton = new System.Windows.Forms.Button();
             this.endLoopNowButton = new System.Windows.Forms.Button();
-            this.speedLabel = new System.Windows.Forms.Label();
-            this.volumeLabel = new System.Windows.Forms.Label();
+            this.speedLabel = new BigMansStuff.PracticeSharp.UI.HoverLabel();
+            this.volumeLabel = new BigMansStuff.PracticeSharp.UI.HoverLabel();
             this.volume100Label = new System.Windows.Forms.Label();
             this.volume0Label = new System.Windows.Forms.Label();
-            this.positionLabel = new System.Windows.Forms.Label();
+            this.positionLabel = new BigMansStuff.PracticeSharp.UI.HoverLabel();
             this.play0Label = new System.Windows.Forms.Label();
             this.playDurationLabel = new System.Windows.Forms.Label();
             this.positionMarkersPanel = new System.Windows.Forms.Panel();
@@ -133,7 +133,7 @@ namespace BigMansStuff.PracticeSharp.UI
             this.label11 = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
             this.pitchValueLabel = new System.Windows.Forms.Label();
-            this.pitchLabel = new System.Windows.Forms.Label();
+            this.pitchLabel = new BigMansStuff.PracticeSharp.UI.HoverLabel();
             this.label15 = new System.Windows.Forms.Label();
             this.label16 = new System.Windows.Forms.Label();
             this.label17 = new System.Windows.Forms.Label();
@@ -258,6 +258,11 @@ namespace BigMansStuff.PracticeSharp.UI
             0,
             0,
             0});
+            this.startLoopSecondUpDown.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            -2147483648});
             this.startLoopSecondUpDown.Name = "startLoopSecondUpDown";
             this.startLoopSecondUpDown.Size = new System.Drawing.Size(38, 20);
             this.startLoopSecondUpDown.TabIndex = 11;
@@ -399,7 +404,7 @@ namespace BigMansStuff.PracticeSharp.UI
             // playPauseButton
             // 
             this.playPauseButton.ImageKey = "Play-Normal.png";
-            this.playPauseButton.Location = new System.Drawing.Point(70, 11);
+            this.playPauseButton.Location = new System.Drawing.Point(70, 26);
             this.playPauseButton.Name = "playPauseButton";
             this.playPauseButton.Size = new System.Drawing.Size(56, 56);
             this.playPauseButton.TabIndex = 1;
@@ -666,7 +671,7 @@ namespace BigMansStuff.PracticeSharp.UI
             this.presetControl3.Size = new System.Drawing.Size(101, 118);
             this.presetControl3.State = BigMansStuff.PracticeSharp.UI.PresetControl.PresetStates.Off;
             this.presetControl3.TabIndex = 4;
-            this.presetControl3.Title = "Preset 3";
+            this.presetControl3.Title = "[No Desc]";
             this.presetControl3.PresetSelected += new System.EventHandler(this.presetControl_PresetSelected);
             this.presetControl3.PresetSaveSelected += new System.EventHandler(this.presetControl_PresetSaveSelected);
             this.presetControl3.PresetDescriptionChanged += new System.EventHandler(this.presetControl_PresetDescriptionChanged);
@@ -690,7 +695,7 @@ namespace BigMansStuff.PracticeSharp.UI
             this.presetControl1.Size = new System.Drawing.Size(101, 118);
             this.presetControl1.State = BigMansStuff.PracticeSharp.UI.PresetControl.PresetStates.Off;
             this.presetControl1.TabIndex = 2;
-            this.presetControl1.Title = "Preset 1";
+            this.presetControl1.Title = "[No Desc]";
             this.presetControl1.PresetSelected += new System.EventHandler(this.presetControl_PresetSelected);
             this.presetControl1.PresetSaveSelected += new System.EventHandler(this.presetControl_PresetSaveSelected);
             this.presetControl1.PresetDescriptionChanged += new System.EventHandler(this.presetControl_PresetDescriptionChanged);
@@ -714,7 +719,7 @@ namespace BigMansStuff.PracticeSharp.UI
             this.presetControl2.Size = new System.Drawing.Size(101, 118);
             this.presetControl2.State = BigMansStuff.PracticeSharp.UI.PresetControl.PresetStates.Off;
             this.presetControl2.TabIndex = 3;
-            this.presetControl2.Title = "Preset 2";
+            this.presetControl2.Title = "[No Desc]";
             this.presetControl2.PresetSelected += new System.EventHandler(this.presetControl_PresetSelected);
             this.presetControl2.PresetSaveSelected += new System.EventHandler(this.presetControl_PresetSaveSelected);
             this.presetControl2.PresetDescriptionChanged += new System.EventHandler(this.presetControl_PresetDescriptionChanged);
@@ -738,7 +743,7 @@ namespace BigMansStuff.PracticeSharp.UI
             this.presetControl4.Size = new System.Drawing.Size(101, 118);
             this.presetControl4.State = BigMansStuff.PracticeSharp.UI.PresetControl.PresetStates.Off;
             this.presetControl4.TabIndex = 5;
-            this.presetControl4.Title = "Preset 4";
+            this.presetControl4.Title = "[No Desc]";
             this.presetControl4.PresetSelected += new System.EventHandler(this.presetControl_PresetSelected);
             this.presetControl4.PresetSaveSelected += new System.EventHandler(this.presetControl_PresetSaveSelected);
             this.presetControl4.PresetDescriptionChanged += new System.EventHandler(this.presetControl_PresetDescriptionChanged);
@@ -751,7 +756,7 @@ namespace BigMansStuff.PracticeSharp.UI
             // openFileButton
             // 
             this.openFileButton.ImageKey = "Play-Normal.png";
-            this.openFileButton.Location = new System.Drawing.Point(3, 11);
+            this.openFileButton.Location = new System.Drawing.Point(3, 26);
             this.openFileButton.Name = "openFileButton";
             this.openFileButton.Size = new System.Drawing.Size(56, 56);
             this.openFileButton.TabIndex = 0;
@@ -766,6 +771,7 @@ namespace BigMansStuff.PracticeSharp.UI
             this.button1.TabIndex = 5;
             this.button1.Text = "Stop";
             this.button1.UseVisualStyleBackColor = true;
+            this.button1.Visible = false;
             this.button1.Click += new System.EventHandler(this.stopButton_Click);
             // 
             // playTimeUpdateTimer
@@ -1140,11 +1146,11 @@ namespace BigMansStuff.PracticeSharp.UI
         private System.Windows.Forms.Button playPauseButton;
         private System.Windows.Forms.Button startLoopNowButton;
         private System.Windows.Forms.Button endLoopNowButton;
-        private System.Windows.Forms.Label speedLabel;
-        private System.Windows.Forms.Label volumeLabel;
+        private HoverLabel speedLabel;
+        private HoverLabel volumeLabel;
         private System.Windows.Forms.Label volume100Label;
         private System.Windows.Forms.Label volume0Label;
-        private System.Windows.Forms.Label positionLabel;
+        private HoverLabel positionLabel;
         private System.Windows.Forms.Label play0Label;
         private System.Windows.Forms.Label playDurationLabel;
         private System.Windows.Forms.Panel positionMarkersPanel;
@@ -1190,7 +1196,7 @@ namespace BigMansStuff.PracticeSharp.UI
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.Label pitchValueLabel;
-        private System.Windows.Forms.Label pitchLabel;
+        private HoverLabel pitchLabel;
         private System.Windows.Forms.Label label15;
         private System.Windows.Forms.Label label16;
         private System.Windows.Forms.Label label17;

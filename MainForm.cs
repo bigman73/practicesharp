@@ -89,12 +89,7 @@ namespace BigMansStuff.PracticeSharp.UI
             m_practiceSharpLogic.PlayTimeChanged += new EventHandler(practiceSharpLogic_PlayTimeChanged);
             m_practiceSharpLogic.CueWaitPulsed += new EventHandler(practiceSharpLogic_CueWaitPulsed);
 
-            playPauseButton.Enabled = false;
-            startLoopNowButton.Enabled = false;
-            endLoopNowButton.Enabled = false;
-            cueComboBox.Enabled = false;
-            writeBankButton.Enabled = false;
-            resetBankButton.Enabled = false;
+            EnableControls( false );
 
             openFileDialog.InitialDirectory = Properties.Settings.Default.LastAudioFolder;
 
@@ -116,9 +111,8 @@ namespace BigMansStuff.PracticeSharp.UI
             volumeTrackBar_ValueChanged(this, new EventArgs());
             playTimeTrackBar_ValueChanged(this, new EventArgs());
 
-            presetControl1.State = PresetControl.PresetStates.Selected;
+            // presetControl1.State = PresetControl.PresetStates.Selected;
         }
-
 
 
         #endregion
@@ -187,15 +181,7 @@ namespace BigMansStuff.PracticeSharp.UI
                 // Load Presets Bank for this input file
                 LoadPresetsBank();
 
-                // playTimeTrackBar.Maximum = Convert.ToInt32(m_practiceSharpLogic.FilePlayDuration.TotalSeconds);
-
-                playPauseButton.Enabled = true;
-                startLoopNowButton.Enabled = true;
-                endLoopNowButton.Enabled = true;
-                cueComboBox.Enabled = true;
-                writeBankButton.Enabled = true;
-                resetBankButton.Enabled = true;               
-
+                EnableControls(true);
 
                 playDurationLabel.Text = 
                        string.Format( "{0}:{1}", m_practiceSharpLogic.FilePlayDuration.Minutes.ToString( "00" ),
@@ -210,8 +196,6 @@ namespace BigMansStuff.PracticeSharp.UI
                        string.Format("{0}:{1}", (m_practiceSharpLogic.FilePlayDuration.TotalSeconds * 3 / 4 / 60).ToString("00"),
                                     (m_practiceSharpLogic.FilePlayDuration.Seconds * 3 / 4 ).ToString("00"));
 
-                playTimeUpdateTimer.Enabled = true;
-
                 if (autoPlay)
                 {
                     playPauseButton.Image = Resources.Pause_Normal;
@@ -225,7 +209,32 @@ namespace BigMansStuff.PracticeSharp.UI
             }
         }
 
-      
+        /// <summary>
+        /// Utility function - Enables/Disabled UI controls
+        /// </summary>
+        /// <param name="enabled"></param>
+        private void EnableControls(bool enabled)
+        {
+            tempoTrackBar.Enabled = enabled;
+            pitchTrackBar.Enabled = enabled;
+            volumeTrackBar.Enabled = enabled;
+            playTimeTrackBar.Enabled = enabled;
+            playPauseButton.Enabled = enabled;
+            startLoopNowButton.Enabled = enabled;
+            endLoopNowButton.Enabled = enabled;
+            cueComboBox.Enabled = enabled;
+            writeBankButton.Enabled = enabled;
+            resetBankButton.Enabled = enabled;
+            presetControl1.Enabled = enabled;
+            presetControl2.Enabled = enabled;
+            presetControl3.Enabled = enabled;
+            presetControl4.Enabled = enabled;
+            loopPanel.Enabled = enabled;
+            currentMinuteUpDown.Enabled = enabled;
+            currentSecondUpDown.Enabled = enabled;
+            currentMilliUpDown.Enabled = enabled;
+        }
+
         private void UpdateCoreCurrentPlayTime()
         {
             m_practiceSharpLogic.CurrentPlayTime = new TimeSpan(0, 0, (int)currentMinuteUpDown.Value, (int)currentSecondUpDown.Value, (int)currentMilliUpDown.Value);
@@ -245,6 +254,9 @@ namespace BigMansStuff.PracticeSharp.UI
             positionMarkersPanel.Refresh();
         }
 
+        /// <summary>
+        /// Loads the presets from the preset bank file
+        /// </summary>
         private void LoadPresetsBank()
         {
             m_presetsBankFilename = m_appDataFolder + "\\" + Path.GetFileName(m_currentFilename) + ".practicesharpbank.xml";
@@ -335,7 +347,6 @@ namespace BigMansStuff.PracticeSharp.UI
             // Console.WriteLine(doc.OuterXml);
         }
 
-
         #endregion 
 
         #region GUI Event Handlers
@@ -369,7 +380,6 @@ namespace BigMansStuff.PracticeSharp.UI
                 m_practiceSharpLogic.Play();
             }
         }
-
 
         /// <summary>
         /// MouseEnter event handler - Handles hover start logic
@@ -427,7 +437,6 @@ namespace BigMansStuff.PracticeSharp.UI
             // Draw just the end marker
             e.Graphics.FillRectangle(Brushes.LightBlue, endMarkerX - MarkerWidth, 0, MarkerWidth, MarkerHeight);
         }
-
 
         /// <summary>
         /// Click event handler for Write Preset Button
@@ -549,7 +558,6 @@ namespace BigMansStuff.PracticeSharp.UI
             WritePresetsBank();
         }
 
-
         private void volumeTrackBar_ValueChanged(object sender, EventArgs e)
         {
             float newVolume = volumeTrackBar.Value / 100.0f;
@@ -558,7 +566,6 @@ namespace BigMansStuff.PracticeSharp.UI
             volumeValueLabel.Text = ( newVolume * 100 ).ToString();
 
         }
-
    
         private void exitMenuItem_Click(object sender, EventArgs e)
         {
@@ -683,7 +690,6 @@ namespace BigMansStuff.PracticeSharp.UI
             speedValueLabel.Text = newTempo.ToString();
         }
 
-
         private void pitchTrackBar_ValueChanged(object sender, EventArgs e)
         {
             // Convert to Percent 
@@ -695,8 +701,6 @@ namespace BigMansStuff.PracticeSharp.UI
             pitchValueLabel.Text = newPitch.ToString( "0.00" );
     
         } 
-
-    
 
         private void speedLabel_Click(object sender, EventArgs e)
         {
@@ -874,6 +878,19 @@ namespace BigMansStuff.PracticeSharp.UI
 
         private void startLoopUpDown_ValueChanged(object sender, EventArgs e)
         {
+            // TODO: Provide Valuechanged handlers for all controls with wrap time logic
+
+            if (startLoopSecondUpDown.Value < 0)
+            {
+                // TODO: If current play time > 0 then decrease by one and apply values to *all* controls
+                startLoopSecondUpDown.Value = 59;
+            }
+            else if (startLoopSecondUpDown.Value > 59)
+            {
+                // TODO: If current play time < duration then increase by one and apply values to *all* controls
+                startLoopSecondUpDown.Value = 0;
+            }
+
             UpdateCoreStartMarker();
         }
 
@@ -902,6 +919,10 @@ namespace BigMansStuff.PracticeSharp.UI
                 {
                     playPauseButton.Image = Resources.Play_Normal;
                     playTimeUpdateTimer.Enabled = false;
+                }
+                else if (newStatus == PracticeSharpLogic.Statuses.Playing)
+                {
+                    playTimeUpdateTimer.Enabled = true;
                 }
             } )
             );
