@@ -437,11 +437,6 @@ namespace BigMansStuff.PracticeSharp.Core
                     {
                         if (m_newPlayTimeRequested)
                         {
-                            // Temporary workaround to NAudio bug: If play time is out of bounds there is a Null exception
-                            if (m_newPlayTime > m_filePlayDuration)
-                            {
-                                m_newPlayTime = m_filePlayDuration.Subtract( new TimeSpan( 0, 0, 0, 0, 100 ) );
-                            }
                             m_waveChannel.CurrentTime = m_newPlayTime;
                             m_newPlayTimeRequested = false;
                         }

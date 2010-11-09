@@ -77,16 +77,24 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="UI\HoverLabel.cs" />
-    <Compile Include="UI\MainForm.cs" />
+    <Compile Include="UI\HoverLabel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="UI\MainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="UI\MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="UI\PresetControl.cs" />
+    <Compile Include="UI\PresetControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="UI\PresetControl.Designer.cs">
       <DependentUpon>PresetControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="UI\PresetTextInputDialog.cs" />
+    <Compile Include="UI\PresetTextInputDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="UI\PresetTextInputDialog.Designer.cs">
       <DependentUpon>PresetTextInputDialog.cs</DependentUpon>
     </Compile>
