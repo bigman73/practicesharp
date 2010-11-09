@@ -117,14 +117,7 @@ namespace BigMansStuff.PracticeSharp.UI
 
         #endregion
 
-        // TODO: Clicking on Volume mutes/unmutes
-        // TODO: Speed/Volume/Position labels need to change color when hovering over them to show that the label is active
-        // FIXED: Put labels in play track bar for 1/4, 1/2 and 3/4, that will show the duration time
-        // FIXED: Put 25%, 50%, 75% labels for volume
-        // FIXED: Put X0.5, X1.5 for Speed
         // TODO: Create/Find a hover button control that switches images from Regular image to hot image
-        // FIXED: Play does not work properly when current play time is in the end after stopping - it should jump to 0 or startMarker
-        // TODO: Add another track bar for transposing voice up/down 
         // TODO: SoundTouch Release DLL crashes. Check why Debug works but Release does not.
 
         #region Destruction
