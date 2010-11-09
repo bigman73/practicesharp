@@ -52,45 +52,46 @@ namespace BigMansStuff.PracticeSharp.UI
         private void InitializeComponent()
         {
             this.presetButton = new System.Windows.Forms.Button();
-            this.presetDescLabel = new System.Windows.Forms.Label();
             this.ledPictureBox = new System.Windows.Forms.PictureBox();
+            this.presetIdLabel = new HoverLabel();
             ((System.ComponentModel.ISupportInitialize)(this.ledPictureBox)).BeginInit();
             this.SuspendLayout();
             // 
             // presetButton
             // 
-            this.presetButton.Location = new System.Drawing.Point(18, 21);
+            this.presetButton.AutoEllipsis = true;
+            this.presetButton.Location = new System.Drawing.Point(1, 21);
             this.presetButton.Name = "presetButton";
-            this.presetButton.Size = new System.Drawing.Size(64, 85);
+            this.presetButton.Size = new System.Drawing.Size(64, 97);
             this.presetButton.TabIndex = 44;
             this.presetButton.Text = "Preset 1";
             this.presetButton.UseVisualStyleBackColor = true;
             this.presetButton.Click += new System.EventHandler(this.presetButton_Click);
             // 
-            // presetDescLabel
-            // 
-            this.presetDescLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.presetDescLabel.Location = new System.Drawing.Point(3, 106);
-            this.presetDescLabel.Name = "presetDescLabel";
-            this.presetDescLabel.Size = new System.Drawing.Size(97, 12);
-            this.presetDescLabel.TabIndex = 47;
-            this.presetDescLabel.Text = "[No Desc]";
-            this.presetDescLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.presetDescLabel.Click += new System.EventHandler(this.presetDescLabel_Click);
-            // 
             // ledPictureBox
             // 
-            this.ledPictureBox.Location = new System.Drawing.Point(42, 3);
+            this.ledPictureBox.Location = new System.Drawing.Point(25, 3);
             this.ledPictureBox.Name = "ledPictureBox";
             this.ledPictureBox.Size = new System.Drawing.Size(16, 16);
             this.ledPictureBox.TabIndex = 45;
             this.ledPictureBox.TabStop = false;
             // 
+            // presetIdLabel
+            // 
+            this.presetIdLabel.AutoSize = true;
+            this.presetIdLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 27.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.presetIdLabel.Location = new System.Drawing.Point(66, 6);
+            this.presetIdLabel.Name = "presetIdLabel";
+            this.presetIdLabel.Size = new System.Drawing.Size(39, 42);
+            this.presetIdLabel.TabIndex = 48;
+            this.presetIdLabel.Text = "1";
+            this.presetIdLabel.Click += new System.EventHandler(this.presetIdLabel_Click);
+            // 
             // PresetControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.presetDescLabel);
+            this.Controls.Add(this.presetIdLabel);
             this.Controls.Add(this.ledPictureBox);
             this.Controls.Add(this.presetButton);
             this.Name = "PresetControl";
@@ -98,6 +99,7 @@ namespace BigMansStuff.PracticeSharp.UI
             this.Load += new System.EventHandler(this.PresetControl_Load);
             ((System.ComponentModel.ISupportInitialize)(this.ledPictureBox)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -105,6 +107,6 @@ namespace BigMansStuff.PracticeSharp.UI
 
         private System.Windows.Forms.PictureBox ledPictureBox;
         private System.Windows.Forms.Button presetButton;
-        private System.Windows.Forms.Label presetDescLabel;
+        private HoverLabel presetIdLabel;
     }
 }

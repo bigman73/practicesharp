@@ -38,7 +38,7 @@
             // 
             this.cancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.cancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.cancelButton.Location = new System.Drawing.Point(168, 52);
+            this.cancelButton.Location = new System.Drawing.Point(78, 130);
             this.cancelButton.Name = "cancelButton";
             this.cancelButton.Size = new System.Drawing.Size(66, 23);
             this.cancelButton.TabIndex = 2;
@@ -49,7 +49,7 @@
             // 
             this.okButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.okButton.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.okButton.Location = new System.Drawing.Point(101, 52);
+            this.okButton.Location = new System.Drawing.Point(11, 130);
             this.okButton.Name = "okButton";
             this.okButton.Size = new System.Drawing.Size(61, 23);
             this.okButton.TabIndex = 1;
@@ -59,16 +59,19 @@
             // 
             // textBox
             // 
-            this.textBox.Location = new System.Drawing.Point(110, 11);
-            this.textBox.MaxLength = 15;
+            this.textBox.AcceptsReturn = true;
+            this.textBox.AcceptsTab = true;
+            this.textBox.Location = new System.Drawing.Point(20, 30);
+            this.textBox.MaxLength = 100;
+            this.textBox.Multiline = true;
             this.textBox.Name = "textBox";
-            this.textBox.Size = new System.Drawing.Size(106, 20);
+            this.textBox.Size = new System.Drawing.Size(110, 90);
             this.textBox.TabIndex = 0;
             // 
             // descLabel
             // 
             this.descLabel.AutoSize = true;
-            this.descLabel.Location = new System.Drawing.Point(12, 14);
+            this.descLabel.Location = new System.Drawing.Point(17, 14);
             this.descLabel.Name = "descLabel";
             this.descLabel.Size = new System.Drawing.Size(92, 13);
             this.descLabel.TabIndex = 3;
@@ -80,7 +83,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.cancelButton;
-            this.ClientSize = new System.Drawing.Size(240, 80);
+            this.ClientSize = new System.Drawing.Size(150, 158);
             this.Controls.Add(this.descLabel);
             this.Controls.Add(this.textBox);
             this.Controls.Add(this.okButton);

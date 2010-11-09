@@ -58,7 +58,8 @@ namespace BigMansStuff.PracticeSharp.UI
         {
             ChangeState(PresetStates.Off);
             PresetData = new PresetData();
-            presetDescLabel.Text = Resources.PresetNoDesc;
+            presetIdLabel.Text = this.Id.ToString();
+            presetButton.Text = Resources.PresetNoDesc;
         }
 
         #endregion
@@ -127,8 +128,8 @@ namespace BigMansStuff.PracticeSharp.UI
         {
             get
             {
-                if (presetDescLabel.Tag != null)
-                    return presetDescLabel.Text;
+                if (presetButton.Tag != null)
+                    return presetButton.Text;
                 else
                     return string.Empty;
             }
@@ -137,13 +138,13 @@ namespace BigMansStuff.PracticeSharp.UI
                 PresetData.Description = value;
                 if (value == string.Empty)
                 {
-                    presetDescLabel.Text = Resources.PresetNoDesc;
-                    presetDescLabel.Tag = null;
+                    presetButton.Text = Resources.PresetNoDesc;
+                    presetButton.Tag = null;
                 }
                 else
                 {
-                    presetDescLabel.Text = value;
-                    presetDescLabel.Tag = "HasValue";
+                    presetButton.Text = value;
+                    presetButton.Tag = "HasValue";
                 }
             }
         }
@@ -188,16 +189,16 @@ namespace BigMansStuff.PracticeSharp.UI
         }
 
         /// <summary>
-        /// Click event handler for Preset Description - Allows changing the description of a preset
+        /// Click event handler for Preset Id label - Allows changing the description of a preset
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void presetDescLabel_Click(object sender, EventArgs e)
+        private void presetIdLabel_Click(object sender, EventArgs e)
         {
             PresetTextInputDialog inputDialog = new PresetTextInputDialog();
-            if (presetDescLabel.Tag != null)
+            if (presetButton.Tag != null)
             {
-                inputDialog.PresetText = presetDescLabel.Text;
+                inputDialog.PresetText = presetButton.Text;
             }
 
             if (DialogResult.OK == inputDialog.ShowDialog(this))
@@ -307,5 +308,6 @@ namespace BigMansStuff.PracticeSharp.UI
         private PresetStates m_state;
 
         #endregion
+
     }
 }
