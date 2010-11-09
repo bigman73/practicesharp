@@ -419,6 +419,11 @@ namespace BigMansStuff.PracticeSharp.Core
                 float tempo;
                 float pitch;
                 int averageBytesPerSec;
+                TimeSpan startMarker;
+                TimeSpan endMarker;
+                long startPosition;
+                long endPosition;
+                bool loop;
 
                 while (!m_stopWorker && m_waveChannel.Position < m_waveChannel.Length)
                 {
@@ -432,6 +437,11 @@ namespace BigMansStuff.PracticeSharp.Core
                     {
                         if (m_newPlayTimeRequested)
                         {
+                            // Temporary workaround to NAudio bug: If play time is out of bounds there is a Null exception
+                            if (m_newPlayTime > m_filePlayDuration)
+                            {
+                                m_newPlayTime = m_filePlayDuration.Subtract( new TimeSpan( 0, 0, 0, 0, 100 ) );
+                            }
                             m_waveChannel.CurrentTime = m_newPlayTime;
                             m_newPlayTimeRequested = false;
                         }
@@ -441,16 +451,9 @@ namespace BigMansStuff.PracticeSharp.Core
                     bytesRead = m_waveChannel.Read(convertInputBuffer.Bytes, 0, convertInputBuffer.Bytes.Length);
                     // Console.WriteLine("File: Total Read: {0}, Current Time {1}", totalRead, m_waveChannel.CurrentTime);
 
-                    // Handle End of File (TODO: Should be end marker)
-                    TimeSpan startMarker;
-                    TimeSpan endMarker;
-                    long startPosition;
-                    long endPosition;
-
                     startMarker = this.StartMarker;
                     endMarker = this.EndMarker;
 
-                    bool loop;
                     lock (m_loopLock)
                     {
                         loop = m_loop;
