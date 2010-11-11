@@ -80,11 +80,8 @@ namespace BigMansStuff.PracticeSharp.UI
             this.playPauseButton = new System.Windows.Forms.Button();
             this.startLoopNowButton = new System.Windows.Forms.Button();
             this.endLoopNowButton = new System.Windows.Forms.Button();
-            this.speedLabel = new BigMansStuff.PracticeSharp.UI.HoverLabel();
-            this.volumeLabel = new BigMansStuff.PracticeSharp.UI.HoverLabel();
             this.volume100Label = new System.Windows.Forms.Label();
             this.volume0Label = new System.Windows.Forms.Label();
-            this.positionLabel = new BigMansStuff.PracticeSharp.UI.HoverLabel();
             this.play0Label = new System.Windows.Forms.Label();
             this.playDurationLabel = new System.Windows.Forms.Label();
             this.positionMarkersPanel = new System.Windows.Forms.Panel();
@@ -106,10 +103,6 @@ namespace BigMansStuff.PracticeSharp.UI
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.resetBankButton = new System.Windows.Forms.Button();
             this.presetPanel = new System.Windows.Forms.Panel();
-            this.presetControl3 = new BigMansStuff.PracticeSharp.UI.PresetControl();
-            this.presetControl1 = new BigMansStuff.PracticeSharp.UI.PresetControl();
-            this.presetControl2 = new BigMansStuff.PracticeSharp.UI.PresetControl();
-            this.presetControl4 = new BigMansStuff.PracticeSharp.UI.PresetControl();
             this.resetBankTimer = new System.Windows.Forms.Timer(this.components);
             this.openFileButton = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
@@ -133,11 +126,18 @@ namespace BigMansStuff.PracticeSharp.UI
             this.label11 = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
             this.pitchValueLabel = new System.Windows.Forms.Label();
-            this.pitchLabel = new BigMansStuff.PracticeSharp.UI.HoverLabel();
             this.label15 = new System.Windows.Forms.Label();
             this.label16 = new System.Windows.Forms.Label();
             this.label17 = new System.Windows.Forms.Label();
             this.pitchTrackBar = new System.Windows.Forms.TrackBar();
+            this.pitchLabel = new BigMansStuff.PracticeSharp.UI.HoverLabel();
+            this.presetControl3 = new BigMansStuff.PracticeSharp.UI.PresetControl();
+            this.presetControl1 = new BigMansStuff.PracticeSharp.UI.PresetControl();
+            this.presetControl2 = new BigMansStuff.PracticeSharp.UI.PresetControl();
+            this.presetControl4 = new BigMansStuff.PracticeSharp.UI.PresetControl();
+            this.positionLabel = new BigMansStuff.PracticeSharp.UI.HoverLabel();
+            this.volumeLabel = new BigMansStuff.PracticeSharp.UI.HoverLabel();
+            this.speedLabel = new BigMansStuff.PracticeSharp.UI.HoverLabel();
             ((System.ComponentModel.ISupportInitialize)(this.tempoTrackBar)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.volumeTrackBar)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.playTimeTrackBar)).BeginInit();
@@ -160,6 +160,7 @@ namespace BigMansStuff.PracticeSharp.UI
             // 
             // tempoTrackBar
             // 
+            this.tempoTrackBar.LargeChange = 0;
             this.tempoTrackBar.Location = new System.Drawing.Point(61, 36);
             this.tempoTrackBar.Maximum = 200;
             this.tempoTrackBar.Minimum = 10;
@@ -170,7 +171,8 @@ namespace BigMansStuff.PracticeSharp.UI
             this.tempoTrackBar.TickFrequency = 10;
             this.tempoTrackBar.TickStyle = System.Windows.Forms.TickStyle.Both;
             this.tempoTrackBar.Value = 100;
-            this.tempoTrackBar.ValueChanged += new System.EventHandler(this.speedTrackBar_ValueChanged);
+            this.tempoTrackBar.ValueChanged += new System.EventHandler(this.tempoTrackBar_ValueChanged);
+            this.tempoTrackBar.MouseDown += new System.Windows.Forms.MouseEventHandler(this.tempoTrackBar_MouseDown);
             // 
             // openFileDialog
             // 
@@ -187,6 +189,7 @@ namespace BigMansStuff.PracticeSharp.UI
             this.volumeTrackBar.TickStyle = System.Windows.Forms.TickStyle.Both;
             this.volumeTrackBar.Value = 25;
             this.volumeTrackBar.ValueChanged += new System.EventHandler(this.volumeTrackBar_ValueChanged);
+            this.volumeTrackBar.MouseDown += new System.Windows.Forms.MouseEventHandler(this.volumeTrackBar_MouseDown);
             // 
             // speed1XLabel
             // 
@@ -240,21 +243,26 @@ namespace BigMansStuff.PracticeSharp.UI
             this.startLoopMinuteUpDown.BackColor = System.Drawing.Color.LimeGreen;
             this.startLoopMinuteUpDown.Location = new System.Drawing.Point(123, 3);
             this.startLoopMinuteUpDown.Maximum = new decimal(new int[] {
-            59,
+            99,
             0,
             0,
             0});
+            this.startLoopMinuteUpDown.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            -2147483648});
             this.startLoopMinuteUpDown.Name = "startLoopMinuteUpDown";
             this.startLoopMinuteUpDown.Size = new System.Drawing.Size(38, 20);
             this.startLoopMinuteUpDown.TabIndex = 10;
-            this.startLoopMinuteUpDown.ValueChanged += new System.EventHandler(this.startLoopUpDown_ValueChanged);
+            this.startLoopMinuteUpDown.ValueChanged += new System.EventHandler(this.startLoopMinuteUpDown_ValueChanged);
             // 
             // startLoopSecondUpDown
             // 
             this.startLoopSecondUpDown.BackColor = System.Drawing.Color.LimeGreen;
             this.startLoopSecondUpDown.Location = new System.Drawing.Point(167, 3);
             this.startLoopSecondUpDown.Maximum = new decimal(new int[] {
-            59,
+            60,
             0,
             0,
             0});
@@ -266,63 +274,93 @@ namespace BigMansStuff.PracticeSharp.UI
             this.startLoopSecondUpDown.Name = "startLoopSecondUpDown";
             this.startLoopSecondUpDown.Size = new System.Drawing.Size(38, 20);
             this.startLoopSecondUpDown.TabIndex = 11;
-            this.startLoopSecondUpDown.ValueChanged += new System.EventHandler(this.startLoopUpDown_ValueChanged);
+            this.startLoopSecondUpDown.ValueChanged += new System.EventHandler(this.startLoopSecondUpDown_ValueChanged);
             // 
             // startLoopMilliUpDown
             // 
             this.startLoopMilliUpDown.BackColor = System.Drawing.Color.LimeGreen;
-            this.startLoopMilliUpDown.Location = new System.Drawing.Point(211, 3);
-            this.startLoopMilliUpDown.Maximum = new decimal(new int[] {
-            999,
+            this.startLoopMilliUpDown.Increment = new decimal(new int[] {
+            10,
             0,
             0,
             0});
+            this.startLoopMilliUpDown.Location = new System.Drawing.Point(211, 3);
+            this.startLoopMilliUpDown.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.startLoopMilliUpDown.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            -2147483648});
             this.startLoopMilliUpDown.Name = "startLoopMilliUpDown";
             this.startLoopMilliUpDown.Size = new System.Drawing.Size(43, 20);
             this.startLoopMilliUpDown.TabIndex = 12;
-            this.startLoopMilliUpDown.ValueChanged += new System.EventHandler(this.startLoopUpDown_ValueChanged);
+            this.startLoopMilliUpDown.ValueChanged += new System.EventHandler(this.startLoopMilliUpDown_ValueChanged);
             // 
             // endLoopMinuteUpDown
             // 
             this.endLoopMinuteUpDown.BackColor = System.Drawing.Color.Turquoise;
             this.endLoopMinuteUpDown.Location = new System.Drawing.Point(123, 28);
             this.endLoopMinuteUpDown.Maximum = new decimal(new int[] {
-            59,
+            99,
             0,
             0,
             0});
+            this.endLoopMinuteUpDown.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            -2147483648});
             this.endLoopMinuteUpDown.Name = "endLoopMinuteUpDown";
             this.endLoopMinuteUpDown.Size = new System.Drawing.Size(38, 20);
             this.endLoopMinuteUpDown.TabIndex = 13;
-            this.endLoopMinuteUpDown.ValueChanged += new System.EventHandler(this.endLoopUpDown_ValueChanged);
+            this.endLoopMinuteUpDown.ValueChanged += new System.EventHandler(this.endLoopMinuteUpDown_ValueChanged);
             // 
             // endLoopSecondUpDown
             // 
             this.endLoopSecondUpDown.BackColor = System.Drawing.Color.Turquoise;
             this.endLoopSecondUpDown.Location = new System.Drawing.Point(167, 28);
             this.endLoopSecondUpDown.Maximum = new decimal(new int[] {
-            59,
+            60,
             0,
             0,
             0});
+            this.endLoopSecondUpDown.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            -2147483648});
             this.endLoopSecondUpDown.Name = "endLoopSecondUpDown";
             this.endLoopSecondUpDown.Size = new System.Drawing.Size(38, 20);
             this.endLoopSecondUpDown.TabIndex = 14;
-            this.endLoopSecondUpDown.ValueChanged += new System.EventHandler(this.endLoopUpDown_ValueChanged);
+            this.endLoopSecondUpDown.ValueChanged += new System.EventHandler(this.endLoopSecondUpDown_ValueChanged);
             // 
             // endLoopMilliUpDown
             // 
             this.endLoopMilliUpDown.BackColor = System.Drawing.Color.Turquoise;
-            this.endLoopMilliUpDown.Location = new System.Drawing.Point(211, 28);
-            this.endLoopMilliUpDown.Maximum = new decimal(new int[] {
-            999,
+            this.endLoopMilliUpDown.Increment = new decimal(new int[] {
+            10,
             0,
             0,
             0});
+            this.endLoopMilliUpDown.Location = new System.Drawing.Point(211, 28);
+            this.endLoopMilliUpDown.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.endLoopMilliUpDown.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            -2147483648});
             this.endLoopMilliUpDown.Name = "endLoopMilliUpDown";
             this.endLoopMilliUpDown.Size = new System.Drawing.Size(43, 20);
             this.endLoopMilliUpDown.TabIndex = 15;
-            this.endLoopMilliUpDown.ValueChanged += new System.EventHandler(this.endLoopUpDown_ValueChanged);
+            this.endLoopMilliUpDown.ValueChanged += new System.EventHandler(this.endLoopMilliUpDown_ValueChanged);
             // 
             // label7
             // 
@@ -364,6 +402,11 @@ namespace BigMansStuff.PracticeSharp.UI
             // 
             // currentMilliUpDown
             // 
+            this.currentMilliUpDown.Increment = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
             this.currentMilliUpDown.Location = new System.Drawing.Point(344, 1);
             this.currentMilliUpDown.Maximum = new decimal(new int[] {
             999,
@@ -433,28 +476,6 @@ namespace BigMansStuff.PracticeSharp.UI
             this.endLoopNowButton.UseVisualStyleBackColor = true;
             this.endLoopNowButton.Click += new System.EventHandler(this.endLoopNowButton_Click);
             // 
-            // speedLabel
-            // 
-            this.speedLabel.AutoSize = true;
-            this.speedLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.speedLabel.Location = new System.Drawing.Point(7, 47);
-            this.speedLabel.Name = "speedLabel";
-            this.speedLabel.Size = new System.Drawing.Size(43, 13);
-            this.speedLabel.TabIndex = 0;
-            this.speedLabel.Text = "Speed";
-            this.speedLabel.Click += new System.EventHandler(this.speedLabel_Click);
-            // 
-            // volumeLabel
-            // 
-            this.volumeLabel.AutoSize = true;
-            this.volumeLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.volumeLabel.Location = new System.Drawing.Point(8, 178);
-            this.volumeLabel.Name = "volumeLabel";
-            this.volumeLabel.Size = new System.Drawing.Size(48, 13);
-            this.volumeLabel.TabIndex = 4;
-            this.volumeLabel.Text = "Volume";
-            this.volumeLabel.Click += new System.EventHandler(this.volumeLabel_Click);
-            // 
             // volume100Label
             // 
             this.volume100Label.AutoSize = true;
@@ -474,17 +495,6 @@ namespace BigMansStuff.PracticeSharp.UI
             this.volume0Label.Size = new System.Drawing.Size(21, 13);
             this.volume0Label.TabIndex = 29;
             this.volume0Label.Text = "0%";
-            // 
-            // positionLabel
-            // 
-            this.positionLabel.AutoSize = true;
-            this.positionLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.positionLabel.Location = new System.Drawing.Point(8, 247);
-            this.positionLabel.Name = "positionLabel";
-            this.positionLabel.Size = new System.Drawing.Size(52, 13);
-            this.positionLabel.TabIndex = 6;
-            this.positionLabel.Text = "Position";
-            this.positionLabel.Click += new System.EventHandler(this.positionLabel_Click);
             // 
             // play0Label
             // 
@@ -651,102 +661,6 @@ namespace BigMansStuff.PracticeSharp.UI
             this.presetPanel.Name = "presetPanel";
             this.presetPanel.Size = new System.Drawing.Size(576, 125);
             this.presetPanel.TabIndex = 9;
-            // 
-            // presetControl3
-            // 
-            this.presetControl3.Id = "3";
-            this.presetControl3.Location = new System.Drawing.Point(336, 3);
-            this.presetControl3.Name = "presetControl3";
-            presetData1.Cue = System.TimeSpan.Parse("00:00:00");
-            presetData1.CurrentPlayTime = System.TimeSpan.Parse("00:00:00");
-            presetData1.Description = "";
-            presetData1.EndMarker = System.TimeSpan.Parse("00:00:00");
-            presetData1.Loop = false;
-            presetData1.Pitch = 0F;
-            presetData1.StartMarker = System.TimeSpan.Parse("00:00:00");
-            presetData1.Tempo = 1F;
-            presetData1.Volume = 0.25F;
-            this.presetControl3.PresetData = presetData1;
-            this.presetControl3.PresetDescription = "";
-            this.presetControl3.Size = new System.Drawing.Size(101, 118);
-            this.presetControl3.State = BigMansStuff.PracticeSharp.UI.PresetControl.PresetStates.Off;
-            this.presetControl3.TabIndex = 4;
-            this.presetControl3.Title = "[No Desc]";
-            this.presetControl3.PresetSelected += new System.EventHandler(this.presetControl_PresetSelected);
-            this.presetControl3.PresetSaveSelected += new System.EventHandler(this.presetControl_PresetSaveSelected);
-            this.presetControl3.PresetDescriptionChanged += new System.EventHandler(this.presetControl_PresetDescriptionChanged);
-            // 
-            // presetControl1
-            // 
-            this.presetControl1.Id = "1";
-            this.presetControl1.Location = new System.Drawing.Point(83, 3);
-            this.presetControl1.Name = "presetControl1";
-            presetData2.Cue = System.TimeSpan.Parse("00:00:00");
-            presetData2.CurrentPlayTime = System.TimeSpan.Parse("00:00:00");
-            presetData2.Description = "";
-            presetData2.EndMarker = System.TimeSpan.Parse("00:00:00");
-            presetData2.Loop = false;
-            presetData2.Pitch = 0F;
-            presetData2.StartMarker = System.TimeSpan.Parse("00:00:00");
-            presetData2.Tempo = 1F;
-            presetData2.Volume = 0.25F;
-            this.presetControl1.PresetData = presetData2;
-            this.presetControl1.PresetDescription = "";
-            this.presetControl1.Size = new System.Drawing.Size(101, 118);
-            this.presetControl1.State = BigMansStuff.PracticeSharp.UI.PresetControl.PresetStates.Off;
-            this.presetControl1.TabIndex = 2;
-            this.presetControl1.Title = "[No Desc]";
-            this.presetControl1.PresetSelected += new System.EventHandler(this.presetControl_PresetSelected);
-            this.presetControl1.PresetSaveSelected += new System.EventHandler(this.presetControl_PresetSaveSelected);
-            this.presetControl1.PresetDescriptionChanged += new System.EventHandler(this.presetControl_PresetDescriptionChanged);
-            // 
-            // presetControl2
-            // 
-            this.presetControl2.Id = "2";
-            this.presetControl2.Location = new System.Drawing.Point(209, 3);
-            this.presetControl2.Name = "presetControl2";
-            presetData3.Cue = System.TimeSpan.Parse("00:00:00");
-            presetData3.CurrentPlayTime = System.TimeSpan.Parse("00:00:00");
-            presetData3.Description = "";
-            presetData3.EndMarker = System.TimeSpan.Parse("00:00:00");
-            presetData3.Loop = false;
-            presetData3.Pitch = 0F;
-            presetData3.StartMarker = System.TimeSpan.Parse("00:00:00");
-            presetData3.Tempo = 1F;
-            presetData3.Volume = 0.25F;
-            this.presetControl2.PresetData = presetData3;
-            this.presetControl2.PresetDescription = "";
-            this.presetControl2.Size = new System.Drawing.Size(101, 118);
-            this.presetControl2.State = BigMansStuff.PracticeSharp.UI.PresetControl.PresetStates.Off;
-            this.presetControl2.TabIndex = 3;
-            this.presetControl2.Title = "[No Desc]";
-            this.presetControl2.PresetSelected += new System.EventHandler(this.presetControl_PresetSelected);
-            this.presetControl2.PresetSaveSelected += new System.EventHandler(this.presetControl_PresetSaveSelected);
-            this.presetControl2.PresetDescriptionChanged += new System.EventHandler(this.presetControl_PresetDescriptionChanged);
-            // 
-            // presetControl4
-            // 
-            this.presetControl4.Id = "4";
-            this.presetControl4.Location = new System.Drawing.Point(464, 3);
-            this.presetControl4.Name = "presetControl4";
-            presetData4.Cue = System.TimeSpan.Parse("00:00:00");
-            presetData4.CurrentPlayTime = System.TimeSpan.Parse("00:00:00");
-            presetData4.Description = "";
-            presetData4.EndMarker = System.TimeSpan.Parse("00:00:00");
-            presetData4.Loop = false;
-            presetData4.Pitch = 0F;
-            presetData4.StartMarker = System.TimeSpan.Parse("00:00:00");
-            presetData4.Tempo = 1F;
-            presetData4.Volume = 0.25F;
-            this.presetControl4.PresetData = presetData4;
-            this.presetControl4.PresetDescription = "";
-            this.presetControl4.Size = new System.Drawing.Size(101, 118);
-            this.presetControl4.State = BigMansStuff.PracticeSharp.UI.PresetControl.PresetStates.Off;
-            this.presetControl4.TabIndex = 5;
-            this.presetControl4.Title = "[No Desc]";
-            this.presetControl4.PresetSelected += new System.EventHandler(this.presetControl_PresetSelected);
-            this.presetControl4.PresetSaveSelected += new System.EventHandler(this.presetControl_PresetSaveSelected);
-            this.presetControl4.PresetDescriptionChanged += new System.EventHandler(this.presetControl_PresetDescriptionChanged);
             // 
             // resetBankTimer
             // 
@@ -989,17 +903,6 @@ namespace BigMansStuff.PracticeSharp.UI
             this.pitchValueLabel.TabIndex = 70;
             this.pitchValueLabel.Text = "-";
             // 
-            // pitchLabel
-            // 
-            this.pitchLabel.AutoSize = true;
-            this.pitchLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.pitchLabel.Location = new System.Drawing.Point(7, 111);
-            this.pitchLabel.Name = "pitchLabel";
-            this.pitchLabel.Size = new System.Drawing.Size(36, 13);
-            this.pitchLabel.TabIndex = 2;
-            this.pitchLabel.Text = "Pitch";
-            this.pitchLabel.Click += new System.EventHandler(this.pitchLabel_Click);
-            // 
             // label15
             // 
             this.label15.AutoSize = true;
@@ -1043,6 +946,147 @@ namespace BigMansStuff.PracticeSharp.UI
             this.pitchTrackBar.TickFrequency = 8;
             this.pitchTrackBar.TickStyle = System.Windows.Forms.TickStyle.Both;
             this.pitchTrackBar.ValueChanged += new System.EventHandler(this.pitchTrackBar_ValueChanged);
+            this.pitchTrackBar.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pitchTrackBar_MouseDown);
+            // 
+            // pitchLabel
+            // 
+            this.pitchLabel.AutoSize = true;
+            this.pitchLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.pitchLabel.Location = new System.Drawing.Point(7, 111);
+            this.pitchLabel.Name = "pitchLabel";
+            this.pitchLabel.Size = new System.Drawing.Size(36, 13);
+            this.pitchLabel.TabIndex = 2;
+            this.pitchLabel.Text = "Pitch";
+            this.pitchLabel.Click += new System.EventHandler(this.pitchLabel_Click);
+            // 
+            // presetControl3
+            // 
+            this.presetControl3.Id = "3";
+            this.presetControl3.Location = new System.Drawing.Point(336, 3);
+            this.presetControl3.Name = "presetControl3";
+            presetData1.Cue = System.TimeSpan.Parse("00:00:00");
+            presetData1.CurrentPlayTime = System.TimeSpan.Parse("00:00:00");
+            presetData1.Description = "";
+            presetData1.EndMarker = System.TimeSpan.Parse("00:00:00");
+            presetData1.Loop = false;
+            presetData1.Pitch = 0F;
+            presetData1.StartMarker = System.TimeSpan.Parse("00:00:00");
+            presetData1.Tempo = 1F;
+            presetData1.Volume = 0.25F;
+            this.presetControl3.PresetData = presetData1;
+            this.presetControl3.PresetDescription = "";
+            this.presetControl3.Size = new System.Drawing.Size(101, 118);
+            this.presetControl3.State = BigMansStuff.PracticeSharp.UI.PresetControl.PresetStates.Off;
+            this.presetControl3.TabIndex = 4;
+            this.presetControl3.Title = "[No Desc]";
+            this.presetControl3.PresetSelected += new System.EventHandler(this.presetControl_PresetSelected);
+            this.presetControl3.PresetSaveSelected += new System.EventHandler(this.presetControl_PresetSaveSelected);
+            this.presetControl3.PresetDescriptionChanged += new System.EventHandler(this.presetControl_PresetDescriptionChanged);
+            // 
+            // presetControl1
+            // 
+            this.presetControl1.Id = "1";
+            this.presetControl1.Location = new System.Drawing.Point(83, 3);
+            this.presetControl1.Name = "presetControl1";
+            presetData2.Cue = System.TimeSpan.Parse("00:00:00");
+            presetData2.CurrentPlayTime = System.TimeSpan.Parse("00:00:00");
+            presetData2.Description = "";
+            presetData2.EndMarker = System.TimeSpan.Parse("00:00:00");
+            presetData2.Loop = false;
+            presetData2.Pitch = 0F;
+            presetData2.StartMarker = System.TimeSpan.Parse("00:00:00");
+            presetData2.Tempo = 1F;
+            presetData2.Volume = 0.25F;
+            this.presetControl1.PresetData = presetData2;
+            this.presetControl1.PresetDescription = "";
+            this.presetControl1.Size = new System.Drawing.Size(101, 118);
+            this.presetControl1.State = BigMansStuff.PracticeSharp.UI.PresetControl.PresetStates.Off;
+            this.presetControl1.TabIndex = 2;
+            this.presetControl1.Title = "[No Desc]";
+            this.presetControl1.PresetSelected += new System.EventHandler(this.presetControl_PresetSelected);
+            this.presetControl1.PresetSaveSelected += new System.EventHandler(this.presetControl_PresetSaveSelected);
+            this.presetControl1.PresetDescriptionChanged += new System.EventHandler(this.presetControl_PresetDescriptionChanged);
+            // 
+            // presetControl2
+            // 
+            this.presetControl2.Id = "2";
+            this.presetControl2.Location = new System.Drawing.Point(209, 3);
+            this.presetControl2.Name = "presetControl2";
+            presetData3.Cue = System.TimeSpan.Parse("00:00:00");
+            presetData3.CurrentPlayTime = System.TimeSpan.Parse("00:00:00");
+            presetData3.Description = "";
+            presetData3.EndMarker = System.TimeSpan.Parse("00:00:00");
+            presetData3.Loop = false;
+            presetData3.Pitch = 0F;
+            presetData3.StartMarker = System.TimeSpan.Parse("00:00:00");
+            presetData3.Tempo = 1F;
+            presetData3.Volume = 0.25F;
+            this.presetControl2.PresetData = presetData3;
+            this.presetControl2.PresetDescription = "";
+            this.presetControl2.Size = new System.Drawing.Size(101, 118);
+            this.presetControl2.State = BigMansStuff.PracticeSharp.UI.PresetControl.PresetStates.Off;
+            this.presetControl2.TabIndex = 3;
+            this.presetControl2.Title = "[No Desc]";
+            this.presetControl2.PresetSelected += new System.EventHandler(this.presetControl_PresetSelected);
+            this.presetControl2.PresetSaveSelected += new System.EventHandler(this.presetControl_PresetSaveSelected);
+            this.presetControl2.PresetDescriptionChanged += new System.EventHandler(this.presetControl_PresetDescriptionChanged);
+            // 
+            // presetControl4
+            // 
+            this.presetControl4.Id = "4";
+            this.presetControl4.Location = new System.Drawing.Point(464, 3);
+            this.presetControl4.Name = "presetControl4";
+            presetData4.Cue = System.TimeSpan.Parse("00:00:00");
+            presetData4.CurrentPlayTime = System.TimeSpan.Parse("00:00:00");
+            presetData4.Description = "";
+            presetData4.EndMarker = System.TimeSpan.Parse("00:00:00");
+            presetData4.Loop = false;
+            presetData4.Pitch = 0F;
+            presetData4.StartMarker = System.TimeSpan.Parse("00:00:00");
+            presetData4.Tempo = 1F;
+            presetData4.Volume = 0.25F;
+            this.presetControl4.PresetData = presetData4;
+            this.presetControl4.PresetDescription = "";
+            this.presetControl4.Size = new System.Drawing.Size(101, 118);
+            this.presetControl4.State = BigMansStuff.PracticeSharp.UI.PresetControl.PresetStates.Off;
+            this.presetControl4.TabIndex = 5;
+            this.presetControl4.Title = "[No Desc]";
+            this.presetControl4.PresetSelected += new System.EventHandler(this.presetControl_PresetSelected);
+            this.presetControl4.PresetSaveSelected += new System.EventHandler(this.presetControl_PresetSaveSelected);
+            this.presetControl4.PresetDescriptionChanged += new System.EventHandler(this.presetControl_PresetDescriptionChanged);
+            // 
+            // positionLabel
+            // 
+            this.positionLabel.AutoSize = true;
+            this.positionLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.positionLabel.Location = new System.Drawing.Point(8, 247);
+            this.positionLabel.Name = "positionLabel";
+            this.positionLabel.Size = new System.Drawing.Size(52, 13);
+            this.positionLabel.TabIndex = 6;
+            this.positionLabel.Text = "Position";
+            this.positionLabel.Click += new System.EventHandler(this.positionLabel_Click);
+            // 
+            // volumeLabel
+            // 
+            this.volumeLabel.AutoSize = true;
+            this.volumeLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.volumeLabel.Location = new System.Drawing.Point(8, 178);
+            this.volumeLabel.Name = "volumeLabel";
+            this.volumeLabel.Size = new System.Drawing.Size(48, 13);
+            this.volumeLabel.TabIndex = 4;
+            this.volumeLabel.Text = "Volume";
+            this.volumeLabel.Click += new System.EventHandler(this.volumeLabel_Click);
+            // 
+            // speedLabel
+            // 
+            this.speedLabel.AutoSize = true;
+            this.speedLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.speedLabel.Location = new System.Drawing.Point(7, 47);
+            this.speedLabel.Name = "speedLabel";
+            this.speedLabel.Size = new System.Drawing.Size(43, 13);
+            this.speedLabel.TabIndex = 0;
+            this.speedLabel.Text = "Speed";
+            this.speedLabel.Click += new System.EventHandler(this.speedLabel_Click);
             // 
             // MainForm
             // 

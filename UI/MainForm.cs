@@ -32,6 +32,7 @@ using BigMansStuff.PracticeSharp.Core;
 using System.IO;
 using System.Threading;
 using System.Xml;
+using System.Configuration;
 
 namespace BigMansStuff.PracticeSharp.UI
 {
@@ -71,16 +72,7 @@ namespace BigMansStuff.PracticeSharp.UI
         /// </summary>
         private void InitializeApplication()
         {
-            // Get and show current application version
-            m_appVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
-            this.Text = "Practice# Version (" + m_appVersion.ToString() + ")";
-
-            // Initialize Application Date Folder - used for storing Preset Bank files
-            m_appDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\PracticeSharp";
-            if (!Directory.Exists(m_appDataFolder))
-            {
-                Directory.CreateDirectory(m_appDataFolder);
-            }
+            InitializeConfiguration();
 
             // Create the PracticeSharpLogic back end layer
             m_practiceSharpLogic = new PracticeSharpLogic();
@@ -107,11 +99,38 @@ namespace BigMansStuff.PracticeSharp.UI
 
 
             // Set defaults
-            speedTrackBar_ValueChanged(this, new EventArgs());
+            tempoTrackBar_ValueChanged(this, new EventArgs());
             volumeTrackBar_ValueChanged(this, new EventArgs());
             playTimeTrackBar_ValueChanged(this, new EventArgs());
 
             // presetControl1.State = PresetControl.PresetStates.Selected;
+        }
+
+        private void InitializeConfiguration()
+        {
+            Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.PerUserRoamingAndLocal);
+            Console.WriteLine("Local user config path: {0}", config.FilePath);
+
+            // Get current application version
+            System.Reflection.Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly();
+            m_appVersion = assembly.GetName().Version;
+            string appVersionString = m_appVersion.ToString();
+
+            // Upgrade user settings from last version to current version, if needed
+            string appVersionSetting = Properties.Settings.Default.ApplicationVersion;
+            if (appVersionSetting != m_appVersion.ToString())
+            {
+                Properties.Settings.Default.Upgrade();
+                Properties.Settings.Default.ApplicationVersion = appVersionString;
+            }
+            // Show current application version
+            this.Text = string.Format(Resources.AppTitle, m_appVersion.ToString());
+            // Initialize Application Date Folder - used for storing Preset Bank files
+            m_appDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\PracticeSharp";
+            if (!Directory.Exists(m_appDataFolder))
+            {
+                Directory.CreateDirectory(m_appDataFolder);
+            }
         }
 
 
@@ -136,211 +155,6 @@ namespace BigMansStuff.PracticeSharp.UI
         }
 
         #endregion
-
-        #region Private Methods
-
-        /// <summary>
-        /// Automatically loads the last played file (and its presets bank if it exists)
-        /// </summary>
-        private void AutoLoadLastFile()
-        {
-            string lastFilename = Properties.Settings.Default.LastFilename;
-
-            if (File.Exists(lastFilename))
-            {
-                // Open file but don't start playing automatically
-                OpenFile(lastFilename, false);
-            }
-        }
-
-        /// <summary>
-        /// Open the given file
-        /// </summary>
-        /// <param name="filename"></param>
-        private void OpenFile(string filename, bool autoPlay)
-        {
-            Cursor.Current = Cursors.WaitCursor;
-            try
-            {
-                playTimeUpdateTimer.Enabled = false;
-
-                Properties.Settings.Default.LastFilename = filename;
-                Properties.Settings.Default.Save();
-
-                m_currentFilename = filename;
-                filenameToolStripStatusLabel.Text = filename;
-                m_practiceSharpLogic.LoadFile(filename);
-
-                // Load Presets Bank for this input file
-                LoadPresetsBank();
-
-                EnableControls(true);
-
-                playDurationLabel.Text = 
-                       string.Format( "{0}:{1}", m_practiceSharpLogic.FilePlayDuration.Minutes.ToString( "00" ),
-                                    m_practiceSharpLogic.FilePlayDuration.Seconds.ToString( "00" )  ) ;
-                play1QDurationLabel.Text = 
-                       string.Format( "{0}:{1}", ( m_practiceSharpLogic.FilePlayDuration.TotalSeconds / 4 / 60 ).ToString( "00" ),
-                                    ( m_practiceSharpLogic.FilePlayDuration.Seconds / 4 ).ToString( "00" )  ) ;
-                play2QDurationLabel.Text =
-                       string.Format("{0}:{1}", (m_practiceSharpLogic.FilePlayDuration.Minutes / 2).ToString("00"),
-                                    (m_practiceSharpLogic.FilePlayDuration.Seconds / 2).ToString("00"));
-                play3QDurationLabel.Text =
-                       string.Format("{0}:{1}", (m_practiceSharpLogic.FilePlayDuration.TotalSeconds * 3 / 4 / 60).ToString("00"),
-                                    (m_practiceSharpLogic.FilePlayDuration.Seconds * 3 / 4 ).ToString("00"));
-
-                if (autoPlay)
-                {
-                    playPauseButton.Image = Resources.Pause_Normal;
-                    m_practiceSharpLogic.Play();
-                }
-            }
-            finally
-            {
-                playTimeUpdateTimer.Enabled = true;
-                Cursor.Current = Cursors.Default;
-            }
-        }
-
-        /// <summary>
-        /// Utility function - Enables/Disabled UI controls
-        /// </summary>
-        /// <param name="enabled"></param>
-        private void EnableControls(bool enabled)
-        {
-            tempoTrackBar.Enabled = enabled;
-            pitchTrackBar.Enabled = enabled;
-            volumeTrackBar.Enabled = enabled;
-            playTimeTrackBar.Enabled = enabled;
-            playPauseButton.Enabled = enabled;
-            startLoopNowButton.Enabled = enabled;
-            endLoopNowButton.Enabled = enabled;
-            cueComboBox.Enabled = enabled;
-            writeBankButton.Enabled = enabled;
-            resetBankButton.Enabled = enabled;
-            presetControl1.Enabled = enabled;
-            presetControl2.Enabled = enabled;
-            presetControl3.Enabled = enabled;
-            presetControl4.Enabled = enabled;
-            loopPanel.Enabled = enabled;
-            currentMinuteUpDown.Enabled = enabled;
-            currentSecondUpDown.Enabled = enabled;
-            currentMilliUpDown.Enabled = enabled;
-        }
-
-        private void UpdateCoreCurrentPlayTime()
-        {
-            m_practiceSharpLogic.CurrentPlayTime = new TimeSpan(0, 0, (int)currentMinuteUpDown.Value, (int)currentSecondUpDown.Value, (int)currentMilliUpDown.Value);
-        }
-
-        private void UpdateCoreStartMarker()
-        {
-            m_practiceSharpLogic.StartMarker = new TimeSpan(0, 0, (int)startLoopMinuteUpDown.Value, (int)startLoopSecondUpDown.Value, (int)startLoopMilliUpDown.Value);
-
-            positionMarkersPanel.Refresh();
-        }
-
-        private void UpdateCoreEndMarker()
-        {
-            m_practiceSharpLogic.EndMarker = new TimeSpan(0, 0, (int)endLoopMinuteUpDown.Value, (int)endLoopSecondUpDown.Value, (int)endLoopMilliUpDown.Value);
-
-            positionMarkersPanel.Refresh();
-        }
-
-        /// <summary>
-        /// Loads the presets from the preset bank file
-        /// </summary>
-        private void LoadPresetsBank()
-        {
-            m_presetsBankFilename = m_appDataFolder + "\\" + Path.GetFileName(m_currentFilename) + ".practicesharpbank.xml";
-
-            if (!File.Exists(m_presetsBankFilename))
-            {
-                return;
-            }
-
-            try
-            {
-                // Loads the presets bank XML file
-                XmlDocument doc = new XmlDocument();
-                doc.Load(m_presetsBankFilename);
-
-                XmlElement root = doc.DocumentElement;
-                XmlNode presetsBankNode = root.SelectSingleNode("/PracticeSharp/PresetsBank");
-                string activePresetId = presetsBankNode.Attributes["ActivePreset"].Value;
-                XmlNodeList presetNodes = presetsBankNode.SelectNodes("Preset");
-                foreach (XmlNode presetNode in presetNodes)
-                {
-                    string presetId = presetNode.Attributes["Id"].Value;
-                    // Load XML values into PresetData object
-                    PresetData presetData = m_presetControls[presetId].PresetData;
-                    presetData.Tempo = Convert.ToSingle(presetNode.Attributes["Tempo"].Value);
-                    presetData.Pitch = Convert.ToSingle(presetNode.Attributes["Pitch"].Value);
-                    presetData.Volume = Convert.ToSingle(presetNode.Attributes["Volume"].Value);
-                    presetData.CurrentPlayTime = TimeSpan.Parse(presetNode.Attributes["PlayTime"].Value);
-                    presetData.StartMarker = TimeSpan.Parse(presetNode.Attributes["LoopStartMarker"].Value);
-                    presetData.EndMarker = TimeSpan.Parse(presetNode.Attributes["LoopEndMarker"].Value);
-                    presetData.Loop = Convert.ToBoolean(presetNode.Attributes["IsLoop"].Value);
-                    presetData.Cue = TimeSpan.Parse(presetNode.Attributes["Cue"].Value);
-                    presetData.Description = Convert.ToString(presetNode.Attributes["Description"].Value);
-
-                    PresetControl presetControl = m_presetControls[presetId];
-                    presetControl.PresetDescription = presetData.Description;
-                }
-
-                m_currentPreset = m_presetControls[activePresetId];
-                m_currentPreset.State = PresetControl.PresetStates.Selected;              
-            }
-            catch ( Exception )
-            {
-                MessageBox.Show(this, "Failed loading Presets Bank for file: " + m_currentFilename, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-    
-            }
-
-        }
-
-        /// <summary>
-        /// Writes a full Preset Bank XML into a file
-        /// </summary>
-        private void WritePresetsBank()
-        {
-            // Create an XML Document
-            XmlDocument doc = new XmlDocument();
-            XmlElement elRoot = (XmlElement)doc.AppendChild(doc.CreateElement("PracticeSharp"));
-            elRoot.SetAttribute("Version", m_appVersion.ToString());
-            XmlElement elPresets = (XmlElement)elRoot.AppendChild(doc.CreateElement("PresetsBank"));
-            elPresets.SetAttribute("Filename", Path.GetFileName(m_currentFilename));
-
-            elPresets.SetAttribute("ActivePreset", m_currentPreset.Id);
-
-            foreach ( PresetControl presetControl in m_presetControls.Values )
-            {
-                PresetData presetData = presetControl.PresetData;
-
-                XmlElement elPreset = (XmlElement)elPresets.AppendChild(doc.CreateElement("Preset"));
-                elPreset.SetAttribute("Id", presetControl.Id);
-                elPreset.SetAttribute("Tempo", presetData.Tempo.ToString());
-                elPreset.SetAttribute("Pitch", presetData.Pitch.ToString());
-                elPreset.SetAttribute("Volume", presetData.Volume.ToString());
-                elPreset.SetAttribute("PlayTime", presetData.CurrentPlayTime.ToString());
-                elPreset.SetAttribute("LoopStartMarker", presetData.StartMarker.ToString());
-                elPreset.SetAttribute("LoopEndMarker", presetData.EndMarker.ToString());
-                elPreset.SetAttribute("IsLoop", presetData.Loop.ToString());
-                elPreset.SetAttribute("Cue", presetData.Cue.ToString());
-                elPreset.SetAttribute("IsLoop", presetData.Loop.ToString());
-                elPreset.SetAttribute("Description", presetData.Description);
-            }
-            
-            // Write to XML file
-            using (StreamWriter writer = new StreamWriter(m_presetsBankFilename, false, Encoding.UTF8))
-            {
-                writer.Write(doc.OuterXml);
-            }
-
-            // Console.WriteLine(doc.OuterXml);
-        }
-
-        #endregion 
 
         #region GUI Event Handlers
         /// <summary>
@@ -419,8 +233,18 @@ namespace BigMansStuff.PracticeSharp.UI
             TimeSpan endMarker = m_practiceSharpLogic.EndMarker;
             TimeSpan filePlayDuration = m_practiceSharpLogic.FilePlayDuration;
 
-            int startMarkerX = Convert.ToInt32(startMarker.TotalSeconds / filePlayDuration.TotalSeconds * positionMarkersPanel.Width);
-            int endMarkerX = Convert.ToInt32(endMarker.TotalSeconds / filePlayDuration.TotalSeconds * positionMarkersPanel.Width);
+            int startMarkerX;
+            int endMarkerX;
+            if (filePlayDuration.TotalSeconds <= 0)
+            {
+                startMarkerX = 0;
+                endMarkerX = 0;
+            }
+            else
+            {
+                startMarkerX = Convert.ToInt32(startMarker.TotalSeconds / filePlayDuration.TotalSeconds * positionMarkersPanel.Width);
+                endMarkerX = Convert.ToInt32(endMarker.TotalSeconds / filePlayDuration.TotalSeconds * positionMarkersPanel.Width);
+            }
 
             // Draw the whole loop region - Start marker to End Marker
             e.Graphics.FillRectangle(Brushes.Wheat, startMarkerX, 0, 
@@ -438,18 +262,31 @@ namespace BigMansStuff.PracticeSharp.UI
         /// <param name="e"></param>
         private void writePresetButton_Click(object sender, EventArgs e)
         {
-            if (m_currentPreset.State != PresetControl.PresetStates.WaitForSave)
+            if (m_currentPreset == null ||
+                m_currentPreset.State != PresetControl.PresetStates.WaitForSave)
             {
+                // Temporary Pause play until save has completed
+                if (m_practiceSharpLogic.Status == PracticeSharpLogic.Statuses.Playing)
+                {
+                    m_tempSavePausePlay = true;
+                    m_practiceSharpLogic.Pause();
+                }
+
                 // Enter preset 'Write Mode'
                 foreach (PresetControl presetControl in m_presetControls.Values)
                 {
                     presetControl.State = PresetControl.PresetStates.WaitForSave;
                 }
             }
-            else
+            else if ( m_currentPreset != null )
             {
                 // Cancel write mode
                 m_currentPreset.State = PresetControl.PresetStates.Selected;
+                if (m_tempSavePausePlay)
+                {
+                    m_practiceSharpLogic.Play();
+                    m_tempSavePausePlay = false;
+                }
             }
         }
 
@@ -476,35 +313,7 @@ namespace BigMansStuff.PracticeSharp.UI
             ApplyPresetValueUIControls(presetData);
         }
 
-        /// <summary>
-        /// Applies the preset values to UI controls - Effectively loads the UI controls with preset values
-        /// </summary>
-        /// <param name="presetData"></param>
-        private void ApplyPresetValueUIControls(PresetData presetData)
-        {
-            // Apply preset values
-            tempoTrackBar.Value = Convert.ToInt32(presetData.Tempo * 100.0f);
-            pitchTrackBar.Value = Convert.ToInt32(presetData.Pitch * 96.0f);
-            volumeTrackBar.Value = Convert.ToInt32(presetData.Volume * 100.0f);
-            if (m_practiceSharpLogic.FilePlayDuration == TimeSpan.Zero)
-            {
-                playTimeTrackBar.Value = playTimeTrackBar.Minimum;
-            }
-            else
-            {
-                playTimeTrackBar.Value = Convert.ToInt32(100.0f * presetData.CurrentPlayTime.TotalSeconds / m_practiceSharpLogic.FilePlayDuration.TotalSeconds);
-            }
-            startLoopMinuteUpDown.Value = Convert.ToInt32(presetData.StartMarker.Minutes);
-            startLoopSecondUpDown.Value = Convert.ToInt32(presetData.StartMarker.Seconds);
-            startLoopMilliUpDown.Value = Convert.ToInt32(presetData.StartMarker.Milliseconds);
-            endLoopMinuteUpDown.Value = Convert.ToInt32(presetData.EndMarker.Minutes);
-            endLoopSecondUpDown.Value = Convert.ToInt32(presetData.EndMarker.Seconds);
-            endLoopMilliUpDown.Value = Convert.ToInt32(presetData.EndMarker.Milliseconds);
-            int cueItemIndex = cueComboBox.FindString(Convert.ToInt32(presetData.Cue.TotalSeconds).ToString());
-            cueComboBox.SelectedIndex = cueItemIndex;
-            loopCheckBox.Checked = presetData.Loop;
-        }
-
+        
         /// <summary>
         /// PresetDescriptionChanged Event handler - When a preset description changed the preset bank has to be rewritten to persist the change
         /// </summary>
@@ -534,6 +343,11 @@ namespace BigMansStuff.PracticeSharp.UI
                 }
                 else
                 {
+                    if (presetControl.PresetData.Description == string.Empty)
+                    {
+                        presetControl.ChangeDescription();
+                    }
+
                     // Update the preset data for the selected preset
                     presetControl.PresetData.Tempo = m_practiceSharpLogic.Tempo;
                     presetControl.PresetData.Pitch = m_practiceSharpLogic.Pitch;
@@ -549,6 +363,12 @@ namespace BigMansStuff.PracticeSharp.UI
 
             // (Re-)Write preset bank file
             WritePresetsBank();
+
+            if (m_tempSavePausePlay)
+            {
+                m_practiceSharpLogic.Play();
+                m_tempSavePausePlay = false;
+            }
         }
 
         private void volumeTrackBar_ValueChanged(object sender, EventArgs e)
@@ -591,6 +411,23 @@ namespace BigMansStuff.PracticeSharp.UI
             // Cancel reset
             resetBankTimer.Stop();
         }
+
+        private void tempoTrackBar_MouseDown(object sender, MouseEventArgs e)
+        {
+            UpdateTrackBarByMousePosition(tempoTrackBar, e);
+        }
+
+        private void pitchTrackBar_MouseDown(object sender, MouseEventArgs e)
+        {
+            UpdateTrackBarByMousePosition(pitchTrackBar, e);
+        }
+
+        private void volumeTrackBar_MouseDown(object sender, MouseEventArgs e)
+        {
+            UpdateTrackBarByMousePosition(volumeTrackBar, e);
+        }
+
+        
 
         #region Drag & Drop
 
@@ -639,6 +476,165 @@ namespace BigMansStuff.PracticeSharp.UI
         }
 
         #endregion
+        private void currentUpDown_ValueChanged(object sender, EventArgs e)
+        {
+            // Don't allow re-entry of UI events when the track bar is being programmatically changed
+            if (m_ignorePlayTimeUIEvents)
+                return;
+
+            // Mask out PracticeSharpLogic events to eliminate 'Racing' between GUI and PracticeSharpLogic over current playtime
+            m_currentControlsMaskOutTime = DateTime.Now.AddMilliseconds(500);
+
+            UpdateCoreCurrentPlayTime();
+        }
+
+        #region Start & End Loop Markers
+
+        private void startLoopSecondUpDown_ValueChanged(object sender, EventArgs e)
+        {
+            TimeSpan startMarker = m_practiceSharpLogic.StartMarker;
+
+            if (startLoopSecondUpDown.Value < 0)
+            {
+                startMarker = startMarker.Subtract(new TimeSpan(0, 0, 1));
+            }
+            else if (startLoopSecondUpDown.Value > 59)
+            {
+                startMarker = startMarker.Add(new TimeSpan(0, 0, 1));
+            }
+            else
+            {
+                startMarker = new TimeSpan(0, 0, startMarker.Minutes, Convert.ToInt32(startLoopSecondUpDown.Value), startMarker.Milliseconds);
+            }
+
+            UpdateCoreStartMarker(startMarker);
+        }
+
+        private void startLoopMilliUpDown_ValueChanged(object sender, EventArgs e)
+        {
+            TimeSpan startMarker = m_practiceSharpLogic.StartMarker;
+
+            if (startLoopMilliUpDown.Value < 0)
+            {
+                startMarker = startMarker.Subtract(new TimeSpan(0, 0, 0, 0, 1));
+            }
+            else if (startLoopMilliUpDown.Value > 999)
+            {
+                startMarker = startMarker.Add(new TimeSpan(0, 0, 0, 0, 1));
+            }
+            else
+            {
+                startMarker = new TimeSpan(0, 0, startMarker.Minutes, startMarker.Seconds, Convert.ToInt32(startLoopMilliUpDown.Value));
+            }
+
+            UpdateCoreStartMarker(startMarker);
+        }
+
+        private void startLoopMinuteUpDown_ValueChanged(object sender, EventArgs e)
+        {
+            TimeSpan startMarker = m_practiceSharpLogic.StartMarker;
+
+            if (startLoopMinuteUpDown.Value < 0)
+            {
+                startMarker = startMarker.Subtract(new TimeSpan(0, 0, 1, 0, 0));
+            }
+            else if (startLoopMinuteUpDown.Value > 99)
+            {
+                startMarker = startMarker.Add(new TimeSpan(0, 0, 1, 0, 0));
+            }
+            else
+            {
+                startMarker = new TimeSpan(0, 0, Convert.ToInt32(startLoopMinuteUpDown.Value), startMarker.Seconds, startMarker.Milliseconds);
+            }
+
+            UpdateCoreStartMarker(startMarker);
+        }
+
+        private void endLoopSecondUpDown_ValueChanged(object sender, EventArgs e)
+        {
+            TimeSpan endMarker = m_practiceSharpLogic.EndMarker;
+
+            if (endLoopSecondUpDown.Value < 0)
+            {
+                endMarker = endMarker.Subtract(new TimeSpan(0, 0, 1));
+            }
+            else if (endLoopSecondUpDown.Value > 59)
+            {
+                endMarker = endMarker.Add(new TimeSpan(0, 0, 1));
+            }
+            else
+            {
+                endMarker = new TimeSpan(0, 0, endMarker.Minutes, Convert.ToInt32(endLoopSecondUpDown.Value), endMarker.Milliseconds);
+            }
+
+            UpdateCoreEndMarker(endMarker);
+        }
+
+        private void endLoopMinuteUpDown_ValueChanged(object sender, EventArgs e)
+        {
+            TimeSpan endMarker = m_practiceSharpLogic.EndMarker;
+
+            if (endLoopMinuteUpDown.Value < 0)
+            {
+                endMarker = endMarker.Subtract(new TimeSpan(0, 0, 1, 0, 0));
+            }
+            else if (endLoopMinuteUpDown.Value > 99)
+            {
+                endMarker = endMarker.Add(new TimeSpan(0, 0, 1, 0, 0));
+            }
+            else
+            {
+                endMarker = new TimeSpan(0, 0, Convert.ToInt32(endLoopMinuteUpDown.Value), endMarker.Seconds, endMarker.Milliseconds);
+            }
+
+            UpdateCoreEndMarker(endMarker);
+        }
+
+        private void endLoopMilliUpDown_ValueChanged(object sender, EventArgs e)
+        {
+            TimeSpan endMarker = m_practiceSharpLogic.EndMarker;
+
+            if (endLoopMilliUpDown.Value < 0)
+            {
+                endMarker = endMarker.Subtract(new TimeSpan(0, 0, 0, 0, 1));
+            }
+            else if (endLoopMilliUpDown.Value > 999)
+            {
+                endMarker = endMarker.Add(new TimeSpan(0, 0, 0, 0, 1));
+            }
+            else
+            {
+                endMarker = new TimeSpan(0, 0, endMarker.Minutes, endMarker.Seconds, Convert.ToInt32(endLoopMilliUpDown.Value));
+            }
+
+            UpdateCoreEndMarker(endMarker);
+        }
+
+
+        private void startLoopNowButton_Click(object sender, EventArgs e)
+        {
+            // Handle special case when Now is clicked after the End marker
+            if (m_practiceSharpLogic.CurrentPlayTime > m_practiceSharpLogic.EndMarker)
+            {
+                endLoopMinuteUpDown.Value = currentMinuteUpDown.Value;
+                endLoopSecondUpDown.Value = currentSecondUpDown.Value;
+                endLoopMilliUpDown.Value = currentMilliUpDown.Value;
+            }
+
+            startLoopMinuteUpDown.Value = currentMinuteUpDown.Value;
+            startLoopSecondUpDown.Value = currentSecondUpDown.Value;
+            startLoopMilliUpDown.Value = currentMilliUpDown.Value;
+        }
+
+        private void endLoopNowButton_Click(object sender, EventArgs e)
+        {
+            endLoopMinuteUpDown.Value = currentMinuteUpDown.Value;
+            endLoopSecondUpDown.Value = currentSecondUpDown.Value;
+            endLoopMilliUpDown.Value = currentMilliUpDown.Value;
+        }
+
+
+        #endregion
 
         /// <summary>
         /// Click event handler for openFileButton - Invokes the open file dialog
@@ -667,12 +663,12 @@ namespace BigMansStuff.PracticeSharp.UI
         }
 
         /// <summary>
-        /// Event handler for ValueChanged of the speedTrackBar -
+        /// Event handler for ValueChanged of the tempoTrackBar -
         ///   Changes the underlying tempo of PracticeSharpLogic
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void speedTrackBar_ValueChanged(object sender, EventArgs e)
+        private void tempoTrackBar_ValueChanged(object sender, EventArgs e)
         {
             // Convert to Percent 
             float newTempo = tempoTrackBar.Value / 100.0f;
@@ -774,25 +770,28 @@ namespace BigMansStuff.PracticeSharp.UI
 
         private void UpdateNewPlayTimeByMousePos(MouseEventArgs e)
         {
-            int newValue = Convert.ToInt32(playTimeTrackBar.Maximum * ((float)e.X / playTimeTrackBar.Width));
-            if (newValue > playTimeTrackBar.Maximum)
-                newValue = playTimeTrackBar.Maximum;
-            if (newValue < playTimeTrackBar.Minimum)
-                newValue = playTimeTrackBar.Minimum;
+            const int TrackBarMargin = 10;
+            float duration = (float)m_practiceSharpLogic.FilePlayDuration.TotalSeconds;
+            float newValue = duration * (((float)e.X - TrackBarMargin) / (playTimeTrackBar.Width - TrackBarMargin * 2 ));
+            if (newValue > duration)
+                newValue = duration;
+            else if (newValue < 0)
+                newValue = 0;
 
-            TimeSpan newPlayTime = new TimeSpan(0, 0, Convert.ToInt32( ( newValue / 100.0f ) * m_practiceSharpLogic.FilePlayDuration.TotalSeconds) );
-
+            TimeSpan newPlayTime = new TimeSpan(0, 0, Convert.ToInt32( newValue ) );
             m_practiceSharpLogic.CurrentPlayTime = newPlayTime;
-           
+
+            int newTrackBarValue = Convert.ToInt32(newValue / duration * 100.0f);
+
             if (m_practiceSharpLogic.Status == PracticeSharpLogic.Statuses.Playing)
             {
                 m_ignorePlayTimeUIEvents = true;
                 try
                 {
                     // Time in which playtime trackbar updates coming from PracticeSharpLogic are not allowed (to eliminate 'Jumps' due to old locations)
-                    m_playTimeTrackBarMaskOutTime = DateTime.Now.AddSeconds(1);
+                    m_playTimeTrackBarMaskOutTime = DateTime.Now.AddMilliseconds(500);
 
-                    playTimeTrackBar.Value = newValue;
+                    playTimeTrackBar.Value = newTrackBarValue;
                 }
                 finally
                 {
@@ -801,7 +800,7 @@ namespace BigMansStuff.PracticeSharp.UI
             }
             else
             {
-                playTimeTrackBar.Value = newValue;
+                playTimeTrackBar.Value = newTrackBarValue;
             }
         }
 
@@ -822,7 +821,10 @@ namespace BigMansStuff.PracticeSharp.UI
             m_ignorePlayTimeUIEvents = true;
             try
             {
-                UpdateCurrentUpDownControls(m_practiceSharpLogic.CurrentPlayTime);
+                if (DateTime.Now > m_currentControlsMaskOutTime)
+                {
+                    UpdateCurrentUpDownControls(m_practiceSharpLogic.CurrentPlayTime);
+                }
 
                 if (!m_playTimeTrackBarIsChanging && DateTime.Now > m_playTimeTrackBarMaskOutTime)
                 {
@@ -846,52 +848,6 @@ namespace BigMansStuff.PracticeSharp.UI
             currentMilliUpDown.Value = playTime.Milliseconds;
         }
 
-        private void startLoopNowButton_Click(object sender, EventArgs e)
-        {
-            startLoopMinuteUpDown.Value = currentMinuteUpDown.Value;
-            startLoopSecondUpDown.Value = currentSecondUpDown.Value;
-            startLoopMilliUpDown.Value = currentMilliUpDown.Value;
-        }
-
-        private void endLoopNowButton_Click(object sender, EventArgs e)
-        {
-            endLoopMinuteUpDown.Value = currentMinuteUpDown.Value;
-            endLoopSecondUpDown.Value = currentSecondUpDown.Value;
-            endLoopMilliUpDown.Value = currentMilliUpDown.Value;
-        }
-
-        private void currentUpDown_ValueChanged(object sender, EventArgs e)
-        {
-            // Don't allow re-entry of UI events when the track bar is being programmatically changed
-            if (m_ignorePlayTimeUIEvents)
-                return;
-
-            UpdateCoreCurrentPlayTime();
-        }
-
-        private void startLoopUpDown_ValueChanged(object sender, EventArgs e)
-        {
-            // TODO: Provide Valuechanged handlers for all controls with wrap time logic
-
-            if (startLoopSecondUpDown.Value < 0)
-            {
-                // TODO: If current play time > 0 then decrease by one and apply values to *all* controls
-                startLoopSecondUpDown.Value = 59;
-            }
-            else if (startLoopSecondUpDown.Value > 59)
-            {
-                // TODO: If current play time < duration then increase by one and apply values to *all* controls
-                startLoopSecondUpDown.Value = 0;
-            }
-
-            UpdateCoreStartMarker();
-        }
-
-        private void endLoopUpDown_ValueChanged(object sender, EventArgs e)
-        {
-            UpdateCoreEndMarker();
-        }
-
         private void cueComboBox_SelectedValueChanged(object sender, EventArgs e)
         {
             m_practiceSharpLogic.Cue = new TimeSpan(0, 0, Convert.ToInt32(cueComboBox.Text));
@@ -901,6 +857,11 @@ namespace BigMansStuff.PracticeSharp.UI
 
         #region PracticeSharpLogic Event Handlers
 
+        /// <summary>
+        /// Event handler for PracticeSharpLogic status changes
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="newStatus"></param>
         private void practiceSharpLogic_StatusChanged(object sender, PracticeSharpLogic.Statuses newStatus)
         {
             this.BeginInvoke( new MethodInvoker( delegate()
@@ -908,6 +869,7 @@ namespace BigMansStuff.PracticeSharp.UI
                 playStatusToolStripLabel.Text = newStatus.ToString();
 
                 if ( (newStatus == PracticeSharpLogic.Statuses.Stopped)
+                   || (newStatus == PracticeSharpLogic.Statuses.Pausing)
                    || (newStatus == PracticeSharpLogic.Statuses.Error) )
                 {
                     playPauseButton.Image = Resources.Play_Normal;
@@ -915,6 +877,7 @@ namespace BigMansStuff.PracticeSharp.UI
                 }
                 else if (newStatus == PracticeSharpLogic.Statuses.Playing)
                 {
+                    playPauseButton.Image = Resources.Pause_Normal;
                     playTimeUpdateTimer.Enabled = true;
                 }
             } )
@@ -953,6 +916,322 @@ namespace BigMansStuff.PracticeSharp.UI
 
         #endregion
 
+        #region Private Methods
+
+        /// <summary>
+        /// Automatically loads the last played file (and its presets bank if it exists)
+        /// </summary>
+        private void AutoLoadLastFile()
+        {
+            string lastFilename = Properties.Settings.Default.LastFilename;
+
+            if (File.Exists(lastFilename))
+            {
+                // Open file but don't start playing automatically
+                OpenFile(lastFilename, false);
+            }
+        }
+
+        /// <summary>
+        /// Open the given file
+        /// </summary>
+        /// <param name="filename"></param>
+        private void OpenFile(string filename, bool autoPlay)
+        {
+            Cursor.Current = Cursors.WaitCursor;
+            try
+            {
+                playTimeUpdateTimer.Enabled = false;
+
+                Properties.Settings.Default.LastFilename = filename;
+                Properties.Settings.Default.Save();
+
+                m_currentFilename = filename;
+                filenameToolStripStatusLabel.Text = filename;
+                m_practiceSharpLogic.LoadFile(filename);
+
+                // Load Presets Bank for this input file
+                LoadPresetsBank();
+
+                EnableControls(true);
+
+                playDurationLabel.Text =
+                       string.Format("{0}:{1}", m_practiceSharpLogic.FilePlayDuration.Minutes.ToString("00"),
+                                    m_practiceSharpLogic.FilePlayDuration.Seconds.ToString("00"));
+                play1QDurationLabel.Text =
+                       string.Format("{0}:{1}", (m_practiceSharpLogic.FilePlayDuration.TotalSeconds / 4 / 60).ToString("00"),
+                                    (m_practiceSharpLogic.FilePlayDuration.Seconds / 4).ToString("00"));
+                play2QDurationLabel.Text =
+                       string.Format("{0}:{1}", (m_practiceSharpLogic.FilePlayDuration.Minutes / 2).ToString("00"),
+                                    (m_practiceSharpLogic.FilePlayDuration.Seconds / 2).ToString("00"));
+                play3QDurationLabel.Text =
+                       string.Format("{0}:{1}", (m_practiceSharpLogic.FilePlayDuration.TotalSeconds * 3 / 4 / 60).ToString("00"),
+                                    (m_practiceSharpLogic.FilePlayDuration.Seconds * 3 / 4).ToString("00"));
+
+                if (autoPlay)
+                {
+                    playPauseButton.Image = Resources.Pause_Normal;
+                    m_practiceSharpLogic.Play();
+                }
+            }
+            finally
+            {
+                playTimeUpdateTimer.Enabled = true;
+                Cursor.Current = Cursors.Default;
+            }
+        }
+
+        /// <summary>
+        /// Utility function - Enables/Disabled UI controls
+        /// </summary>
+        /// <param name="enabled"></param>
+        private void EnableControls(bool enabled)
+        {
+            tempoTrackBar.Enabled = enabled;
+            pitchTrackBar.Enabled = enabled;
+            volumeTrackBar.Enabled = enabled;
+            playTimeTrackBar.Enabled = enabled;
+            playPauseButton.Enabled = enabled;
+            startLoopNowButton.Enabled = enabled;
+            endLoopNowButton.Enabled = enabled;
+            cueComboBox.Enabled = enabled;
+            writeBankButton.Enabled = enabled;
+            resetBankButton.Enabled = enabled;
+            presetControl1.Enabled = enabled;
+            presetControl2.Enabled = enabled;
+            presetControl3.Enabled = enabled;
+            presetControl4.Enabled = enabled;
+            loopPanel.Enabled = enabled;
+            currentMinuteUpDown.Enabled = enabled;
+            currentSecondUpDown.Enabled = enabled;
+            currentMilliUpDown.Enabled = enabled;
+        }
+
+        private void UpdateCoreCurrentPlayTime()
+        {
+            m_practiceSharpLogic.CurrentPlayTime = new TimeSpan(0, 0, (int)currentMinuteUpDown.Value, (int)currentSecondUpDown.Value, (int)currentMilliUpDown.Value);
+        }
+
+        private void UpdateCoreStartMarker(TimeSpan startMarker)
+        {
+            if (startMarker > m_practiceSharpLogic.EndMarker)
+            {
+                startMarker = m_practiceSharpLogic.EndMarker;
+            }
+            else if (startMarker < TimeSpan.Zero)
+            {
+                startMarker = TimeSpan.Zero;
+            }
+
+            m_practiceSharpLogic.StartMarker = startMarker;
+
+            positionMarkersPanel.Refresh();
+
+            ApplyLoopStartMarkerUI(startMarker);
+        }
+
+        private void ApplyLoopStartMarkerUI(TimeSpan startMarker)
+        {
+            startLoopMinuteUpDown.ValueChanged -= startLoopMinuteUpDown_ValueChanged;
+            startLoopSecondUpDown.ValueChanged -= startLoopSecondUpDown_ValueChanged;
+            startLoopMilliUpDown.ValueChanged -= startLoopMilliUpDown_ValueChanged;
+            try
+            {
+                startLoopMinuteUpDown.Value = startMarker.Minutes;
+                startLoopSecondUpDown.Value = startMarker.Seconds;
+                startLoopMilliUpDown.Value = startMarker.Milliseconds;
+            }
+            finally
+            {
+                startLoopMinuteUpDown.ValueChanged += startLoopMinuteUpDown_ValueChanged;
+                startLoopSecondUpDown.ValueChanged += startLoopSecondUpDown_ValueChanged;
+                startLoopMilliUpDown.ValueChanged += startLoopMilliUpDown_ValueChanged;
+            }
+        }
+
+        private void ApplyLoopEndMarkerUI(TimeSpan endMarker)
+        {
+            endLoopMinuteUpDown.ValueChanged -= endLoopMinuteUpDown_ValueChanged;
+            endLoopSecondUpDown.ValueChanged -= endLoopSecondUpDown_ValueChanged;
+            endLoopMilliUpDown.ValueChanged -= endLoopMilliUpDown_ValueChanged;
+            try
+            {
+                endLoopMinuteUpDown.Value = endMarker.Minutes;
+                endLoopSecondUpDown.Value = endMarker.Seconds;
+                endLoopMilliUpDown.Value = endMarker.Milliseconds;
+            }
+            finally
+            {
+                endLoopMinuteUpDown.ValueChanged += endLoopMinuteUpDown_ValueChanged;
+                endLoopSecondUpDown.ValueChanged += endLoopSecondUpDown_ValueChanged;
+                endLoopMilliUpDown.ValueChanged += endLoopMilliUpDown_ValueChanged;
+            }
+        }
+
+        private void UpdateCoreEndMarker(TimeSpan endMarker)
+        {
+            if (endMarker < m_practiceSharpLogic.StartMarker)
+            {
+                endMarker = m_practiceSharpLogic.StartMarker;
+            }
+            else if (endMarker > m_practiceSharpLogic.FilePlayDuration)
+            {
+                endMarker = m_practiceSharpLogic.FilePlayDuration;
+            }
+
+            m_practiceSharpLogic.EndMarker = endMarker;
+
+            positionMarkersPanel.Refresh();
+
+            ApplyLoopEndMarkerUI(endMarker);
+        }
+
+        #region Presets
+
+        /// <summary>
+        /// Loads the presets from the preset bank file
+        /// </summary>
+        private void LoadPresetsBank()
+        {
+            m_presetsBankFilename = m_appDataFolder + "\\" + Path.GetFileName(m_currentFilename) + ".practicesharpbank.xml";
+
+            if (!File.Exists(m_presetsBankFilename))
+            {
+                return;
+            }
+
+            try
+            {
+                // Loads the presets bank XML file
+                XmlDocument doc = new XmlDocument();
+                doc.Load(m_presetsBankFilename);
+
+                XmlElement root = doc.DocumentElement;
+                XmlNode presetsBankNode = root.SelectSingleNode("/" + XML_Node_Root + "/" + XML_Node_PresetsBank);
+                string activePresetId = presetsBankNode.Attributes[XML_Attr_ActivePreset].Value;
+                XmlNodeList presetNodes = presetsBankNode.SelectNodes(XML_Node_Preset);
+                // Load all preset nodes
+                foreach (XmlNode presetNode in presetNodes)
+                {
+                    string presetId = presetNode.Attributes[XML_Attr_Id].Value;
+                    // Load XML values into PresetData object
+                    PresetData presetData = m_presetControls[presetId].PresetData;
+                    presetData.Tempo = Convert.ToSingle(presetNode.Attributes[XML_Attr_Tempo].Value);
+                    presetData.Pitch = Convert.ToSingle(presetNode.Attributes[XML_Attr_Pitch].Value);
+                    presetData.Volume = Convert.ToSingle(presetNode.Attributes[XML_Attr_Volume].Value);
+
+                    presetData.CurrentPlayTime = TimeSpan.Parse(presetNode.Attributes[XML_Attr_PlayTime].Value);
+                    presetData.StartMarker = TimeSpan.Parse(presetNode.Attributes[XML_Attr_LoopStartMarker].Value);
+                    presetData.EndMarker = TimeSpan.Parse(presetNode.Attributes[XML_Attr_LoopEndMarker].Value);
+                    presetData.Loop = Convert.ToBoolean(presetNode.Attributes[XML_Attr_IsLoop].Value);
+                    presetData.Cue = TimeSpan.Parse(presetNode.Attributes[XML_Attr_Cue].Value);
+                    presetData.Description = Convert.ToString(presetNode.Attributes[XML_Attr_Description].Value);
+
+                    PresetControl presetControl = m_presetControls[presetId];
+                    presetControl.PresetDescription = presetData.Description;
+                }
+
+                m_currentPreset = m_presetControls[activePresetId];
+                m_currentPreset.State = PresetControl.PresetStates.Selected;
+            }
+            catch (Exception)
+            {
+                MessageBox.Show(this, "Failed loading Presets Bank for file: " + m_currentFilename, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+            }
+
+        }
+
+        /// <summary>
+        /// Writes a full Preset Bank XML into a file
+        /// </summary>
+        private void WritePresetsBank()
+        {
+            // Create an XML Document
+            XmlDocument doc = new XmlDocument();
+            XmlElement elRoot = (XmlElement)doc.AppendChild(doc.CreateElement(XML_Node_Root));
+            elRoot.SetAttribute(XML_Attr_Version, m_appVersion.ToString());
+            XmlElement elPresets = (XmlElement)elRoot.AppendChild(doc.CreateElement(XML_Node_PresetsBank));
+            elPresets.SetAttribute(XML_Attr_Filename, Path.GetFileName(m_currentFilename));
+            elPresets.SetAttribute(XML_Attr_ActivePreset, m_currentPreset.Id);
+
+            // Write XML Nodes for each Preset
+            foreach (PresetControl presetControl in m_presetControls.Values)
+            {
+                PresetData presetData = presetControl.PresetData;
+
+                XmlElement elPreset = (XmlElement)elPresets.AppendChild(doc.CreateElement(XML_Node_Preset));
+                // Write Preset Attributes
+                elPreset.SetAttribute(XML_Attr_Id, presetControl.Id);
+                elPreset.SetAttribute(XML_Attr_Tempo, presetData.Tempo.ToString());
+                elPreset.SetAttribute(XML_Attr_Pitch, presetData.Pitch.ToString());
+                elPreset.SetAttribute(XML_Attr_Volume, presetData.Volume.ToString());
+                elPreset.SetAttribute(XML_Attr_PlayTime, presetData.CurrentPlayTime.ToString());
+                elPreset.SetAttribute(XML_Attr_LoopStartMarker, presetData.StartMarker.ToString());
+                elPreset.SetAttribute(XML_Attr_LoopEndMarker, presetData.EndMarker.ToString());
+                elPreset.SetAttribute(XML_Attr_IsLoop, presetData.Loop.ToString());
+                elPreset.SetAttribute(XML_Attr_Cue, presetData.Cue.ToString());
+                elPreset.SetAttribute(XML_Attr_IsLoop, presetData.Loop.ToString());
+                elPreset.SetAttribute(XML_Attr_Description, presetData.Description);
+            }
+
+            // Write to XML file
+            using (StreamWriter writer = new StreamWriter(m_presetsBankFilename, false, Encoding.UTF8))
+            {
+                writer.Write(doc.OuterXml);
+            }
+        }
+
+        /// <summary>
+        /// Applies the preset values to UI controls - Effectively loads the UI controls with preset values
+        /// </summary>
+        /// <param name="presetData"></param>
+        private void ApplyPresetValueUIControls(PresetData presetData)
+        {
+            // Apply preset values
+            tempoTrackBar.Value = Convert.ToInt32(presetData.Tempo * 100.0f);
+            pitchTrackBar.Value = Convert.ToInt32(presetData.Pitch * 96.0f);
+            volumeTrackBar.Value = Convert.ToInt32(presetData.Volume * 100.0f);
+            if (m_practiceSharpLogic.FilePlayDuration == TimeSpan.Zero)
+            {
+                playTimeTrackBar.Value = playTimeTrackBar.Minimum;
+            }
+            else
+            {
+                playTimeTrackBar.Value = Convert.ToInt32(100.0f * presetData.CurrentPlayTime.TotalSeconds / m_practiceSharpLogic.FilePlayDuration.TotalSeconds);
+            }
+
+            ApplyLoopStartMarkerUI(presetData.StartMarker);
+            ApplyLoopEndMarkerUI(presetData.EndMarker);
+
+            m_practiceSharpLogic.StartMarker = presetData.StartMarker;
+            m_practiceSharpLogic.EndMarker = presetData.EndMarker;
+
+            int cueItemIndex = cueComboBox.FindString(Convert.ToInt32(presetData.Cue.TotalSeconds).ToString());
+            cueComboBox.SelectedIndex = cueItemIndex;
+            loopCheckBox.Checked = presetData.Loop;
+            positionMarkersPanel.Refresh();
+        }
+
+        #endregion
+        private void UpdateTrackBarByMousePosition(TrackBar trackBar, MouseEventArgs e)
+        {
+            const int TrackBarMargin = 10;
+            float maxValue = trackBar.Maximum;
+            float minValue = trackBar.Minimum;
+            float newValue = minValue + (maxValue - minValue) * (((float)e.X - TrackBarMargin) / (trackBar.Width - TrackBarMargin * 2));
+            if (newValue > maxValue)
+                newValue = maxValue;
+            else if (newValue < minValue)
+                newValue = minValue;
+
+            int newTrackBarValue = Convert.ToInt32(newValue);
+
+            trackBar.Value = newTrackBarValue;
+        }
+
+        #endregion 
+
         #region Private Members
 
         private bool m_isUpdatePlayTimeNeeded;
@@ -969,7 +1248,13 @@ namespace BigMansStuff.PracticeSharp.UI
         private bool m_ignorePlayTimeUIEvents = false;
         private bool m_playTimeTrackBarIsChanging = false;
 
+        /// <summary>
+        /// Flag for Temporary Pausing Play while saving
+        /// </summary>
+        private bool m_tempSavePausePlay = false;
+
         private DateTime m_playTimeTrackBarMaskOutTime = DateTime.Now;
+        private DateTime m_currentControlsMaskOutTime = DateTime.Now;
 
         private string m_currentFilename;
         private string m_presetsBankFilename;
@@ -983,6 +1268,26 @@ namespace BigMansStuff.PracticeSharp.UI
         const int MarkerWidth = 5; 
         const int MarkerHeight = 10;
 
+
+        #endregion
+   
+        #region XML Constants
+        const string XML_Node_Root = "PracticeSharp";
+        const string XML_Node_PresetsBank = "PresetsBank";
+        const string XML_Node_Preset = "Preset";
+        const string XML_Attr_ActivePreset = "ActivePreset";
+        const string XML_Attr_Version = "Version";
+        const string XML_Attr_Filename = "Filename";
+        const string XML_Attr_Id = "Id";
+        const string XML_Attr_Tempo = "Tempo";
+        const string XML_Attr_Pitch = "Pitch";
+        const string XML_Attr_Volume = "Volume";         
+        const string XML_Attr_PlayTime = "PlayTime";
+        const string XML_Attr_LoopStartMarker = "LoopStartMarker";
+        const string XML_Attr_LoopEndMarker = "LoopEndMarker";
+        const string XML_Attr_IsLoop = "IsLoop";
+        const string XML_Attr_Cue = "Cue";
+        const string XML_Attr_Description = "Description";
 
         #endregion
     }
