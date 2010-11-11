@@ -31,18 +31,16 @@ using System.Windows.Forms;
 
 namespace BigMansStuff.PracticeSharp.UI
 {
+    /// <summary>
+    /// A dialog form that allows entering the preset's text description
+    /// </summary>
     public partial class PresetTextInputDialog : Form
     {
+        #region Construction
+
         public PresetTextInputDialog()
         {
             InitializeComponent();
-        }
-
-        public string PresetText { get; set; }
-
-        private void okButton_Click(object sender, EventArgs e)
-        {
-            PresetText = textBox.Text;
         }
 
         private void PresetTextInputDialog_Load(object sender, EventArgs e)
@@ -50,5 +48,28 @@ namespace BigMansStuff.PracticeSharp.UI
             textBox.Text = PresetText;
             textBox.SelectAll();
         }
+
+        #endregion
+        
+        #region Properties
+
+        public string PresetText { get; set; }
+
+        #endregion
+
+        #region Event Handlers
+
+        /// <summary>
+        /// OK Click Handler
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void okButton_Click(object sender, EventArgs e)
+        {
+            // Update the PresetText property
+            PresetText = textBox.Text;
+        }
+
+        #endregion
     }
 }
