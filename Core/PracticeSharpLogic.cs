@@ -46,11 +46,11 @@ namespace BigMansStuff.PracticeSharp.Core
             ChangeStatus(Statuses.Initializing);
             try
             {
-                InitializeSoundTouchSharp();
-
                 m_startMarker = TimeSpan.Zero;
                 m_endMarker = TimeSpan.Zero;
                 m_cue = TimeSpan.Zero;
+
+                InitializeSoundTouchSharp();
 
                 ChangeStatus(Statuses.Initialized);
             }
@@ -89,29 +89,15 @@ namespace BigMansStuff.PracticeSharp.Core
 
             m_filename = filename;
 
-            InitializeNAudio();
-
-            CreateSoundTouchInputProvider(m_filename);
-
-            try
-            {
-                m_waveOutDevice.Init(m_inputProvider);
-            }
-            catch (Exception initException)
-            {
-                Console.WriteLine(String.Format("{0}", initException.Message), "Error Initializing Output");
-
-                throw;
-            }
-
-            m_filePlayDuration = m_waveChannel.TotalTime;
-
             m_status = Statuses.Pausing;
 
+            InitializeFileAudio();
+
             // Create the Audio Processing Worker (Thread)
-            m_audioProcessingWorker = new BackgroundWorker();
-            m_audioProcessingWorker.DoWork += new DoWorkEventHandler(audioProcessingWorker_DoWork);
-            m_audioProcessingWorker.RunWorkerAsync();
+            m_audioProcessingThread = new Thread( new ThreadStart( audioProcessingWorker_DoWork) );
+            m_audioProcessingThread.IsBackground = true;
+            m_audioProcessingThread.Priority = ThreadPriority.AboveNormal;
+            m_audioProcessingThread.Start();
         }
 
         /// <summary>
@@ -139,7 +125,7 @@ namespace BigMansStuff.PracticeSharp.Core
                 m_waveOutDevice.Stop();
             }
 
-            if ( m_audioProcessingWorker != null )
+            if ( m_audioProcessingThread != null )
             {
                 m_stopWorker = true;
                 while (m_workerRunning)
@@ -147,8 +133,7 @@ namespace BigMansStuff.PracticeSharp.Core
                     Thread.Sleep(10);
                 }
 
-                m_audioProcessingWorker.Dispose();
-                m_audioProcessingWorker = null;
+                m_audioProcessingThread = null;
             }
 
             TerminateNAudio();
@@ -378,7 +363,7 @@ namespace BigMansStuff.PracticeSharp.Core
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void audioProcessingWorker_DoWork(object sender, DoWorkEventArgs e)
+        private void audioProcessingWorker_DoWork()
         {
             try
             {
@@ -390,6 +375,26 @@ namespace BigMansStuff.PracticeSharp.Core
                 ChangeStatus( Statuses.Error );
             }
 
+        }
+
+        private void InitializeFileAudio()
+        {
+            InitializeNAudioLibrary();
+
+            CreateSoundTouchInputProvider(m_filename);
+
+            try
+            {
+                m_waveOutDevice.Init(m_inputProvider);
+            }
+            catch (Exception initException)
+            {
+                Console.WriteLine(String.Format("{0}", initException.Message), "Error Initializing Output");
+
+                throw;
+            }
+
+            m_filePlayDuration = m_waveChannel.TotalTime;
         }
 
         private void ProcessAudio()
@@ -527,6 +532,7 @@ namespace BigMansStuff.PracticeSharp.Core
                             TimeSpan currentBufferTime = m_waveChannel.CurrentTime;
                             int bufferAverageBytesPerSecond = Convert.ToInt32(format.AverageBytesPerSecond / m_tempo);
 
+                            // Add samples to buffered player
                             m_inputProvider.AddSamples(convertOutputBuffer.Bytes, 0, (int)samplesProcessed * sizeof(float) * format.Channels, currentBufferTime, averageBytesPerSec);
 
                             // Wait for queue to free up - only then add continue reading from the file
@@ -622,21 +628,11 @@ namespace BigMansStuff.PracticeSharp.Core
             m_soundTouchSharp.SetPitchSemiTones(0);
             m_soundTouchSharp.SetRateChange(0);
 
-            // TODO: Move to apply after each file block read
             m_soundTouchSharp.SetTempo(m_tempo);
 
             m_soundTouchSharp.SetSetting(SoundTouchSharp.SoundTouchSettings.SETTING_USE_QUICKSEEK, 0);
             m_soundTouchSharp.SetSetting(SoundTouchSharp.SoundTouchSettings.SETTING_USE_AA_FILTER, 1);
-
-            // TODO: Support speech mode
-            /*             if (params->speech)
-                            {
-                                // use settings for speech processing
-                                m_soundTouchSharp.SetSetting(SETTING_SEQUENCE_MS, 40);
-                                m_soundTouchSharp.SetSetting(SETTING_SEEKWINDOW_MS, 15);
-                                m_soundTouchSharp.SetSetting(SETTING_OVERLAP_MS, 8);
-                            }
-            */
+            m_soundTouchSharp.SetSetting(SoundTouchSharp.SoundTouchSettings.SETTING_AA_FILTER_LENGTH, 128);
         }
 
         /// <summary>
@@ -692,7 +688,7 @@ namespace BigMansStuff.PracticeSharp.Core
         /// <summary>
         /// Initialize the NAudio framework
         /// </summary>
-        private void InitializeNAudio()
+        private void InitializeNAudioLibrary()
         {
             try
             {
@@ -818,7 +814,7 @@ namespace BigMansStuff.PracticeSharp.Core
  
         private object m_propertiesLock = new object();
 
-        private BackgroundWorker m_audioProcessingWorker;
+        private Thread m_audioProcessingThread;
         private bool m_stopWorker = false;
         private bool m_workerRunning = false;
 
