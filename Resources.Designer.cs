@@ -74,6 +74,15 @@ namespace BigMansStuff.PracticeSharp.UI {
             }
         }
         
+        /// <summary>
+        ///   Looks up a localized string similar to Practice# ({0}).
+        /// </summary>
+        internal static string AppTitle {
+            get {
+                return ResourceManager.GetString("AppTitle", resourceCulture);
+            }
+        }
+        
         internal static System.Drawing.Bitmap blue_off_16 {
             get {
                 object obj = ResourceManager.GetObject("blue_off_16", resourceCulture);

@@ -172,4 +172,7 @@
   <data name="PresetNoDesc" xml:space="preserve">
     <value>[No Desc]</value>
   </data>
+  <data name="AppTitle" xml:space="preserve">
+    <value>Practice# ({0})</value>
+  </data>
 </root>
