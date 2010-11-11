@@ -78,7 +78,28 @@ namespace BigMansStuff.PracticeSharp.UI
 
             PresetDescription = string.Empty;
         }
-        
+
+        public void ChangeDescription()
+        {
+            PresetTextInputDialog inputDialog = new PresetTextInputDialog();
+            if (presetButton.Tag != null)
+            {
+                inputDialog.PresetText = presetButton.Text;
+            }
+
+            if (DialogResult.OK == inputDialog.ShowDialog(this))
+            {
+                PresetDescription = inputDialog.PresetText.Trim();
+            }
+
+            // Raise a save event - Renaming the description of a preset should be persisted immediately
+            if (PresetDescriptionChanged != null)
+            {
+                PresetDescriptionChanged(this, new EventArgs());
+            }
+
+        }
+
         #endregion
 
         #region Properties
@@ -195,22 +216,7 @@ namespace BigMansStuff.PracticeSharp.UI
         /// <param name="e"></param>
         private void presetIdLabel_Click(object sender, EventArgs e)
         {
-            PresetTextInputDialog inputDialog = new PresetTextInputDialog();
-            if (presetButton.Tag != null)
-            {
-                inputDialog.PresetText = presetButton.Text;
-            }
-
-            if (DialogResult.OK == inputDialog.ShowDialog(this))
-            {
-                PresetDescription = inputDialog.PresetText.Trim();
-            }
-
-            // Raise a save event - Renaming the description of a preset should be persisted immediately
-            if (PresetDescriptionChanged != null)
-            {
-                PresetDescriptionChanged(this, new EventArgs());
-            }
+            ChangeDescription();
         }
 
         #endregion
@@ -308,6 +314,5 @@ namespace BigMansStuff.PracticeSharp.UI
         private PresetStates m_state;
 
         #endregion
-
     }
 }
