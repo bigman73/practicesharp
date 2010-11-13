@@ -73,6 +73,7 @@ namespace BigMansStuff.PracticeSharp.UI
         private void InitializeApplication()
         {
             InitializeConfiguration();
+            InitializeMRUFiles();
 
             // Create the PracticeSharpLogic back end layer
             m_practiceSharpLogic = new PracticeSharpLogic();
@@ -105,6 +106,21 @@ namespace BigMansStuff.PracticeSharp.UI
 
             // presetControl1.State = PresetControl.PresetStates.Selected;
         }
+
+        private void InitializeMRUFiles()
+        {
+            m_recentFilesMenuItems.AddRange(new ToolStripMenuItem[] { 
+                        recent1ToolStripMenuItem,  recent2ToolStripMenuItem, recent3ToolStripMenuItem, recent4ToolStripMenuItem, recent5ToolStripMenuItem,
+                        recent6ToolStripMenuItem, recent7ToolStripMenuItem, recent8ToolStripMenuItem });
+            foreach (ToolStripMenuItem recentMenuItem in m_recentFilesMenuItems)
+            {
+                recentMenuItem.Click += new EventHandler(recentMenuItem_Click);
+            }
+
+            m_mruFile = m_appDataFolder + "\\practicesharp_mru.txt";
+            m_mruManager = new MRUManager(m_recentFilesMenuItems.Count, m_mruFile);
+        }
+
 
         private void InitializeConfiguration()
         {
@@ -852,7 +868,76 @@ namespace BigMansStuff.PracticeSharp.UI
         {
             m_practiceSharpLogic.Cue = new TimeSpan(0, 0, Convert.ToInt32(cueComboBox.Text));
         }
-        
+
+        #region Recent Files (MRU)
+        private void recentFilesToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
+        {
+            List<string> mruItems = m_mruManager.Items;
+
+            for (int menuItemIndex = 0; menuItemIndex < m_recentFilesMenuItems.Count; menuItemIndex++)
+            {
+                ToolStripMenuItem menuItem = m_recentFilesMenuItems[menuItemIndex];
+
+                menuItem.Visible = menuItemIndex < mruItems.Count;
+                if (menuItemIndex < mruItems.Count)
+                {
+                    string recentFilename = mruItems[menuItemIndex];
+                    menuItem.Visible = true;
+                    int rightIndex = 0;
+                    string recentFilenameDisplay = string.Empty;
+                    if (recentFilename.Length > MaxRecentDisplayLength)
+                    {
+                        rightIndex = recentFilename.Length - MaxRecentDisplayLength;
+                        recentFilenameDisplay = recentFilename.Substring(0, 3) + " ... " + recentFilename.Substring(rightIndex, MaxRecentDisplayLength);
+                    }
+                    else
+                    {
+                        recentFilenameDisplay = recentFilename;
+                    }
+
+                    menuItem.Text = recentFilenameDisplay;
+                    menuItem.Tag = recentFilename;
+
+                    // Disable current file in recent MRU items - its already open
+                    if (recentFilename == m_currentFilename)
+                    {
+                        menuItem.Enabled = false;
+                    }
+                    else
+                    {
+                        menuItem.Enabled = true;
+                    }
+                }
+                else
+                {
+                    menuItem.Visible = false;
+                }
+
+            }
+        }
+
+        private void recentMenuItem_Click(object sender, EventArgs e)
+        {
+            ToolStripMenuItem menuItem = sender as ToolStripMenuItem;
+            string selectedRecentFilename = (string)menuItem.Tag;
+
+            if (!OpenFile(selectedRecentFilename, true))
+            {
+                m_mruManager.Remove(selectedRecentFilename);
+            }
+        }
+
+        #endregion
+        private void aboutMenuItem_Click(object sender, EventArgs e)
+        {
+            using (AboutForm aboutForm = new AboutForm())
+            {
+                aboutForm.AppVersion = m_appVersion;
+                aboutForm.ShowDialog(this);
+            }
+
+        }
+
         #endregion
 
         #region PracticeSharpLogic Event Handlers
@@ -936,11 +1021,18 @@ namespace BigMansStuff.PracticeSharp.UI
         /// Open the given file
         /// </summary>
         /// <param name="filename"></param>
-        private void OpenFile(string filename, bool autoPlay)
+        private bool OpenFile(string filename, bool autoPlay)
         {
             Cursor.Current = Cursors.WaitCursor;
             try
             {
+                if (!File.Exists(filename))
+                {
+                    MessageBox.Show("File does not exist: " + filename, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return false;
+                }
+
+                m_mruManager.Add(filename);
                 playTimeUpdateTimer.Enabled = false;
 
                 Properties.Settings.Default.LastFilename = filename;
@@ -979,6 +1071,8 @@ namespace BigMansStuff.PracticeSharp.UI
                 playTimeUpdateTimer.Enabled = true;
                 Cursor.Current = Cursors.Default;
             }
+
+            return true;
         }
 
         /// <summary>
@@ -1261,6 +1355,10 @@ namespace BigMansStuff.PracticeSharp.UI
         private string m_appDataFolder;
         private Version m_appVersion;
 
+        private MRUManager m_mruManager;
+        private string m_mruFile;
+        private List<ToolStripMenuItem> m_recentFilesMenuItems = new List<ToolStripMenuItem>();
+
         #endregion
 
         #region Constants
@@ -1268,6 +1366,7 @@ namespace BigMansStuff.PracticeSharp.UI
         const int MarkerWidth = 5; 
         const int MarkerHeight = 10;
 
+        const int MaxRecentDisplayLength = 60;
 
         #endregion
    
@@ -1290,5 +1389,6 @@ namespace BigMansStuff.PracticeSharp.UI
         const string XML_Attr_Description = "Description";
 
         #endregion
+
     }
 }

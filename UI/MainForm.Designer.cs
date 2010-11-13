@@ -103,6 +103,10 @@ namespace BigMansStuff.PracticeSharp.UI
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.resetBankButton = new System.Windows.Forms.Button();
             this.presetPanel = new System.Windows.Forms.Panel();
+            this.presetControl3 = new BigMansStuff.PracticeSharp.UI.PresetControl();
+            this.presetControl1 = new BigMansStuff.PracticeSharp.UI.PresetControl();
+            this.presetControl2 = new BigMansStuff.PracticeSharp.UI.PresetControl();
+            this.presetControl4 = new BigMansStuff.PracticeSharp.UI.PresetControl();
             this.resetBankTimer = new System.Windows.Forms.Timer(this.components);
             this.openFileButton = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
@@ -130,14 +134,22 @@ namespace BigMansStuff.PracticeSharp.UI
             this.label16 = new System.Windows.Forms.Label();
             this.label17 = new System.Windows.Forms.Label();
             this.pitchTrackBar = new System.Windows.Forms.TrackBar();
+            this.trackBarPanel = new System.Windows.Forms.Panel();
             this.pitchLabel = new BigMansStuff.PracticeSharp.UI.HoverLabel();
-            this.presetControl3 = new BigMansStuff.PracticeSharp.UI.PresetControl();
-            this.presetControl1 = new BigMansStuff.PracticeSharp.UI.PresetControl();
-            this.presetControl2 = new BigMansStuff.PracticeSharp.UI.PresetControl();
-            this.presetControl4 = new BigMansStuff.PracticeSharp.UI.PresetControl();
-            this.positionLabel = new BigMansStuff.PracticeSharp.UI.HoverLabel();
-            this.volumeLabel = new BigMansStuff.PracticeSharp.UI.HoverLabel();
             this.speedLabel = new BigMansStuff.PracticeSharp.UI.HoverLabel();
+            this.volumeLabel = new BigMansStuff.PracticeSharp.UI.HoverLabel();
+            this.positionLabel = new BigMansStuff.PracticeSharp.UI.HoverLabel();
+            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.recentFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.recent1ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.recent2ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.recent3ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.recent4ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.recent5ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.recent6ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.recent7ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.recent8ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.aboutMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.tempoTrackBar)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.volumeTrackBar)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.playTimeTrackBar)).BeginInit();
@@ -156,12 +168,14 @@ namespace BigMansStuff.PracticeSharp.UI
             this.loopPanel.SuspendLayout();
             this.controlPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pitchTrackBar)).BeginInit();
+            this.trackBarPanel.SuspendLayout();
+            this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // tempoTrackBar
             // 
             this.tempoTrackBar.LargeChange = 0;
-            this.tempoTrackBar.Location = new System.Drawing.Point(61, 36);
+            this.tempoTrackBar.Location = new System.Drawing.Point(59, 28);
             this.tempoTrackBar.Maximum = 200;
             this.tempoTrackBar.Minimum = 10;
             this.tempoTrackBar.Name = "tempoTrackBar";
@@ -180,7 +194,7 @@ namespace BigMansStuff.PracticeSharp.UI
             // 
             // volumeTrackBar
             // 
-            this.volumeTrackBar.Location = new System.Drawing.Point(62, 167);
+            this.volumeTrackBar.Location = new System.Drawing.Point(60, 159);
             this.volumeTrackBar.Maximum = 100;
             this.volumeTrackBar.Name = "volumeTrackBar";
             this.volumeTrackBar.Size = new System.Drawing.Size(520, 45);
@@ -195,7 +209,7 @@ namespace BigMansStuff.PracticeSharp.UI
             // 
             this.speed1XLabel.AutoSize = true;
             this.speed1XLabel.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.speed1XLabel.Location = new System.Drawing.Point(297, 20);
+            this.speed1XLabel.Location = new System.Drawing.Point(295, 12);
             this.speed1XLabel.Name = "speed1XLabel";
             this.speed1XLabel.Size = new System.Drawing.Size(23, 13);
             this.speed1XLabel.TabIndex = 4;
@@ -205,7 +219,7 @@ namespace BigMansStuff.PracticeSharp.UI
             // playTimeTrackBar
             // 
             this.playTimeTrackBar.LargeChange = 0;
-            this.playTimeTrackBar.Location = new System.Drawing.Point(63, 233);
+            this.playTimeTrackBar.Location = new System.Drawing.Point(61, 225);
             this.playTimeTrackBar.Maximum = 100;
             this.playTimeTrackBar.Name = "playTimeTrackBar";
             this.playTimeTrackBar.Size = new System.Drawing.Size(520, 45);
@@ -222,7 +236,7 @@ namespace BigMansStuff.PracticeSharp.UI
             // 
             this.speed01XLabel.AutoSize = true;
             this.speed01XLabel.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.speed01XLabel.Location = new System.Drawing.Point(61, 20);
+            this.speed01XLabel.Location = new System.Drawing.Point(59, 12);
             this.speed01XLabel.Name = "speed01XLabel";
             this.speed01XLabel.Size = new System.Drawing.Size(32, 13);
             this.speed01XLabel.TabIndex = 6;
@@ -232,7 +246,7 @@ namespace BigMansStuff.PracticeSharp.UI
             // 
             this.speed2XLabel.AutoSize = true;
             this.speed2XLabel.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.speed2XLabel.Location = new System.Drawing.Point(556, 20);
+            this.speed2XLabel.Location = new System.Drawing.Point(554, 12);
             this.speed2XLabel.Name = "speed2XLabel";
             this.speed2XLabel.Size = new System.Drawing.Size(23, 13);
             this.speed2XLabel.TabIndex = 7;
@@ -480,7 +494,7 @@ namespace BigMansStuff.PracticeSharp.UI
             // 
             this.volume100Label.AutoSize = true;
             this.volume100Label.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.volume100Label.Location = new System.Drawing.Point(553, 151);
+            this.volume100Label.Location = new System.Drawing.Point(551, 143);
             this.volume100Label.Name = "volume100Label";
             this.volume100Label.Size = new System.Drawing.Size(33, 13);
             this.volume100Label.TabIndex = 28;
@@ -490,7 +504,7 @@ namespace BigMansStuff.PracticeSharp.UI
             // 
             this.volume0Label.AutoSize = true;
             this.volume0Label.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.volume0Label.Location = new System.Drawing.Point(65, 151);
+            this.volume0Label.Location = new System.Drawing.Point(63, 143);
             this.volume0Label.Name = "volume0Label";
             this.volume0Label.Size = new System.Drawing.Size(21, 13);
             this.volume0Label.TabIndex = 29;
@@ -500,7 +514,7 @@ namespace BigMansStuff.PracticeSharp.UI
             // 
             this.play0Label.AutoSize = true;
             this.play0Label.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.play0Label.Location = new System.Drawing.Point(66, 217);
+            this.play0Label.Location = new System.Drawing.Point(64, 209);
             this.play0Label.Name = "play0Label";
             this.play0Label.Size = new System.Drawing.Size(34, 13);
             this.play0Label.TabIndex = 31;
@@ -510,7 +524,7 @@ namespace BigMansStuff.PracticeSharp.UI
             // 
             this.playDurationLabel.AutoSize = true;
             this.playDurationLabel.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.playDurationLabel.Location = new System.Drawing.Point(553, 217);
+            this.playDurationLabel.Location = new System.Drawing.Point(551, 209);
             this.playDurationLabel.Name = "playDurationLabel";
             this.playDurationLabel.Size = new System.Drawing.Size(34, 13);
             this.playDurationLabel.TabIndex = 36;
@@ -518,7 +532,7 @@ namespace BigMansStuff.PracticeSharp.UI
             // 
             // positionMarkersPanel
             // 
-            this.positionMarkersPanel.Location = new System.Drawing.Point(75, 234);
+            this.positionMarkersPanel.Location = new System.Drawing.Point(73, 226);
             this.positionMarkersPanel.Name = "positionMarkersPanel";
             this.positionMarkersPanel.Size = new System.Drawing.Size(492, 5);
             this.positionMarkersPanel.TabIndex = 37;
@@ -590,7 +604,7 @@ namespace BigMansStuff.PracticeSharp.UI
             this.playStatusToolStripLabel,
             this.toolStripStatusLabel5,
             this.filenameToolStripStatusLabel});
-            this.statusStrip.Location = new System.Drawing.Point(0, 485);
+            this.statusStrip.Location = new System.Drawing.Point(0, 516);
             this.statusStrip.Name = "statusStrip";
             this.statusStrip.Size = new System.Drawing.Size(608, 22);
             this.statusStrip.SizingGrip = false;
@@ -657,307 +671,10 @@ namespace BigMansStuff.PracticeSharp.UI
             this.presetPanel.Controls.Add(this.presetControl2);
             this.presetPanel.Controls.Add(this.writeBankButton);
             this.presetPanel.Controls.Add(this.presetControl4);
-            this.presetPanel.Location = new System.Drawing.Point(14, 357);
+            this.presetPanel.Location = new System.Drawing.Point(14, 388);
             this.presetPanel.Name = "presetPanel";
             this.presetPanel.Size = new System.Drawing.Size(576, 125);
             this.presetPanel.TabIndex = 9;
-            // 
-            // resetBankTimer
-            // 
-            this.resetBankTimer.Interval = 1000;
-            this.resetBankTimer.Tick += new System.EventHandler(this.resetBankTimer_Tick);
-            // 
-            // openFileButton
-            // 
-            this.openFileButton.ImageKey = "Play-Normal.png";
-            this.openFileButton.Location = new System.Drawing.Point(3, 26);
-            this.openFileButton.Name = "openFileButton";
-            this.openFileButton.Size = new System.Drawing.Size(56, 56);
-            this.openFileButton.TabIndex = 0;
-            this.openFileButton.UseVisualStyleBackColor = true;
-            this.openFileButton.Click += new System.EventHandler(this.openFileButton_Click);
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(526, -1);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(45, 23);
-            this.button1.TabIndex = 5;
-            this.button1.Text = "Stop";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Visible = false;
-            this.button1.Click += new System.EventHandler(this.stopButton_Click);
-            // 
-            // playTimeUpdateTimer
-            // 
-            this.playTimeUpdateTimer.Interval = 50;
-            this.playTimeUpdateTimer.Tick += new System.EventHandler(this.playTimeUpdateTimer_Tick);
-            // 
-            // cueComboBox
-            // 
-            this.cueComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cueComboBox.FormattingEnabled = true;
-            this.cueComboBox.Items.AddRange(new object[] {
-            "0",
-            "1",
-            "2",
-            "5",
-            "10"});
-            this.cueComboBox.Location = new System.Drawing.Point(355, 3);
-            this.cueComboBox.Name = "cueComboBox";
-            this.cueComboBox.Size = new System.Drawing.Size(42, 21);
-            this.cueComboBox.TabIndex = 50;
-            this.cueComboBox.SelectedValueChanged += new System.EventHandler(this.cueComboBox_SelectedValueChanged);
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(326, 6);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(26, 13);
-            this.label1.TabIndex = 51;
-            this.label1.Text = "Cue";
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(405, 6);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(29, 13);
-            this.label5.TabIndex = 52;
-            this.label5.Text = "Sec.";
-            // 
-            // volumeValueLabel
-            // 
-            this.volumeValueLabel.AutoSize = true;
-            this.volumeValueLabel.Location = new System.Drawing.Point(18, 151);
-            this.volumeValueLabel.Name = "volumeValueLabel";
-            this.volumeValueLabel.Size = new System.Drawing.Size(10, 13);
-            this.volumeValueLabel.TabIndex = 53;
-            this.volumeValueLabel.Text = "-";
-            // 
-            // speedValueLabel
-            // 
-            this.speedValueLabel.AutoSize = true;
-            this.speedValueLabel.Location = new System.Drawing.Point(18, 20);
-            this.speedValueLabel.Name = "speedValueLabel";
-            this.speedValueLabel.Size = new System.Drawing.Size(10, 13);
-            this.speedValueLabel.TabIndex = 54;
-            this.speedValueLabel.Text = "-";
-            // 
-            // cuePictureBox
-            // 
-            this.cuePictureBox.Image = global::BigMansStuff.PracticeSharp.UI.Resources.blue_off_16;
-            this.cuePictureBox.Location = new System.Drawing.Point(308, 5);
-            this.cuePictureBox.Name = "cuePictureBox";
-            this.cuePictureBox.Size = new System.Drawing.Size(18, 18);
-            this.cuePictureBox.TabIndex = 55;
-            this.cuePictureBox.TabStop = false;
-            // 
-            // loopPanel
-            // 
-            this.loopPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.loopPanel.Controls.Add(this.cueComboBox);
-            this.loopPanel.Controls.Add(this.cuePictureBox);
-            this.loopPanel.Controls.Add(this.label1);
-            this.loopPanel.Controls.Add(this.label5);
-            this.loopPanel.Controls.Add(this.startLoopMinuteUpDown);
-            this.loopPanel.Controls.Add(this.startLoopSecondUpDown);
-            this.loopPanel.Controls.Add(this.startLoopMilliUpDown);
-            this.loopPanel.Controls.Add(this.endLoopMinuteUpDown);
-            this.loopPanel.Controls.Add(this.endLoopSecondUpDown);
-            this.loopPanel.Controls.Add(this.endLoopMilliUpDown);
-            this.loopPanel.Controls.Add(this.label7);
-            this.loopPanel.Controls.Add(this.label8);
-            this.loopPanel.Controls.Add(this.loopCheckBox);
-            this.loopPanel.Controls.Add(this.endLoopNowButton);
-            this.loopPanel.Controls.Add(this.startLoopNowButton);
-            this.loopPanel.Location = new System.Drawing.Point(132, 27);
-            this.loopPanel.Name = "loopPanel";
-            this.loopPanel.Size = new System.Drawing.Size(443, 54);
-            this.loopPanel.TabIndex = 56;
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.label2.Location = new System.Drawing.Point(310, 151);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(27, 13);
-            this.label2.TabIndex = 57;
-            this.label2.Text = "50%";
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.label3.Location = new System.Drawing.Point(427, 151);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(27, 13);
-            this.label3.TabIndex = 58;
-            this.label3.Text = "75%";
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.label4.Location = new System.Drawing.Point(188, 151);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(27, 13);
-            this.label4.TabIndex = 59;
-            this.label4.Text = "25%";
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.label6.Location = new System.Drawing.Point(425, 20);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(32, 13);
-            this.label6.TabIndex = 60;
-            this.label6.Text = "X 1.5";
-            // 
-            // label10
-            // 
-            this.label10.AutoSize = true;
-            this.label10.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.label10.Location = new System.Drawing.Point(174, 20);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(32, 13);
-            this.label10.TabIndex = 61;
-            this.label10.Text = "X 0.5";
-            // 
-            // play2QDurationLabel
-            // 
-            this.play2QDurationLabel.AutoSize = true;
-            this.play2QDurationLabel.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.play2QDurationLabel.Location = new System.Drawing.Point(293, 217);
-            this.play2QDurationLabel.Name = "play2QDurationLabel";
-            this.play2QDurationLabel.Size = new System.Drawing.Size(34, 13);
-            this.play2QDurationLabel.TabIndex = 62;
-            this.play2QDurationLabel.Text = "00:00";
-            // 
-            // play3QDurationLabel
-            // 
-            this.play3QDurationLabel.AutoSize = true;
-            this.play3QDurationLabel.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.play3QDurationLabel.Location = new System.Drawing.Point(425, 217);
-            this.play3QDurationLabel.Name = "play3QDurationLabel";
-            this.play3QDurationLabel.Size = new System.Drawing.Size(34, 13);
-            this.play3QDurationLabel.TabIndex = 63;
-            this.play3QDurationLabel.Text = "00:00";
-            // 
-            // play1QDurationLabel
-            // 
-            this.play1QDurationLabel.AutoSize = true;
-            this.play1QDurationLabel.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.play1QDurationLabel.Location = new System.Drawing.Point(175, 217);
-            this.play1QDurationLabel.Name = "play1QDurationLabel";
-            this.play1QDurationLabel.Size = new System.Drawing.Size(34, 13);
-            this.play1QDurationLabel.TabIndex = 64;
-            this.play1QDurationLabel.Text = "00:00";
-            // 
-            // controlPanel
-            // 
-            this.controlPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.controlPanel.Controls.Add(this.loopPanel);
-            this.controlPanel.Controls.Add(this.playPauseButton);
-            this.controlPanel.Controls.Add(this.label9);
-            this.controlPanel.Controls.Add(this.currentMilliUpDown);
-            this.controlPanel.Controls.Add(this.currentMinuteUpDown);
-            this.controlPanel.Controls.Add(this.openFileButton);
-            this.controlPanel.Controls.Add(this.button1);
-            this.controlPanel.Controls.Add(this.currentSecondUpDown);
-            this.controlPanel.Location = new System.Drawing.Point(14, 266);
-            this.controlPanel.Name = "controlPanel";
-            this.controlPanel.Size = new System.Drawing.Size(575, 85);
-            this.controlPanel.TabIndex = 8;
-            // 
-            // label11
-            // 
-            this.label11.AutoSize = true;
-            this.label11.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.label11.Location = new System.Drawing.Point(174, 84);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(25, 13);
-            this.label11.TabIndex = 72;
-            this.label11.Text = "-0.5";
-            // 
-            // label12
-            // 
-            this.label12.AutoSize = true;
-            this.label12.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.label12.Location = new System.Drawing.Point(425, 84);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(28, 13);
-            this.label12.TabIndex = 71;
-            this.label12.Text = "+0.5";
-            // 
-            // pitchValueLabel
-            // 
-            this.pitchValueLabel.AutoSize = true;
-            this.pitchValueLabel.Location = new System.Drawing.Point(18, 84);
-            this.pitchValueLabel.Name = "pitchValueLabel";
-            this.pitchValueLabel.Size = new System.Drawing.Size(10, 13);
-            this.pitchValueLabel.TabIndex = 70;
-            this.pitchValueLabel.Text = "-";
-            // 
-            // label15
-            // 
-            this.label15.AutoSize = true;
-            this.label15.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.label15.Location = new System.Drawing.Point(556, 84);
-            this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(19, 13);
-            this.label15.TabIndex = 68;
-            this.label15.Text = "+1";
-            // 
-            // label16
-            // 
-            this.label16.AutoSize = true;
-            this.label16.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.label16.Location = new System.Drawing.Point(61, 84);
-            this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(16, 13);
-            this.label16.TabIndex = 67;
-            this.label16.Text = "-1";
-            // 
-            // label17
-            // 
-            this.label17.AutoSize = true;
-            this.label17.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.label17.Location = new System.Drawing.Point(316, 84);
-            this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(13, 13);
-            this.label17.TabIndex = 66;
-            this.label17.Text = "0";
-            // 
-            // pitchTrackBar
-            // 
-            this.pitchTrackBar.LargeChange = 16;
-            this.pitchTrackBar.Location = new System.Drawing.Point(61, 101);
-            this.pitchTrackBar.Maximum = 96;
-            this.pitchTrackBar.Minimum = -96;
-            this.pitchTrackBar.Name = "pitchTrackBar";
-            this.pitchTrackBar.Size = new System.Drawing.Size(520, 45);
-            this.pitchTrackBar.SmallChange = 8;
-            this.pitchTrackBar.TabIndex = 3;
-            this.pitchTrackBar.TickFrequency = 8;
-            this.pitchTrackBar.TickStyle = System.Windows.Forms.TickStyle.Both;
-            this.pitchTrackBar.ValueChanged += new System.EventHandler(this.pitchTrackBar_ValueChanged);
-            this.pitchTrackBar.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pitchTrackBar_MouseDown);
-            // 
-            // pitchLabel
-            // 
-            this.pitchLabel.AutoSize = true;
-            this.pitchLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.pitchLabel.Location = new System.Drawing.Point(7, 111);
-            this.pitchLabel.Name = "pitchLabel";
-            this.pitchLabel.Size = new System.Drawing.Size(36, 13);
-            this.pitchLabel.TabIndex = 2;
-            this.pitchLabel.Text = "Pitch";
-            this.pitchLabel.Click += new System.EventHandler(this.pitchLabel_Click);
             // 
             // presetControl3
             // 
@@ -1055,80 +772,468 @@ namespace BigMansStuff.PracticeSharp.UI
             this.presetControl4.PresetSaveSelected += new System.EventHandler(this.presetControl_PresetSaveSelected);
             this.presetControl4.PresetDescriptionChanged += new System.EventHandler(this.presetControl_PresetDescriptionChanged);
             // 
-            // positionLabel
+            // resetBankTimer
             // 
-            this.positionLabel.AutoSize = true;
-            this.positionLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.positionLabel.Location = new System.Drawing.Point(8, 247);
-            this.positionLabel.Name = "positionLabel";
-            this.positionLabel.Size = new System.Drawing.Size(52, 13);
-            this.positionLabel.TabIndex = 6;
-            this.positionLabel.Text = "Position";
-            this.positionLabel.Click += new System.EventHandler(this.positionLabel_Click);
+            this.resetBankTimer.Interval = 1000;
+            this.resetBankTimer.Tick += new System.EventHandler(this.resetBankTimer_Tick);
             // 
-            // volumeLabel
+            // openFileButton
             // 
-            this.volumeLabel.AutoSize = true;
-            this.volumeLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.volumeLabel.Location = new System.Drawing.Point(8, 178);
-            this.volumeLabel.Name = "volumeLabel";
-            this.volumeLabel.Size = new System.Drawing.Size(48, 13);
-            this.volumeLabel.TabIndex = 4;
-            this.volumeLabel.Text = "Volume";
-            this.volumeLabel.Click += new System.EventHandler(this.volumeLabel_Click);
+            this.openFileButton.ImageKey = "Play-Normal.png";
+            this.openFileButton.Location = new System.Drawing.Point(3, 26);
+            this.openFileButton.Name = "openFileButton";
+            this.openFileButton.Size = new System.Drawing.Size(56, 56);
+            this.openFileButton.TabIndex = 0;
+            this.openFileButton.UseVisualStyleBackColor = true;
+            this.openFileButton.Click += new System.EventHandler(this.openFileButton_Click);
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(526, -1);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(45, 23);
+            this.button1.TabIndex = 5;
+            this.button1.Text = "Stop";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Visible = false;
+            this.button1.Click += new System.EventHandler(this.stopButton_Click);
+            // 
+            // playTimeUpdateTimer
+            // 
+            this.playTimeUpdateTimer.Interval = 50;
+            this.playTimeUpdateTimer.Tick += new System.EventHandler(this.playTimeUpdateTimer_Tick);
+            // 
+            // cueComboBox
+            // 
+            this.cueComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cueComboBox.FormattingEnabled = true;
+            this.cueComboBox.Items.AddRange(new object[] {
+            "0",
+            "1",
+            "2",
+            "5",
+            "10"});
+            this.cueComboBox.Location = new System.Drawing.Point(355, 3);
+            this.cueComboBox.Name = "cueComboBox";
+            this.cueComboBox.Size = new System.Drawing.Size(42, 21);
+            this.cueComboBox.TabIndex = 50;
+            this.cueComboBox.SelectedValueChanged += new System.EventHandler(this.cueComboBox_SelectedValueChanged);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(326, 6);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(26, 13);
+            this.label1.TabIndex = 51;
+            this.label1.Text = "Cue";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(405, 6);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(29, 13);
+            this.label5.TabIndex = 52;
+            this.label5.Text = "Sec.";
+            // 
+            // volumeValueLabel
+            // 
+            this.volumeValueLabel.AutoSize = true;
+            this.volumeValueLabel.Location = new System.Drawing.Point(16, 143);
+            this.volumeValueLabel.Name = "volumeValueLabel";
+            this.volumeValueLabel.Size = new System.Drawing.Size(10, 13);
+            this.volumeValueLabel.TabIndex = 53;
+            this.volumeValueLabel.Text = "-";
+            // 
+            // speedValueLabel
+            // 
+            this.speedValueLabel.AutoSize = true;
+            this.speedValueLabel.Location = new System.Drawing.Point(16, 12);
+            this.speedValueLabel.Name = "speedValueLabel";
+            this.speedValueLabel.Size = new System.Drawing.Size(10, 13);
+            this.speedValueLabel.TabIndex = 54;
+            this.speedValueLabel.Text = "-";
+            // 
+            // cuePictureBox
+            // 
+            this.cuePictureBox.Image = global::BigMansStuff.PracticeSharp.UI.Resources.blue_off_16;
+            this.cuePictureBox.Location = new System.Drawing.Point(308, 5);
+            this.cuePictureBox.Name = "cuePictureBox";
+            this.cuePictureBox.Size = new System.Drawing.Size(18, 18);
+            this.cuePictureBox.TabIndex = 55;
+            this.cuePictureBox.TabStop = false;
+            // 
+            // loopPanel
+            // 
+            this.loopPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.loopPanel.Controls.Add(this.cueComboBox);
+            this.loopPanel.Controls.Add(this.cuePictureBox);
+            this.loopPanel.Controls.Add(this.label1);
+            this.loopPanel.Controls.Add(this.label5);
+            this.loopPanel.Controls.Add(this.startLoopMinuteUpDown);
+            this.loopPanel.Controls.Add(this.startLoopSecondUpDown);
+            this.loopPanel.Controls.Add(this.startLoopMilliUpDown);
+            this.loopPanel.Controls.Add(this.endLoopMinuteUpDown);
+            this.loopPanel.Controls.Add(this.endLoopSecondUpDown);
+            this.loopPanel.Controls.Add(this.endLoopMilliUpDown);
+            this.loopPanel.Controls.Add(this.label7);
+            this.loopPanel.Controls.Add(this.label8);
+            this.loopPanel.Controls.Add(this.loopCheckBox);
+            this.loopPanel.Controls.Add(this.endLoopNowButton);
+            this.loopPanel.Controls.Add(this.startLoopNowButton);
+            this.loopPanel.Location = new System.Drawing.Point(132, 27);
+            this.loopPanel.Name = "loopPanel";
+            this.loopPanel.Size = new System.Drawing.Size(443, 54);
+            this.loopPanel.TabIndex = 56;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.label2.Location = new System.Drawing.Point(308, 143);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(27, 13);
+            this.label2.TabIndex = 57;
+            this.label2.Text = "50%";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.label3.Location = new System.Drawing.Point(425, 143);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(27, 13);
+            this.label3.TabIndex = 58;
+            this.label3.Text = "75%";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.label4.Location = new System.Drawing.Point(186, 143);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(27, 13);
+            this.label4.TabIndex = 59;
+            this.label4.Text = "25%";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.label6.Location = new System.Drawing.Point(423, 12);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(32, 13);
+            this.label6.TabIndex = 60;
+            this.label6.Text = "X 1.5";
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.label10.Location = new System.Drawing.Point(172, 12);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(32, 13);
+            this.label10.TabIndex = 61;
+            this.label10.Text = "X 0.5";
+            // 
+            // play2QDurationLabel
+            // 
+            this.play2QDurationLabel.AutoSize = true;
+            this.play2QDurationLabel.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.play2QDurationLabel.Location = new System.Drawing.Point(291, 209);
+            this.play2QDurationLabel.Name = "play2QDurationLabel";
+            this.play2QDurationLabel.Size = new System.Drawing.Size(34, 13);
+            this.play2QDurationLabel.TabIndex = 62;
+            this.play2QDurationLabel.Text = "00:00";
+            // 
+            // play3QDurationLabel
+            // 
+            this.play3QDurationLabel.AutoSize = true;
+            this.play3QDurationLabel.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.play3QDurationLabel.Location = new System.Drawing.Point(423, 209);
+            this.play3QDurationLabel.Name = "play3QDurationLabel";
+            this.play3QDurationLabel.Size = new System.Drawing.Size(34, 13);
+            this.play3QDurationLabel.TabIndex = 63;
+            this.play3QDurationLabel.Text = "00:00";
+            // 
+            // play1QDurationLabel
+            // 
+            this.play1QDurationLabel.AutoSize = true;
+            this.play1QDurationLabel.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.play1QDurationLabel.Location = new System.Drawing.Point(173, 209);
+            this.play1QDurationLabel.Name = "play1QDurationLabel";
+            this.play1QDurationLabel.Size = new System.Drawing.Size(34, 13);
+            this.play1QDurationLabel.TabIndex = 64;
+            this.play1QDurationLabel.Text = "00:00";
+            // 
+            // controlPanel
+            // 
+            this.controlPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.controlPanel.Controls.Add(this.loopPanel);
+            this.controlPanel.Controls.Add(this.playPauseButton);
+            this.controlPanel.Controls.Add(this.label9);
+            this.controlPanel.Controls.Add(this.currentMilliUpDown);
+            this.controlPanel.Controls.Add(this.currentMinuteUpDown);
+            this.controlPanel.Controls.Add(this.openFileButton);
+            this.controlPanel.Controls.Add(this.button1);
+            this.controlPanel.Controls.Add(this.currentSecondUpDown);
+            this.controlPanel.Location = new System.Drawing.Point(14, 297);
+            this.controlPanel.Name = "controlPanel";
+            this.controlPanel.Size = new System.Drawing.Size(575, 85);
+            this.controlPanel.TabIndex = 8;
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.label11.Location = new System.Drawing.Point(172, 76);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(25, 13);
+            this.label11.TabIndex = 72;
+            this.label11.Text = "-0.5";
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.label12.Location = new System.Drawing.Point(423, 76);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(28, 13);
+            this.label12.TabIndex = 71;
+            this.label12.Text = "+0.5";
+            // 
+            // pitchValueLabel
+            // 
+            this.pitchValueLabel.AutoSize = true;
+            this.pitchValueLabel.Location = new System.Drawing.Point(16, 76);
+            this.pitchValueLabel.Name = "pitchValueLabel";
+            this.pitchValueLabel.Size = new System.Drawing.Size(10, 13);
+            this.pitchValueLabel.TabIndex = 70;
+            this.pitchValueLabel.Text = "-";
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.label15.Location = new System.Drawing.Point(554, 76);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(19, 13);
+            this.label15.TabIndex = 68;
+            this.label15.Text = "+1";
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.label16.Location = new System.Drawing.Point(59, 76);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(16, 13);
+            this.label16.TabIndex = 67;
+            this.label16.Text = "-1";
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.label17.Location = new System.Drawing.Point(314, 76);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(13, 13);
+            this.label17.TabIndex = 66;
+            this.label17.Text = "0";
+            // 
+            // pitchTrackBar
+            // 
+            this.pitchTrackBar.LargeChange = 16;
+            this.pitchTrackBar.Location = new System.Drawing.Point(59, 93);
+            this.pitchTrackBar.Maximum = 96;
+            this.pitchTrackBar.Minimum = -96;
+            this.pitchTrackBar.Name = "pitchTrackBar";
+            this.pitchTrackBar.Size = new System.Drawing.Size(520, 45);
+            this.pitchTrackBar.SmallChange = 8;
+            this.pitchTrackBar.TabIndex = 3;
+            this.pitchTrackBar.TickFrequency = 8;
+            this.pitchTrackBar.TickStyle = System.Windows.Forms.TickStyle.Both;
+            this.pitchTrackBar.ValueChanged += new System.EventHandler(this.pitchTrackBar_ValueChanged);
+            this.pitchTrackBar.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pitchTrackBar_MouseDown);
+            // 
+            // trackBarPanel
+            // 
+            this.trackBarPanel.Controls.Add(this.speedValueLabel);
+            this.trackBarPanel.Controls.Add(this.label11);
+            this.trackBarPanel.Controls.Add(this.tempoTrackBar);
+            this.trackBarPanel.Controls.Add(this.label12);
+            this.trackBarPanel.Controls.Add(this.volumeTrackBar);
+            this.trackBarPanel.Controls.Add(this.pitchValueLabel);
+            this.trackBarPanel.Controls.Add(this.speed1XLabel);
+            this.trackBarPanel.Controls.Add(this.pitchLabel);
+            this.trackBarPanel.Controls.Add(this.playTimeTrackBar);
+            this.trackBarPanel.Controls.Add(this.label15);
+            this.trackBarPanel.Controls.Add(this.speed01XLabel);
+            this.trackBarPanel.Controls.Add(this.label16);
+            this.trackBarPanel.Controls.Add(this.speed2XLabel);
+            this.trackBarPanel.Controls.Add(this.label17);
+            this.trackBarPanel.Controls.Add(this.speedLabel);
+            this.trackBarPanel.Controls.Add(this.pitchTrackBar);
+            this.trackBarPanel.Controls.Add(this.volumeLabel);
+            this.trackBarPanel.Controls.Add(this.volume100Label);
+            this.trackBarPanel.Controls.Add(this.play1QDurationLabel);
+            this.trackBarPanel.Controls.Add(this.volume0Label);
+            this.trackBarPanel.Controls.Add(this.play3QDurationLabel);
+            this.trackBarPanel.Controls.Add(this.positionLabel);
+            this.trackBarPanel.Controls.Add(this.play2QDurationLabel);
+            this.trackBarPanel.Controls.Add(this.play0Label);
+            this.trackBarPanel.Controls.Add(this.label10);
+            this.trackBarPanel.Controls.Add(this.playDurationLabel);
+            this.trackBarPanel.Controls.Add(this.label6);
+            this.trackBarPanel.Controls.Add(this.positionMarkersPanel);
+            this.trackBarPanel.Controls.Add(this.label4);
+            this.trackBarPanel.Controls.Add(this.volumeValueLabel);
+            this.trackBarPanel.Controls.Add(this.label3);
+            this.trackBarPanel.Controls.Add(this.label2);
+            this.trackBarPanel.Location = new System.Drawing.Point(6, 24);
+            this.trackBarPanel.Name = "trackBarPanel";
+            this.trackBarPanel.Size = new System.Drawing.Size(590, 272);
+            this.trackBarPanel.TabIndex = 73;
+            // 
+            // pitchLabel
+            // 
+            this.pitchLabel.AutoSize = true;
+            this.pitchLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.pitchLabel.Location = new System.Drawing.Point(6, 103);
+            this.pitchLabel.Name = "pitchLabel";
+            this.pitchLabel.Size = new System.Drawing.Size(36, 13);
+            this.pitchLabel.TabIndex = 2;
+            this.pitchLabel.Text = "Pitch";
+            this.pitchLabel.Click += new System.EventHandler(this.pitchLabel_Click);
             // 
             // speedLabel
             // 
             this.speedLabel.AutoSize = true;
             this.speedLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.speedLabel.Location = new System.Drawing.Point(7, 47);
+            this.speedLabel.Location = new System.Drawing.Point(6, 39);
             this.speedLabel.Name = "speedLabel";
             this.speedLabel.Size = new System.Drawing.Size(43, 13);
             this.speedLabel.TabIndex = 0;
             this.speedLabel.Text = "Speed";
             this.speedLabel.Click += new System.EventHandler(this.speedLabel_Click);
             // 
+            // volumeLabel
+            // 
+            this.volumeLabel.AutoSize = true;
+            this.volumeLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.volumeLabel.Location = new System.Drawing.Point(6, 170);
+            this.volumeLabel.Name = "volumeLabel";
+            this.volumeLabel.Size = new System.Drawing.Size(48, 13);
+            this.volumeLabel.TabIndex = 4;
+            this.volumeLabel.Text = "Volume";
+            this.volumeLabel.Click += new System.EventHandler(this.volumeLabel_Click);
+            // 
+            // positionLabel
+            // 
+            this.positionLabel.AutoSize = true;
+            this.positionLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.positionLabel.Location = new System.Drawing.Point(6, 239);
+            this.positionLabel.Name = "positionLabel";
+            this.positionLabel.Size = new System.Drawing.Size(52, 13);
+            this.positionLabel.TabIndex = 6;
+            this.positionLabel.Text = "Position";
+            this.positionLabel.Click += new System.EventHandler(this.positionLabel_Click);
+            // 
+            // menuStrip1
+            // 
+            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.recentFilesToolStripMenuItem,
+            this.aboutMenuItem});
+            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip1.Name = "menuStrip1";
+            this.menuStrip1.Size = new System.Drawing.Size(608, 24);
+            this.menuStrip1.TabIndex = 74;
+            this.menuStrip1.Text = "menuStrip1";
+            // 
+            // recentFilesToolStripMenuItem
+            // 
+            this.recentFilesToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.recent1ToolStripMenuItem,
+            this.recent2ToolStripMenuItem,
+            this.recent3ToolStripMenuItem,
+            this.recent4ToolStripMenuItem,
+            this.recent5ToolStripMenuItem,
+            this.recent6ToolStripMenuItem,
+            this.recent7ToolStripMenuItem,
+            this.recent8ToolStripMenuItem});
+            this.recentFilesToolStripMenuItem.Name = "recentFilesToolStripMenuItem";
+            this.recentFilesToolStripMenuItem.Size = new System.Drawing.Size(81, 20);
+            this.recentFilesToolStripMenuItem.Text = "Recent Files";
+            this.recentFilesToolStripMenuItem.DropDownOpening += new System.EventHandler(this.recentFilesToolStripMenuItem_DropDownOpening);
+            // 
+            // recent1ToolStripMenuItem
+            // 
+            this.recent1ToolStripMenuItem.Name = "recent1ToolStripMenuItem";
+            this.recent1ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.recent1ToolStripMenuItem.Text = "Recent1";
+            // 
+            // recent2ToolStripMenuItem
+            // 
+            this.recent2ToolStripMenuItem.Name = "recent2ToolStripMenuItem";
+            this.recent2ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.recent2ToolStripMenuItem.Text = "Recent2";
+            // 
+            // recent3ToolStripMenuItem
+            // 
+            this.recent3ToolStripMenuItem.Name = "recent3ToolStripMenuItem";
+            this.recent3ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.recent3ToolStripMenuItem.Text = "Recent3";
+            // 
+            // recent4ToolStripMenuItem
+            // 
+            this.recent4ToolStripMenuItem.Name = "recent4ToolStripMenuItem";
+            this.recent4ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.recent4ToolStripMenuItem.Text = "Recent4";
+            // 
+            // recent5ToolStripMenuItem
+            // 
+            this.recent5ToolStripMenuItem.Name = "recent5ToolStripMenuItem";
+            this.recent5ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.recent5ToolStripMenuItem.Text = "Recent5";
+            // 
+            // recent6ToolStripMenuItem
+            // 
+            this.recent6ToolStripMenuItem.Name = "recent6ToolStripMenuItem";
+            this.recent6ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.recent6ToolStripMenuItem.Text = "Recent6";
+            // 
+            // recent7ToolStripMenuItem
+            // 
+            this.recent7ToolStripMenuItem.Name = "recent7ToolStripMenuItem";
+            this.recent7ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.recent7ToolStripMenuItem.Text = "Recent7";
+            // 
+            // recent8ToolStripMenuItem
+            // 
+            this.recent8ToolStripMenuItem.Name = "recent8ToolStripMenuItem";
+            this.recent8ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.recent8ToolStripMenuItem.Text = "Recent8";
+            // 
+            // aboutMenuItem
+            // 
+            this.aboutMenuItem.Name = "aboutMenuItem";
+            this.aboutMenuItem.Size = new System.Drawing.Size(58, 20);
+            this.aboutMenuItem.Text = "About..";
+            this.aboutMenuItem.Click += new System.EventHandler(this.aboutMenuItem_Click);
+            // 
             // MainForm
             // 
             this.AllowDrop = true;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(608, 507);
-            this.Controls.Add(this.label11);
-            this.Controls.Add(this.label12);
-            this.Controls.Add(this.pitchValueLabel);
-            this.Controls.Add(this.pitchLabel);
-            this.Controls.Add(this.label15);
-            this.Controls.Add(this.label16);
-            this.Controls.Add(this.label17);
-            this.Controls.Add(this.pitchTrackBar);
+            this.ClientSize = new System.Drawing.Size(608, 538);
+            this.Controls.Add(this.menuStrip1);
+            this.Controls.Add(this.trackBarPanel);
             this.Controls.Add(this.controlPanel);
-            this.Controls.Add(this.play1QDurationLabel);
-            this.Controls.Add(this.play3QDurationLabel);
-            this.Controls.Add(this.play2QDurationLabel);
-            this.Controls.Add(this.label10);
-            this.Controls.Add(this.label6);
-            this.Controls.Add(this.label4);
-            this.Controls.Add(this.label3);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.speedValueLabel);
-            this.Controls.Add(this.volumeValueLabel);
             this.Controls.Add(this.presetPanel);
             this.Controls.Add(this.statusStrip);
-            this.Controls.Add(this.positionMarkersPanel);
-            this.Controls.Add(this.playDurationLabel);
-            this.Controls.Add(this.play0Label);
-            this.Controls.Add(this.positionLabel);
-            this.Controls.Add(this.volume0Label);
-            this.Controls.Add(this.volume100Label);
-            this.Controls.Add(this.volumeLabel);
-            this.Controls.Add(this.speedLabel);
-            this.Controls.Add(this.speed2XLabel);
-            this.Controls.Add(this.speed01XLabel);
-            this.Controls.Add(this.playTimeTrackBar);
-            this.Controls.Add(this.speed1XLabel);
-            this.Controls.Add(this.volumeTrackBar);
-            this.Controls.Add(this.tempoTrackBar);
             this.DoubleBuffered = true;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -1160,6 +1265,10 @@ namespace BigMansStuff.PracticeSharp.UI
             this.controlPanel.ResumeLayout(false);
             this.controlPanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pitchTrackBar)).EndInit();
+            this.trackBarPanel.ResumeLayout(false);
+            this.trackBarPanel.PerformLayout();
+            this.menuStrip1.ResumeLayout(false);
+            this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1248,6 +1357,18 @@ namespace BigMansStuff.PracticeSharp.UI
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel4;
         private System.Windows.Forms.ToolStripStatusLabel playStatusToolStripLabel;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel5;
+        private System.Windows.Forms.Panel trackBarPanel;
+        private System.Windows.Forms.MenuStrip menuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem recentFilesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem recent1ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem recent2ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem recent3ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem recent4ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem recent5ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem recent6ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem recent7ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem recent8ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem aboutMenuItem;
     }
 }
 
