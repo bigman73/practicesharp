@@ -118,6 +118,13 @@ namespace BigMansStuff.PracticeSharp.UI {
             }
         }
         
+        internal static System.Drawing.Bitmap lgplv3_147x51 {
+            get {
+                object obj = ResourceManager.GetObject("lgplv3_147x51", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap OpenFile_icon {
             get {
                 object obj = ResourceManager.GetObject("OpenFile_icon", resourceCulture);
@@ -149,6 +156,13 @@ namespace BigMansStuff.PracticeSharp.UI {
         internal static System.Drawing.Bitmap Play_Normal {
             get {
                 object obj = ResourceManager.GetObject("Play_Normal", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap PracticeSharp {
+            get {
+                object obj = ResourceManager.GetObject("PracticeSharp", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
