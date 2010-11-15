@@ -69,5 +69,17 @@ namespace BigMansStuff.PracticeSharp.UI.Properties {
                 this["LastVersionCheckDateTime"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool SupressVersionCheck {
+            get {
+                return ((bool)(this["SupressVersionCheck"]));
+            }
+            set {
+                this["SupressVersionCheck"] = value;
+            }
+        }
     }
 }
