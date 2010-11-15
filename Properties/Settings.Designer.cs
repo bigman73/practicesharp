@@ -58,5 +58,16 @@ namespace BigMansStuff.PracticeSharp.UI.Properties {
                 this["ApplicationVersion"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public global::System.DateTime LastVersionCheckDateTime {
+            get {
+                return ((global::System.DateTime)(this["LastVersionCheckDateTime"]));
+            }
+            set {
+                this["LastVersionCheckDateTime"] = value;
+            }
+        }
     }
 }

@@ -125,6 +125,17 @@ namespace BigMansStuff.PracticeSharp.UI {
             }
         }
         
+        /// <summary>
+        ///   Looks up a localized string similar to A new version [{0}] of Practice# was released on Google Code.
+        ///Would you like to download it?
+        ///(Note: Selecting No will not ask again for the next month).
+        /// </summary>
+        internal static string NewVersionFound {
+            get {
+                return ResourceManager.GetString("NewVersionFound", resourceCulture);
+            }
+        }
+        
         internal static System.Drawing.Bitmap OpenFile_icon {
             get {
                 object obj = ResourceManager.GetObject("OpenFile_icon", resourceCulture);

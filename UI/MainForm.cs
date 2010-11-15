@@ -75,6 +75,8 @@ namespace BigMansStuff.PracticeSharp.UI
             InitializeConfiguration();
             InitializeMRUFiles();
 
+            VersionUpdater.CheckNewVersion(m_appVersion);
+
             // Create the PracticeSharpLogic back end layer
             m_practiceSharpLogic = new PracticeSharpLogic();
             m_practiceSharpLogic.Initialize();
@@ -106,6 +108,8 @@ namespace BigMansStuff.PracticeSharp.UI
 
             // presetControl1.State = PresetControl.PresetStates.Selected;
         }
+
+       
 
         private void InitializeMRUFiles()
         {
