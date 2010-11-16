@@ -67,8 +67,6 @@ namespace BigMansStuff.PracticeSharp.UI
             AutoLoadLastFile();
         }
 
-        private VersionUpdater m_versionUpdater;
-
         /// <summary>
         /// Initialize the PracticeSharp Application
         /// </summary>
@@ -160,7 +158,6 @@ namespace BigMansStuff.PracticeSharp.UI
 
         #endregion
 
-        // TODO: Create/Find a hover button control that switches images from Regular image to hot image
         // TODO: SoundTouch Release DLL crashes. Check why Debug works but Release does not.
 
         #region Destruction
@@ -328,19 +325,34 @@ namespace BigMansStuff.PracticeSharp.UI
         /// <param name="e"></param>
         private void presetControl_PresetSelected(object sender, EventArgs e)
         {
-            m_currentPreset = sender as PresetControl;
-            foreach (PresetControl presetControl in m_presetControls.Values)
+            bool isPlaying = (m_practiceSharpLogic.Status == PracticeSharpLogic.Statuses.Playing);
+
+            if (isPlaying)
             {
-                if (presetControl != m_currentPreset)
-                {
-                    presetControl.State = PresetControl.PresetStates.Off;
-                }
+                m_practiceSharpLogic.Pause();
+                TempMaskOutPlayTimeTrackBar();
             }
+            try
+            {
+                m_currentPreset = sender as PresetControl;
+                foreach (PresetControl presetControl in m_presetControls.Values)
+                {
+                    if (presetControl != m_currentPreset)
+                    {
+                        presetControl.State = PresetControl.PresetStates.Off;
+                    }
+                }
 
-            PresetData presetData = m_currentPreset.PresetData;
-
-            ApplyPresetValueUIControls(presetData);
+                PresetData presetData = m_currentPreset.PresetData;
+            
+                ApplyPresetValueUIControls(presetData);
+            }
+            finally
+            {
+                if (isPlaying) m_practiceSharpLogic.Play();
+            }
         }
+
 
         
         /// <summary>
@@ -685,12 +697,6 @@ namespace BigMansStuff.PracticeSharp.UI
             }
         }
 
-        private void stopButton_Click(object sender, EventArgs e)
-        {
-            m_practiceSharpLogic.Stop();
-            playTimeUpdateTimer.Enabled = false;
-        }
-
         /// <summary>
         /// Event handler for ValueChanged of the tempoTrackBar -
         ///   Changes the underlying tempo of PracticeSharpLogic
@@ -791,7 +797,7 @@ namespace BigMansStuff.PracticeSharp.UI
                 UpdateNewPlayTimeByMousePos(e);
             }
         }
-
+    
         private void playPositionTrackBar_MouseUp(object sender, MouseEventArgs e)
         {
             m_playTimeTrackBarIsChanging = false;
@@ -818,7 +824,7 @@ namespace BigMansStuff.PracticeSharp.UI
                 try
                 {
                     // Time in which playtime trackbar updates coming from PracticeSharpLogic are not allowed (to eliminate 'Jumps' due to old locations)
-                    m_playTimeTrackBarMaskOutTime = DateTime.Now.AddMilliseconds(500);
+                    TempMaskOutPlayTimeTrackBar();
 
                     playTimeTrackBar.Value = newTrackBarValue;
                 }
@@ -869,14 +875,11 @@ namespace BigMansStuff.PracticeSharp.UI
             }
         }
 
-        private void UpdateCurrentUpDownControls( TimeSpan playTime )
-        {
-            // Update current play time controls
-            currentMinuteUpDown.Value = playTime.Minutes;
-            currentSecondUpDown.Value = playTime.Seconds;
-            currentMilliUpDown.Value = playTime.Milliseconds;
-        }
-
+        /// <summary>
+        /// Event handler for changes in the CueComboBox
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void cueComboBox_SelectedValueChanged(object sender, EventArgs e)
         {
             m_practiceSharpLogic.Cue = new TimeSpan(0, 0, Convert.ToInt32(cueComboBox.Text));
@@ -1114,11 +1117,18 @@ namespace BigMansStuff.PracticeSharp.UI
             currentMilliUpDown.Enabled = enabled;
         }
 
+        /// <summary>
+        /// Updates the CurrentPlayTime from the UI Current controls
+        /// </summary>
         private void UpdateCoreCurrentPlayTime()
         {
             m_practiceSharpLogic.CurrentPlayTime = new TimeSpan(0, 0, (int)currentMinuteUpDown.Value, (int)currentSecondUpDown.Value, (int)currentMilliUpDown.Value);
         }
 
+        /// <summary>
+        /// Updates the start marker value
+        /// </summary>
+        /// <param name="startMarker"></param>
         private void UpdateCoreStartMarker(TimeSpan startMarker)
         {
             if (startMarker > m_practiceSharpLogic.EndMarker)
@@ -1137,6 +1147,32 @@ namespace BigMansStuff.PracticeSharp.UI
             ApplyLoopStartMarkerUI(startMarker);
         }
 
+        /// <summary>
+        /// Updates the end marker value
+        /// </summary>
+        /// <param name="endMarker"></param>
+        private void UpdateCoreEndMarker(TimeSpan endMarker)
+        {
+            if (endMarker < m_practiceSharpLogic.StartMarker)
+            {
+                endMarker = m_practiceSharpLogic.StartMarker;
+            }
+            else if (endMarker > m_practiceSharpLogic.FilePlayDuration)
+            {
+                endMarker = m_practiceSharpLogic.FilePlayDuration;
+            }
+
+            m_practiceSharpLogic.EndMarker = endMarker;
+
+            positionMarkersPanel.Refresh();
+
+            ApplyLoopEndMarkerUI(endMarker);
+        }
+
+        /// <summary>
+        /// Updates all StartLoop UpDown controls together
+        /// </summary>
+        /// <param name="startMarker"></param>
         private void ApplyLoopStartMarkerUI(TimeSpan startMarker)
         {
             startLoopMinuteUpDown.ValueChanged -= startLoopMinuteUpDown_ValueChanged;
@@ -1156,6 +1192,10 @@ namespace BigMansStuff.PracticeSharp.UI
             }
         }
 
+        /// <summary>
+        /// Updates all EndLoop UpDown controls together
+        /// </summary>
+        /// <param name="endMarker"></param>
         private void ApplyLoopEndMarkerUI(TimeSpan endMarker)
         {
             endLoopMinuteUpDown.ValueChanged -= endLoopMinuteUpDown_ValueChanged;
@@ -1175,22 +1215,40 @@ namespace BigMansStuff.PracticeSharp.UI
             }
         }
 
-        private void UpdateCoreEndMarker(TimeSpan endMarker)
+        /// <summary>
+        /// Updates all current UpDown controls together
+        /// </summary>
+        /// <param name="playTime"></param>
+        private void UpdateCurrentUpDownControls(TimeSpan playTime)
         {
-            if (endMarker < m_practiceSharpLogic.StartMarker)
-            {
-                endMarker = m_practiceSharpLogic.StartMarker;
-            }
-            else if (endMarker > m_practiceSharpLogic.FilePlayDuration)
-            {
-                endMarker = m_practiceSharpLogic.FilePlayDuration;
-            }
+            // Update current play time controls
+            currentMinuteUpDown.Value = playTime.Minutes;
+            currentSecondUpDown.Value = playTime.Seconds;
+            currentMilliUpDown.Value = playTime.Milliseconds;
+        }
 
-            m_practiceSharpLogic.EndMarker = endMarker;
+        private void UpdateTrackBarByMousePosition(TrackBar trackBar, MouseEventArgs e)
+        {
+            const int TrackBarMargin = 10;
+            float maxValue = trackBar.Maximum;
+            float minValue = trackBar.Minimum;
+            float newValue = minValue + (maxValue - minValue) * (((float)e.X - TrackBarMargin) / (trackBar.Width - TrackBarMargin * 2));
+            if (newValue > maxValue)
+                newValue = maxValue;
+            else if (newValue < minValue)
+                newValue = minValue;
 
-            positionMarkersPanel.Refresh();
+            int newTrackBarValue = Convert.ToInt32(newValue);
 
-            ApplyLoopEndMarkerUI(endMarker);
+            trackBar.Value = newTrackBarValue;
+        }
+
+        /// <summary>
+        /// Maskout playtime TrackBar update messages for some time to avoid trackbar jumps 
+        /// </summary>
+        private void TempMaskOutPlayTimeTrackBar()
+        {
+            m_playTimeTrackBarMaskOutTime = DateTime.Now.AddMilliseconds(500);
         }
 
         #region Presets
@@ -1321,21 +1379,7 @@ namespace BigMansStuff.PracticeSharp.UI
         }
 
         #endregion
-        private void UpdateTrackBarByMousePosition(TrackBar trackBar, MouseEventArgs e)
-        {
-            const int TrackBarMargin = 10;
-            float maxValue = trackBar.Maximum;
-            float minValue = trackBar.Minimum;
-            float newValue = minValue + (maxValue - minValue) * (((float)e.X - TrackBarMargin) / (trackBar.Width - TrackBarMargin * 2));
-            if (newValue > maxValue)
-                newValue = maxValue;
-            else if (newValue < minValue)
-                newValue = minValue;
 
-            int newTrackBarValue = Convert.ToInt32(newValue);
-
-            trackBar.Value = newTrackBarValue;
-        }
 
         #endregion 
 
@@ -1372,6 +1416,8 @@ namespace BigMansStuff.PracticeSharp.UI
         private string m_mruFile;
         private List<ToolStripMenuItem> m_recentFilesMenuItems = new List<ToolStripMenuItem>();
 
+        private VersionUpdater m_versionUpdater;
+
         #endregion
 
         #region Constants
@@ -1402,6 +1448,5 @@ namespace BigMansStuff.PracticeSharp.UI
         const string XML_Attr_Description = "Description";
 
         #endregion
-
     }
 }
