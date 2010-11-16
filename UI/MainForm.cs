@@ -67,6 +67,8 @@ namespace BigMansStuff.PracticeSharp.UI
             AutoLoadLastFile();
         }
 
+        private VersionUpdater m_versionUpdater;
+
         /// <summary>
         /// Initialize the PracticeSharp Application
         /// </summary>
@@ -75,7 +77,8 @@ namespace BigMansStuff.PracticeSharp.UI
             InitializeConfiguration();
             InitializeMRUFiles();
 
-            VersionUpdater.CheckNewVersion(m_appVersion);
+            m_versionUpdater = new VersionUpdater(this, m_appVersion);
+            m_versionUpdater.CheckNewVersion();
 
             // Create the PracticeSharpLogic back end layer
             m_practiceSharpLogic = new PracticeSharpLogic();
@@ -142,6 +145,7 @@ namespace BigMansStuff.PracticeSharp.UI
             {
                 Properties.Settings.Default.Upgrade();
                 Properties.Settings.Default.ApplicationVersion = appVersionString;
+                Properties.Settings.Default.Save();
             }
             // Show current application version
             this.Text = string.Format(Resources.AppTitle, m_appVersion.ToString());
@@ -172,6 +176,11 @@ namespace BigMansStuff.PracticeSharp.UI
             {
                 m_practiceSharpLogic.Dispose();
             }
+
+            //if (m_versionUpdater != null)
+            //{
+            //    m_versionUpdater.Cancel();
+            //}
         }
 
         #endregion
