@@ -67,14 +67,18 @@ namespace BigMansStuff.PracticeSharp.UI
         #region Public Methods
 
         /// <summary>
-        /// Resets the controls state to default
+        /// Resets the control's state to default
         /// </summary>
-        public void Reset()
+        public void Reset( bool animate )
         {
             PresetData.Reset();
 
-            BlinkLed(Resources.amber_off_16, Resources.amber_on_16, 4, 50);
-            ShowSelectedLed();
+            if (animate)
+            {
+                BlinkLed(Resources.amber_off_16, Resources.amber_on_16, 4, 50);
+            }
+
+            ShowRegularLed();
 
             PresetDescription = string.Empty;
         }
