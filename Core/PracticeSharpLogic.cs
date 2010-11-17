@@ -27,6 +27,7 @@ using System.Text;
 using NAudio.Wave;
 using System.ComponentModel;
 using System.Threading;
+using System.IO;
 
 namespace BigMansStuff.PracticeSharp.Core
 {
@@ -93,6 +94,11 @@ namespace BigMansStuff.PracticeSharp.Core
 
             InitializeFileAudio();
 
+            // Special case handling for re-playing after last playing stopped in non-loop mode: 
+            //   Reset current play time to begining of file in case the previous play has reached the end of file
+            if (!m_newPlayTimeRequested && m_currentPlayTime >= m_waveChannel.TotalTime)
+                m_currentPlayTime = TimeSpan.Zero;
+
             // Create the Audio Processing Worker (Thread)
             m_audioProcessingThread = new Thread( new ThreadStart( audioProcessingWorker_DoWork) );
             m_audioProcessingThread.IsBackground = true;
@@ -140,13 +146,13 @@ namespace BigMansStuff.PracticeSharp.Core
 
             m_soundTouchSharp.Clear();
 
-            m_currentPlayTime = TimeSpan.Zero;
+            /*m_currentPlayTime = TimeSpan.Zero;
             m_startMarker = TimeSpan.Zero;
             m_endMarker = TimeSpan.Zero;
             m_cue = TimeSpan.Zero;
             m_loop = false;
             m_volume = PresetData.DefaultVolume;
-
+            */
 
             ChangeStatus(Statuses.Stopped);
         }
@@ -424,10 +430,7 @@ namespace BigMansStuff.PracticeSharp.Core
                 float tempo;
                 float pitch;
                 int averageBytesPerSec;
-                TimeSpan startMarker;
-                TimeSpan endMarker;
-                long startPosition;
-                long endPosition;
+                TimeSpan actualEndMarker = TimeSpan.Zero;
                 bool loop;
 
                 while (!m_stopWorker && m_waveChannel.Position < m_waveChannel.Length)
@@ -449,24 +452,14 @@ namespace BigMansStuff.PracticeSharp.Core
 
                     // Read one chunk from input file
                     bytesRead = m_waveChannel.Read(convertInputBuffer.Bytes, 0, convertInputBuffer.Bytes.Length);
-                    // Console.WriteLine("File: Total Read: {0}, Current Time {1}", totalRead, m_waveChannel.CurrentTime);
 
-                    startMarker = this.StartMarker;
-                    endMarker = this.EndMarker;
+                    actualEndMarker = this.EndMarker;
+                    loop = this.Loop;
 
-                    lock (m_loopLock)
-                    {
-                        loop = m_loop;
-                    }
+                    if (!loop || actualEndMarker == TimeSpan.Zero)
+                        actualEndMarker = m_waveChannel.TotalTime;
 
-                    if (!loop || endMarker == TimeSpan.Zero)
-                        endPosition = m_waveChannel.Length;
-                    else
-                        endPosition = Convert.ToInt32(endMarker.TotalSeconds * format.AverageBytesPerSecond);
-
-                    startPosition = Convert.ToInt32(startMarker.TotalSeconds * format.AverageBytesPerSecond);
-
-                    if (m_waveChannel.Position > endPosition)
+                    if (m_waveChannel.CurrentTime > actualEndMarker)
                     {
                         // ** End marker reached **
                         // Now the input buffer is processed, 'flush' some last samples that are
@@ -494,14 +487,10 @@ namespace BigMansStuff.PracticeSharp.Core
                             }
                         }
 
-                        lock (m_loopLock)
-                        {
-                            loop = m_loop;
-                        }
-
+                        loop = this.Loop;
                         if (loop)
                         {
-                            m_waveChannel.Position = startPosition;
+                            m_waveChannel.CurrentTime = this.StartMarker;
                             WaitForCue();
                         }
                         else
@@ -511,10 +500,7 @@ namespace BigMansStuff.PracticeSharp.Core
                     }
 
                     totalRead += bytesRead;
-                    //Console.WriteLine("File: Total Read: {0}, Current Time {1}", totalRead, m_waveChannel.CurrentTime);
-
                     floatsRead = bytesRead / ((sizeof(float)) * format.Channels);
-
                     SetSoundSharpValues(out tempo, out pitch, out averageBytesPerSec);
 
                     // Put samples in SoundTouch
@@ -545,9 +531,17 @@ namespace BigMansStuff.PracticeSharp.Core
                     } while (!m_stopWorker && samplesProcessed != 0);
                 } // while
 
+                // Stop listening to PlayPositionChanged events
+                m_inputProvider.PlayPositionChanged -= new EventHandler(inputProvider_PlayPositionChanged);
 
-                //Console.WriteLine("Total bytes read: " + totalRead);
-                //Console.WriteLine("Total bytes processed: " + totalSamples * sizeof(float) * format.Channels);
+                // Fix to current play time not finishing up at end marker (Wave channel uses positions)
+                if (!m_stopWorker && CurrentPlayTime < actualEndMarker)
+                {
+                    lock (m_currentPlayTimeLock)
+                    {
+                        m_currentPlayTime = actualEndMarker;
+                    }
+                }
 
                 ChangeStatus(Statuses.Stopped);
             }
@@ -651,12 +645,19 @@ namespace BigMansStuff.PracticeSharp.Core
 
             // Calculate the average bytes per second ratio - Needed for position calculation
             averageBytesPerSec = Convert.ToInt32(1.0f / tempo);
-//            averageBytesPerSec = Convert.ToInt32((10 * Math.Abs(pitch) + 1) * 1.0f / tempo);
         }
 
+        /// <summary>
+        /// NAudio Event handler - Fired every time the play position has changed
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void inputProvider_PlayPositionChanged(object sender, EventArgs e)
         {
-            m_currentPlayTime = (e as BufferedPlayEventArgs).PlayTime;
+            lock (m_currentPlayTimeLock)
+            {
+                m_currentPlayTime = (e as BufferedPlayEventArgs).PlayTime;
+            }
 
             PlayTimeChanged(this, new EventArgs());
         }
@@ -667,17 +668,25 @@ namespace BigMansStuff.PracticeSharp.Core
         /// <param name="filename"></param>
         private void CreateInputWaveChannel(string filename)
         {
-            if (filename.ToLower().EndsWith(".mp3"))
+            const string MP3Extension = ".mp3";
+            const string WAVExtension = ".wav";
+
+            string fileExt = Path.GetExtension( filename.ToLower() );
+            if ( fileExt == MP3Extension )
             {
                 m_mp3Reader = new Mp3FileReader(filename);
                 m_blockAlignedStream = new BlockAlignReductionStream(m_mp3Reader);
                 // Wave channel - reads from file and returns raw wave blocks
                 m_waveChannel = new WaveChannel32(m_blockAlignedStream);
             }
-            else if (filename.ToLower().EndsWith(".wav"))
+            else if ( fileExt == WAVExtension )
             {
                 m_waveReader = new WaveFileReader(filename);
                 m_waveChannel = new WaveChannel32(m_waveReader);
+            }
+            else
+            {
+                throw new ApplicationException("Cannot create Input WaveChannel - Unknown file type: " + fileExt);
             }
         }
 
@@ -824,10 +833,10 @@ namespace BigMansStuff.PracticeSharp.Core
         private TimeSpan m_endMarker;
         private TimeSpan m_cue;
 
+        private object m_currentPlayTimeLock = new object();
         private TimeSpan m_currentPlayTime;
         private TimeSpan m_newPlayTime;
         private bool m_newPlayTimeRequested;
-        private object m_currentPlayTimeLock = new object();
 
         #endregion
     }

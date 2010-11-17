@@ -36,6 +36,9 @@ using System.Configuration;
 
 namespace BigMansStuff.PracticeSharp.UI
 {
+    // TODO: SoundTouch Release DLL crashes. Check why Debug works but Release does not.
+    // FIXED Beta 1.1: Reset all settings/UI Controls when loading files. New files that have never been used, have no presets and as a result all the previous file information stays (Tempo, Pitch, Volume, Presets)
+
     public partial class MainForm : Form
     {
         #region Construction
@@ -157,8 +160,6 @@ namespace BigMansStuff.PracticeSharp.UI
 
 
         #endregion
-
-        // TODO: SoundTouch Release DLL crashes. Check why Debug works but Release does not.
 
         #region Destruction
 
@@ -441,7 +442,8 @@ namespace BigMansStuff.PracticeSharp.UI
             resetBankTimer.Stop();
 
             // Reset bank values
-            m_currentPreset.Reset();
+            m_currentPreset.Reset( true );
+            m_currentPreset.State = PresetControl.PresetStates.Selected;
             ApplyPresetValueUIControls( m_currentPreset.PresetData );
 
             WritePresetsBank();
@@ -975,6 +977,13 @@ namespace BigMansStuff.PracticeSharp.UI
                 {
                     playPauseButton.Image = Resources.Play_Normal;
                     playTimeUpdateTimer.Enabled = false;
+
+                    m_ignorePlayTimeUIEvents = true;
+                    // Force a last refresh of play time controls
+                    UpdateCurrentUpDownControls(m_practiceSharpLogic.CurrentPlayTime);
+                    int currentPlayTimeValue = Convert.ToInt32(100.0f * m_practiceSharpLogic.CurrentPlayTime.TotalSeconds / m_practiceSharpLogic.FilePlayDuration.TotalSeconds);
+                    playTimeTrackBar.Value = currentPlayTimeValue;
+                    positionMarkersPanel.Refresh();
                 }
                 else if (newStatus == PracticeSharpLogic.Statuses.Playing)
                 {
@@ -1048,14 +1057,23 @@ namespace BigMansStuff.PracticeSharp.UI
                     return false;
                 }
 
-                m_mruManager.Add(filename);
                 playTimeUpdateTimer.Enabled = false;
+                m_practiceSharpLogic.Stop();
+
+                m_mruManager.Add(filename);
 
                 Properties.Settings.Default.LastFilename = filename;
                 Properties.Settings.Default.Save();
 
+                // Reset current UI Controls
+                foreach (PresetControl presetControl in m_presetControls.Values)
+                {
+                    presetControl.Reset( false );
+                }
+                ApplyPresetValueUIControls( m_presetControls[ "1" ].PresetData );
+
                 m_currentFilename = filename;
-                filenameToolStripStatusLabel.Text = filename;
+                filenameToolStripStatusLabel.Text = Path.GetFileName( filename );
                 m_practiceSharpLogic.LoadFile(filename);
 
                 // Load Presets Bank for this input file
