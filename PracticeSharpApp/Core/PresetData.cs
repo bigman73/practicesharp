@@ -60,7 +60,7 @@ namespace BigMansStuff.PracticeSharp.Core
 
         #region Constants
 
-        public const float DefaultVolume = 0.25f;
+        public const float DefaultVolume = 0.5f;
         public const float DefaultTempo = 1.0f; // 1 = 100%/regular speed
         public const float DefaultPitch = 0.0f; // 0 = Regular pitch
         #endregion
