@@ -36,11 +36,10 @@ namespace BigMansStuff.PracticeSharp.Core
     /// </summary>
     public class AdvancedBufferedWaveProvider : IWaveProvider
     {
-        private Queue<AudioBuffer> m_queue;
-        private WaveFormat m_waveFormat;
+        #region Construction
 
         /// <summary>
-        /// Creates a new buffered WaveProvider
+        /// Constructor - Creates a new buffered WaveProvider
         /// </summary>
         /// <param name="waveFormat">WaveFormat</param>
         public AdvancedBufferedWaveProvider(WaveFormat waveFormat)
@@ -49,6 +48,10 @@ namespace BigMansStuff.PracticeSharp.Core
             this.m_queue = new Queue<AudioBuffer>();
             this.MaxQueuedBuffers = 100;
         }
+
+        #endregion
+
+        #region Public 
 
         /// <summary>
         /// Maximum number of queued buffers
@@ -76,7 +79,7 @@ namespace BigMansStuff.PracticeSharp.Core
                 {
                     throw new InvalidOperationException("Too many queued buffers");
                 }
-                this.m_queue.Enqueue(new AudioBuffer(nbuffer, currentTime, averageBytesPerSec));
+                this.m_queue.Enqueue(new AudioBuffer(nbuffer, currentTime));
             }
         }
 
@@ -163,6 +166,8 @@ namespace BigMansStuff.PracticeSharp.Core
             return queueCount;
         }
 
+        #endregion
+
         /// <summary>
         /// Internal helper class for a stored buffer
         /// </summary>
@@ -171,11 +176,10 @@ namespace BigMansStuff.PracticeSharp.Core
             /// <summary>
             /// Constructs a new AudioBuffer
             /// </summary>
-            public AudioBuffer(byte[] buffer, TimeSpan currentTime, int averageBytesPerSec )
+            public AudioBuffer(byte[] buffer, TimeSpan currentTime )
             {
                 this.Buffer = buffer;
                 this.CurrentTime = currentTime;
-                m_averageBytesPerSec = averageBytesPerSec;
             }
 
             /// <summary>
@@ -192,11 +196,14 @@ namespace BigMansStuff.PracticeSharp.Core
             /// CurrentTime of original file - used for calculating actual position within played buffer
             /// </summary>
             public TimeSpan CurrentTime { get; set; }
-
-            public int AverageBytesPerSec { get { return m_averageBytesPerSec; }}
-
-            private int m_averageBytesPerSec;
         }
+
+        #region Private Members
+
+        private Queue<AudioBuffer> m_queue;
+        private WaveFormat m_waveFormat;
+
+        #endregion
     }
 
     public class BufferedPlayEventArgs : EventArgs
@@ -208,4 +215,5 @@ namespace BigMansStuff.PracticeSharp.Core
 
         public TimeSpan PlayTime;
     }
+
 }
