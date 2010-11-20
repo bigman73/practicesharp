@@ -169,6 +169,19 @@ namespace BigMansStuff.PracticeSharp.Core
             m_waveOutDevice.Pause();
         }
 
+        /// <summary>
+        /// Utility function that identifies wether the file is an audio file or not
+        /// </summary>
+        /// <param name="filename"></param>
+        /// <returns></returns>
+        public static bool IsAudioFile(string filename)
+        {
+            filename = filename.ToLower();
+            bool result = filename.EndsWith(".mp3") || filename.EndsWith(".wav") || filename.EndsWith(".ogg");
+
+            return result;
+        }
+
         #endregion
 
         #region Properties
@@ -666,10 +679,6 @@ namespace BigMansStuff.PracticeSharp.Core
         /// <param name="filename"></param>
         private void CreateInputWaveChannel(string filename)
         {
-            const string MP3Extension = ".mp3";
-            const string WAVExtension = ".wav";
-            const string OGGVExtension = ".ogg";
-
             string fileExt = Path.GetExtension( filename.ToLower() );
             if ( fileExt == MP3Extension )
             {
@@ -865,6 +874,14 @@ namespace BigMansStuff.PracticeSharp.Core
         private TimeSpan m_currentPlayTime;
         private TimeSpan m_newPlayTime;
         private bool m_newPlayTimeRequested;
+
+        #endregion
+
+        #region Constants
+
+        const string MP3Extension = ".mp3";
+        const string WAVExtension = ".wav";
+        const string OGGVExtension = ".ogg";
 
         #endregion
     }
