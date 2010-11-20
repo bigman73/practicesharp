@@ -37,7 +37,6 @@ using System.Configuration;
 namespace BigMansStuff.PracticeSharp.UI
 {
     // TODO: SoundTouch Release DLL crashes. Check why Debug works but Release does not.
-    // FIXED Beta 1.1: Reset all settings/UI Controls when loading files. New files that have never been used, have no presets and as a result all the previous file information stays (Tempo, Pitch, Volume, Presets)
 
     public partial class MainForm : Form
     {
@@ -67,7 +66,15 @@ namespace BigMansStuff.PracticeSharp.UI
                 MessageBox.Show("Failed initialize the Practice Sharp back end - " + ex.ToString());
             }
 
-            AutoLoadLastFile();
+            // Handle command line arguments
+            string[] args = Environment.GetCommandLineArgs();
+            if (args.Length == 2 && PracticeSharpLogic.IsAudioFile(args[1]))
+            {
+                OpenFile(args[1], true);
+            }
+            else
+                // No command line argument - Try to load the last played file
+                AutoLoadLastFile();
         }
 
         /// <summary>
@@ -112,7 +119,6 @@ namespace BigMansStuff.PracticeSharp.UI
             volumeTrackBar_ValueChanged(this, new EventArgs());
             playTimeTrackBar_ValueChanged(this, new EventArgs());
         }
-
        
 
         private void InitializeMRUFiles()
@@ -486,13 +492,13 @@ namespace BigMansStuff.PracticeSharp.UI
                 string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
                 string droppedFile = files[0];
                 Console.WriteLine("[DragEnter] DragAndDrop Files: " + droppedFile);
-                if (droppedFile.ToLower().EndsWith(".mp3") || droppedFile.ToLower().EndsWith(".wav"))
+                if ( PracticeSharpLogic.IsAudioFile( droppedFile ) )
                 {
                     e.Effect = DragDropEffects.Copy;
                 }
                 else
                 {
-                    Console.WriteLine("DragAndDrop are only allowed for music files (MP3, WAV)");
+                    Console.WriteLine("DragAndDrop are only allowed for recognized music files");
                     e.Effect = DragDropEffects.None;
                 }
             }
