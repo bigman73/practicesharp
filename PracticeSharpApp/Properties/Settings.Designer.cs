@@ -81,5 +81,17 @@ namespace BigMansStuff.PracticeSharp.UI.Properties {
                 this["SupressVersionCheck"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int LastFilterIndex {
+            get {
+                return ((int)(this["LastFilterIndex"]));
+            }
+            set {
+                this["LastFilterIndex"] = value;
+            }
+        }
     }
 }

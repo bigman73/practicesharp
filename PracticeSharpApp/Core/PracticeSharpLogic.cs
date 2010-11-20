@@ -28,6 +28,7 @@ using NAudio.Wave;
 using System.ComponentModel;
 using System.Threading;
 using System.IO;
+using BigMansStuff.NAudio.Ogg;
 
 namespace BigMansStuff.PracticeSharp.Core
 {
@@ -103,7 +104,6 @@ namespace BigMansStuff.PracticeSharp.Core
             m_audioProcessingThread = new Thread( new ThreadStart( audioProcessingWorker_DoWork) );
             m_audioProcessingThread.IsBackground = true;
             m_audioProcessingThread.Priority = ThreadPriority.AboveNormal;
-            m_audioProcessingThread.Start();
         }
 
         /// <summary>
@@ -111,6 +111,11 @@ namespace BigMansStuff.PracticeSharp.Core
         /// </summary>
         public void Play()
         {
+            if (!m_audioProcessingThread.IsAlive)
+            {
+                m_audioProcessingThread.Start();
+            }
+
             if (m_status == Statuses.Initialized || m_status == Statuses.Pausing)
             {
                 m_waveOutDevice.Play();
@@ -126,6 +131,12 @@ namespace BigMansStuff.PracticeSharp.Core
         ///  </remarks>
         public void Stop()
         {
+            if (m_status == Statuses.Initialized || m_status == Statuses.Initialized )
+            {
+                // Nothing to stop, the core never start playing
+                return; 
+            }
+
             if (m_waveOutDevice != null)
             {
                 m_waveOutDevice.Stop();
@@ -145,14 +156,6 @@ namespace BigMansStuff.PracticeSharp.Core
             TerminateNAudio();
 
             m_soundTouchSharp.Clear();
-
-            /*m_currentPlayTime = TimeSpan.Zero;
-            m_startMarker = TimeSpan.Zero;
-            m_endMarker = TimeSpan.Zero;
-            m_cue = TimeSpan.Zero;
-            m_loop = false;
-            m_volume = PresetData.DefaultVolume;
-            */
 
             ChangeStatus(Statuses.Stopped);
         }
@@ -423,8 +426,6 @@ namespace BigMansStuff.PracticeSharp.Core
                 int bytesRead;
                 int floatsRead;
                 uint samplesProcessed = 0;
-                int totalRead = 0;
-                uint totalSamples = 0;
                 int bufferIndex = 0;
 
                 float tempo;
@@ -446,6 +447,7 @@ namespace BigMansStuff.PracticeSharp.Core
                         if (m_newPlayTimeRequested)
                         {
                             m_waveChannel.CurrentTime = m_newPlayTime;
+
                             m_newPlayTimeRequested = false;
                         }
                     }
@@ -475,8 +477,6 @@ namespace BigMansStuff.PracticeSharp.Core
 
                                 if (samplesProcessed > 0)
                                 {
-                                    totalSamples += samplesProcessed;
-
                                     // TODO: Calculation and add relative CurrentTime
                                     TimeSpan currentBufferTime = m_waveChannel.CurrentTime;
 
@@ -499,7 +499,6 @@ namespace BigMansStuff.PracticeSharp.Core
                         }
                     }
 
-                    totalRead += bytesRead;
                     floatsRead = bytesRead / ((sizeof(float)) * format.Channels);
                     SetSoundSharpValues(out tempo, out pitch, out averageBytesPerSec);
 
@@ -513,7 +512,6 @@ namespace BigMansStuff.PracticeSharp.Core
 
                         if (samplesProcessed > 0)
                         {
-                            totalSamples += samplesProcessed;
                             // TODO: Calculation and add relative CurrentTime
                             TimeSpan currentBufferTime = m_waveChannel.CurrentTime;
                             int bufferAverageBytesPerSecond = Convert.ToInt32(format.AverageBytesPerSecond / m_tempo);
@@ -670,6 +668,7 @@ namespace BigMansStuff.PracticeSharp.Core
         {
             const string MP3Extension = ".mp3";
             const string WAVExtension = ".wav";
+            const string OGGVExtension = ".ogg";
 
             string fileExt = Path.GetExtension( filename.ToLower() );
             if ( fileExt == MP3Extension )
@@ -682,6 +681,35 @@ namespace BigMansStuff.PracticeSharp.Core
             else if ( fileExt == WAVExtension )
             {
                 m_waveReader = new WaveFileReader(filename);
+                if (m_waveReader.WaveFormat.Encoding != WaveFormatEncoding.Pcm)
+                {
+                    m_waveReader = WaveFormatConversionStream.CreatePcmStream(m_waveReader);
+                    m_waveReader = new BlockAlignReductionStream(m_waveReader);
+                }
+                if (m_waveReader.WaveFormat.BitsPerSample != 16)
+                {
+                    var format = new WaveFormat(m_waveReader.WaveFormat.SampleRate,
+                       16, m_waveReader.WaveFormat.Channels);
+                    m_waveReader = new WaveFormatConversionStream(format, m_waveReader);
+                }
+                
+                m_waveChannel = new WaveChannel32(m_waveReader);
+            }
+            else if (fileExt == OGGVExtension)
+            {
+                m_waveReader = new OggVorbisFileReader(filename);
+                if (m_waveReader.WaveFormat.Encoding != WaveFormatEncoding.Pcm)
+                {
+                    m_waveReader = WaveFormatConversionStream.CreatePcmStream(m_waveReader);
+                    m_waveReader = new BlockAlignReductionStream(m_waveReader);
+                }
+                if (m_waveReader.WaveFormat.BitsPerSample != 16)
+                {
+                    var format = new WaveFormat(m_waveReader.WaveFormat.SampleRate,
+                       16, m_waveReader.WaveFormat.Channels);
+                    m_waveReader = new WaveFormatConversionStream(format, m_waveReader);
+                }
+
                 m_waveChannel = new WaveChannel32(m_waveReader);
             }
             else
@@ -808,7 +836,7 @@ namespace BigMansStuff.PracticeSharp.Core
 
         private WaveStream m_mp3Reader = null;
         private WaveStream m_blockAlignedStream = null;
-        private WaveFileReader m_waveReader = null;
+        private WaveStream m_waveReader = null;
         private WaveChannel32 m_waveChannel = null;
 
         private float m_tempo = 1f;

@@ -1,0 +1,96 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{B2D3B85A-252C-4A0E-BB07-816A62AB20A8}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>BigMansStuff.NAudio.Ogg</RootNamespace>
+    <AssemblyName>NAudioOggVorbis</AssemblyName>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="NAudio">
+      <HintPath>..\..\..\naudio\NAudio\bin\Debug\NAudio.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="csogg\Buffer.cs" />
+    <Compile Include="csogg\Packet.cs" />
+    <Compile Include="csogg\Page.cs" />
+    <Compile Include="csogg\StreamState.cs" />
+    <Compile Include="csogg\SyncState.cs" />
+    <Compile Include="csvorbis\Block.cs" />
+    <Compile Include="csvorbis\CodeBook.cs" />
+    <Compile Include="csvorbis\Comment.cs" />
+    <Compile Include="csvorbis\csorbisException.cs" />
+    <Compile Include="csvorbis\Drft.cs" />
+    <Compile Include="csvorbis\DspState.cs" />
+    <Compile Include="csvorbis\EncodeAuxNearestMatch.cs" />
+    <Compile Include="csvorbis\EncodeAuxThreshMatch.cs" />
+    <Compile Include="csvorbis\Floor0.cs" />
+    <Compile Include="csvorbis\Floor1.cs" />
+    <Compile Include="csvorbis\FuncFloor.cs" />
+    <Compile Include="csvorbis\FuncMapping.cs" />
+    <Compile Include="csvorbis\FuncResidue.cs" />
+    <Compile Include="csvorbis\FuncTime.cs" />
+    <Compile Include="csvorbis\Info.cs" />
+    <Compile Include="csvorbis\InfoMode.cs" />
+    <Compile Include="csvorbis\Lookup.cs" />
+    <Compile Include="csvorbis\Lpc.cs" />
+    <Compile Include="csvorbis\Lsp.cs" />
+    <Compile Include="csvorbis\Mapping0.cs" />
+    <Compile Include="csvorbis\Mdct.cs" />
+    <Compile Include="csvorbis\PsyInfo.cs" />
+    <Compile Include="csvorbis\PsyLook.cs" />
+    <Compile Include="csvorbis\Residue0.cs" />
+    <Compile Include="csvorbis\Residue1.cs" />
+    <Compile Include="csvorbis\Residue2.cs" />
+    <Compile Include="csvorbis\StaticCodeBook.cs" />
+    <Compile Include="csvorbis\Time0.cs" />
+    <Compile Include="csvorbis\VorbisFile.cs" />
+    <Compile Include="OggFileReader.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

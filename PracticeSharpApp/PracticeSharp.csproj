@@ -215,6 +215,12 @@
     <Content Include="Res\PracticeSharp.ico" />
     <Content Include="Res\PracticeSharp.png" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\NAudioOggVorbis\Library\NAudioOggVorbis.csproj">
+      <Project>{B2D3B85A-252C-4A0E-BB07-816A62AB20A8}</Project>
+      <Name>NAudioOggVorbis</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>copy $(ProjectDir)SoundTouchDLL\SoundTouch.dll $(TargetDir)

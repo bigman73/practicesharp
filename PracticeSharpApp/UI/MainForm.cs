@@ -91,6 +91,7 @@ namespace BigMansStuff.PracticeSharp.UI
             EnableControls( false );
 
             openFileDialog.InitialDirectory = Properties.Settings.Default.LastAudioFolder;
+            openFileDialog.FilterIndex = Properties.Settings.Default.LastFilterIndex;
 
             playPauseButton.Image = Resources.Play_Normal;
             writeBankButton.Image = Resources.save_icon;
@@ -107,10 +108,9 @@ namespace BigMansStuff.PracticeSharp.UI
 
             // Set defaults
             tempoTrackBar_ValueChanged(this, new EventArgs());
+            pitchTrackBar_ValueChanged(this, new EventArgs());
             volumeTrackBar_ValueChanged(this, new EventArgs());
             playTimeTrackBar_ValueChanged(this, new EventArgs());
-
-            // presetControl1.State = PresetControl.PresetStates.Selected;
         }
 
        
@@ -692,6 +692,7 @@ namespace BigMansStuff.PracticeSharp.UI
                 // Get directory path and store it as a user settting
                 FileInfo fi = new FileInfo( openFileDialog.FileName );
                 Properties.Settings.Default.LastAudioFolder = fi.Directory.FullName;
+                Properties.Settings.Default.LastFilterIndex = openFileDialog.FilterIndex;
                 Properties.Settings.Default.Save();
 
                 // Open the file for playing
@@ -866,6 +867,11 @@ namespace BigMansStuff.PracticeSharp.UI
                 if (!m_playTimeTrackBarIsChanging && DateTime.Now > m_playTimeTrackBarMaskOutTime)
                 {
                     int currentPlayTimeValue = Convert.ToInt32(100.0f * m_practiceSharpLogic.CurrentPlayTime.TotalSeconds / m_practiceSharpLogic.FilePlayDuration.TotalSeconds);
+                    if (currentPlayTimeValue > playTimeTrackBar.Maximum)
+                    {
+                        currentPlayTimeValue = playTimeTrackBar.Maximum;
+                    }
+
                     playTimeTrackBar.Value = currentPlayTimeValue;
                 }
 
@@ -939,6 +945,7 @@ namespace BigMansStuff.PracticeSharp.UI
             ToolStripMenuItem menuItem = sender as ToolStripMenuItem;
             string selectedRecentFilename = (string)menuItem.Tag;
 
+            // Open Recent file and start playing it
             if (!OpenFile(selectedRecentFilename, true))
             {
                 m_mruManager.Remove(selectedRecentFilename);
@@ -981,7 +988,13 @@ namespace BigMansStuff.PracticeSharp.UI
                     m_ignorePlayTimeUIEvents = true;
                     // Force a last refresh of play time controls
                     UpdateCurrentUpDownControls(m_practiceSharpLogic.CurrentPlayTime);
-                    int currentPlayTimeValue = Convert.ToInt32(100.0f * m_practiceSharpLogic.CurrentPlayTime.TotalSeconds / m_practiceSharpLogic.FilePlayDuration.TotalSeconds);
+                    int currentPlayTimeValue = 0;
+                    if (m_practiceSharpLogic.FilePlayDuration.TotalSeconds > 0)
+                    {
+                        currentPlayTimeValue = Convert.ToInt32(100.0f * m_practiceSharpLogic.CurrentPlayTime.TotalSeconds / m_practiceSharpLogic.FilePlayDuration.TotalSeconds);
+                        if (currentPlayTimeValue > playTimeTrackBar.Maximum)
+                            currentPlayTimeValue = playTimeTrackBar.Maximum;
+                    }
                     playTimeTrackBar.Value = currentPlayTimeValue;
                     positionMarkersPanel.Refresh();
                 }
@@ -1070,8 +1083,7 @@ namespace BigMansStuff.PracticeSharp.UI
                 {
                     presetControl.Reset( false );
                 }
-                ApplyPresetValueUIControls( m_presetControls[ "1" ].PresetData );
-
+                ApplyPresetValueUIControls(m_presetControls["1"].PresetData);
                 m_currentFilename = filename;
                 filenameToolStripStatusLabel.Text = Path.GetFileName( filename );
                 m_practiceSharpLogic.LoadFile(filename);

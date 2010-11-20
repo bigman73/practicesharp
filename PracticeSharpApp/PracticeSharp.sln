@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual C# Express 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PracticeSharp", "PracticeSharp.csproj", "{BBEECE8C-8D5A-42F5-9901-34E8D07490AE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NAudioOggVorbis", "..\NAudioOggVorbis\Library\NAudioOggVorbis.csproj", "{B2D3B85A-252C-4A0E-BB07-816A62AB20A8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,6 +26,16 @@ Global
 		{BBEECE8C-8D5A-42F5-9901-34E8D07490AE}.Release|Mixed Platforms.Build.0 = Release|x86
 		{BBEECE8C-8D5A-42F5-9901-34E8D07490AE}.Release|x86.ActiveCfg = Release|x86
 		{BBEECE8C-8D5A-42F5-9901-34E8D07490AE}.Release|x86.Build.0 = Release|x86
+		{B2D3B85A-252C-4A0E-BB07-816A62AB20A8}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{B2D3B85A-252C-4A0E-BB07-816A62AB20A8}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{B2D3B85A-252C-4A0E-BB07-816A62AB20A8}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{B2D3B85A-252C-4A0E-BB07-816A62AB20A8}.Debug|x86.ActiveCfg = Debug|x86
+		{B2D3B85A-252C-4A0E-BB07-816A62AB20A8}.Debug|x86.Build.0 = Debug|x86
+		{B2D3B85A-252C-4A0E-BB07-816A62AB20A8}.Release|Any CPU.ActiveCfg = Release|x86
+		{B2D3B85A-252C-4A0E-BB07-816A62AB20A8}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{B2D3B85A-252C-4A0E-BB07-816A62AB20A8}.Release|Mixed Platforms.Build.0 = Release|x86
+		{B2D3B85A-252C-4A0E-BB07-816A62AB20A8}.Release|x86.ActiveCfg = Release|x86
+		{B2D3B85A-252C-4A0E-BB07-816A62AB20A8}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

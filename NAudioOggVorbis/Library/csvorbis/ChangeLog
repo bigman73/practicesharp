@@ -1,0 +1,48 @@
+2010-05-09  El Dragon  <thedragon@the-dragons-nest.co.uk>
+
+	* VorbisFile.cs: Implemented IDisposable for proper clean-up
+	  of file handles
+
+2010-05-09  El Dragon  <thedragon@the-dragons-nest.co.uk>
+
+	* VorbisFile.cs: Added comments to describe change in previous
+	  revision
+
+2010-05-09  El Dragon  <thedragon@the-dragons-nest.co.uk>
+
+	* VorbisFile.cs: Altered FileStream initialisation to prevent
+	  sharing violation when used in conjunction with TagLibSharp
+
+2010-04-16  El Dragon  <thedragon@the-dragons-nest.co.uk>
+
+	* Lpc.cs:
+	* Lsp.cs:
+	* Drft.cs:
+	* Info.cs:
+	* Mdct.cs:
+	* Block.cs:
+	* Time0.cs:
+	* Floor1.cs:
+	* Floor0.cs:
+	* Lookup.cs:
+	* PsyLook.cs:
+	* PsyInfo.cs:
+	* Comment.cs:
+	* InfoMode.cs:
+	* Residue0.cs:
+	* FuncTime.cs:
+	* Mapping0.cs:
+	* Residue1.cs:
+	* DspState.cs:
+	* CodeBook.cs:
+	* Residue2.cs:
+	* FuncFloor.cs:
+	* VorbisFile.cs:
+	* AllocChain.cs:
+	* FuncMapping.cs:
+	* FuncResidue.cs:
+	* StaticCodeBook.cs:
+	* csorbisException.cs:
+	* EncodeAuxThreshMatch.cs:
+	* EncodeAuxNearestMatch.cs: 
+
