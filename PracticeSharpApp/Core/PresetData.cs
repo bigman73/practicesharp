@@ -58,14 +58,11 @@ namespace BigMansStuff.PracticeSharp.Core
 
         #endregion
 
-        #region Constants
+        #region Public Methods
 
-        public const float DefaultVolume = 0.5f;
-        public const float DefaultTempo = 1.0f; // 1 = 100%/regular speed
-        public const float DefaultPitch = 0.0f; // 0 = Regular pitch
-        #endregion
-
-
+        /// <summary>
+        /// Resets the preset settings to Defaults
+        /// </summary>
         public void Reset()
         {
             Volume = DefaultVolume;
@@ -76,7 +73,15 @@ namespace BigMansStuff.PracticeSharp.Core
             EndMarker = TimeSpan.Zero;
             Cue = TimeSpan.Zero;
             Loop = false;
-            Description = string.Empty;            
+            Description = string.Empty;
         }
+        #endregion
+
+        #region Constants
+
+        public const float DefaultVolume = 0.5f;
+        public const float DefaultTempo = 1.0f; // 1 = 100%/regular speed
+        public const float DefaultPitch = 0.0f; // 0 = Regular pitch
+        #endregion
     }
 }
