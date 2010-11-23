@@ -103,7 +103,7 @@ namespace BigMansStuff.PracticeSharp.Core
             // Create the Audio Processing Worker (Thread)
             m_audioProcessingThread = new Thread( new ThreadStart( audioProcessingWorker_DoWork) );
             m_audioProcessingThread.IsBackground = true;
-            m_audioProcessingThread.Priority = ThreadPriority.AboveNormal;
+            m_audioProcessingThread.Priority = ThreadPriority.Highest;
         }
 
         /// <summary>
@@ -380,11 +380,8 @@ namespace BigMansStuff.PracticeSharp.Core
         #region Private Methods
 
         /// <summary>
-        /// The heart of sound processing - Reads chunks from the input file, 
-        /// processes it using SoundTouch and then playes it using NAudio
+        /// Audio processing thread procedure
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void audioProcessingWorker_DoWork()
         {
             try
@@ -396,9 +393,182 @@ namespace BigMansStuff.PracticeSharp.Core
                 Console.WriteLine("Exception: " + ex.ToString());
                 ChangeStatus( Statuses.Error );
             }
-
         }
 
+        /// <summary>
+        /// The heart of Practice# audio processing:
+        /// 1. Reads chunks of uncompressed samples from the input file
+        /// 2. Processes the samples using SoundTouch 
+        /// 3. Receive process samples from SoundTouch
+        /// 4. Play the processed samples with NAudio
+        /// 
+        /// Also handles logic required for dynamically changing values on-the-fly of: Volume, Loop, Cue, Current Play Position.
+        /// </summary>
+        private void ProcessAudio()
+        {
+            m_stopWorker = false;
+            m_workerRunning = true;
+            try
+            {
+                #region Setup
+                WaveFormat format = m_waveChannel.WaveFormat;
+                int bufferSecondLength = format.SampleRate * format.Channels;
+                byte[] inputBuffer = new byte[BufferSamples * sizeof(float)];
+                byte[] soundTouchOutBuffer = new byte[BufferSamples * sizeof(float)];
+
+                ByteAndFloatsConverter convertInputBuffer = new ByteAndFloatsConverter { Bytes = inputBuffer };
+                ByteAndFloatsConverter convertOutputBuffer = new ByteAndFloatsConverter { Bytes = soundTouchOutBuffer };
+                uint outBufferSizeFloats = (uint)convertOutputBuffer.Bytes.Length / (uint)(sizeof(float) * format.Channels);
+
+                int bytesRead;
+                int floatsRead;
+                uint samplesProcessed = 0;
+                int bufferIndex = 0;
+                TimeSpan actualEndMarker = TimeSpan.Zero;
+                bool loop;
+
+                #endregion
+
+                while (!m_stopWorker && m_waveChannel.Position < m_waveChannel.Length)
+                {
+                    lock (m_propertiesLock)
+                    {
+                        m_waveChannel.Volume = m_volume;
+                    }
+
+                    #region Read samples from file
+
+                    // Change current play position
+                    lock (m_currentPlayTimeLock)
+                    {
+                        if (m_newPlayTimeRequested)
+                        {
+                            m_waveChannel.CurrentTime = m_newPlayTime;
+
+                            m_newPlayTimeRequested = false;
+                        }
+                    }
+
+                    // *** Read one chunk from input file ***
+                    bytesRead = m_waveChannel.Read(convertInputBuffer.Bytes, 0, convertInputBuffer.Bytes.Length);
+                    // **************************************
+
+                    #endregion
+
+                    actualEndMarker = this.EndMarker;
+                    loop = this.Loop;
+
+                    if (!loop || actualEndMarker == TimeSpan.Zero)
+                        actualEndMarker = m_waveChannel.TotalTime;
+
+                    if (m_waveChannel.CurrentTime > actualEndMarker)
+                    {
+                        #region Flush left over samples
+
+                        // ** End marker reached **
+                        // Now the input buffer is processed, 'flush' some last samples that are
+                        // hiding in the SoundTouch's internal processing pipeline.
+                        m_soundTouchSharp.Flush();
+                        if (!m_stopWorker)
+                        {
+                            while (!m_stopWorker && samplesProcessed != 0)
+                            {
+                                SetSoundSharpValues();
+
+                                samplesProcessed = m_soundTouchSharp.ReceiveSamples(convertOutputBuffer.Floats, outBufferSizeFloats);
+
+                                if (samplesProcessed > 0)
+                                {
+                                    TimeSpan currentBufferTime = m_waveChannel.CurrentTime;
+                                    m_inputProvider.AddSamples(convertOutputBuffer.Bytes, 0, (int)samplesProcessed * sizeof(float) * format.Channels, currentBufferTime);
+                                }
+
+                                samplesProcessed = m_soundTouchSharp.ReceiveSamples(convertOutputBuffer.Floats, outBufferSizeFloats);
+                            }
+                        }
+
+                        #endregion
+
+                        #region Handle Loop & Cue
+                        loop = this.Loop;
+                        if (loop)
+                        {
+                            m_waveChannel.CurrentTime = this.StartMarker;
+                            WaitForCue();
+                        }
+                        else
+                        {
+                            break;
+                        }
+
+                        #endregion
+                    }
+
+                    floatsRead = bytesRead / ((sizeof(float)) * format.Channels);
+                    
+                    #region Put samples in SoundTouch
+
+                    SetSoundSharpValues();
+
+                    // ***                    Put samples in SoundTouch                   ***
+                    m_soundTouchSharp.PutSamples(convertInputBuffer.Floats, (uint)floatsRead);
+                    // **********************************************************************
+
+                    #endregion
+
+                    #region Receive & Play Samples
+                    // Receive samples from SoundTouch
+                    do
+                    {
+                        // ***                Receive samples back from SoundTouch            ***
+                        // *** This is where Time Stretching and Pitch Changing is done *********
+                        samplesProcessed = m_soundTouchSharp.ReceiveSamples(convertOutputBuffer.Floats, outBufferSizeFloats);
+                        // **********************************************************************
+
+                        if (samplesProcessed > 0)
+                        {
+                            TimeSpan currentBufferTime = m_waveChannel.CurrentTime;
+
+                            // ** Play samples that came out of SoundTouch by adding them to AdvancedBufferedWaveProvider - the buffered player 
+                            m_inputProvider.AddSamples(convertOutputBuffer.Bytes, 0, (int)samplesProcessed * sizeof(float) * format.Channels, currentBufferTime);
+                            // **********************************************************************
+
+                            // Wait for queue to free up - only then add continue reading from the file
+                            while (!m_stopWorker && m_inputProvider.GetQueueCount() > BusyQueuedBuffersThreshold)
+                            {
+                                Thread.Sleep(10);
+                            }
+                            bufferIndex++;
+                        }
+                    } while (!m_stopWorker && samplesProcessed != 0);
+                    #endregion
+                } // while
+
+                #region Stop PlayBack 
+                // Stop listening to PlayPositionChanged events
+                m_inputProvider.PlayPositionChanged -= new EventHandler(inputProvider_PlayPositionChanged);
+
+                // Fix to current play time not finishing up at end marker (Wave channel uses positions)
+                if (!m_stopWorker && CurrentPlayTime < actualEndMarker)
+                {
+                    lock (m_currentPlayTimeLock)
+                    {
+                        m_currentPlayTime = actualEndMarker;
+                    }
+                }
+
+                ChangeStatus(Statuses.Stopped);
+                #endregion
+            }
+            finally
+            {
+                m_workerRunning = false;
+            }
+        }
+
+        /// <summary>
+        /// Initialize the file play back audio infrastructure
+        /// </summary>
         private void InitializeFileAudio()
         {
             InitializeNAudioLibrary();
@@ -417,149 +587,6 @@ namespace BigMansStuff.PracticeSharp.Core
             }
 
             m_filePlayDuration = m_waveChannel.TotalTime;
-        }
-
-        private void ProcessAudio()
-        {
-            m_stopWorker = false;
-            m_workerRunning = true;
-            try
-            {
-                const int BufferSamples = 5 * 2048; // floats, not bytes
-
-                WaveFormat format = m_waveChannel.WaveFormat;
-                int bufferSecondLength = format.SampleRate * format.Channels;
-                byte[] inputBuffer = new byte[BufferSamples * sizeof(float)];
-                byte[] soundTouchOutBuffer = new byte[BufferSamples * sizeof(float)];
-
-                ByteAndFloatsConverter convertInputBuffer = new ByteAndFloatsConverter { Bytes = inputBuffer };
-                ByteAndFloatsConverter convertOutputBuffer = new ByteAndFloatsConverter { Bytes = soundTouchOutBuffer };
-                uint outBufferSizeFloats = (uint)convertOutputBuffer.Bytes.Length / (uint)(sizeof(float) * format.Channels);
-
-                int bytesRead;
-                int floatsRead;
-                uint samplesProcessed = 0;
-                int bufferIndex = 0;
-
-                float tempo;
-                float pitch;
-                int averageBytesPerSec;
-                TimeSpan actualEndMarker = TimeSpan.Zero;
-                bool loop;
-
-                while (!m_stopWorker && m_waveChannel.Position < m_waveChannel.Length)
-                {
-                    lock (m_propertiesLock)
-                    {
-                        m_waveChannel.Volume = m_volume;
-                    }
-
-                    // Change current play position
-                    lock (m_currentPlayTimeLock)
-                    {
-                        if (m_newPlayTimeRequested)
-                        {
-                            m_waveChannel.CurrentTime = m_newPlayTime;
-
-                            m_newPlayTimeRequested = false;
-                        }
-                    }
-
-                    // Read one chunk from input file
-                    bytesRead = m_waveChannel.Read(convertInputBuffer.Bytes, 0, convertInputBuffer.Bytes.Length);
-
-                    actualEndMarker = this.EndMarker;
-                    loop = this.Loop;
-
-                    if (!loop || actualEndMarker == TimeSpan.Zero)
-                        actualEndMarker = m_waveChannel.TotalTime;
-
-                    if (m_waveChannel.CurrentTime > actualEndMarker)
-                    {
-                        // ** End marker reached **
-                        // Now the input buffer is processed, 'flush' some last samples that are
-                        // hiding in the SoundTouch's internal processing pipeline.
-                        m_soundTouchSharp.Flush();
-                        if (!m_stopWorker)
-                        {
-                            while (!m_stopWorker && samplesProcessed != 0)
-                            {
-                                SetSoundSharpValues(out tempo, out pitch, out averageBytesPerSec);
-
-                                samplesProcessed = m_soundTouchSharp.ReceiveSamples(convertOutputBuffer.Floats, outBufferSizeFloats);
-
-                                if (samplesProcessed > 0)
-                                {
-                                    // TODO: Calculation and add relative CurrentTime
-                                    TimeSpan currentBufferTime = m_waveChannel.CurrentTime;
-
-                                    m_inputProvider.AddSamples(convertOutputBuffer.Bytes, 0, (int)samplesProcessed * sizeof(float) * format.Channels, currentBufferTime, averageBytesPerSec);
-                                }
-
-                                samplesProcessed = m_soundTouchSharp.ReceiveSamples(convertOutputBuffer.Floats, outBufferSizeFloats);
-                            }
-                        }
-
-                        loop = this.Loop;
-                        if (loop)
-                        {
-                            m_waveChannel.CurrentTime = this.StartMarker;
-                            WaitForCue();
-                        }
-                        else
-                        {
-                            break;
-                        }
-                    }
-
-                    floatsRead = bytesRead / ((sizeof(float)) * format.Channels);
-                    SetSoundSharpValues(out tempo, out pitch, out averageBytesPerSec);
-
-                    // Put samples in SoundTouch
-                    m_soundTouchSharp.PutSamples(convertInputBuffer.Floats, (uint)floatsRead);
-
-                    // Receive samples from SoundTouch
-                    do
-                    {
-                        samplesProcessed = m_soundTouchSharp.ReceiveSamples(convertOutputBuffer.Floats, outBufferSizeFloats);
-
-                        if (samplesProcessed > 0)
-                        {
-                            // TODO: Calculation and add relative CurrentTime
-                            TimeSpan currentBufferTime = m_waveChannel.CurrentTime;
-                            int bufferAverageBytesPerSecond = Convert.ToInt32(format.AverageBytesPerSecond / m_tempo);
-
-                            // Add samples to buffered player
-                            m_inputProvider.AddSamples(convertOutputBuffer.Bytes, 0, (int)samplesProcessed * sizeof(float) * format.Channels, currentBufferTime, averageBytesPerSec);
-
-                            // Wait for queue to free up - only then add continue reading from the file
-                            while (!m_stopWorker && m_inputProvider.GetQueueCount() > 2)
-                            {
-                                Thread.Sleep(10);
-                            }
-                            bufferIndex++;
-                        }
-                    } while (!m_stopWorker && samplesProcessed != 0);
-                } // while
-
-                // Stop listening to PlayPositionChanged events
-                m_inputProvider.PlayPositionChanged -= new EventHandler(inputProvider_PlayPositionChanged);
-
-                // Fix to current play time not finishing up at end marker (Wave channel uses positions)
-                if (!m_stopWorker && CurrentPlayTime < actualEndMarker)
-                {
-                    lock (m_currentPlayTimeLock)
-                    {
-                        m_currentPlayTime = actualEndMarker;
-                    }
-                }
-
-                ChangeStatus(Statuses.Stopped);
-            }
-            finally
-            {
-                m_workerRunning = false;
-            }
         }
 
         /// <summary>
@@ -644,18 +671,15 @@ namespace BigMansStuff.PracticeSharp.Core
         /// Sets the SoundSharp values - tempo & pitch
         /// </summary>
         /// <param name="tempo"></param>
-        /// <param name="averageBytesPerSec"></param>
-        private void SetSoundSharpValues(out float tempo, out float pitch, out int averageBytesPerSec)
+        /// <param name="pitch"></param>
+        private void SetSoundSharpValues()
         {
-            tempo = this.Tempo;
-            pitch = this.Pitch;
+            float tempo = this.Tempo;
+            float pitch = this.Pitch;
             // Assign updated tempo
             m_soundTouchSharp.SetTempo(tempo);
             // Assign updated pitch
             m_soundTouchSharp.SetPitchOctaves(pitch);
-
-            // Calculate the average bytes per second ratio - Needed for position calculation
-            averageBytesPerSec = Convert.ToInt32(1.0f / tempo);
         }
 
         /// <summary>
@@ -882,6 +906,10 @@ namespace BigMansStuff.PracticeSharp.Core
         const string MP3Extension = ".mp3";
         const string WAVExtension = ".wav";
         const string OGGVExtension = ".ogg";
+
+        const int BusyQueuedBuffersThreshold = 3;
+            
+        const int BufferSamples = 5 * 2048; // floats, not bytes
 
         #endregion
     }
