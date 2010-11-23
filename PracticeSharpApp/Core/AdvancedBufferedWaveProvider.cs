@@ -69,7 +69,7 @@ namespace BigMansStuff.PracticeSharp.Core
         /// <summary>
         /// Adds samples. Takes a copy of buffer, so that buffer can be reused if necessary
         /// </summary>
-        public void AddSamples(byte[] buffer, int offset, int count, TimeSpan currentTime, int averageBytesPerSec)
+        public void AddSamples(byte[] buffer, int offset, int count, TimeSpan currentTime)
         {
             byte[] nbuffer = new byte[count];
             Buffer.BlockCopy(buffer, offset, nbuffer, 0, count);
@@ -167,43 +167,43 @@ namespace BigMansStuff.PracticeSharp.Core
         }
 
         #endregion
-
-        /// <summary>
-        /// Internal helper class for a stored buffer
-        /// </summary>
-        private class AudioBuffer
-        {
-            /// <summary>
-            /// Constructs a new AudioBuffer
-            /// </summary>
-            public AudioBuffer(byte[] buffer, TimeSpan currentTime )
-            {
-                this.Buffer = buffer;
-                this.CurrentTime = currentTime;
-            }
-
-            /// <summary>
-            /// Gets the Buffer
-            /// </summary>
-            public byte[] Buffer { get; private set; }
-
-            /// <summary>
-            /// Gets or sets the position within the buffer we have read up to so far
-            /// </summary>
-            public int Position { get; set; }
-
-            /// <summary>
-            /// CurrentTime of original file - used for calculating actual position within played buffer
-            /// </summary>
-            public TimeSpan CurrentTime { get; set; }
-        }
-
+       
         #region Private Members
 
         private Queue<AudioBuffer> m_queue;
         private WaveFormat m_waveFormat;
 
         #endregion
+    }
+
+    /// <summary>
+    /// Internal helper class for a stored buffer
+    /// </summary>
+    internal class AudioBuffer
+    {
+        /// <summary>
+        /// Constructs a new AudioBuffer
+        /// </summary>
+        public AudioBuffer(byte[] buffer, TimeSpan currentTime)
+        {
+            this.Buffer = buffer;
+            this.CurrentTime = currentTime;
+        }
+
+        /// <summary>
+        /// Gets the Buffer
+        /// </summary>
+        public byte[] Buffer { get; private set; }
+
+        /// <summary>
+        /// Gets or sets the position within the buffer we have read up to so far
+        /// </summary>
+        public int Position { get; set; }
+
+        /// <summary>
+        /// CurrentTime of original file - used for calculating actual position within played buffer
+        /// </summary>
+        public TimeSpan CurrentTime { get; set; }
     }
 
     public class BufferedPlayEventArgs : EventArgs
