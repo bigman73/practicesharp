@@ -101,7 +101,7 @@ namespace BigMansStuff.NAudio.Ogg
         }
 
         /// <summary>
-        /// Reads decompressed PCM data from our MP3 file.
+        /// Reads decompressed PCM data from our Ogg Vorbis file.
         /// </summary>
         public override int Read(byte[] sampleBuffer, int offset, int numBytes)
         {
