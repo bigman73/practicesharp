@@ -58,6 +58,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>NAudioDLL\NAudio.dll</HintPath>
     </Reference>
+    <Reference Include="NAudio.WindowsMediaFormat">
+      <HintPath>NAudioDLL\NAudio.WindowsMediaFormat.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Data" />
@@ -219,10 +222,6 @@
     <ProjectReference Include="..\NAudioOggVorbis\Library\NAudioOggVorbis.csproj">
       <Project>{B2D3B85A-252C-4A0E-BB07-816A62AB20A8}</Project>
       <Name>NAudioOggVorbis</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\NAudioWMA\Library\NAudioWMA.csproj">
-      <Project>{A589C62F-4A8B-447D-BD85-6D6E4F985B80}</Project>
-      <Name>NAudioWMA</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

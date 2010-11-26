@@ -29,7 +29,7 @@ using System.ComponentModel;
 using System.Threading;
 using System.IO;
 using BigMansStuff.NAudio.Ogg;
-using BigMansStuff.NAudio.WMA;
+using NAudio.WindowsMediaFormat;
 
 namespace BigMansStuff.PracticeSharp.Core
 {
