@@ -29,6 +29,7 @@ using System.ComponentModel;
 using System.Threading;
 using System.IO;
 using BigMansStuff.NAudio.Ogg;
+using BigMansStuff.NAudio.WMA;
 
 namespace BigMansStuff.PracticeSharp.Core
 {
@@ -83,27 +84,22 @@ namespace BigMansStuff.PracticeSharp.Core
         /// <param name="filename"></param>
         public void LoadFile(string filename)
         {
-            // Stop a previous file load
+            // Stop a previous file running
             if (m_waveOutDevice != null)
             {
                 Stop();
             }
 
             m_filename = filename;
-
-            m_status = Statuses.Pausing;
-
-            InitializeFileAudio();
-
-            // Special case handling for re-playing after last playing stopped in non-loop mode: 
-            //   Reset current play time to begining of file in case the previous play has reached the end of file
-            if (!m_newPlayTimeRequested && m_currentPlayTime >= m_waveChannel.TotalTime)
-                m_currentPlayTime = TimeSpan.Zero;
+            m_status = Statuses.PreparePlay;
 
             // Create the Audio Processing Worker (Thread)
             m_audioProcessingThread = new Thread( new ThreadStart( audioProcessingWorker_DoWork) );
             m_audioProcessingThread.IsBackground = true;
             m_audioProcessingThread.Priority = ThreadPriority.Highest;
+            // Important: MTA is needed for WMFSDK to function properly (for WMA support)
+            // All WMA (COM) related actions MUST be done within the Thread's MTA otherwise there is a COM exception
+            m_audioProcessingThread.SetApartmentState( ApartmentState.MTA ); 
         }
 
         /// <summary>
@@ -111,12 +107,12 @@ namespace BigMansStuff.PracticeSharp.Core
         /// </summary>
         public void Play()
         {
+            // Not playing now - Start the audio processing thread
             if (!m_audioProcessingThread.IsAlive)
             {
                 m_audioProcessingThread.Start();
             }
-
-            if (m_status == Statuses.Initialized || m_status == Statuses.Pausing)
+            else if (m_status == Statuses.Pausing)
             {
                 m_waveOutDevice.Play();
                 ChangeStatus(Statuses.Playing);
@@ -131,7 +127,7 @@ namespace BigMansStuff.PracticeSharp.Core
         ///  </remarks>
         public void Stop()
         {
-            if (m_status == Statuses.Initialized || m_status == Statuses.Initialized )
+            if (m_status == Statuses.Initializing || m_status == Statuses.Initialized )
             {
                 // Nothing to stop, the core never start playing
                 return; 
@@ -177,7 +173,10 @@ namespace BigMansStuff.PracticeSharp.Core
         public static bool IsAudioFile(string filename)
         {
             filename = filename.ToLower();
-            bool result = filename.EndsWith(".mp3") || filename.EndsWith(".wav") || filename.EndsWith(".ogg");
+            bool result = filename.EndsWith(".mp3") || 
+                          filename.EndsWith(".wav") || 
+                          filename.EndsWith(".ogg") || 
+                          filename.EndsWith(".wma");
 
             return result;
         }
@@ -373,7 +372,7 @@ namespace BigMansStuff.PracticeSharp.Core
 
         #region Enums
 
-        public enum Statuses { Initializing, Initialized, Playing, Stopped, Pausing, Terminating, Terminated, Error };
+        public enum Statuses { None, Initializing, Initialized, PreparePlay, PlayReady, Playing, Stopped, Pausing, Terminating, Terminated, Error };
 
         #endregion
 
@@ -386,7 +385,34 @@ namespace BigMansStuff.PracticeSharp.Core
         {
             try
             {
-                ProcessAudio();
+                InitializeFileAudio();
+
+                // Special case handling for re-playing after last playing stopped in non-loop mode: 
+                //   Reset current play time to begining of file in case the previous play has reached the end of file
+                if (!m_newPlayTimeRequested && m_currentPlayTime >= m_waveChannel.TotalTime)
+                    m_currentPlayTime = TimeSpan.Zero;
+
+                m_waveOutDevice.Play();
+                ChangeStatus(Statuses.Playing);
+
+                try
+                {
+                    ProcessAudio();
+                }
+                finally
+                {
+                    // TODO: Validate that all COM related operations are done within MTA thread, not on STA thread
+                    // TODO: Does Terminate Audio need to be here?
+                    // TODO: Initialize of SoundTouch should be also in MTA, not in STA
+
+                    // Dispose of reader in context of thread (for WMF it will cannot be disposed in the UI's STA)
+                    if (m_waveReader != null)
+                    {
+                        m_waveReader.Dispose();
+                        m_waveReader = null;
+                    }
+
+                }
             }
             catch (Exception ex)
             {
@@ -587,6 +613,8 @@ namespace BigMansStuff.PracticeSharp.Core
             }
 
             m_filePlayDuration = m_waveChannel.TotalTime;
+
+            m_status = Statuses.PlayReady;
         }
 
         /// <summary>
@@ -698,7 +726,7 @@ namespace BigMansStuff.PracticeSharp.Core
         }
 
         /// <summary>
-        /// Creates an input WaveChannel (Audio file reader for MP3/WAV/Other formats in the future)
+        /// Creates an input WaveChannel (Audio file reader for MP3/WAV/OGG/WMA/Other formats in the future)
         /// </summary>
         /// <param name="filename"></param>
         private void CreateInputWaveChannel(string filename)
@@ -706,8 +734,8 @@ namespace BigMansStuff.PracticeSharp.Core
             string fileExt = Path.GetExtension( filename.ToLower() );
             if ( fileExt == MP3Extension )
             {
-                m_mp3Reader = new Mp3FileReader(filename);
-                m_blockAlignedStream = new BlockAlignReductionStream(m_mp3Reader);
+                m_waveReader = new Mp3FileReader(filename);
+                m_blockAlignedStream = new BlockAlignReductionStream(m_waveReader);
                 // Wave channel - reads from file and returns raw wave blocks
                 m_waveChannel = new WaveChannel32(m_blockAlignedStream);
             }
@@ -731,6 +759,23 @@ namespace BigMansStuff.PracticeSharp.Core
             else if (fileExt == OGGVExtension)
             {
                 m_waveReader = new OggVorbisFileReader(filename);
+                if (m_waveReader.WaveFormat.Encoding != WaveFormatEncoding.Pcm)
+                {
+                    m_waveReader = WaveFormatConversionStream.CreatePcmStream(m_waveReader);
+                    m_waveReader = new BlockAlignReductionStream(m_waveReader);
+                }
+                if (m_waveReader.WaveFormat.BitsPerSample != 16)
+                {
+                    var format = new WaveFormat(m_waveReader.WaveFormat.SampleRate,
+                       16, m_waveReader.WaveFormat.Channels);
+                    m_waveReader = new WaveFormatConversionStream(format, m_waveReader);
+                }
+
+                m_waveChannel = new WaveChannel32(m_waveReader);
+            }
+            else if (fileExt == WMAExtension)
+            {
+                m_waveReader = new WMAFileReader(filename);
                 if (m_waveReader.WaveFormat.Encoding != WaveFormatEncoding.Pcm)
                 {
                     m_waveReader = WaveFormatConversionStream.CreatePcmStream(m_waveReader);
@@ -812,17 +857,6 @@ namespace BigMansStuff.PracticeSharp.Core
                 m_blockAlignedStream = null;
             }
 
-            if (m_mp3Reader != null)
-            {
-                m_mp3Reader.Dispose();
-                m_mp3Reader = null;
-            }
-            if (m_waveReader != null)
-            {
-                m_waveReader.Dispose();
-                m_waveReader = null;
-            }
-
             if (m_inputProvider != null)
             {
                 if (m_inputProvider is IDisposable)
@@ -859,7 +893,7 @@ namespace BigMansStuff.PracticeSharp.Core
 
         #region Private Members
 
-        private Statuses m_status;
+        private Statuses m_status = Statuses.None;
         private string m_filename;
         private int m_latency = 100; // msec
         
@@ -867,7 +901,6 @@ namespace BigMansStuff.PracticeSharp.Core
         private IWavePlayer m_waveOutDevice;
         private AdvancedBufferedWaveProvider m_inputProvider;
 
-        private WaveStream m_mp3Reader = null;
         private WaveStream m_blockAlignedStream = null;
         private WaveStream m_waveReader = null;
         private WaveChannel32 m_waveChannel = null;
@@ -906,6 +939,7 @@ namespace BigMansStuff.PracticeSharp.Core
         const string MP3Extension = ".mp3";
         const string WAVExtension = ".wav";
         const string OGGVExtension = ".ogg";
+        const string WMAExtension = ".wma";
 
         const int BusyQueuedBuffersThreshold = 3;
             

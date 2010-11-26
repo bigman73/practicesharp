@@ -203,7 +203,8 @@ namespace BigMansStuff.PracticeSharp.UI
                 m_practiceSharpLogic.Pause();
             }
             else if ( (m_practiceSharpLogic.Status == PracticeSharpLogic.Statuses.Pausing ) ||
-                      (m_practiceSharpLogic.Status == PracticeSharpLogic.Statuses.Initialized ) )
+                      (m_practiceSharpLogic.Status == PracticeSharpLogic.Statuses.PreparePlay) ||
+                      (m_practiceSharpLogic.Status == PracticeSharpLogic.Statuses.PlayReady ) )
             {
                 playPauseButton.Image = Resources.Pause_Hot;
 

@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("PracticeSharp")]
-[assembly: AssemblyDescription("A utility for practicing playing music. Will make your playing skills sharper!")]
+[assembly: AssemblyTitle("NAudioWMA")]
+[assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Yuval Naveh")]
-[assembly: AssemblyProduct("PracticeSharp")]
-[assembly: AssemblyCopyright("Copyright © Yuval Naveh 2010 (http://code.google.com/p/practicesharp)")]
+[assembly: AssemblyProduct("NAudioWMA")]
+[assembly: AssemblyCopyright("Copyright © Yuval Naveh 2010")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("07437f79-325a-4ae9-ae22-5bd48b444121")]
+[assembly: Guid("398553df-0c5a-4f00-a19d-074aca6d17c0")]
 
 // Version information for an assembly consists of the following four values:
 //
@@ -32,5 +32,5 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("0.3.0.0")]
-[assembly: AssemblyFileVersion("0.3.0.0")]
+[assembly: AssemblyVersion("1.0.0.0")]
+[assembly: AssemblyFileVersion("1.0.0.0")]

@@ -189,7 +189,7 @@ namespace BigMansStuff.PracticeSharp.UI
             // 
             // openFileDialog
             // 
-            this.openFileDialog.Filter = "MP3 files|*.mp3|WAV files|*.wav|Ogg Vorbis files|*.ogg";
+            this.openFileDialog.Filter = "MP3 files|*.mp3|WAV files|*.wav|Ogg Vorbis files|*.ogg|WMA files|*.wma";
             // 
             // volumeTrackBar
             // 
