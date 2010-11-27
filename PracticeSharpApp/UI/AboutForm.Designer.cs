@@ -127,7 +127,7 @@
             // 
             // pictureBox1
             // 
-            this.pictureBox1.Image = global::BigMansStuff.PracticeSharp.UI.Resources.PracticeSharp;
+            this.pictureBox1.Image = global::BigMansStuff.PracticeSharp.Resources.PracticeSharp;
             this.pictureBox1.Location = new System.Drawing.Point(190, 9);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(131, 143);
@@ -136,7 +136,7 @@
             // 
             // pictureBox2
             // 
-            this.pictureBox2.Image = global::BigMansStuff.PracticeSharp.UI.Resources.lgplv3_147x51;
+            this.pictureBox2.Image = global::BigMansStuff.PracticeSharp.Resources.lgplv3_147x51;
             this.pictureBox2.Location = new System.Drawing.Point(190, 174);
             this.pictureBox2.Name = "pictureBox2";
             this.pictureBox2.Size = new System.Drawing.Size(131, 60);
