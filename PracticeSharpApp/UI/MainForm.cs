@@ -211,8 +211,7 @@ namespace BigMansStuff.PracticeSharp.UI
                 m_practiceSharpLogic.Pause();
             }
             else if ( (m_practiceSharpLogic.Status == PracticeSharpLogic.Statuses.Pausing ) ||
-                      (m_practiceSharpLogic.Status == PracticeSharpLogic.Statuses.PreparePlay) ||
-                      (m_practiceSharpLogic.Status == PracticeSharpLogic.Statuses.PlayReady ) )
+                      (m_practiceSharpLogic.Status == PracticeSharpLogic.Statuses.Initialized) )
             {
                 playPauseButton.Image = Resources.Pause_Hot;
 
@@ -304,13 +303,14 @@ namespace BigMansStuff.PracticeSharp.UI
         /// <param name="e"></param>
         private void writePresetButton_Click(object sender, EventArgs e)
         {
-            if (m_currentPreset == null ||
-                m_currentPreset.State != PresetControl.PresetStates.WaitForSave)
+            if (!m_writeMode)
             {
+                m_writeMode = true;
                 // Temporary Pause play until save has completed
                 if (m_practiceSharpLogic.Status == PracticeSharpLogic.Statuses.Playing)
                 {
                     m_tempSavePausePlay = true;
+                    playPauseButton.Enabled = false;
                     m_practiceSharpLogic.Pause();
                 }
 
@@ -320,12 +320,27 @@ namespace BigMansStuff.PracticeSharp.UI
                     presetControl.State = PresetControl.PresetStates.WaitForSave;
                 }
             }
-            else if ( m_currentPreset != null )
+            // Write mode is already on - Cancel write mode               
+            else
             {
-                // Cancel write mode
-                m_currentPreset.State = PresetControl.PresetStates.Selected;
+                m_writeMode = false;
+
+                // Set preset controls as Selected/Off
+                foreach (PresetControl presetControl in m_presetControls.Values)
+                {
+                    if (m_currentPreset != null && presetControl == m_currentPreset)
+                    {
+                        m_currentPreset.State = PresetControl.PresetStates.Selected;
+                    }
+                    else
+                    {
+                        presetControl.State = PresetControl.PresetStates.Off;
+                    }
+                }
+
                 if (m_tempSavePausePlay)
                 {
+                    playPauseButton.Enabled = true;
                     m_practiceSharpLogic.Play();
                     m_tempSavePausePlay = false;
                 }
@@ -423,6 +438,7 @@ namespace BigMansStuff.PracticeSharp.UI
 
             if (m_tempSavePausePlay)
             {
+                playPauseButton.Enabled = true;
                 m_practiceSharpLogic.Play();
                 m_tempSavePausePlay = false;
             }
@@ -442,16 +458,23 @@ namespace BigMansStuff.PracticeSharp.UI
             this.Close();
         }
 
-        private void resetBankButton_Click(object sender, EventArgs e)
-        {
+        #region Reset Bank Button event handlers
 
-        }
-
+        /// <summary>
+        /// Mouse Down - start the reset timer
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void resetBankButton_MouseDown(object sender, MouseEventArgs e)
         {
             resetBankTimer.Start();
         }
 
+        /// <summary>
+        /// Timer tick event handler - enough time has passed since the mouse down has started, it is time to do the actual reset action
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void resetBankTimer_Tick(object sender, EventArgs e)
         {
             resetBankTimer.Stop();
@@ -464,27 +487,51 @@ namespace BigMansStuff.PracticeSharp.UI
             WritePresetsBank();
         }
 
+        /// <summary>
+        /// Mouse was up - Cancel the reset action
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void resetBankButton_MouseUp(object sender, MouseEventArgs e)
         {
-            // Cancel reset
-            resetBankTimer.Stop();
+            if (resetBankTimer.Enabled)
+            {
+                // Cancel reset
+                resetBankTimer.Stop();
+            }
         }
 
+        #endregion
+
+        /// <summary>
+        /// tempoTrackBar Mouse Down - Changes the tempo to the value under the current mouse position
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void tempoTrackBar_MouseDown(object sender, MouseEventArgs e)
         {
             UpdateTrackBarByMousePosition(tempoTrackBar, e);
         }
 
+        /// <summary>
+        /// pitchTrackBar Mouse Down - Changes the pitch to the value under the current mouse position
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void pitchTrackBar_MouseDown(object sender, MouseEventArgs e)
         {
             UpdateTrackBarByMousePosition(pitchTrackBar, e);
         }
 
+        /// <summary>
+        /// volumeTrackBar Mouse Down - Changes the volume to the value under the current mouse position
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void volumeTrackBar_MouseDown(object sender, MouseEventArgs e)
         {
             UpdateTrackBarByMousePosition(volumeTrackBar, e);
         }
-
         
 
         #region Drag & Drop
@@ -534,6 +581,12 @@ namespace BigMansStuff.PracticeSharp.UI
         }
 
         #endregion
+
+        /// <summary>
+        /// ValueChanged Event Handler - Changes the Current play time
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void currentUpDown_ValueChanged(object sender, EventArgs e)
         {
             // Don't allow re-entry of UI events when the track bar is being programmatically changed
@@ -701,17 +754,34 @@ namespace BigMansStuff.PracticeSharp.UI
         /// <param name="e"></param>
         private void openFileButton_Click(object sender, EventArgs e)
         {
-            // Show the open file dialog
-            if (DialogResult.OK == openFileDialog.ShowDialog(this))
+            // Temporary Pause play until save has completed
+            if (m_practiceSharpLogic.Status == PracticeSharpLogic.Statuses.Playing)
             {
-                // Get directory path and store it as a user settting
-                FileInfo fi = new FileInfo( openFileDialog.FileName );
-                Properties.Settings.Default.LastAudioFolder = fi.Directory.FullName;
-                Properties.Settings.Default.LastFilterIndex = openFileDialog.FilterIndex;
-                Properties.Settings.Default.Save();
+                m_tempSavePausePlay = true;
+                m_practiceSharpLogic.Pause();
+            }
+            try
+            {
+                // Show the open file dialog
+                if (DialogResult.OK == openFileDialog.ShowDialog(this))
+                {
+                    // Get directory path and store it as a user settting
+                    FileInfo fi = new FileInfo(openFileDialog.FileName);
+                    Properties.Settings.Default.LastAudioFolder = fi.Directory.FullName;
+                    Properties.Settings.Default.LastFilterIndex = openFileDialog.FilterIndex;
+                    Properties.Settings.Default.Save();
 
-                // Open the file for playing
-                OpenFile(openFileDialog.FileName, true);
+                    // Open the file for playing
+                    OpenFile(openFileDialog.FileName, true);
+                }
+            }
+            finally
+            {
+                if (m_tempSavePausePlay)
+                {
+                    m_tempSavePausePlay = false;
+                    m_practiceSharpLogic.Play();
+                }
             }
         }
 
@@ -732,6 +802,12 @@ namespace BigMansStuff.PracticeSharp.UI
             speedValueLabel.Text = newTempo.ToString();
         }
 
+        /// <summary>
+        /// Event handler for ValueChanged of the pitchTrackBar -
+        ///   Changes the underlying pitch of PracticeSharpLogic
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void pitchTrackBar_ValueChanged(object sender, EventArgs e)
         {
             // Convert to Percent 
@@ -744,11 +820,21 @@ namespace BigMansStuff.PracticeSharp.UI
     
         } 
 
+        /// <summary>
+        /// speedLabel Click event handler - Reset the tempo to default value
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void speedLabel_Click(object sender, EventArgs e)
         {
             tempoTrackBar.Value = Convert.ToInt32( PresetData.DefaultTempo * 100 );
         }
 
+        /// <summary>
+        /// volumeLabel Click event handler - Reset the volume to default value
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void volumeLabel_Click(object sender, EventArgs e)
         {
             volumeTrackBar.Value = Convert.ToInt32( PresetData.DefaultVolume * 100 );
@@ -759,6 +845,11 @@ namespace BigMansStuff.PracticeSharp.UI
               pitchTrackBar.Value = Convert.ToInt32( PresetData.DefaultPitch * 100 );
         }
 
+        /// <summary>
+        /// positionLabel Click event handler - Reset the position to default value
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void positionLabel_Click(object sender, EventArgs e)
         {
             // Reset current play time so it starts from the begining
@@ -773,10 +864,17 @@ namespace BigMansStuff.PracticeSharp.UI
             }
         }
     
+        /// <summary>
+        /// Toggle the loop mode On/Off
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void loopCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             m_practiceSharpLogic.Loop = loopCheckBox.Checked;
         }
+
+        #region Play Time - Event handlers
 
         private void playTimeTrackBar_ValueChanged(object sender, EventArgs e)
         {
@@ -816,7 +914,7 @@ namespace BigMansStuff.PracticeSharp.UI
             }
         }
     
-        private void playPositionTrackBar_MouseUp(object sender, MouseEventArgs e)
+        private void playTimeTrackBar_MouseUp(object sender, MouseEventArgs e)
         {
             m_playTimeTrackBarIsChanging = false;
         }
@@ -900,6 +998,8 @@ namespace BigMansStuff.PracticeSharp.UI
             }
         }
 
+        #endregion
+
         /// <summary>
         /// Event handler for changes in the CueComboBox
         /// </summary>
@@ -970,6 +1070,7 @@ namespace BigMansStuff.PracticeSharp.UI
         }
 
         #endregion
+
         private void aboutMenuItem_Click(object sender, EventArgs e)
         {
             using (AboutForm aboutForm = new AboutForm())
@@ -1462,6 +1563,8 @@ namespace BigMansStuff.PracticeSharp.UI
         /// Flag for Temporary Pausing Play while saving
         /// </summary>
         private bool m_tempSavePausePlay = false;
+
+        private bool m_writeMode = false;
 
         private DateTime m_playTimeTrackBarMaskOutTime = DateTime.Now;
         private DateTime m_currentControlsMaskOutTime = DateTime.Now;
