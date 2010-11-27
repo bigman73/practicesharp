@@ -115,8 +115,11 @@ namespace BigMansStuff.PracticeSharp.Core
                 {
                     int nread = audioBuffer.Buffer.Length - audioBuffer.Position;
 
-                    // Console.WriteLine("Now playing: " + audioBuffer.CurrentTime.ToString() /*+ audioBuffer.Position / au*/ );
-                    PlayPositionChanged(this, new BufferedPlayEventArgs(audioBuffer.CurrentTime));
+                    // Fire PlayPositionChanged event
+                    if (PlayPositionChanged != null)
+                    {
+                        PlayPositionChanged(this, new BufferedPlayEventArgs(audioBuffer.CurrentTime));
+                    }
 
                     // If this buffer must be read in it's entirety
                     if (nread <= required) 
