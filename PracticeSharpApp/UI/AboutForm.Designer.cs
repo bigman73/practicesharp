@@ -158,10 +158,10 @@
             this.codeProjectLinkLabel.AutoSize = true;
             this.codeProjectLinkLabel.Location = new System.Drawing.Point(12, 139);
             this.codeProjectLinkLabel.Name = "codeProjectLinkLabel";
-            this.codeProjectLinkLabel.Size = new System.Drawing.Size(89, 13);
+            this.codeProjectLinkLabel.Size = new System.Drawing.Size(118, 13);
             this.codeProjectLinkLabel.TabIndex = 11;
             this.codeProjectLinkLabel.TabStop = true;
-            this.codeProjectLinkLabel.Text = "Code Project Site";
+            this.codeProjectLinkLabel.Text = "CodeProject Article Site";
             this.codeProjectLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.codeProjectLinkLabel_LinkClicked);
             // 
             // AboutForm

@@ -83,7 +83,7 @@ namespace BigMansStuff.PracticeSharp.UI
         /// </summary>
         private void InitializeApplication()
         {
-            // Set process priority to high - to minimize playback hickups
+            // Set process priority to high - to minimize playback hiccups
             Process.GetCurrentProcess().PriorityClass = System.Diagnostics.ProcessPriorityClass.High;
 
             InitializeConfiguration();
