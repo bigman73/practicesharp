@@ -746,7 +746,7 @@ namespace BigMansStuff.PracticeSharp.UI
             // 
             // cuePictureBox
             // 
-            this.cuePictureBox.Image = global::BigMansStuff.PracticeSharp.UI.Resources.blue_off_16;
+            this.cuePictureBox.Image = global::BigMansStuff.PracticeSharp.Resources.blue_off_16;
             this.cuePictureBox.Location = new System.Drawing.Point(318, 5);
             this.cuePictureBox.Name = "cuePictureBox";
             this.cuePictureBox.Size = new System.Drawing.Size(18, 18);

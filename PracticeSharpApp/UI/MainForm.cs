@@ -33,6 +33,7 @@ using System.IO;
 using System.Threading;
 using System.Xml;
 using System.Configuration;
+using System.Diagnostics;
 
 namespace BigMansStuff.PracticeSharp.UI
 {
@@ -82,6 +83,9 @@ namespace BigMansStuff.PracticeSharp.UI
         /// </summary>
         private void InitializeApplication()
         {
+            // Set process priority to high - to minimize playback hickups
+            Process.GetCurrentProcess().PriorityClass = System.Diagnostics.ProcessPriorityClass.High;
+
             InitializeConfiguration();
             InitializeMRUFiles();
 
