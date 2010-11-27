@@ -70,9 +70,9 @@ namespace BigMansStuff.PracticeSharp.Core
             Stop();
 
             // Release lock, just in case the thread is locked
-            lock (m_firstPlayLock)
+            lock (FirstPlayLock)
             {
-                Monitor.Pulse(m_firstPlayLock);
+                Monitor.Pulse(FirstPlayLock);
             }
 
             ChangeStatus(Statuses.Terminated);
@@ -105,9 +105,9 @@ namespace BigMansStuff.PracticeSharp.Core
             m_audioProcessingThread.Start();
 
             // Wait for thread for finish initialization
-            lock (m_initializedLock)
+            lock (InitializedLock)
             {
-                Monitor.Wait(m_initializedLock);
+                Monitor.Wait(InitializedLock);
             }
 
         }
@@ -120,9 +120,9 @@ namespace BigMansStuff.PracticeSharp.Core
             // Not playing now - Start the audio processing thread
             if (m_status == Statuses.Initialized)
             {
-                lock (m_firstPlayLock)
+                lock (FirstPlayLock)
                 {
-                    Monitor.Pulse(m_firstPlayLock);
+                    Monitor.Pulse(FirstPlayLock);
                 }
             }
             else if (m_status == Statuses.Pausing)
@@ -160,13 +160,6 @@ namespace BigMansStuff.PracticeSharp.Core
                 }
 
                 m_audioProcessingThread = null;
-            }
-
-            // TerminateNAudio();
-
-            if (m_soundTouchSharp != null)
-            {
-                m_soundTouchSharp.Clear();
             }
 
             ChangeStatus(Statuses.Stopped);
@@ -224,8 +217,8 @@ namespace BigMansStuff.PracticeSharp.Core
         /// </remarks>
         public float Tempo
         {
-            get { lock (m_tempoLock) return m_tempo; }
-            set { lock (m_tempoLock) { m_tempo = value; } }
+            get { lock (TempoLock) return m_tempo; }
+            set { lock (TempoLock) { m_tempo = value; } }
         }
 
         /// <summary>
@@ -240,8 +233,8 @@ namespace BigMansStuff.PracticeSharp.Core
         /// </remarks>
         public float Pitch
         {
-            get { lock (m_propertiesLock) return m_pitch; }
-            set { lock (m_propertiesLock) { m_pitch = value; } }
+            get { lock (PropertiesLock) return m_pitch; }
+            set { lock (PropertiesLock) { m_pitch = value; } }
         }
 
         /// <summary>
@@ -251,11 +244,11 @@ namespace BigMansStuff.PracticeSharp.Core
         {
             get
             {
-                lock (m_propertiesLock) { return m_volume; }
+                lock (PropertiesLock) { return m_volume; }
             }
             set
             {
-                lock (m_propertiesLock) { m_volume = value; }
+                lock (PropertiesLock) { m_volume = value; }
             }
         }
 
@@ -274,14 +267,14 @@ namespace BigMansStuff.PracticeSharp.Core
                 if (m_inputProvider == null)
                     return TimeSpan.Zero;
 
-                lock (m_currentPlayTimeLock)
+                lock (CurrentPlayTimeLock)
                 {
                     return m_currentPlayTime;
                 }
             }
             set
             {
-                lock (m_currentPlayTimeLock)
+                lock (CurrentPlayTimeLock)
                 {
                     m_newPlayTime = value;
                     m_newPlayTimeRequested = true;
@@ -298,14 +291,14 @@ namespace BigMansStuff.PracticeSharp.Core
         {
             get
             {
-                lock (m_loopLock)
+                lock (LoopLock)
                 {
                     return m_loop;
                 }
             }
             set
             {
-                lock (m_loopLock)
+                lock (LoopLock)
                 {
                     m_loop = value;
                 }
@@ -319,14 +312,14 @@ namespace BigMansStuff.PracticeSharp.Core
                 if (m_inputProvider == null)
                     return TimeSpan.Zero;
 
-                lock (m_propertiesLock)
+                lock (PropertiesLock)
                 {
                     return m_startMarker;
                 }
             }
             set
             {
-                lock (m_propertiesLock)
+                lock (PropertiesLock)
                 {
                     m_startMarker = value;
                 }
@@ -340,14 +333,14 @@ namespace BigMansStuff.PracticeSharp.Core
                 if (m_inputProvider == null)
                     return TimeSpan.Zero;
 
-                lock (m_propertiesLock)
+                lock (PropertiesLock)
                 {
                     return m_endMarker;
                 }
             }
             set
             {
-                lock (m_propertiesLock)
+                lock (PropertiesLock)
                 {
                     m_endMarker = value;
                 }
@@ -361,14 +354,14 @@ namespace BigMansStuff.PracticeSharp.Core
                 if (m_inputProvider == null)
                     return TimeSpan.Zero;
 
-                lock (m_propertiesLock)
+                lock (PropertiesLock)
                 {
                     return m_cue;
                 }
             }
             set
             {
-                lock (m_propertiesLock)
+                lock (PropertiesLock)
                 {
                     m_cue = value;
                 }
@@ -394,9 +387,6 @@ namespace BigMansStuff.PracticeSharp.Core
 
         #region Private Methods
 
-        private readonly object m_initializedLock = new object();
-        private readonly object m_firstPlayLock = new object();
-
         /// <summary>
         /// Audio processing thread procedure
         /// </summary>
@@ -420,16 +410,16 @@ namespace BigMansStuff.PracticeSharp.Core
                 finally
                 {
                     // Pulse the initialized lock to release the client (UI) that is waiting for initialization to finish
-                    lock (m_initializedLock)
+                    lock (InitializedLock)
                     {
-                        Monitor.Pulse(m_initializedLock);
+                        Monitor.Pulse(InitializedLock);
                     }
                 }
 
                 // Wait for first Play to pulse and free lock
-                lock (m_firstPlayLock)
+                lock (FirstPlayLock)
                 {
-                    Monitor.Wait(m_firstPlayLock);
+                    Monitor.Wait(FirstPlayLock);
                 }
                 // Safety guard - if thread never really started playing but PracticeSharpLogic was terminated
                 if (m_status == Statuses.Terminating || m_status == Statuses.Terminated)
@@ -444,10 +434,6 @@ namespace BigMansStuff.PracticeSharp.Core
                 }
                 finally
                 {
-                    // TODO: Validate that all COM related operations are done within MTA thread, not on STA thread
-
-
-
                     // Dispose of NAudio in context of thread (for WMF it will must be disposed in the same thread)
                     TerminateNAudio();
 
@@ -497,7 +483,7 @@ namespace BigMansStuff.PracticeSharp.Core
 
                 while (!m_stopWorker && m_waveChannel.Position < m_waveChannel.Length)
                 {
-                    lock (m_propertiesLock)
+                    lock (PropertiesLock)
                     {
                         m_waveChannel.Volume = m_volume;
                     }
@@ -505,7 +491,7 @@ namespace BigMansStuff.PracticeSharp.Core
                     #region Read samples from file
 
                     // Change current play position
-                    lock (m_currentPlayTimeLock)
+                    lock (CurrentPlayTimeLock)
                     {
                         if (m_newPlayTimeRequested)
                         {
@@ -617,7 +603,7 @@ namespace BigMansStuff.PracticeSharp.Core
                 // Fix to current play time not finishing up at end marker (Wave channel uses positions)
                 if (!m_stopWorker && CurrentPlayTime < actualEndMarker)
                 {
-                    lock (m_currentPlayTimeLock)
+                    lock (CurrentPlayTimeLock)
                     {
                         m_currentPlayTime = actualEndMarker;
                     }
@@ -669,7 +655,12 @@ namespace BigMansStuff.PracticeSharp.Core
                 {
                     if (CueWaitPulsed != null)
                     {
-                        CueWaitPulsed(this, new EventArgs());
+                        // explicitly invoke each subscribed event handler *asynchronously*
+                        foreach (EventHandler subscriber in CueWaitPulsed.GetInvocationList())
+                        {
+                            // Event is unidirectional - No call back (i.e. EndInvoke) needed
+                            subscriber.BeginInvoke(this, new EventArgs(), null, subscriber);
+                        }
                     }
 
                     Thread.Sleep(1000);
@@ -702,7 +693,14 @@ namespace BigMansStuff.PracticeSharp.Core
             Console.WriteLine("PracticeSharpLogic - Status changed: " + m_status);
             // Raise StatusChanged Event
             if (StatusChanged != null)
-                StatusChanged(this, m_status);
+            {
+                // explicitly invoke each subscribed event handler *asynchronously*
+                foreach (StatusChangedEventHandler subscriber in StatusChanged.GetInvocationList())
+                {
+                    // Event is unidirectional - No call back (i.e. EndInvoke) needed
+                    subscriber.BeginInvoke(this, newStatus, null, subscriber);
+                }
+            }
         }
 
         /// <summary>
@@ -755,14 +753,20 @@ namespace BigMansStuff.PracticeSharp.Core
         /// <param name="e"></param>
         private void inputProvider_PlayPositionChanged(object sender, EventArgs e)
         {
-            lock (m_currentPlayTimeLock)
+            lock (CurrentPlayTimeLock)
             {
                 m_currentPlayTime = (e as BufferedPlayEventArgs).PlayTime;
             }
 
+            
             if (PlayTimeChanged != null)
             {
-                PlayTimeChanged(this, new EventArgs());
+                // explicitly invoke each subscribed event handler *asynchronously*
+                foreach (EventHandler subscriber in PlayTimeChanged.GetInvocationList())
+                {
+                    // Event is unidirectional - No call back (i.e. EndInvoke) needed
+                    subscriber.BeginInvoke(this, new EventArgs(), null, subscriber);
+                }
             }
         }
 
@@ -848,6 +852,7 @@ namespace BigMansStuff.PracticeSharp.Core
         {
             try
             {
+                m_latency = BigMansStuff.PracticeSharp.Properties.Settings.Default.Latency;
                 m_waveOutDevice = new DirectSoundOut(m_latency);
             }
             catch (Exception driverCreateException)
@@ -930,6 +935,7 @@ namespace BigMansStuff.PracticeSharp.Core
 
             if (m_soundTouchSharp != null)
             {
+                m_soundTouchSharp.Clear();
                 m_soundTouchSharp.Dispose();
                 m_soundTouchSharp = null;
                 Console.WriteLine("SoundTouch terminated");
@@ -942,7 +948,7 @@ namespace BigMansStuff.PracticeSharp.Core
 
         private Statuses m_status = Statuses.None;
         private string m_filename;
-        private int m_latency = 100; // msec
+        private int m_latency = 125; // msec
         
         private SoundTouchSharp m_soundTouchSharp;
         private IWavePlayer m_waveOutDevice;
@@ -953,16 +959,9 @@ namespace BigMansStuff.PracticeSharp.Core
         private WaveChannel32 m_waveChannel = null;
 
         private float m_tempo = 1f;
-        private object m_tempoLock = new object();
-
         private float m_pitch = 0f;
-
         private bool m_loop;
-        private object m_loopLock = new object();
-
         private float m_volume;
- 
-        private object m_propertiesLock = new object();
 
         private Thread m_audioProcessingThread;
         private bool m_stopWorker = false;
@@ -974,10 +973,17 @@ namespace BigMansStuff.PracticeSharp.Core
         private TimeSpan m_endMarker;
         private TimeSpan m_cue;
 
-        private object m_currentPlayTimeLock = new object();
         private TimeSpan m_currentPlayTime;
         private TimeSpan m_newPlayTime;
         private bool m_newPlayTimeRequested;
+
+        // Thread Locks
+        private readonly object LoopLock = new object();
+        private readonly object CurrentPlayTimeLock = new object();
+        private readonly object InitializedLock = new object();
+        private readonly object FirstPlayLock = new object();
+        private readonly object TempoLock = new object();
+        private readonly object PropertiesLock = new object();
 
         #endregion
 
