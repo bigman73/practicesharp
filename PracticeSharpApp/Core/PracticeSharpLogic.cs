@@ -73,6 +73,12 @@ namespace BigMansStuff.PracticeSharp.Core
 
             Stop();
 
+            // Release lock, just in case the thread is locked
+            lock (m_firstPlayLock)
+            {
+                Monitor.Pulse(m_firstPlayLock);
+            }
+
             TerminateSoundTouchSharp();
 
             ChangeStatus(Statuses.Terminated);
@@ -99,7 +105,17 @@ namespace BigMansStuff.PracticeSharp.Core
             m_audioProcessingThread.Priority = ThreadPriority.Highest;
             // Important: MTA is needed for WMFSDK to function properly (for WMA support)
             // All WMA (COM) related actions MUST be done within the Thread's MTA otherwise there is a COM exception
-            m_audioProcessingThread.SetApartmentState( ApartmentState.MTA ); 
+            m_audioProcessingThread.SetApartmentState( ApartmentState.MTA );
+
+            // Allow initialization to start >>Inside<< the thread, the thread will stop and wait for a pulse
+            m_audioProcessingThread.Start();
+
+            // Wait for thread for finish initialization
+            lock (m_initializedLock)
+            {
+                Monitor.Wait(m_initializedLock);
+            }
+
         }
 
         /// <summary>
@@ -108,9 +124,12 @@ namespace BigMansStuff.PracticeSharp.Core
         public void Play()
         {
             // Not playing now - Start the audio processing thread
-            if (!m_audioProcessingThread.IsAlive)
+            if (m_status == Statuses.PlayReady)
             {
-                m_audioProcessingThread.Start();
+                lock (m_firstPlayLock)
+                {
+                    Monitor.Pulse(m_firstPlayLock);
+                }
             }
             else if (m_status == Statuses.Pausing)
             {
@@ -151,7 +170,10 @@ namespace BigMansStuff.PracticeSharp.Core
 
             TerminateNAudio();
 
-            m_soundTouchSharp.Clear();
+            if (m_soundTouchSharp != null)
+            {
+                m_soundTouchSharp.Clear();
+            }
 
             ChangeStatus(Statuses.Stopped);
         }
@@ -378,6 +400,9 @@ namespace BigMansStuff.PracticeSharp.Core
 
         #region Private Methods
 
+        private readonly object m_initializedLock = new object();
+        private readonly object m_firstPlayLock = new object();
+
         /// <summary>
         /// Audio processing thread procedure
         /// </summary>
@@ -391,6 +416,20 @@ namespace BigMansStuff.PracticeSharp.Core
                 //   Reset current play time to begining of file in case the previous play has reached the end of file
                 if (!m_newPlayTimeRequested && m_currentPlayTime >= m_waveChannel.TotalTime)
                     m_currentPlayTime = TimeSpan.Zero;
+
+                lock (m_initializedLock)
+                {
+                    Monitor.Pulse(m_initializedLock);
+                }
+
+                // Wait for first Play to pulse and free lock
+                lock (m_firstPlayLock)
+                {
+                    Monitor.Wait(m_firstPlayLock);
+                }
+                // Safety guard - if thread never really started playing but PracticeSharpLogic was terminated
+                if (m_status == Statuses.Terminating || m_status == Statuses.Terminated)
+                    return;
 
                 m_waveOutDevice.Play();
                 ChangeStatus(Statuses.Playing);
@@ -722,7 +761,10 @@ namespace BigMansStuff.PracticeSharp.Core
                 m_currentPlayTime = (e as BufferedPlayEventArgs).PlayTime;
             }
 
-            PlayTimeChanged(this, new EventArgs());
+            if (PlayTimeChanged != null)
+            {
+                PlayTimeChanged(this, new EventArgs());
+            }
         }
 
         /// <summary>

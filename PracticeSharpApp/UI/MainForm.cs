@@ -176,15 +176,23 @@ namespace BigMansStuff.PracticeSharp.UI
         /// <param name="e"></param>
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
+            playTimeUpdateTimer.Stop();
+
             if (m_practiceSharpLogic != null)
             {
-                m_practiceSharpLogic.Dispose();
-            }
+                m_practiceSharpLogic.Terminate();
 
-            //if (m_versionUpdater != null)
-            //{
-            //    m_versionUpdater.Cancel();
-            //}
+                m_practiceSharpLogic.StatusChanged -= new PracticeSharpLogic.StatusChangedEventHandler(practiceSharpLogic_StatusChanged);
+                m_practiceSharpLogic.PlayTimeChanged -= new EventHandler(practiceSharpLogic_PlayTimeChanged);
+                m_practiceSharpLogic.CueWaitPulsed -= new EventHandler(practiceSharpLogic_CueWaitPulsed);
+
+                m_practiceSharpLogic.Dispose();
+                m_practiceSharpLogic = null;
+
+                // Let previous events from practice sharp logic to finish - To avoid racing on MainForm which causes exceptions in PracticeSharp event handlers
+                Thread.Sleep(100);
+                Application.DoEvents();
+            }
         }
 
         #endregion
@@ -258,7 +266,7 @@ namespace BigMansStuff.PracticeSharp.UI
         /// <param name="e"></param>
         private void positionMarkersPanel_Paint(object sender, PaintEventArgs e)
         {
-            if (m_practiceSharpLogic.Status == PracticeSharpLogic.Statuses.Initialized)
+            if (m_practiceSharpLogic == null || m_practiceSharpLogic.Status == PracticeSharpLogic.Statuses.Initialized)
             {
                 return;
             }
@@ -826,7 +834,9 @@ namespace BigMansStuff.PracticeSharp.UI
             TimeSpan newPlayTime = new TimeSpan(0, 0, Convert.ToInt32( newValue ) );
             m_practiceSharpLogic.CurrentPlayTime = newPlayTime;
 
-            int newTrackBarValue = Convert.ToInt32(newValue / duration * 100.0f);
+            int newTrackBarValue = 0;
+            if (duration != 0)
+                newTrackBarValue = Convert.ToInt32(newValue / duration * 100.0f);
 
             if (m_practiceSharpLogic.Status == PracticeSharpLogic.Statuses.Playing)
             {
@@ -981,8 +991,14 @@ namespace BigMansStuff.PracticeSharp.UI
         /// <param name="newStatus"></param>
         private void practiceSharpLogic_StatusChanged(object sender, PracticeSharpLogic.Statuses newStatus)
         {
-            this.BeginInvoke( new MethodInvoker( delegate()
+            if (m_practiceSharpLogic == null || m_practiceSharpLogic.Status == PracticeSharpLogic.Statuses.Terminating || m_practiceSharpLogic.Status == PracticeSharpLogic.Statuses.Terminated)
+                return;
+            
+            this.BeginInvoke(new MethodInvoker(delegate()
             {
+                if (m_practiceSharpLogic == null || m_practiceSharpLogic.Status == PracticeSharpLogic.Statuses.Terminating || m_practiceSharpLogic.Status == PracticeSharpLogic.Statuses.Terminated)
+                    return;
+
                 playStatusToolStripLabel.Text = newStatus.ToString();
 
                 if ( (newStatus == PracticeSharpLogic.Statuses.Stopped)
@@ -1016,22 +1032,28 @@ namespace BigMansStuff.PracticeSharp.UI
 
         private void practiceSharpLogic_PlayTimeChanged(object sender, EventArgs e)
         {
+            if (m_practiceSharpLogic == null || m_practiceSharpLogic.Status == PracticeSharpLogic.Statuses.Terminating || m_practiceSharpLogic.Status == PracticeSharpLogic.Statuses.Terminated)
+                return;
+
             this.Invoke(
                 new MethodInvoker(delegate()
                 {
-                    lock (this)
-                    {
-                        m_isUpdatePlayTimeNeeded = true;
-                    }
+                    m_isUpdatePlayTimeNeeded = true;
                 }));
         }
 
         private void practiceSharpLogic_CueWaitPulsed(object sender, EventArgs e)
         {
+            if (m_practiceSharpLogic == null || m_practiceSharpLogic.Status == PracticeSharpLogic.Statuses.Terminating || m_practiceSharpLogic.Status == PracticeSharpLogic.Statuses.Terminated)
+                return;
+
             this.BeginInvoke(
 
                 new MethodInvoker(delegate()
                 {
+                    if (m_practiceSharpLogic == null || m_practiceSharpLogic.Status == PracticeSharpLogic.Statuses.Terminating || m_practiceSharpLogic.Status == PracticeSharpLogic.Statuses.Terminated)
+                        return;
+
                     // Pulse the cue led once
                     cuePictureBox.Image = Resources.blue_on_16;
                     Application.DoEvents();
