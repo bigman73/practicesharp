@@ -52,10 +52,6 @@ namespace BigMansStuff.PracticeSharp.Core
                 m_startMarker = TimeSpan.Zero;
                 m_endMarker = TimeSpan.Zero;
                 m_cue = TimeSpan.Zero;
-
-                InitializeSoundTouchSharp();
-
-                ChangeStatus(Statuses.Initialized);
             }
             catch (Exception ex)
             {
@@ -79,8 +75,6 @@ namespace BigMansStuff.PracticeSharp.Core
                 Monitor.Pulse(m_firstPlayLock);
             }
 
-            TerminateSoundTouchSharp();
-
             ChangeStatus(Statuses.Terminated);
         }
 
@@ -97,7 +91,7 @@ namespace BigMansStuff.PracticeSharp.Core
             }
 
             m_filename = filename;
-            m_status = Statuses.PreparePlay;
+            m_status = Statuses.Loading;
 
             // Create the Audio Processing Worker (Thread)
             m_audioProcessingThread = new Thread( new ThreadStart( audioProcessingWorker_DoWork) );
@@ -124,7 +118,7 @@ namespace BigMansStuff.PracticeSharp.Core
         public void Play()
         {
             // Not playing now - Start the audio processing thread
-            if (m_status == Statuses.PlayReady)
+            if (m_status == Statuses.Initialized)
             {
                 lock (m_firstPlayLock)
                 {
@@ -168,7 +162,7 @@ namespace BigMansStuff.PracticeSharp.Core
                 m_audioProcessingThread = null;
             }
 
-            TerminateNAudio();
+            // TerminateNAudio();
 
             if (m_soundTouchSharp != null)
             {
@@ -394,7 +388,7 @@ namespace BigMansStuff.PracticeSharp.Core
 
         #region Enums
 
-        public enum Statuses { None, Initializing, Initialized, PreparePlay, PlayReady, Playing, Stopped, Pausing, Terminating, Terminated, Error };
+        public enum Statuses { None, Initializing, Initialized, Loading, Playing, Stopped, Pausing, Terminating, Terminated, Error };
 
         #endregion
 
@@ -410,16 +404,26 @@ namespace BigMansStuff.PracticeSharp.Core
         {
             try
             {
-                InitializeFileAudio();
-
-                // Special case handling for re-playing after last playing stopped in non-loop mode: 
-                //   Reset current play time to begining of file in case the previous play has reached the end of file
-                if (!m_newPlayTimeRequested && m_currentPlayTime >= m_waveChannel.TotalTime)
-                    m_currentPlayTime = TimeSpan.Zero;
-
-                lock (m_initializedLock)
+                try
                 {
-                    Monitor.Pulse(m_initializedLock);
+                    InitializeSoundTouchSharp();
+
+                    InitializeFileAudio();
+
+                    // Special case handling for re-playing after last playing stopped in non-loop mode: 
+                    //   Reset current play time to begining of file in case the previous play has reached the end of file
+                    if (!m_newPlayTimeRequested && m_currentPlayTime >= m_waveChannel.TotalTime)
+                        m_currentPlayTime = TimeSpan.Zero;
+
+                    ChangeStatus(Statuses.Initialized);
+                }
+                finally
+                {
+                    // Pulse the initialized lock to release the client (UI) that is waiting for initialization to finish
+                    lock (m_initializedLock)
+                    {
+                        Monitor.Pulse(m_initializedLock);
+                    }
                 }
 
                 // Wait for first Play to pulse and free lock
@@ -441,16 +445,13 @@ namespace BigMansStuff.PracticeSharp.Core
                 finally
                 {
                     // TODO: Validate that all COM related operations are done within MTA thread, not on STA thread
-                    // TODO: Does Terminate Audio need to be here?
-                    // TODO: Initialize of SoundTouch should be also in MTA, not in STA
 
-                    // Dispose of reader in context of thread (for WMF it will cannot be disposed in the UI's STA)
-                    if (m_waveReader != null)
-                    {
-                        m_waveReader.Dispose();
-                        m_waveReader = null;
-                    }
 
+
+                    // Dispose of NAudio in context of thread (for WMF it will must be disposed in the same thread)
+                    TerminateNAudio();
+
+                    TerminateSoundTouchSharp();
                 }
             }
             catch (Exception ex)
@@ -652,8 +653,6 @@ namespace BigMansStuff.PracticeSharp.Core
             }
 
             m_filePlayDuration = m_waveChannel.TotalTime;
-
-            m_status = Statuses.PlayReady;
         }
 
         /// <summary>
@@ -887,6 +886,12 @@ namespace BigMansStuff.PracticeSharp.Core
         /// </summary>
         private void TerminateNAudio()
         {
+            if (m_waveReader != null)
+            {
+                m_waveReader.Dispose();
+                m_waveReader = null;
+            }
+
             if (m_waveChannel != null)
             {
                 m_waveChannel.Dispose();
