@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace BigMansStuff.PracticeSharp.UI {
+namespace BigMansStuff.PracticeSharp {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace BigMansStuff.PracticeSharp.UI {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("BigMansStuff.PracticeSharp.UI.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("BigMansStuff.PracticeSharp.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

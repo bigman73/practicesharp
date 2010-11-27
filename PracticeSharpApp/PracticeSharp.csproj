@@ -8,7 +8,7 @@
     <ProjectGuid>{BBEECE8C-8D5A-42F5-9901-34E8D07490AE}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>BigMansStuff.PracticeSharp.UI</RootNamespace>
+    <RootNamespace>BigMansStuff.PracticeSharp</RootNamespace>
     <AssemblyName>PracticeSharp</AssemblyName>
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>
