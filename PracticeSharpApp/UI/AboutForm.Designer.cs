@@ -39,6 +39,8 @@
             this.thisVersionLabel = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.codeProjectLinkLabel = new System.Windows.Forms.LinkLabel();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.SuspendLayout();
@@ -47,7 +49,7 @@
             // 
             this.closeButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.closeButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.closeButton.Location = new System.Drawing.Point(114, 238);
+            this.closeButton.Location = new System.Drawing.Point(137, 248);
             this.closeButton.Name = "closeButton";
             this.closeButton.Size = new System.Drawing.Size(75, 23);
             this.closeButton.TabIndex = 0;
@@ -57,7 +59,7 @@
             // googleCodeProjectLinkLabel
             // 
             this.googleCodeProjectLinkLabel.AutoSize = true;
-            this.googleCodeProjectLinkLabel.Location = new System.Drawing.Point(12, 123);
+            this.googleCodeProjectLinkLabel.Location = new System.Drawing.Point(12, 121);
             this.googleCodeProjectLinkLabel.Name = "googleCodeProjectLinkLabel";
             this.googleCodeProjectLinkLabel.Size = new System.Drawing.Size(126, 13);
             this.googleCodeProjectLinkLabel.TabIndex = 1;
@@ -77,7 +79,7 @@
             // naudioLinkLabel
             // 
             this.naudioLinkLabel.AutoSize = true;
-            this.naudioLinkLabel.Location = new System.Drawing.Point(12, 169);
+            this.naudioLinkLabel.Location = new System.Drawing.Point(12, 186);
             this.naudioLinkLabel.Name = "naudioLinkLabel";
             this.naudioLinkLabel.Size = new System.Drawing.Size(42, 13);
             this.naudioLinkLabel.TabIndex = 3;
@@ -88,7 +90,7 @@
             // soundTouchLinkLabel
             // 
             this.soundTouchLinkLabel.AutoSize = true;
-            this.soundTouchLinkLabel.Location = new System.Drawing.Point(12, 182);
+            this.soundTouchLinkLabel.Location = new System.Drawing.Point(12, 199);
             this.soundTouchLinkLabel.Name = "soundTouchLinkLabel";
             this.soundTouchLinkLabel.Size = new System.Drawing.Size(69, 13);
             this.soundTouchLinkLabel.TabIndex = 4;
@@ -99,7 +101,7 @@
             // creditsLabel
             // 
             this.creditsLabel.AutoSize = true;
-            this.creditsLabel.Location = new System.Drawing.Point(12, 156);
+            this.creditsLabel.Location = new System.Drawing.Point(12, 173);
             this.creditsLabel.Name = "creditsLabel";
             this.creditsLabel.Size = new System.Drawing.Size(42, 13);
             this.creditsLabel.TabIndex = 5;
@@ -126,7 +128,7 @@
             // pictureBox1
             // 
             this.pictureBox1.Image = global::BigMansStuff.PracticeSharp.UI.Resources.PracticeSharp;
-            this.pictureBox1.Location = new System.Drawing.Point(175, 9);
+            this.pictureBox1.Location = new System.Drawing.Point(190, 9);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(131, 143);
             this.pictureBox1.TabIndex = 8;
@@ -135,11 +137,32 @@
             // pictureBox2
             // 
             this.pictureBox2.Image = global::BigMansStuff.PracticeSharp.UI.Resources.lgplv3_147x51;
-            this.pictureBox2.Location = new System.Drawing.Point(175, 165);
+            this.pictureBox2.Location = new System.Drawing.Point(190, 174);
             this.pictureBox2.Name = "pictureBox2";
             this.pictureBox2.Size = new System.Drawing.Size(131, 60);
             this.pictureBox2.TabIndex = 9;
             this.pictureBox2.TabStop = false;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Location = new System.Drawing.Point(172, 155);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(149, 16);
+            this.label2.TabIndex = 10;
+            this.label2.Text = "© 2010, Yuval Naveh";
+            // 
+            // codeProjectLinkLabel
+            // 
+            this.codeProjectLinkLabel.AutoSize = true;
+            this.codeProjectLinkLabel.Location = new System.Drawing.Point(12, 139);
+            this.codeProjectLinkLabel.Name = "codeProjectLinkLabel";
+            this.codeProjectLinkLabel.Size = new System.Drawing.Size(89, 13);
+            this.codeProjectLinkLabel.TabIndex = 11;
+            this.codeProjectLinkLabel.TabStop = true;
+            this.codeProjectLinkLabel.Text = "Code Project Site";
+            this.codeProjectLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.codeProjectLinkLabel_LinkClicked);
             // 
             // AboutForm
             // 
@@ -147,7 +170,9 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.closeButton;
-            this.ClientSize = new System.Drawing.Size(318, 273);
+            this.ClientSize = new System.Drawing.Size(338, 283);
+            this.Controls.Add(this.codeProjectLinkLabel);
+            this.Controls.Add(this.label2);
             this.Controls.Add(this.pictureBox2);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.thisVersionLabel);
@@ -183,5 +208,7 @@
         private System.Windows.Forms.Label thisVersionLabel;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.PictureBox pictureBox2;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.LinkLabel codeProjectLinkLabel;
     }
 }
