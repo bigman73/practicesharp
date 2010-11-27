@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace BigMansStuff.PracticeSharp.UI.Properties {
+namespace BigMansStuff.PracticeSharp.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
@@ -61,6 +61,7 @@ namespace BigMansStuff.PracticeSharp.UI.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("11/27/2010 12:00:00")]
         public global::System.DateTime LastVersionCheckDateTime {
             get {
                 return ((global::System.DateTime)(this["LastVersionCheckDateTime"]));
@@ -91,6 +92,18 @@ namespace BigMansStuff.PracticeSharp.UI.Properties {
             }
             set {
                 this["LastFilterIndex"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("125")]
+        public int Latency {
+            get {
+                return ((int)(this["Latency"]));
+            }
+            set {
+                this["Latency"] = value;
             }
         }
     }

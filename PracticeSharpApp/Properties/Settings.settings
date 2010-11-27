@@ -1,5 +1,5 @@
 ﻿<?xml version='1.0' encoding='utf-8'?>
-<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="BigMansStuff.PracticeSharp.UI.Properties" GeneratedClassName="Settings">
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="BigMansStuff.PracticeSharp.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
     <Setting Name="LastAudioFolder" Type="System.String" Scope="User">
@@ -12,13 +12,16 @@
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="LastVersionCheckDateTime" Type="System.DateTime" Scope="User">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">11/27/2010 12:00:00</Value>
     </Setting>
     <Setting Name="SupressVersionCheck" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="LastFilterIndex" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="Latency" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">125</Value>
     </Setting>
   </Settings>
 </SettingsFile>
