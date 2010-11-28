@@ -1,0 +1,115 @@
+<?xml version='1.0' encoding='windows-1252'?>
+<Wix xmlns='http://schemas.microsoft.com/wix/2006/wi'>
+<!-- Practice Sharp
+ 
+    © Copyright 2010, Yuval Naveh.
+     All rights reserved.
+ 
+    This file is part of Practice Sharp.
+
+    Practice Sharp is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Lesser Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Practice Sharp is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Lesser Public License for more details.
+
+    You should have received a copy of the GNU Lesser Public License
+    along with Practice Sharp.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+  <Product Name='Practice# Beta 3' Id='EEBCE8D2-F6FF-49C2-8057-C60D89894B1D' UpgradeCode='698FDA6C-C8E8-4C2B-8705-28A99B39E171'
+    Language='1033' Codepage='1252' Version='0.3.0' Manufacturer='Yuval Naveh'>
+
+    <Package Id='*' Keywords='Installer' Description="Practice# Beta 3 Installer"
+      Comments='Practice#, Copyright 2010 Yuval Naveh LGPL.' Manufacturer='Yuval Naveh.'
+      InstallerVersion='100' Languages='1033' Compressed='yes' SummaryCodepage='1252' />
+	  
+	<Condition Message='Windows 95 is not supported'>NOT Version9X = 400</Condition>
+	<Condition Message='Windows 95 is not supported'>NOT (Version9X = 400 AND WindowsBuild = 1111)</Condition>
+	<Condition Message='Windows 98 is not supported'>NOT Version9X = 410</Condition>
+	<Condition Message='Windows 98 SE is not supported'>NOT (Version9X = 410 AND WindowsBuild = 2222)</Condition>
+	<Condition Message='Windows ME is not supported'>NOT Version9X = 490</Condition>
+	<Condition Message='Windows NT4 is not supported'>NOT VersionNT = 400</Condition>
+	<Condition Message='Windows 2000 is not supported'>NOT VersionNT = 500</Condition>	
+	
+    <Media Id='1' Cabinet='Sample.cab' EmbedCab='yes' DiskPrompt="CD-ROM #1" />
+    <Property Id='DiskPrompt' Value="Practice# Beta 3 Installation [1]" />
+
+    <Directory Id='TARGETDIR' Name='SourceDir'>
+      <Directory Id='ProgramFilesFolder' Name='PFiles'>
+         <Directory Id='INSTALLDIR' Name='Practice#'>
+
+            <Component Id='MainExecutable' Guid='487E7825-4A47-498A-A4E5-A117AE3B3BEA'>
+              <File Id='PracticeSharpEXE' Name='PracticeSharp.exe' DiskId='1' Source='Source\PracticeSharp.exe' KeyPath='yes'>
+                <Shortcut Id="startmenuFoobar10" Directory="ProgramMenuDir" Name="Practice# Beta 3" WorkingDirectory='INSTALLDIR' Icon="PracticeSharp.exe" IconIndex="0" Advertise="yes" />
+                <Shortcut Id="desktopFoobar10" Directory="DesktopFolder" Name="Practice# Beta 3" WorkingDirectory='INSTALLDIR' Icon="PracticeSharp.exe" IconIndex="0" Advertise="yes" />
+              </File>
+            </Component>
+
+            <Component Id='NAudioLibrary' Guid='BC45A422-81EC-4C4B-93F9-D7F9E0AB815D'>
+              <File Id='NAudioDLL' Name='NAudio.dll' DiskId='1' Source='Source\NAudio.dll' KeyPath='yes' />
+            </Component>
+
+            <Component Id='NAudioWMFLibrary' Guid='F763CF13-08C8-42D5-851C-8B9EBF884790'>
+              <File Id='NAudioWMFDLL' Name='NAudio.WindowsMediaFormat.dll' DiskId='1' Source='Source\NAudio.WindowsMediaFormat.dll' KeyPath='yes' />
+            </Component>
+
+            <Component Id='NAudioOggLibrary' Guid='5DDD7580-0C86-4D16-8348-7776AD935721'>
+              <File Id='NAudioOggDLL' Name='NAudioOggVorbis.dll' DiskId='1' Source='Source\NAudioOggVorbis.dll' KeyPath='yes' />
+            </Component>
+
+            <Component Id='SoundTouchLibrary' Guid='391DC820-C466-40D1-9279-53AE27B38A1F'>
+              <File Id='SoundTouchDLL' Name='SoundTouch.dll' DiskId='1' Source='Source\SoundTouch.dll' KeyPath='yes' />
+            </Component>
+
+            <Component Id='PracticeSharpConfiguration' Guid='F71657CD-9018-449C-ABE4-73CF15D0CBCB'>
+              <File Id='PracticeSharpConfigFile' Name='PracticeSharp.exe.config' DiskId='1' Source='Source\PracticeSharp.exe.config' KeyPath='yes' />
+            </Component>
+
+		</Directory>
+      </Directory>
+
+      <Directory Id="ProgramMenuFolder" Name="Programs">
+        <Directory Id="ProgramMenuDir" Name="Practice# Beta 3">
+          <Component Id="ProgramMenuDir" Guid="E103842D-C11C-4A1E-B0E9-C91E58956958">
+            <RemoveFolder Id='ProgramMenuDir' On='uninstall' />
+            <RegistryValue Root='HKCU' Key='Software\Practice#' Type='string' Value='' KeyPath='yes' />
+          </Component>
+        </Directory>
+      </Directory>
+
+    <Directory Id="DesktopFolder" Name="Desktop" />
+    </Directory>
+	
+	<Feature Id='Complete' Title='Practice# Beta 3' Description='The complete package.'
+      Display='expand' Level='1' ConfigurableDirectory='INSTALLDIR'>
+      <Feature Id='MainProgram' Title='Program Files' Description='The binaries.' Level='1' Absent="disallow">
+        <ComponentRef Id='MainExecutable' />
+		<ComponentRef Id='NAudioLibrary' />
+		<ComponentRef Id='NAudioWMFLibrary' />
+		<ComponentRef Id='NAudioOggLibrary' />
+		<ComponentRef Id='SoundTouchLibrary' />
+		<ComponentRef Id='PracticeSharpConfiguration' />
+		<ComponentRef Id='ProgramMenuDir' />
+      </Feature>
+
+	  <!-- 
+      <Feature Id='Documentation' Title='Description' Description='The instruction manual.' Level='1000'>
+        <ComponentRef Id='Manual' />
+      </Feature> -->
+    </Feature>
+  
+	<WixVariable Id="WixUILicenseRtf" Value="Resources\PracticeSharp_License.rtf" />  
+	<WixVariable Id="WixUIBannerBmp" Value="Resources\WizardBanner.bmp" />  
+	<WixVariable Id="WixUIDialogBmp" Value="Resources\WizardSideBar.bmp" />  
+  
+	<UIRef Id="WixUI_Mondo" />
+    <UIRef Id="WixUI_ErrorProgressText" />
+
+    <Icon Id="PracticeSharp.exe" SourceFile="Source\PracticeSharp.exe" />
+  </Product>
+</Wix>
