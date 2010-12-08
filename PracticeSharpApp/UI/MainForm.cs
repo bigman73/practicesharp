@@ -37,8 +37,6 @@ using System.Diagnostics;
 
 namespace BigMansStuff.PracticeSharp.UI
 {
-    // TODO: SoundTouch Release DLL crashes. Check why Debug works but Release does not.
-
     public partial class MainForm : Form
     {
         #region Construction

@@ -91,18 +91,19 @@ namespace BigMansStuff.PracticeSharp.Core
         }
 
         /// <summary>
-        /// Get SoundTouch library version Id
+        /// Get SoundTouch library version string
         /// </summary>
         /// <returns></returns>
         public string GetVersionString()
         {
-            SoundTouchVersionString = soundtouch_getVersionString();
+            StringBuilder versionString = new StringBuilder(100);
+            soundtouch_getVersionString2(versionString, 100);
 
-            return SoundTouchVersionString;
+            return versionString.ToString();
         }
 
         /// <summary>
-        /// Get SoundTouch library version string
+        /// Get SoundTouch library version Id
         /// </summary>
         /// <returns></returns>
         public int GetVersionId()
@@ -509,7 +510,7 @@ SOUNDTOUCHDLL_API int __stdcall soundtouch_isEmpty(HANDLE h);
         internal static extern int soundtouch_getVersionId();
 
         [DllImport(SoundTouchDLLName)]
-        internal static extern string soundtouch_getVersionString();
+        internal static extern void soundtouch_getVersionString2(StringBuilder versionString, int bufferSize);
 
         [DllImport(SoundTouchDLLName)]
         internal static extern void soundtouch_setRate(IntPtr h, float newRate);
