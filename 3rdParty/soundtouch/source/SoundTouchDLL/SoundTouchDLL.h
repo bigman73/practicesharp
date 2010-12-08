@@ -58,6 +58,10 @@ SOUNDTOUCHDLL_API void __stdcall soundtouch_destroyInstance(HANDLE h);
 /// Get SoundTouch library version string
 SOUNDTOUCHDLL_API const char *__stdcall soundtouch_getVersionString();
 
+// Yuval Naveh - 12/7/2010 - .NET Compliant function
+/// Get SoundTouch library version string
+SOUNDTOUCHDLL_API void __stdcall soundtouch_getVersionString2(char* versionString, int bufferSize);
+
 /// Get SoundTouch library version Id
 SOUNDTOUCHDLL_API unsigned int __stdcall soundtouch_getVersionId();
 

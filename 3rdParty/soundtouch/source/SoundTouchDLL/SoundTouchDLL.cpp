@@ -107,6 +107,14 @@ SOUNDTOUCHDLL_API const char *__stdcall soundtouch_getVersionString()
     return SoundTouch::getVersionString();
 }
 
+// Yuval Naveh - 12/7/2010 - .NET Compliant function
+/// Get SoundTouch library version string
+SOUNDTOUCHDLL_API void __stdcall soundtouch_getVersionString2(char* versionString, int bufferSize)
+{
+	strcpy_s(versionString, bufferSize, SoundTouch::getVersionString());
+}
+
+
 /// Get SoundTouch library version Id
 SOUNDTOUCHDLL_API uint __stdcall soundtouch_getVersionId()
 {
