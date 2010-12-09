@@ -1,0 +1,715 @@
+﻿
+
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+
+<head>
+
+<title>Article Source</title>
+
+<link rel="stylesheet" type="text/css" href="http://s.codeproject.com/App_Themes/Std/CSS/CodeProject.css?dt=2.3.101208.3" />
+
+<base href="http://www.codeproject.com/KB/audio-video/" />
+
+</head>
+
+<body>
+
+<!--
+
+HTML for article "PracticeSharp (or Practice#) - A utility for practicing your musical instrument with playback." by Yuval Naveh
+URL: http://www.codeproject.com/KB/audio-video/practice_sharp.aspx
+
+Copyright 2010 by Yuval Naveh
+
+All formatting, additions and alterations Copyright © CodeProject, 1999-2010
+
+-->
+
+
+
+
+
+
+
+<p><b>Please choose 'View Source' in your browser to view the HTML, or File | Save to save this 
+
+file to your hard drive for editing.</b></p>
+
+
+
+<hr class="Divider subdue" />
+
+<div>
+
+
+
+
+
+
+
+
+
+<!-- Start Article -->
+
+<span id="ArticleContent">
+
+<p align="baseline"><a href="practice_sharp/PracticeSharp_0_2_0.zip"></a><a href="practice_sharp/PracticeSharp_0_3_0.zip"><span class="Apple-tab-span" style="white-space: pre; ">	<a href="practice_sharp/PracticeSharp_0_3_0.zip">Download PracticeSharp_0_3_0.zip - 486.39 KB </a></span>&nbsp;</a>&nbsp;</p><p align="baseline">
+
+</p><h2><img src="http://imgur.com/Nw3pY.png" /></h2><h2>Introduction&nbsp;</h2>
+
+
+
+<p>I've been playing an electric guitar for the last two years but only a few months ago I started to learn with a professional teacher.
+
+The level of complexity rose incredibly - from just trying to playing some chords, I'm now playing difficult licks which are pretty hard to get right when a new song is learned.
+
+My guitar teacher uses a application to slow down the playback - Amazing Slow Downer.<br />
+
+It is commercial and I have no plans to pay money for it (surely it is affordable, but open source is better and I can tweak it to my preferences).<br />
+
+An open source alternative that I found is called BestPractice. This utility is working fine on Windows XP.
+
+But - it crashes on Windows 7 Pro 64 bit, the playback quality could have been better, the UI could have better designed (e.g. volume bar has a tiny thumb button) and most importantly it is missing a key feature - <strong>Presets</strong>.<br />
+
+I downloaded the source code but found out that the code was written in Borland C++ builder - not quite the development environment I was looking forward to develop in.<br />
+
+<br />
+
+User Interface and Presets are a point that is worth talking about - In order to get my guitar to have amazing sound effects I purchased the Boss ME-70 (as shown below) a while ago.<br />
+
+</p><div>
+
+<img width="400" src="http://imgur.com/i1Xvy.jpg" alt="Boss ME-70 Effect Box" />
+
+</div>
+
+This piece of hardware is truly amazing, not just because of the great effects and sound quality but because the UI design is brilliant. <br />
+
+There are no menus - every thing is just laid out for immediate intuitive usage.<br />
+
+The best part (for me) are presets - You can manually change some settings (for example: Amplifier emulation mode, Compressor and Delay) then once you're happy with the sound you can keep it by simply saving it to a persistent preset.<br />
+
+This is great for practice - you come back the next day and that preset is waiting for you. No need to set it all up from scratch.<br />
+
+
+
+<br />
+
+I really wanted these presets in a playback practice tool - the ability to define a lick with some slow down factor and perhaps some volume, maybe also set a loop that allows repetive practice on that section.
+
+Once that &quot;playback section&quot; was properly defined, I wanted to be able to save to a preset just like I do with my Boss ME-70.<br />Previously, when I used BestPractice, I had to write down all the settings on paper and then manually 'dial' them in every time I started practice. With Practice# I wanted to be able to make these settings persistent and also be able to save the same settings as two ore more presets each having a different slow down (speed) so the lick can be played for example as 70% when you start, 85% when you feel more confident and finally 100% for regular speed.
+
+<br />
+
+
+
+So once I had my internal 'Business Requirement' it was time to move on to Design and Implementation.
+
+ <p>
+
+
+
+
+
+</p><h2>Architecture&nbsp;</h2>
+
+
+
+<div>
+
+<table>
+
+<tbody><tr>
+
+<td width="200">
+
+</td><td>
+
+<img left="200" width="450" src="http://imgur.com/mT7pf.png" alt="Practice# high level architecture (layers)" />
+
+</td>
+
+</tr></tbody></table>
+
+</div>
+
+I decided to go with .NET 2.0, C# and Windows Forms because the .NET framework/C# is easy and fast to develop with (In particular UI), Windows Forms is very powerful and Visual Studio Express is free. <br />
+
+The architecture diagram shows the different layers of Practice#.<br />
+
+Starting from top to bottom:<br />
+
+<ol>
+
+<li>User Interface - Responsible for user interface logic and also for controlling the Core Audio Logic (&quot;Back-End&quot;) layer</li>
+
+<li>Presets - A collection of persistent user defined settings such as Tempo, Pitch, Volume etc.</li>
+
+<li>Core Audio Logic - Contains all the specific audio processing logic that is needed for Practice# to function. Controls and coordinates the other frameworks and libraries (NAudio, SoundTouch, Vorbis#). Does not handle any User Interface logic.</li>
+
+<li>NAudio - (3rd Party) An audio playback platform that handles all the lower level API needed to play audio on an operating system.&nbsp;</li>
+
+<li>SoundTouchSharp - A managed C# Interop wrapper to SoundTouch.</li>
+
+<li>SoundTouch - (3rd Party) An audio DSP library that allows time stretching (tempo changes) and pitch changes.</li>
+
+<li>Vorbis# - (3rd Party) A library that reads Ogg Vorbis files and returns the compressed samples as uncompressed PCM samples that can be processed by NAudio.</li>
+
+</ol>
+
+
+
+<h2>Design&nbsp;</h2>
+
+<img width="850" src="http://imgur.com/JqDwj.png" alt="Practice# Class Diagram" />
+
+
+
+<h3>
+
+Time Stretching
+
+</h3>
+
+<p>
+
+The biggest problem was how to stretch time - how to change the audio speed (or tempo) <strong>without changing its pitch</strong>. <br />
+
+What does it mean exactly? If you have some audio file (e.g. mp3 or wav) and you just play it faster by sampling every second sample it will run twice as fast as the original audio but the pitch (tone of sound) will become two times higher - sounding like cartoons.<br />
+
+The same problem happens when you slow down an audio file using a 'naive' brute-force way: The pitch will go down, e.g. The singer that used to be a Alto will become Bass.<br />
+
+That's not good - the sound should have the same pitch just slower.<br />
+
+<br />
+
+A somewhat similar problem is how to change the pitch of the audio <strong>without changing its speed</strong>. That use-case is not as useful as the prior use-case but can still be used in some cases - for example for matching keys.<br />
+
+Both use cases - Time Stretching and Pitch Changing are similar since they only change one parameter (time or pitch) but without affecting the other playback parameter (pitch or time, respectively).<br />
+
+<br />
+
+The theory behind this problem is very interesting but beyond the scope of this article.
+
+For those who wish to learn more about the theory behind Time Stretching and Pitch Changing please refer to this page on <a href="http://www.dspdimension.com/admin/time-pitch-overview/">DSPDimension</a>.
+
+The topic is described there in details, is comprehensive and compares different algorithms with audio examples.
+
+The basic requirements for a Time Stretching library are:<br />
+
+</p><ol>
+
+	<li>It has to be open source and LGPL&nbsp;</li>
+
+	<li>It has to run on Windows 32/64&nbsp;</li>
+
+	<li>The audio quality must be good&nbsp;</li>
+
+	<li>An adequate API has to be provided and it has to work with .NET properly. Managed code is preferred but not mandatory.&nbsp;</li>
+
+	<li>It must have high performance (low CPU usage) and small latency. High latency is OK for batch utilities, but a front end practicing playback utility must have low latency.</li>
+
+</ol>
+
+<br />
+
+
+
+<h3>SoundTouch&nbsp;</h3>
+
+
+
+<p>
+
+The only candidate library that matched these requirements was <a href="http://www.surina.net/soundtouch/">SoundTouch</a>.<br />
+
+SoundTouch is an LGPL C++ Library that provides an API for performing Time Stretching and Pitch Changing.<br />
+
+SoundTouch's quality is pretty good as can be heard from the <a href="http://www.surina.net/soundtouch/soundstretch.html#examples">samples</a>.<br />
+
+The main challenge with this library was how to use it from a managed .NET application since it is a native C++ DLL.
+
+</p>
+
+
+
+<h3>SoundTouchSharp</h3>
+
+<p>
+
+In order to achieve this integration between .NET and SoundTouch, a wrapper was written - It is called <strong>SoundTouchSharp</strong>.<br />
+
+Basically SoundTouchSharp is an C# Interop Class that wraps the SoundTouch C++ native DLL and exposes the DLL's functions as C# managed API.<br />
+
+<strong>Note:</strong> SoundTouchSharp can be used out of the scope of Practice# for applications that need to implement Time Stretching or Pitch Changing.<br />
+
+If for example an ASP.NET Web Application needs that functionality it can use SoundTouchSharp together with SoundTouch.<br />
+
+<br />
+
+The main API methods are:
+
+<br />
+
+</p><pre lang="cs"><summary>        /// Sets new tempo control value. Normal tempo = 1.0, smaller values
+
+        /// represent slower tempo, larger faster tempo.
+
+</summary>        public void SetTempo(float newTempo)
+
+
+
+<summary>        /// Adds 'numSamples' pcs of samples from the 'samples' memory position into
+
+        /// the input of the object. Notice that sample rate _has_to_ be set before
+
+        /// calling this function, otherwise throws a runtime_error exception.
+
+</summary>        public void PutSamples(float[] pSamples, uint numSamples)
+
+<summary>
+
+        /// Adjusts book-keeping so that given number of samples are removed from beginning of the 
+
+        /// sample buffer without copying them anywhere. 
+
+        ///
+
+        /// Used to reduce the number of samples in the buffer when accessing the sample buffer directly
+
+        /// with 'ptrBegin' function.</summary>
+
+        public uint ReceiveSamples(float[] pOutBuffer, uint maxSamples)
+
+</pre>
+
+		
+
+The method <code>SetTempo()</code> sets the tempo (or speed) of the playback.<br />
+
+It should be set before putting samples into the SoundTouch queue.<br />
+
+The method <code>PutSamples()</code> puts samples into SoundTouch queue.<br />
+
+To receive these samples back as time stretched (or pitched changed) samples the method <code>ReceiveSamples()</code> needs to be called.<br />
+
+When the tempo is not 100% (i.e. regular speed) then it is important to understand that the number of received samples are different then the number of sample put in the queue, due to the inherent nature time stretching.<br />
+
+Therefore the client calling <code>ReceiveSamples()</code> needs to take this fact into account - ReceiveSamples needs to be called until the internal buffer in SoundTouch has no more samples to return.<br />
+
+One call of <code>PutSamples()</code> with X samples might require more than one call to <code>ReceiveSamples()</code>, depending on the tempo value set in <code>SetTempo()</code>.<br />
+
+
+
+<p>
+
+
+
+
+
+</p><h3>
+
+Audio Playback Framework
+
+</h3>
+
+<p>
+
+I had some experience with Audio playback on Windows but that was done in C++ and DirectSound and it was a pain to directly deal with DirectSound, generally speaking.<br />
+
+My target to write a practice tool that allows practicing without wasting too much time on core technologies as&nbsp;playing&nbsp;sound.</p><p>
+
+DirectSound is also unmanaged.<br />
+
+Luckily there is a very good managed library for Audio processing and playback - <a href="http://naudio.codeplex.com/">NAudio</a><br />
+
+NAudio takes care of all of the low level APIs (like DirectSound) and provides a simple interface which is easy to use, but also easy to extend.<br />
+
+With NAudio I managed to play sound files after a few minutes, but for dynamic time stretched playback that is not enough. <br />
+
+The main requirement from an interactive practicing tool is to be able to change the tempo on-the-fly.<br />
+
+Therefore a special audio processor was needed, one that can handle samples of different tempos.<br />
+
+Based on idea that appeared on NAudio's <a href="http://naudio.codeplex.com/Thread/View.aspx?ThreadId=54133">discussion site</a>, the <code>AdvancedBufferedWaveProvider</code> class was created. It manages a queue of audio buffers each starting on a different time (<code>CurrentTime</code>).<br />
+
+The <code>AdvancedBufferedWaveProvider</code> doesn't hold too many audio buffers in its queue, new audio buffers are dynamically added to the queue all the time.<br />
+
+
+
+</p>
+
+
+
+<h3>
+
+Ogg Vorbis
+
+</h3>
+
+
+
+<p>
+
+I really like open source products and open source formats. That is why I felt odd with a LGPL utility that can only play back WAV (Uncompressed and basically a Microsoft format) or MP3 (Compressed but proprietary).<br />
+
+Ogg Vorbis is compressed and free - Why not use it?<br />
+
+Unfortunately, NAudio (as of writing of this article) does not support out-of-the-box playback of Ogg Vorbis files.<br />
+
+I had to come up with some solution - Luckily, there is a LGPL library named <a>Vorbis#</a> (or csvorbis) that does provide Ogg Vorbis playback support for managed code.<br />
+
+Vorbis# is a port of the <a href="http://www.jcraft.com/jorbis/">Jorbis</a> Java library which itself is a port of the <a href="http://www.xiph.org/press/2010/libogg-1.2.1/">original xiph orbis decoder</a> which written in C. <br />
+
+In order to allow Vorbis# to work with NAudio an assembly (project) was written: <code>NAudioOggVorbis</code>.<br />
+
+ <code>NAudioOggVorbis</code> encapsulates the Vorbis# code and also provides an NAudio Ogg Vorbis adapter class: <code>OggVorbisFileReader</code> which plugs-in into NAudio as it inherents from the NAudio core abstract class:  <code>WaveStream</code>.<br />
+
+NAudio takes care of the handling audio playback logic and commands <code>OggVorbisFileReader</code> to return back buffers and/or change file positions when needed.<br />
+
+<code>OggVorbisFileReader</code> delegates these requests to a Vorbis# class <code>VorbisFile</code> which takes care of decoding the compressed Ogg Vorbis packets into uncompressed PCM packets.
+
+<code>VorbisFile</code> is a high level wrapper of the decoding logic that is implemented by the many Vorbis# classes. Using it as a single point of entry keeps the client code in <code>OggVorbisFileReader</code> nice and clean.<br />
+
+
+
+The code <code>OggVorbisFileReader</code> that uses <code>VorbisFile</code> to decode the next packet:
+
+</p><pre lang="cs">        /// <summary>
+
+        /// Reads decompressed PCM data from our Ogg Vorbis file.
+
+        /// </summary>
+
+        public override int Read(byte[] sampleBuffer, int offset, int numBytes)
+
+        {
+
+            int bytesRead = 0;
+
+            lock (m_repositionLock)
+
+            {
+
+                // Read PCM bytes from the Ogg Vorbis File into the sample buffer
+
+                bytesRead = m_vorbisFile.read(sampleBuffer, numBytes, _BIGENDIANREADMODE, _WORDREADMODE, _SGNEDREADMODE, null);
+
+
+
+            }
+
+
+
+            return bytesRead;
+
+        }
+
+</pre>
+
+		
+
+Once PCM packets are returned to NAudio, NAudio plays them as if they came from any other source - i.e. NAudio has no idea that the packets were originally Ogg Vorbis encoded packets, nor should it care about this fact.
+
+That approach proved to be quick and easy to implement - Ogg Vorbis are played back (and slowed down) just like WAV and MP3 files. Mission accomplished.
+
+<p>
+
+
+
+
+
+
+
+</p><h3>
+
+UI Design
+
+</h3>
+
+<p>
+
+As mentioned above, I was aiming for a user interface which would be productive and intuitive by being close in spirit to the Boss ME-70.<br />
+
+Some other elements that I liked, like the Loop controls and Now buttons, where inspired from the BestPractice utility.<br />
+
+
+
+Minimal menus are used (only for Recent Files, About Form) and only two Modal Dialog (Open File and Preset Description dialogs) - all other operational aspects of the tool are laid directly on the form.<br />
+
+The 4 presets resemble the 4 Boss presets pedals - only one is active at a time.<br />
+
+To write to a preset the Write button (Floppy Disk Icon) has to be clicked - at this point the LEDs of all presets light in Red waiting for the user to select which preset to write into. Once a preset is clicked the preset settings are written to a file.<br />
+
+Clicking on another preset essentially acts as a 'Copy Preset' function, because the current preset's settings are going to be written also in the selected preset.
+
+Each audio file automatically gets its own preset file - all these preset files are kept in a user folder %LOCALAPPDATA%\PracticeSharp (e.g. on my Win7 laptop it is: C:\Users\Yuval\AppData\Local\PracticeSharp)
+
+This is good for a few reasons - each file gets its preset persistent without requiring menus, and when a file is re-opened the correct presets are loaded automatically.
+
+If a preset needs to be reset to default values, the user has to click and hold the Eraser icon for a second or more and the current preset would be blink a few times in with an orange LED, then all the settings will revert to default. Once again: no menus or modal dialogs.
+
+
+
+</p><h2>Implementation - Audio Processing</h2>
+
+<p>
+
+The heart of Practice# is the <code>PracticeSharpLogic</code> class.
+
+It contains the Audio processing thread which is implemented by <code>ProcessAudio</code> and does the following things:
+
+</p><ol>
+
+<li>Reads chunks of uncompressed samples from the input file</li>
+
+<li>Processes the samples using SoundTouch </li>
+
+<li>Receive process samples from SoundTouch</li>
+
+<li>Play the processed samples with NAudio</li>
+
+<li>Handling of logic required for dynamically changing values on-the-fly of: Volume, Loop, Cue and Current Play Position.</li>
+
+</ol>
+
+<div>
+
+<img src="http://imgur.com/AwaXT.png" />
+
+</div>
+
+<br />
+
+The first important code to notice is the reading of samples from the input file (shown in image above as first green rectangle from top).
+
+This is achieved with NAudio's <code>WaveChannel</code> class.<br />
+
+
+
+<strong>Note:</strong> There is a nice trick I used for converting a float array to byte array without actually requiring CPU or memory. The class is <code>ByteAndFloatsConverter</code> and it is based on <a href="http://stackoverflow.com/questions/619041/what-is-the-fastest-way-to-convert-a-float-to-a-byte">this discussion</a>.<br />
+
+
+
+<pre lang="cs">#region Read samples from file
+
+
+
+// Change current play position
+
+lock (m_currentPlayTimeLock)
+
+{
+
+	if (m_newPlayTimeRequested)
+
+	{
+
+		m_waveChannel.CurrentTime = m_newPlayTime;
+
+
+
+		m_newPlayTimeRequested = false;
+
+	}
+
+}
+
+
+
+// *** Read one chunk from input file ***
+
+bytesRead = m_waveChannel.Read(convertInputBuffer.Bytes, 0, convertInputBuffer.Bytes.Length);
+
+// **************************************
+
+
+
+#endregion
+
+</pre>
+
+	
+
+The second important code to notice is putting the read samples into <code>SoundTouch</code>, via <code>SoundTouchSharp</code>, for DSP processing (shown in image above as second green rectangle from top).
+
+The requested tempo and pitch are set before the call (in <code>SetSoundSharpValues</code>).<br />
+
+
+
+<pre lang="cs">#region Put samples in SoundTouch
+
+
+
+SetSoundSharpValues();
+
+
+
+// ***                    Put samples in SoundTouch                   ***
+
+m_soundTouchSharp.PutSamples(convertInputBuffer.Floats, (uint)floatsRead);
+
+// **********************************************************************
+
+
+
+#endregion
+
+</pre>
+
+
+
+<p>
+
+
+
+
+
+Finally, the third and perhaps most important code receives the processed samples back from <code>SoundTouch</code> and then puts them in the queued buffered player where they will be played by NAudio (shown in image above as third green rectangle from top).
+
+
+
+</p><pre lang="cs">#region Receive &amp; Play Samples
+
+// Receive samples from SoundTouch
+
+do
+
+{
+
+	// ***                Receive samples back from SoundTouch            ***
+
+	// *** This is where Time Stretching and Pitch Changing is done *********
+
+	samplesProcessed = m_soundTouchSharp.ReceiveSamples(convertOutputBuffer.Floats, outBufferSizeFloats);
+
+	// **********************************************************************
+
+
+
+	if (samplesProcessed &gt; 0)
+
+	{
+
+		TimeSpan currentBufferTime = m_waveChannel.CurrentTime;
+
+
+
+		// ** Play samples that came out of SoundTouch by adding them to AdvancedBufferedWaveProvider - the buffered player 
+
+		m_inputProvider.AddSamples(convertOutputBuffer.Bytes, 0, (int)samplesProcessed * sizeof(float) * format.Channels, currentBufferTime);
+
+		// **********************************************************************
+
+
+
+		// Wait for queue to free up - only then add continue reading from the file
+
+		while (!m_stopWorker &amp;&amp; m_inputProvider.GetQueueCount() &gt; BusyQueuedBuffersThreshold)
+
+		{
+
+			Thread.Sleep(10);
+
+		}
+
+		bufferIndex++;
+
+	}
+
+} while (!m_stopWorker &amp;&amp; samplesProcessed != 0);
+
+#endregion
+
+</pre>
+
+
+
+<h2>Usage Demonstration</h2>
+
+
+
+<p>
+
+Please see <a href="http://www.youtube.com/watch?v=K3k_CVwsqH4">YouTube</a> video
+
+</p>
+
+
+
+<h2>Source Code</h2>
+
+<p>
+
+Since CodeProject does not have support for Subversion, I decided to keep the Practice# source code in <a href="http://code.google.com/p/practicesharp/">Google Code</a>.<br />
+
+To obtain the latest sources please checkout the <a href="http://code.google.com/p/practicesharp/source/checkout">latest Practice# sources</a>.<br />
+
+To obtain the latest binary please download the <a href="http://code.google.com/p/practicesharp/downloads/list">latest Practice# binary</a>.&nbsp;</p><p>
+
+<a href="http://www.gnu.org/copyleft/lesser.html"><img src="http://www.gnu.org/graphics/lgplv3-147x51.png" alt="LGPLV3" /></a>
+
+</p>
+
+
+
+<h2>History&nbsp;&nbsp;</h2><p style="font-family: Verdana, Arial, sans-serif; font-size: 10pt; line-height: 1.2em; "><strong>11/27/2010 - 0.3.0.0 (Beta 3)</strong></p><div><ul><li>Added playback support for WMA</li><li>Integrated with new version NAudio 64392. NAudio has incoporated WMA support that was developed in Practice# (based on original code from Idael Cardaso)</li><li>Bug fixes, mainly stability issues with preset saving and when application was shut down</li><li>All Playback initialization and termination fully moved into the audio processing thread (not done on main UI thread any longer)</li><li>Improved playback hiccups - Mainly due to synchronous events from PracticeSharpLogic to MainForm. Now PracticeSharpLogic events are asynchronous.&nbsp;</li><li>Added support for a command line argument - the filename (to allow running Practice# from command line or through a future shell extension)</li><li>Code clean up&nbsp;</li></ul></div>
+
+
+
+<p>
+
+<strong>11/20/2010 - 0.2.1.0 (Beta 2.1), Fully functional utility</strong><br />
+
+ </p><ul><li>MP3, WAV and Ogg Vorbis playback</li><li>Speed change - The ability to slow down or speed up music without changing its pitch</li><li>Pitch change - The ability to change the pitch of music up or down without changing its speed</li><li>Loops - Start and End Marker with Cue (waiting a few seconds before the loop starts, useful to get hands back into position)&nbsp;&nbsp;</li><li>Presets&nbsp;&nbsp;</li></ul>
+
+ 
+
+ 
+
+ 
+
+ 
+
+<p>
+
+
+
+
+
+
+
+</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</span>
+
+<!-- End Article -->
+
+
+
+
+
+
+
+
+
+</div> 
+
+</body>
+
+</html>
