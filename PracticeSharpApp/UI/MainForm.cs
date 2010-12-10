@@ -37,6 +37,9 @@ using System.Diagnostics;
 
 namespace BigMansStuff.PracticeSharp.UI
 {
+    /// <summary>
+    /// Practice# Main Form
+    /// </summary>
     public partial class MainForm : Form
     {
         #region Construction
@@ -114,7 +117,6 @@ namespace BigMansStuff.PracticeSharp.UI
             m_presetControls.Add("3", presetControl3);
             m_presetControls.Add("4", presetControl4);
 
-
             // Set defaults
             tempoTrackBar_ValueChanged(this, new EventArgs());
             pitchTrackBar_ValueChanged(this, new EventArgs());
@@ -122,7 +124,9 @@ namespace BigMansStuff.PracticeSharp.UI
             playTimeTrackBar_ValueChanged(this, new EventArgs());
         }
        
-
+        /// <summary>
+        /// Initializes the Most-Recently-Used files
+        /// </summary>
         private void InitializeMRUFiles()
         {
             m_recentFilesMenuItems.AddRange(new ToolStripMenuItem[] { 
@@ -137,7 +141,9 @@ namespace BigMansStuff.PracticeSharp.UI
             m_mruManager = new MRUManager(m_recentFilesMenuItems.Count, m_mruFile);
         }
 
-
+        /// <summary>
+        /// Initializes the configuration
+        /// </summary>
         private void InitializeConfiguration()
         {
             Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.PerUserRoamingAndLocal);
@@ -165,7 +171,6 @@ namespace BigMansStuff.PracticeSharp.UI
                 Directory.CreateDirectory(m_appDataFolder);
             }
         }
-
 
         #endregion
 
@@ -200,6 +205,56 @@ namespace BigMansStuff.PracticeSharp.UI
         #endregion
 
         #region GUI Event Handlers
+
+        /// <summary>
+        /// Central key handler
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void MainForm_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (!e.Control && e.Alt && !e.Shift && e.KeyCode == Keys.D1)
+            {
+                presetControl1.State = PresetControl.PresetStates.Selected;
+                e.Handled = true;
+            }
+            else if (!e.Control && e.Alt && !e.Shift && e.KeyCode == Keys.D2)
+            {
+                presetControl2.State = PresetControl.PresetStates.Selected;
+                e.Handled = true;
+            }
+            else if (!e.Control && e.Alt && !e.Shift && e.KeyCode == Keys.D3)
+            {
+                presetControl3.State = PresetControl.PresetStates.Selected;
+                e.Handled = true;
+            }
+            else if (!e.Control && e.Alt && !e.Shift && e.KeyCode == Keys.D4)
+            {
+                presetControl4.State = PresetControl.PresetStates.Selected;
+                e.Handled = true;
+            }
+            else if (e.Control && !e.Alt && !e.Shift && e.KeyCode == Keys.O)
+            {
+                openFileButton.PerformClick();
+                e.Handled = true;
+            }
+            else if (!e.Control && !e.Alt && !e.Shift && e.KeyCode == Keys.Space)
+            {
+                playPauseButton.PerformClick();
+                e.Handled = true;
+            }
+            else if (!e.Control && !e.Alt && !e.Shift && e.KeyCode == Keys.Home)
+            {
+                positionLabel.PerformClick();
+                e.Handled = true;
+            }
+            else if (!e.Control && !e.Alt && !e.Shift && e.KeyCode == Keys.F1)
+            {
+                aboutMenuItem.PerformClick();
+                e.Handled = true;
+            }
+        }
+
         /// <summary>
         /// Play/Pause button click event handler - Plays or Pauses the current play back of the file
         /// </summary>
@@ -385,8 +440,6 @@ namespace BigMansStuff.PracticeSharp.UI
                 if (isPlaying) m_practiceSharpLogic.Play();
             }
         }
-
-
         
         /// <summary>
         /// PresetDescriptionChanged Event handler - When a preset description changed the preset bank has to be rewritten to persist the change
@@ -454,11 +507,7 @@ namespace BigMansStuff.PracticeSharp.UI
             volumeValueLabel.Text = ( newVolume * 100 ).ToString();
 
         }
-   
-        private void exitMenuItem_Click(object sender, EventArgs e)
-        {
-            this.Close();
-        }
+  
 
         #region Reset Bank Button event handlers
 
@@ -534,7 +583,352 @@ namespace BigMansStuff.PracticeSharp.UI
         {
             UpdateTrackBarByMousePosition(volumeTrackBar, e);
         }
-        
+
+        /// <summary>
+        /// ValueChanged Event Handler - Changes the Current play time
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void currentUpDown_ValueChanged(object sender, EventArgs e)
+        {
+            // Don't allow re-entry of UI events when the track bar is being programmatically changed
+            if (m_ignorePlayTimeUIEvents)
+                return;
+
+            // Mask out PracticeSharpLogic events to eliminate 'Racing' between GUI and PracticeSharpLogic over current playtime
+            m_currentControlsMaskOutTime = DateTime.Now.AddMilliseconds(500);
+
+            UpdateCoreCurrentPlayTime();
+        }
+
+        /// <summary>
+        /// Click event handler for openFileButton - Invokes the open file dialog
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void openFileButton_Click(object sender, EventArgs e)
+        {
+            // Temporary Pause play until save has completed
+            if (m_practiceSharpLogic.Status == PracticeSharpLogic.Statuses.Playing)
+            {
+                m_tempSavePausePlay = true;
+                m_practiceSharpLogic.Pause();
+            }
+            try
+            {
+                // Show the open file dialog
+                if (DialogResult.OK == openFileDialog.ShowDialog(this))
+                {
+                    // Get directory path and store it as a user settting
+                    FileInfo fi = new FileInfo(openFileDialog.FileName);
+                    Properties.Settings.Default.LastAudioFolder = fi.Directory.FullName;
+                    Properties.Settings.Default.LastFilterIndex = openFileDialog.FilterIndex;
+                    Properties.Settings.Default.Save();
+
+                    // Open the file for playing
+                    OpenFile(openFileDialog.FileName, true);
+                }
+            }
+            finally
+            {
+                if (m_tempSavePausePlay)
+                {
+                    m_tempSavePausePlay = false;
+                    m_practiceSharpLogic.Play();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Event handler for ValueChanged of the tempoTrackBar -
+        ///   Changes the underlying tempo of PracticeSharpLogic
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void tempoTrackBar_ValueChanged(object sender, EventArgs e)
+        {
+            // Convert to Percent 
+            float newTempo = tempoTrackBar.Value / 100.0f;
+            // Assign new Tempo
+            m_practiceSharpLogic.Tempo = newTempo;
+            
+            // Update speed value label
+            speedValueLabel.Text = newTempo.ToString();
+        }
+
+        /// <summary>
+        /// Event handler for ValueChanged of the pitchTrackBar -
+        ///   Changes the underlying pitch of PracticeSharpLogic
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void pitchTrackBar_ValueChanged(object sender, EventArgs e)
+        {
+            // Convert to Percent 
+            float newPitch = pitchTrackBar.Value / 96.0f;
+            // Assign new Pitch
+            m_practiceSharpLogic.Pitch = newPitch;
+
+            // Update Pitch value label
+            pitchValueLabel.Text = newPitch.ToString( "0.00" );
+    
+        } 
+
+        /// <summary>
+        /// speedLabel Click event handler - Reset the tempo to default value
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void speedLabel_Click(object sender, EventArgs e)
+        {
+            tempoTrackBar.Value = Convert.ToInt32( PresetData.DefaultTempo * 100 );
+        }
+
+        /// <summary>
+        /// volumeLabel Click event handler - Reset the volume to default value
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void volumeLabel_Click(object sender, EventArgs e)
+        {
+            volumeTrackBar.Value = Convert.ToInt32( PresetData.DefaultVolume * 100 );
+        }
+
+        private void pitchLabel_Click(object sender, EventArgs e)
+        {
+              pitchTrackBar.Value = Convert.ToInt32( PresetData.DefaultPitch * 100 );
+        }
+
+        /// <summary>
+        /// positionLabel Click event handler - Reset the position to default value
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void positionLabel_Click(object sender, EventArgs e)
+        {
+            // Reset current play time so it starts from the begining
+            if (m_practiceSharpLogic.Loop)
+            {
+                // In case of a loop, move the current play time to the start marker
+                m_practiceSharpLogic.CurrentPlayTime = m_practiceSharpLogic.StartMarker;
+            }
+            else
+            {
+                m_practiceSharpLogic.CurrentPlayTime = TimeSpan.Zero;
+            }
+        }
+    
+        /// <summary>
+        /// Toggle the loop mode On/Off
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void loopCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            m_practiceSharpLogic.Loop = loopCheckBox.Checked;
+        }
+
+        /// <summary>
+        /// Event handler for changes in the CueComboBox
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void cueComboBox_SelectedValueChanged(object sender, EventArgs e)
+        {
+            m_practiceSharpLogic.Cue = new TimeSpan(0, 0, Convert.ToInt32(cueComboBox.Text));
+        }
+
+        #region Menu Items
+
+        /// <summary>
+        /// About Menu Handler - Shows the About Form
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void aboutMenuItem_Click(object sender, EventArgs e)
+        {
+            using (AboutForm aboutForm = new AboutForm())
+            {
+                aboutForm.AppVersion = m_appVersion;
+                aboutForm.ShowDialog(this);
+            }
+
+        }
+
+        /// <summary>
+        /// Exit Event Handler - Closes application
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void exitMenuItem_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        #endregion
+
+        #region Play Time - Event handlers
+
+        private void playTimeTrackBar_ValueChanged(object sender, EventArgs e)
+        {
+            // Don't allow re-entry of UI events when the track bar is being programmtically changed
+            if (m_ignorePlayTimeUIEvents)
+                return;
+
+            float playPosSeconds = (float)(playTimeTrackBar.Value / 100.0f * m_practiceSharpLogic.FilePlayDuration.TotalSeconds);
+            TimeSpan newPlayTime = new TimeSpan(0, 0, 0, (int)playPosSeconds,
+                    (int)(100 * (playPosSeconds - Math.Truncate(playPosSeconds))));
+
+            m_practiceSharpLogic.CurrentPlayTime = newPlayTime;
+            if (m_practiceSharpLogic.Status != PracticeSharpLogic.Statuses.Playing)
+            {
+                UpdateCurrentUpDownControls(newPlayTime);
+            }
+        }
+
+        private void playPositionTrackBar_MouseDown(object sender, MouseEventArgs e)
+        {
+            m_isUpdatePlayTimeNeeded = false;
+            m_playTimeTrackBarIsChanging = true;
+
+            Application.DoEvents();
+            // Let previous pending updates to position track bar to complete - otherwise the track bar 'jumps'
+            Thread.Sleep(100);
+            Application.DoEvents();
+
+            UpdateNewPlayTimeByMousePos(e);
+        }
+
+        private void playTimeTrackBar_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (m_playTimeTrackBarIsChanging)
+            {
+                UpdateNewPlayTimeByMousePos(e);
+            }
+        }
+
+        private void playTimeTrackBar_MouseUp(object sender, MouseEventArgs e)
+        {
+            m_playTimeTrackBarIsChanging = false;
+        }
+
+      
+
+        private void playTimeUpdateTimer_Tick(object sender, EventArgs e)
+        {
+            lock (this)
+            {
+                if (!m_isUpdatePlayTimeNeeded)
+                    return;
+            }
+
+            // Only update when file is playing
+            if (m_practiceSharpLogic.Status != PracticeSharpLogic.Statuses.Playing)
+                return;
+
+            m_isUpdatePlayTimeNeeded = false;
+
+            m_ignorePlayTimeUIEvents = true;
+            try
+            {
+                if (DateTime.Now > m_currentControlsMaskOutTime)
+                {
+                    UpdateCurrentUpDownControls(m_practiceSharpLogic.CurrentPlayTime);
+                }
+
+                if (!m_playTimeTrackBarIsChanging && DateTime.Now > m_playTimeTrackBarMaskOutTime)
+                {
+                    int currentPlayTimeValue = Convert.ToInt32(100.0f * m_practiceSharpLogic.CurrentPlayTime.TotalSeconds / m_practiceSharpLogic.FilePlayDuration.TotalSeconds);
+                    if (currentPlayTimeValue > playTimeTrackBar.Maximum)
+                    {
+                        currentPlayTimeValue = playTimeTrackBar.Maximum;
+                    }
+
+                    playTimeTrackBar.Value = currentPlayTimeValue;
+                }
+
+                positionMarkersPanel.Refresh();
+            }
+            finally
+            {
+                m_ignorePlayTimeUIEvents = false;
+            }
+        }
+
+        #endregion
+
+
+        #region Recent Files (MRU)
+
+        /// <summary>
+        /// Show all recently played files in correct order
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void recentFilesToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
+        {
+            List<string> mruItems = m_mruManager.Items;
+
+            for (int menuItemIndex = 0; menuItemIndex < m_recentFilesMenuItems.Count; menuItemIndex++)
+            {
+                ToolStripMenuItem menuItem = m_recentFilesMenuItems[menuItemIndex];
+
+                menuItem.Visible = menuItemIndex < mruItems.Count;
+                if (menuItemIndex < mruItems.Count)
+                {
+                    string recentFilename = mruItems[menuItemIndex];
+                    menuItem.Visible = true;
+                    int rightIndex = 0;
+                    string recentFilenameDisplay = string.Empty;
+                    if (recentFilename.Length > MaxRecentDisplayLength)
+                    {
+                        rightIndex = recentFilename.Length - MaxRecentDisplayLength;
+                        recentFilenameDisplay = recentFilename.Substring(0, 3) + " ... " + recentFilename.Substring(rightIndex, MaxRecentDisplayLength);
+                    }
+                    else
+                    {
+                        recentFilenameDisplay = recentFilename;
+                    }
+
+                    menuItem.Text = recentFilenameDisplay;
+                    menuItem.Tag = recentFilename;
+
+                    // Disable current file in recent MRU items - its already open
+                    if (recentFilename == m_currentFilename)
+                    {
+                        menuItem.Enabled = false;
+                    }
+                    else
+                    {
+                        menuItem.Enabled = true;
+                    }
+                }
+                else
+                {
+                    menuItem.Visible = false;
+                }
+
+            }
+        }
+
+        /// <summary>
+        /// Open a recent file
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void recentMenuItem_Click(object sender, EventArgs e)
+        {
+            ToolStripMenuItem menuItem = sender as ToolStripMenuItem;
+            string selectedRecentFilename = (string)menuItem.Tag;
+
+            // Open Recent file and start playing it
+            if (!OpenFile(selectedRecentFilename, true))
+            {
+                m_mruManager.Remove(selectedRecentFilename);
+            }
+        }
+
+        #endregion
 
         #region Drag & Drop
 
@@ -550,7 +944,7 @@ namespace BigMansStuff.PracticeSharp.UI
                 string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
                 string droppedFile = files[0];
                 Console.WriteLine("[DragEnter] DragAndDrop Files: " + droppedFile);
-                if ( PracticeSharpLogic.IsAudioFile( droppedFile ) )
+                if (PracticeSharpLogic.IsAudioFile(droppedFile))
                 {
                     e.Effect = DragDropEffects.Copy;
                 }
@@ -575,31 +969,14 @@ namespace BigMansStuff.PracticeSharp.UI
         {
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
-                string[] files = (string[]) e.Data.GetData(DataFormats.FileDrop);
+                string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
                 string droppedFile = files[0];
-                Console.WriteLine("[DragDrop] DragAndDrop Files: " + droppedFile );
+                Console.WriteLine("[DragDrop] DragAndDrop Files: " + droppedFile);
                 OpenFile(droppedFile, true);
             }
         }
 
         #endregion
-
-        /// <summary>
-        /// ValueChanged Event Handler - Changes the Current play time
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void currentUpDown_ValueChanged(object sender, EventArgs e)
-        {
-            // Don't allow re-entry of UI events when the track bar is being programmatically changed
-            if (m_ignorePlayTimeUIEvents)
-                return;
-
-            // Mask out PracticeSharpLogic events to eliminate 'Racing' between GUI and PracticeSharpLogic over current playtime
-            m_currentControlsMaskOutTime = DateTime.Now.AddMilliseconds(500);
-
-            UpdateCoreCurrentPlayTime();
-        }
 
         #region Start & End Loop Markers
 
@@ -748,340 +1125,6 @@ namespace BigMansStuff.PracticeSharp.UI
 
 
         #endregion
-
-        /// <summary>
-        /// Click event handler for openFileButton - Invokes the open file dialog
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void openFileButton_Click(object sender, EventArgs e)
-        {
-            // Temporary Pause play until save has completed
-            if (m_practiceSharpLogic.Status == PracticeSharpLogic.Statuses.Playing)
-            {
-                m_tempSavePausePlay = true;
-                m_practiceSharpLogic.Pause();
-            }
-            try
-            {
-                // Show the open file dialog
-                if (DialogResult.OK == openFileDialog.ShowDialog(this))
-                {
-                    // Get directory path and store it as a user settting
-                    FileInfo fi = new FileInfo(openFileDialog.FileName);
-                    Properties.Settings.Default.LastAudioFolder = fi.Directory.FullName;
-                    Properties.Settings.Default.LastFilterIndex = openFileDialog.FilterIndex;
-                    Properties.Settings.Default.Save();
-
-                    // Open the file for playing
-                    OpenFile(openFileDialog.FileName, true);
-                }
-            }
-            finally
-            {
-                if (m_tempSavePausePlay)
-                {
-                    m_tempSavePausePlay = false;
-                    m_practiceSharpLogic.Play();
-                }
-            }
-        }
-
-        /// <summary>
-        /// Event handler for ValueChanged of the tempoTrackBar -
-        ///   Changes the underlying tempo of PracticeSharpLogic
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void tempoTrackBar_ValueChanged(object sender, EventArgs e)
-        {
-            // Convert to Percent 
-            float newTempo = tempoTrackBar.Value / 100.0f;
-            // Assign new Tempo
-            m_practiceSharpLogic.Tempo = newTempo;
-            
-            // Update speed value label
-            speedValueLabel.Text = newTempo.ToString();
-        }
-
-        /// <summary>
-        /// Event handler for ValueChanged of the pitchTrackBar -
-        ///   Changes the underlying pitch of PracticeSharpLogic
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void pitchTrackBar_ValueChanged(object sender, EventArgs e)
-        {
-            // Convert to Percent 
-            float newPitch = pitchTrackBar.Value / 96.0f;
-            // Assign new Pitch
-            m_practiceSharpLogic.Pitch = newPitch;
-
-            // Update Pitch value label
-            pitchValueLabel.Text = newPitch.ToString( "0.00" );
-    
-        } 
-
-        /// <summary>
-        /// speedLabel Click event handler - Reset the tempo to default value
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void speedLabel_Click(object sender, EventArgs e)
-        {
-            tempoTrackBar.Value = Convert.ToInt32( PresetData.DefaultTempo * 100 );
-        }
-
-        /// <summary>
-        /// volumeLabel Click event handler - Reset the volume to default value
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void volumeLabel_Click(object sender, EventArgs e)
-        {
-            volumeTrackBar.Value = Convert.ToInt32( PresetData.DefaultVolume * 100 );
-        }
-
-        private void pitchLabel_Click(object sender, EventArgs e)
-        {
-              pitchTrackBar.Value = Convert.ToInt32( PresetData.DefaultPitch * 100 );
-        }
-
-        /// <summary>
-        /// positionLabel Click event handler - Reset the position to default value
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void positionLabel_Click(object sender, EventArgs e)
-        {
-            // Reset current play time so it starts from the begining
-            if (m_practiceSharpLogic.Loop)
-            {
-                // In case of a loop, move the current play time to the start marker
-                m_practiceSharpLogic.CurrentPlayTime = m_practiceSharpLogic.StartMarker;
-            }
-            else
-            {
-                m_practiceSharpLogic.CurrentPlayTime = TimeSpan.Zero;
-            }
-        }
-    
-        /// <summary>
-        /// Toggle the loop mode On/Off
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void loopCheckBox_CheckedChanged(object sender, EventArgs e)
-        {
-            m_practiceSharpLogic.Loop = loopCheckBox.Checked;
-        }
-
-        #region Play Time - Event handlers
-
-        private void playTimeTrackBar_ValueChanged(object sender, EventArgs e)
-        {
-            // Don't allow re-entry of UI events when the track bar is being programmtically changed
-            if (m_ignorePlayTimeUIEvents)
-                return;
-
-            float playPosSeconds = ( float ) ( playTimeTrackBar.Value / 100.0f * m_practiceSharpLogic.FilePlayDuration.TotalSeconds );
-            TimeSpan newPlayTime = new TimeSpan( 0, 0, 0, ( int ) playPosSeconds, 
-                    ( int ) ( 100 * ( playPosSeconds - Math.Truncate( playPosSeconds ) ) )) ;
-
-            m_practiceSharpLogic.CurrentPlayTime = newPlayTime;
-            if (m_practiceSharpLogic.Status != PracticeSharpLogic.Statuses.Playing)
-            {
-                UpdateCurrentUpDownControls(newPlayTime);
-            }
-        }
-
-        private void playPositionTrackBar_MouseDown(object sender, MouseEventArgs e)
-        {
-            m_isUpdatePlayTimeNeeded = false;
-            m_playTimeTrackBarIsChanging = true;
-
-            Application.DoEvents();
-            // Let previous pending updates to position track bar to complete - otherwise the track bar 'jumps'
-            Thread.Sleep(100);
-            Application.DoEvents();
-
-            UpdateNewPlayTimeByMousePos(e);
-        }
-
-        private void playTimeTrackBar_MouseMove(object sender, MouseEventArgs e)
-        {
-            if (m_playTimeTrackBarIsChanging)
-            {
-                UpdateNewPlayTimeByMousePos(e);
-            }
-        }
-    
-        private void playTimeTrackBar_MouseUp(object sender, MouseEventArgs e)
-        {
-            m_playTimeTrackBarIsChanging = false;
-        }
-
-        private void UpdateNewPlayTimeByMousePos(MouseEventArgs e)
-        {
-            const int TrackBarMargin = 10;
-            float duration = (float)m_practiceSharpLogic.FilePlayDuration.TotalSeconds;
-            float newValue = duration * (((float)e.X - TrackBarMargin) / (playTimeTrackBar.Width - TrackBarMargin * 2 ));
-            if (newValue > duration)
-                newValue = duration;
-            else if (newValue < 0)
-                newValue = 0;
-
-            TimeSpan newPlayTime = new TimeSpan(0, 0, Convert.ToInt32( newValue ) );
-            m_practiceSharpLogic.CurrentPlayTime = newPlayTime;
-
-            int newTrackBarValue = 0;
-            if (duration != 0)
-                newTrackBarValue = Convert.ToInt32(newValue / duration * 100.0f);
-
-            if (m_practiceSharpLogic.Status == PracticeSharpLogic.Statuses.Playing)
-            {
-                m_ignorePlayTimeUIEvents = true;
-                try
-                {
-                    // Time in which playtime trackbar updates coming from PracticeSharpLogic are not allowed (to eliminate 'Jumps' due to old locations)
-                    TempMaskOutPlayTimeTrackBar();
-
-                    playTimeTrackBar.Value = newTrackBarValue;
-                }
-                finally
-                {
-                    m_ignorePlayTimeUIEvents = false;
-                }
-            }
-            else
-            {
-                playTimeTrackBar.Value = newTrackBarValue;
-            }
-        }
-
-        private void playTimeUpdateTimer_Tick(object sender, EventArgs e)
-        {
-            lock (this)
-            {
-                if (!m_isUpdatePlayTimeNeeded)
-                    return;
-            }
-
-            // Only update when file is playing
-            if (m_practiceSharpLogic.Status != PracticeSharpLogic.Statuses.Playing)
-                return;
-
-            m_isUpdatePlayTimeNeeded = false;
-
-            m_ignorePlayTimeUIEvents = true;
-            try
-            {
-                if (DateTime.Now > m_currentControlsMaskOutTime)
-                {
-                    UpdateCurrentUpDownControls(m_practiceSharpLogic.CurrentPlayTime);
-                }
-
-                if (!m_playTimeTrackBarIsChanging && DateTime.Now > m_playTimeTrackBarMaskOutTime)
-                {
-                    int currentPlayTimeValue = Convert.ToInt32(100.0f * m_practiceSharpLogic.CurrentPlayTime.TotalSeconds / m_practiceSharpLogic.FilePlayDuration.TotalSeconds);
-                    if (currentPlayTimeValue > playTimeTrackBar.Maximum)
-                    {
-                        currentPlayTimeValue = playTimeTrackBar.Maximum;
-                    }
-
-                    playTimeTrackBar.Value = currentPlayTimeValue;
-                }
-
-                positionMarkersPanel.Refresh();
-            }
-            finally
-            {
-                m_ignorePlayTimeUIEvents = false;
-            }
-        }
-
-        #endregion
-
-        /// <summary>
-        /// Event handler for changes in the CueComboBox
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void cueComboBox_SelectedValueChanged(object sender, EventArgs e)
-        {
-            m_practiceSharpLogic.Cue = new TimeSpan(0, 0, Convert.ToInt32(cueComboBox.Text));
-        }
-
-        #region Recent Files (MRU)
-        private void recentFilesToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
-        {
-            List<string> mruItems = m_mruManager.Items;
-
-            for (int menuItemIndex = 0; menuItemIndex < m_recentFilesMenuItems.Count; menuItemIndex++)
-            {
-                ToolStripMenuItem menuItem = m_recentFilesMenuItems[menuItemIndex];
-
-                menuItem.Visible = menuItemIndex < mruItems.Count;
-                if (menuItemIndex < mruItems.Count)
-                {
-                    string recentFilename = mruItems[menuItemIndex];
-                    menuItem.Visible = true;
-                    int rightIndex = 0;
-                    string recentFilenameDisplay = string.Empty;
-                    if (recentFilename.Length > MaxRecentDisplayLength)
-                    {
-                        rightIndex = recentFilename.Length - MaxRecentDisplayLength;
-                        recentFilenameDisplay = recentFilename.Substring(0, 3) + " ... " + recentFilename.Substring(rightIndex, MaxRecentDisplayLength);
-                    }
-                    else
-                    {
-                        recentFilenameDisplay = recentFilename;
-                    }
-
-                    menuItem.Text = recentFilenameDisplay;
-                    menuItem.Tag = recentFilename;
-
-                    // Disable current file in recent MRU items - its already open
-                    if (recentFilename == m_currentFilename)
-                    {
-                        menuItem.Enabled = false;
-                    }
-                    else
-                    {
-                        menuItem.Enabled = true;
-                    }
-                }
-                else
-                {
-                    menuItem.Visible = false;
-                }
-
-            }
-        }
-
-        private void recentMenuItem_Click(object sender, EventArgs e)
-        {
-            ToolStripMenuItem menuItem = sender as ToolStripMenuItem;
-            string selectedRecentFilename = (string)menuItem.Tag;
-
-            // Open Recent file and start playing it
-            if (!OpenFile(selectedRecentFilename, true))
-            {
-                m_mruManager.Remove(selectedRecentFilename);
-            }
-        }
-
-        #endregion
-
-        private void aboutMenuItem_Click(object sender, EventArgs e)
-        {
-            using (AboutForm aboutForm = new AboutForm())
-            {
-                aboutForm.AppVersion = m_appVersion;
-                aboutForm.ShowDialog(this);
-            }
-
-        }
 
         #endregion
 
@@ -1389,6 +1432,11 @@ namespace BigMansStuff.PracticeSharp.UI
             currentMilliUpDown.Value = playTime.Milliseconds;
         }
 
+        /// <summary>
+        /// Utility function - updates a track bar by a given mouse position
+        /// </summary>
+        /// <param name="trackBar"></param>
+        /// <param name="e"></param>
         private void UpdateTrackBarByMousePosition(TrackBar trackBar, MouseEventArgs e)
         {
             const int TrackBarMargin = 10;
@@ -1403,6 +1451,48 @@ namespace BigMansStuff.PracticeSharp.UI
             int newTrackBarValue = Convert.ToInt32(newValue);
 
             trackBar.Value = newTrackBarValue;
+        }
+
+        /// <summary>
+        /// Utility function - updates the new play time by a given mouse position
+        /// </summary>
+        /// <param name="e"></param>
+        private void UpdateNewPlayTimeByMousePos(MouseEventArgs e)
+        {
+            const int TrackBarMargin = 10;
+            float duration = (float)m_practiceSharpLogic.FilePlayDuration.TotalSeconds;
+            float newValue = duration * (((float)e.X - TrackBarMargin) / (playTimeTrackBar.Width - TrackBarMargin * 2));
+            if (newValue > duration)
+                newValue = duration;
+            else if (newValue < 0)
+                newValue = 0;
+
+            TimeSpan newPlayTime = new TimeSpan(0, 0, Convert.ToInt32(newValue));
+            m_practiceSharpLogic.CurrentPlayTime = newPlayTime;
+
+            int newTrackBarValue = 0;
+            if (duration != 0)
+                newTrackBarValue = Convert.ToInt32(newValue / duration * 100.0f);
+
+            if (m_practiceSharpLogic.Status == PracticeSharpLogic.Statuses.Playing)
+            {
+                m_ignorePlayTimeUIEvents = true;
+                try
+                {
+                    // Time in which playtime trackbar updates coming from PracticeSharpLogic are not allowed (to eliminate 'Jumps' due to old locations)
+                    TempMaskOutPlayTimeTrackBar();
+
+                    playTimeTrackBar.Value = newTrackBarValue;
+                }
+                finally
+                {
+                    m_ignorePlayTimeUIEvents = false;
+                }
+            }
+            else
+            {
+                playTimeTrackBar.Value = newTrackBarValue;
+            }
         }
 
         /// <summary>

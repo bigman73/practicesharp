@@ -87,6 +87,9 @@
     <Compile Include="UI\AboutForm.Designer.cs">
       <DependentUpon>AboutForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="UI\FlickerFreePanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="UI\HoverLabel.cs">
       <SubType>Component</SubType>
     </Compile>

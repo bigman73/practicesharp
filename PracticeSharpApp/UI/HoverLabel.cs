@@ -36,11 +36,18 @@ namespace BigMansStuff.PracticeSharp.UI
     /// </summary>
     class HoverLabel: Label
     {
+        /// <summary>
+        /// Constructor
+        /// </summary>
         public HoverLabel()
         {
             HoverColor = Color.FromName(DefaultHoverColorName);
         }
 
+        /// <summary>
+        /// Mouse Enter - Start Hover
+        /// </summary>
+        /// <param name="e"></param>
         protected override void OnMouseEnter(EventArgs e)
         {
             base.OnMouseEnter(e);
@@ -48,11 +55,23 @@ namespace BigMansStuff.PracticeSharp.UI
             ForeColor = HoverColor;
         }
 
+        /// <summary>
+        /// Mouse Leave - End Hover
+        /// </summary>
+        /// <param name="e"></param>
         protected override void OnMouseLeave(EventArgs e)
         {
             base.OnMouseLeave(e);
 
             ForeColor = DefaultForeColor;
+        }
+
+        /// <summary>
+        /// Allow programmatic clicking of the label
+        /// </summary>
+        public void PerformClick()
+        {
+            OnClick(new EventArgs());
         }
 
         [BrowsableAttribute(true)]

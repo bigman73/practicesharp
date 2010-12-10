@@ -83,6 +83,9 @@ namespace BigMansStuff.PracticeSharp.UI
             PresetDescription = string.Empty;
         }
 
+        /// <summary>
+        /// Invokes changing of the Preset's description
+        /// </summary>
         public void ChangeDescription()
         {
             PresetTextInputDialog inputDialog = new PresetTextInputDialog();
@@ -101,7 +104,6 @@ namespace BigMansStuff.PracticeSharp.UI
             {
                 PresetDescriptionChanged(this, new EventArgs());
             }
-
         }
 
         #endregion
@@ -189,6 +191,7 @@ namespace BigMansStuff.PracticeSharp.UI
         #endregion  
 
         #region Events
+
         public event EventHandler PresetSelected;
         public event EventHandler PresetSaveSelected;
         public event EventHandler PresetDescriptionChanged;
