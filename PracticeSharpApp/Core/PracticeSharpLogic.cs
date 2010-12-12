@@ -252,6 +252,54 @@ namespace BigMansStuff.PracticeSharp.Core
             }
         }
 
+        public float EqualizerLoBand
+        {
+            get
+            {
+                lock (PropertiesLock) { return m_eqLo; }
+            }
+            set
+            {
+                lock (PropertiesLock) 
+                { 
+                    m_eqLo = value;
+                    m_eqParamsChanged = true;
+                }
+            }
+        }        
+
+        public float EqualizerMedBand
+        {
+            get
+            {
+                lock (PropertiesLock) { return m_eqMed; }
+            }
+            set
+            {
+                lock (PropertiesLock) 
+                { 
+                    m_eqMed = value;
+                    m_eqParamsChanged = true;
+                }
+            }
+        }
+
+        public float EqualizerHiBand
+        {
+            get
+            {
+                lock (PropertiesLock) { return m_eqHi; }
+            }
+            set
+            {
+                lock (PropertiesLock) 
+                { 
+                    m_eqHi = value;
+                    m_eqParamsChanged = true;
+                }
+            }
+        }
+
         /// <summary>
         /// Current status
         /// </summary>
@@ -400,6 +448,8 @@ namespace BigMansStuff.PracticeSharp.Core
 
                     InitializeFileAudio();
 
+                    InitializeEqualizerEffect();
+
                     // Special case handling for re-playing after last playing stopped in non-loop mode: 
                     //   Reset current play time to begining of file in case the previous play has reached the end of file
                     if (!m_newPlayTimeRequested && m_currentPlayTime >= m_waveChannel.TotalTime)
@@ -505,6 +555,14 @@ namespace BigMansStuff.PracticeSharp.Core
                     bytesRead = m_waveChannel.Read(convertInputBuffer.Bytes, 0, convertInputBuffer.Bytes.Length);
                     // **************************************
 
+                    floatsRead = bytesRead / ((sizeof(float)) * format.Channels);
+
+                    #endregion
+
+                    #region Apply Equalizer Effect
+
+                    ApplyEqualizerEffect(convertInputBuffer.Floats, floatsRead);
+
                     #endregion
 
                     actualEndMarker = this.EndMarker;
@@ -556,8 +614,6 @@ namespace BigMansStuff.PracticeSharp.Core
                         #endregion
                     }
 
-                    floatsRead = bytesRead / ((sizeof(float)) * format.Channels);
-                    
                     #region Put samples in SoundTouch
 
                     SetSoundSharpValues();
@@ -618,6 +674,53 @@ namespace BigMansStuff.PracticeSharp.Core
             }
         }
 
+
+        /// <summary>
+        /// Applies the DSP Effects in the effects chain
+        /// </summary>
+        /// <param name="buffer"></param>
+        /// <param name="count"></param>
+        private void ApplyEqualizerEffect( float[] buffer, int count)
+        {
+            int samples = count * 2;
+
+            // Apply Equalizer parameters (if they were changed)
+            lock (PropertiesLock)
+            {
+                if (m_eqParamsChanged)
+                {
+                    m_eqEffect.LoGainFactor.Value = m_eqEffect.LoGainFactor.Maximum * m_eqLo;
+                    //m_eqEffect.LoDriveFactor.Value = (m_eqLo + 1.0f) / 2 * 100.0f;
+                    m_eqEffect.MedGainFactor.Value = m_eqEffect.MedGainFactor.Maximum * m_eqMed;
+                    // m_eqEffect.MedDriveFactor.Value = (m_eqMed + 1.0f) / 2 * 100.0f;
+                    m_eqEffect.HiGainFactor.Value = m_eqEffect.HiGainFactor.Maximum * m_eqHi;
+                    //m_eqEffect.HiDriveFactor.Value = (m_eqHi + 1.0f) / 2 * 100.0f;
+
+                    Console.WriteLine("LoEq:" + m_eqEffect.LoGainFactor.Value + "," + m_eqEffect.LoDriveFactor.Value);
+                    Console.WriteLine("MedEq:" + m_eqEffect.MedGainFactor.Value + "," + m_eqEffect.MedDriveFactor.Value);
+                    Console.WriteLine("HiEq:" + m_eqEffect.HiGainFactor.Value + "," + m_eqEffect.HiDriveFactor.Value);
+
+                    m_eqEffect.OnFactorChanges();
+
+                    m_eqParamsChanged = false;
+                }
+            }
+
+            for(int sample = 0; sample < samples; sample+=2)
+            {
+                // get the sample(s)
+                float sampleLeft = buffer[sample];
+                float sampleRight = buffer[sample + 1];
+               
+                // Run these samples through the equalizer effect
+                m_eqEffect.Sample(ref sampleLeft, ref sampleRight);
+
+                // put the samples back into the buffer
+                buffer[sample] = sampleLeft;
+                buffer[sample + 1] = sampleRight;
+            }
+        }
+    
         /// <summary>
         /// Initialize the file play back audio infrastructure
         /// </summary>
@@ -872,6 +975,24 @@ namespace BigMansStuff.PracticeSharp.Core
             Console.WriteLine("SoundTouch Initialized - Version: " + m_soundTouchSharp.SoundTouchVersionId + ", " + m_soundTouchSharp.SoundTouchVersionString);
         }
 
+        /// <summary>
+        /// Initialize the Equalizer DSP Effect
+        /// </summary>
+        private void InitializeEqualizerEffect()
+        {
+            // Initialize Equalizer
+            m_eqEffect = new EqualizerEffect();
+            m_eqEffect.SampleRate = m_waveChannel.WaveFormat.SampleRate;
+            m_eqEffect.LoDriveFactor.Value = 50;
+            m_eqEffect.LoGainFactor.Value = 0;
+            m_eqEffect.MedDriveFactor.Value = 50;
+            m_eqEffect.MedGainFactor.Value = 0;
+            m_eqEffect.HiDriveFactor.Value = 50;
+            m_eqEffect.HiGainFactor.Value = 0;
+            m_eqEffect.Init();
+            m_eqEffect.OnFactorChanges();
+        }
+
         #endregion
 
         #region Termination
@@ -962,6 +1083,11 @@ namespace BigMansStuff.PracticeSharp.Core
         private float m_pitch = 0f;
         private bool m_loop;
         private float m_volume;
+        private float m_eqLo;
+        private float m_eqMed;
+        private float m_eqHi;
+        private bool m_eqParamsChanged;
+        private EqualizerEffect m_eqEffect;
 
         private Thread m_audioProcessingThread;
         private bool m_stopWorker = false;
@@ -976,6 +1102,8 @@ namespace BigMansStuff.PracticeSharp.Core
         private TimeSpan m_currentPlayTime;
         private TimeSpan m_newPlayTime;
         private bool m_newPlayTimeRequested;
+
+        private List<DSPEffect> m_dspEffects = new List<DSPEffect>();
 
         // Thread Locks
         private readonly object LoopLock = new object();

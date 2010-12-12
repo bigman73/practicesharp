@@ -42,6 +42,9 @@ namespace BigMansStuff.PracticeSharp.UI
     /// </summary>
     public partial class MainForm : Form
     {
+        // TODO: Eq Value Labels
+        // TODO: Write/Read Eq values To/From Preset
+
         #region Construction
 
         /// <summary>
@@ -504,55 +507,11 @@ namespace BigMansStuff.PracticeSharp.UI
             float newVolume = volumeTrackBar.Value / 100.0f;
             m_practiceSharpLogic.Volume = newVolume;
 
-            volumeValueLabel.Text = ( newVolume * 100 ).ToString();
-
+            volumeValueLabel.Text = ( newVolume * 100 ).ToString() + "%";
         }
   
 
-        #region Reset Bank Button event handlers
-
-        /// <summary>
-        /// Mouse Down - start the reset timer
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void resetBankButton_MouseDown(object sender, MouseEventArgs e)
-        {
-            resetBankTimer.Start();
-        }
-
-        /// <summary>
-        /// Timer tick event handler - enough time has passed since the mouse down has started, it is time to do the actual reset action
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void resetBankTimer_Tick(object sender, EventArgs e)
-        {
-            resetBankTimer.Stop();
-
-            // Reset bank values
-            m_currentPreset.Reset( true );
-            m_currentPreset.State = PresetControl.PresetStates.Selected;
-            ApplyPresetValueUIControls( m_currentPreset.PresetData );
-
-            WritePresetsBank();
-        }
-
-        /// <summary>
-        /// Mouse was up - Cancel the reset action
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void resetBankButton_MouseUp(object sender, MouseEventArgs e)
-        {
-            if (resetBankTimer.Enabled)
-            {
-                // Cancel reset
-                resetBankTimer.Stop();
-            }
-        }
-
-        #endregion
+    
 
         /// <summary>
         /// tempoTrackBar Mouse Down - Changes the tempo to the value under the current mouse position
@@ -561,7 +520,7 @@ namespace BigMansStuff.PracticeSharp.UI
         /// <param name="e"></param>
         private void tempoTrackBar_MouseDown(object sender, MouseEventArgs e)
         {
-            UpdateTrackBarByMousePosition(tempoTrackBar, e);
+            UpdateHorizontalTrackBarByMousePosition(tempoTrackBar, e);
         }
 
         /// <summary>
@@ -571,7 +530,7 @@ namespace BigMansStuff.PracticeSharp.UI
         /// <param name="e"></param>
         private void pitchTrackBar_MouseDown(object sender, MouseEventArgs e)
         {
-            UpdateTrackBarByMousePosition(pitchTrackBar, e);
+            UpdateHorizontalTrackBarByMousePosition(pitchTrackBar, e);
         }
 
         /// <summary>
@@ -581,7 +540,7 @@ namespace BigMansStuff.PracticeSharp.UI
         /// <param name="e"></param>
         private void volumeTrackBar_MouseDown(object sender, MouseEventArgs e)
         {
-            UpdateTrackBarByMousePosition(volumeTrackBar, e);
+            UpdateVerticalTrackBarByMousePosition(volumeTrackBar, e);
         }
 
         /// <summary>
@@ -857,7 +816,6 @@ namespace BigMansStuff.PracticeSharp.UI
 
         #endregion
 
-
         #region Recent Files (MRU)
 
         /// <summary>
@@ -1125,6 +1083,113 @@ namespace BigMansStuff.PracticeSharp.UI
 
 
         #endregion
+
+        #region Reset Bank Button event handlers
+
+        /// <summary>
+        /// Mouse Down - start the reset timer
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void resetBankButton_MouseDown(object sender, MouseEventArgs e)
+        {
+            resetBankTimer.Start();
+        }
+
+        /// <summary>
+        /// Timer tick event handler - enough time has passed since the mouse down has started, it is time to do the actual reset action
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void resetBankTimer_Tick(object sender, EventArgs e)
+        {
+            resetBankTimer.Stop();
+
+            // Reset bank values
+            m_currentPreset.Reset(true);
+            m_currentPreset.State = PresetControl.PresetStates.Selected;
+            ApplyPresetValueUIControls(m_currentPreset.PresetData);
+
+            WritePresetsBank();
+        }
+
+        /// <summary>
+        /// Mouse was up - Cancel the reset action
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void resetBankButton_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (resetBankTimer.Enabled)
+            {
+                // Cancel reset
+                resetBankTimer.Stop();
+            }
+        }
+
+        #endregion
+
+        #region Equalizer
+        private void loEqtrackBar_ValueChanged(object sender, EventArgs e)
+        {
+            float newEqLo = loEqtrackBar.Value / 100.0f;
+            m_practiceSharpLogic.EqualizerLoBand = newEqLo;
+
+            // TODO: Value Label
+            //volumeValueLabel.Text = (newVolume * 100).ToString() + "%";
+        }
+
+
+        private void medEqTrackBar_ValueChanged(object sender, EventArgs e)
+        {
+            float newEqMed = medEqTrackBar.Value / 100.0f;
+            m_practiceSharpLogic.EqualizerMedBand = newEqMed;
+        }
+
+        private void hiEqTrackBar_ValueChanged(object sender, EventArgs e)
+        {
+            float newEqHi = hiEqTrackBar.Value / 100.0f;
+            m_practiceSharpLogic.EqualizerHiBand = newEqHi;
+        }
+
+        private void equalizerHoverLabel_Click(object sender, EventArgs e)
+        {
+            loEqHoverLabel.PerformClick();
+            medEqHoverLabel.PerformClick();
+            hiEqHoverLabel.PerformClick();
+        }
+
+        private void loEqHoverLabel_Click(object sender, EventArgs e)
+        {
+            loEqtrackBar.Value = 0;
+        }
+
+        private void medEqHoverLabel_Click(object sender, EventArgs e)
+        {
+            medEqTrackBar.Value = 0;
+        }
+
+        private void hiEqHoverLabel_Click(object sender, EventArgs e)
+        {
+            hiEqTrackBar.Value = 0;
+        }
+
+        private void loEqtrackBar_MouseDown(object sender, MouseEventArgs e)
+        {
+            UpdateVerticalTrackBarByMousePosition(loEqtrackBar, e);
+        }
+
+        private void medEqTrackBar_MouseDown(object sender, MouseEventArgs e)
+        {
+            UpdateVerticalTrackBarByMousePosition(medEqTrackBar, e);
+        }
+
+        private void hiEqTrackBar_MouseDown(object sender, MouseEventArgs e)
+        {
+            UpdateVerticalTrackBarByMousePosition(hiEqTrackBar, e);
+        }
+
+        #endregion Equalizer
 
         #endregion
 
@@ -1433,16 +1498,37 @@ namespace BigMansStuff.PracticeSharp.UI
         }
 
         /// <summary>
-        /// Utility function - updates a track bar by a given mouse position
+        /// Utility function - updates a horizontal track bar by a given mouse position
         /// </summary>
         /// <param name="trackBar"></param>
         /// <param name="e"></param>
-        private void UpdateTrackBarByMousePosition(TrackBar trackBar, MouseEventArgs e)
+        private void UpdateHorizontalTrackBarByMousePosition(TrackBar trackBar, MouseEventArgs e)
         {
             const int TrackBarMargin = 10;
             float maxValue = trackBar.Maximum;
             float minValue = trackBar.Minimum;
             float newValue = minValue + (maxValue - minValue) * (((float)e.X - TrackBarMargin) / (trackBar.Width - TrackBarMargin * 2));
+            if (newValue > maxValue)
+                newValue = maxValue;
+            else if (newValue < minValue)
+                newValue = minValue;
+
+            int newTrackBarValue = Convert.ToInt32(newValue);
+
+            trackBar.Value = newTrackBarValue;
+        }
+
+        /// <summary>
+        /// Utility function - updates a vertical track bar by a given mouse position
+        /// </summary>
+        /// <param name="trackBar"></param>
+        /// <param name="e"></param>
+        private void UpdateVerticalTrackBarByMousePosition(TrackBar trackBar, MouseEventArgs e)
+        {
+            const int TrackBarMargin = 10;
+            float maxValue = trackBar.Maximum;
+            float minValue = trackBar.Minimum;
+            float newValue = maxValue - (maxValue - minValue) * (((float)e.Y - TrackBarMargin) / (trackBar.Height - TrackBarMargin * 2));
             if (newValue > maxValue)
                 newValue = maxValue;
             else if (newValue < minValue)

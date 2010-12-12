@@ -71,6 +71,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core\AdvancedBufferedWaveProvider.cs" />
+    <Compile Include="Core\DSPEffect.cs" />
+    <Compile Include="Core\DSPEffectFactor.cs" />
+    <Compile Include="Core\EqualizerEffect.cs" />
     <Compile Include="Core\PracticeSharpLogic.cs" />
     <Compile Include="Core\SoundTouchSharp.cs" />
     <Compile Include="Core\PresetData.cs" />
@@ -215,6 +218,7 @@
     <None Include="Res\open-icon.png" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="LICENSES.txt" />
     <Content Include="Res\blue-off-16.png" />
     <Content Include="Res\blue-on-16.png" />
     <Content Include="Res\lgplv3-147x51.png" />
