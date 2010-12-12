@@ -201,7 +201,7 @@ namespace BigMansStuff.PracticeSharp.UI
         #region Constants
 
         private const string DownloadsWebPageURL = "http://code.google.com/p/practicesharp/downloads/list";
-        private const string LatestVersionWebPageURL = "http://code.google.com/p/practicesharp/wiki/LatestVersion";
+        private const string LatestVersionWebPageURL = "http://practicesharp.googlecode.com/svn/wiki/LatestVersion.wiki";
 
         #endregion
     }
