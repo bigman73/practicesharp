@@ -128,7 +128,6 @@ namespace BigMansStuff.PracticeSharp.UI
             catch (Exception)
             {
                 MessageBox.Show(null, "Failed loading Presets Bank for file: " + m_currentAudioFilename, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-
             }
 
             return null;
@@ -177,25 +176,25 @@ namespace BigMansStuff.PracticeSharp.UI
 
         #region XML Constants
 
-        internal const string XML_Node_Root = "PracticeSharp";
-        internal const string XML_Node_PresetsBank = "PresetsBank";
-        internal const string XML_Node_Preset = "Preset";
-        internal const string XML_Attr_ActivePreset = "ActivePreset";
-        internal const string XML_Attr_Version = "Version";
-        internal const string XML_Attr_Filename = "Filename";
-        internal const string XML_Attr_Id = "Id";
-        internal const string XML_Attr_Tempo = "Tempo";
-        internal const string XML_Attr_Pitch = "Pitch";
-        internal const string XML_Attr_Volume = "Volume";
-        internal const string XML_Attr_LoEq = "LoEq";
-        internal const string XML_Attr_MedEq = "MedEq";
-        internal const string XML_Attr_HiEq = "HiEq";
-        internal const string XML_Attr_PlayTime = "PlayTime";
-        internal const string XML_Attr_LoopStartMarker = "LoopStartMarker";
-        internal const string XML_Attr_LoopEndMarker = "LoopEndMarker";
-        internal const string XML_Attr_IsLoop = "IsLoop";
-        internal const string XML_Attr_Cue = "Cue";
-        internal const string XML_Attr_Description = "Description";
+        const string XML_Node_Root = "PracticeSharp";
+        const string XML_Node_PresetsBank = "PresetsBank";
+        const string XML_Node_Preset = "Preset";
+        const string XML_Attr_ActivePreset = "ActivePreset";
+        const string XML_Attr_Version = "Version";
+        const string XML_Attr_Filename = "Filename";
+        const string XML_Attr_Id = "Id";
+        const string XML_Attr_Tempo = "Tempo";
+        const string XML_Attr_Pitch = "Pitch";
+        const string XML_Attr_Volume = "Volume";
+        const string XML_Attr_LoEq = "LoEq";
+        const string XML_Attr_MedEq = "MedEq";
+        const string XML_Attr_HiEq = "HiEq";
+        const string XML_Attr_PlayTime = "PlayTime";
+        const string XML_Attr_LoopStartMarker = "LoopStartMarker";
+        const string XML_Attr_LoopEndMarker = "LoopEndMarker";
+        const string XML_Attr_IsLoop = "IsLoop";
+        const string XML_Attr_Cue = "Cue";
+        const string XML_Attr_Description = "Description";
 
         #endregion
     }

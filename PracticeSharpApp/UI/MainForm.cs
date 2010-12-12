@@ -502,6 +502,11 @@ namespace BigMansStuff.PracticeSharp.UI
             m_writeMode = false;
         }
 
+        /// <summary>
+        /// Volume TrackBar ValueChanged Event Handler - Changes the volume in PractceSharpLogic
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void volumeTrackBar_ValueChanged(object sender, EventArgs e)
         {
             float newVolume = volumeTrackBar.Value / 100.0f;
@@ -509,9 +514,6 @@ namespace BigMansStuff.PracticeSharp.UI
 
             volumeValueLabel.Text = ( newVolume * 100 ).ToString() + "%";
         }
-  
-
-    
 
         /// <summary>
         /// tempoTrackBar Mouse Down - Changes the tempo to the value under the current mouse position
@@ -653,6 +655,11 @@ namespace BigMansStuff.PracticeSharp.UI
             volumeTrackBar.Value = Convert.ToInt32( PresetData.DefaultVolume * 100 );
         }
 
+        /// <summary>
+        /// Pitch label Click event handler - Reset the Pitch to default value
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void pitchLabel_Click(object sender, EventArgs e)
         {
               pitchTrackBar.Value = Convert.ToInt32( PresetData.DefaultPitch * 100 );
@@ -1140,7 +1147,6 @@ namespace BigMansStuff.PracticeSharp.UI
             loEqValueLabel.Text = (newEqLo * 100).ToString() + "%";
         }
 
-
         private void medEqTrackBar_ValueChanged(object sender, EventArgs e)
         {
             float newEqMed = medEqTrackBar.Value / 100.0f;
@@ -1159,6 +1165,11 @@ namespace BigMansStuff.PracticeSharp.UI
             hiEqValueLabel.Text = (newEqHi * 100).ToString() + "%";
         }
 
+        /// <summary>
+        /// Equalizer label click event handler - resets all equalizer band to default
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void equalizerHoverLabel_Click(object sender, EventArgs e)
         {
             loEqHoverLabel.PerformClick();
@@ -1166,16 +1177,31 @@ namespace BigMansStuff.PracticeSharp.UI
             hiEqHoverLabel.PerformClick();
         }
 
+        /// <summary>
+        /// Lo Equalizer Label click event handler - resets the Lo equalizer band to default
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void loEqHoverLabel_Click(object sender, EventArgs e)
         {
             loEqTrackBar.Value = Convert.ToInt32(PresetData.DefaultLoEq);
         }
 
+        /// <summary>
+        /// Med Equalizer Label click event handler - resets the Med equalizer band to default
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void medEqHoverLabel_Click(object sender, EventArgs e)
         {
             medEqTrackBar.Value = Convert.ToInt32(PresetData.DefaultMedEq);
         }
 
+        /// <summary>
+        /// Hi Equalizer Label click event handler - resets the Hi equalizer band to default
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void hiEqHoverLabel_Click(object sender, EventArgs e)
         {
             hiEqTrackBar.Value = Convert.ToInt32(PresetData.DefaultHiEq);
