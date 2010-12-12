@@ -42,9 +42,6 @@ namespace BigMansStuff.PracticeSharp.UI
     /// </summary>
     public partial class MainForm : Form
     {
-        // TODO: Eq Value Labels
-        // TODO: Write/Read Eq values To/From Preset
-
         #region Construction
 
         /// <summary>
@@ -451,8 +448,7 @@ namespace BigMansStuff.PracticeSharp.UI
         /// <param name="e"></param>
         private void presetControl_PresetDescriptionChanged(object sender, EventArgs e)
         {
-            // (Re-)Write preset bank file
-            WritePresetsBank();
+            RewritePresetsBankFile();
         }
 
         /// <summary>
@@ -478,10 +474,13 @@ namespace BigMansStuff.PracticeSharp.UI
                         presetControl.ChangeDescription();
                     }
 
-                    // Update the preset data for the selected preset
+                    // Update the preset data with the values from the selected preset
                     presetControl.PresetData.Tempo = m_practiceSharpLogic.Tempo;
                     presetControl.PresetData.Pitch = m_practiceSharpLogic.Pitch;
                     presetControl.PresetData.Volume = m_practiceSharpLogic.Volume;
+                    presetControl.PresetData.LoEqValue = m_practiceSharpLogic.EqualizerLoBand;
+                    presetControl.PresetData.MedEqValue = m_practiceSharpLogic.EqualizerMedBand;
+                    presetControl.PresetData.HiEqValue = m_practiceSharpLogic.EqualizerHiBand;
                     presetControl.PresetData.CurrentPlayTime = m_practiceSharpLogic.CurrentPlayTime;
                     presetControl.PresetData.StartMarker = m_practiceSharpLogic.StartMarker;
                     presetControl.PresetData.EndMarker = m_practiceSharpLogic.EndMarker;
@@ -492,7 +491,7 @@ namespace BigMansStuff.PracticeSharp.UI
             }
 
             // (Re-)Write preset bank file
-            WritePresetsBank();
+            RewritePresetsBankFile();
 
             if (m_tempSavePausePlay)
             {
@@ -500,6 +499,7 @@ namespace BigMansStuff.PracticeSharp.UI
                 m_practiceSharpLogic.Play();
                 m_tempSavePausePlay = false;
             }
+            m_writeMode = false;
         }
 
         private void volumeTrackBar_ValueChanged(object sender, EventArgs e)
@@ -1110,7 +1110,7 @@ namespace BigMansStuff.PracticeSharp.UI
             m_currentPreset.State = PresetControl.PresetStates.Selected;
             ApplyPresetValueUIControls(m_currentPreset.PresetData);
 
-            WritePresetsBank();
+            RewritePresetsBankFile();
         }
 
         /// <summary>
@@ -1130,13 +1130,14 @@ namespace BigMansStuff.PracticeSharp.UI
         #endregion
 
         #region Equalizer
-        private void loEqtrackBar_ValueChanged(object sender, EventArgs e)
+
+        private void loEqTrackBar_ValueChanged(object sender, EventArgs e)
         {
-            float newEqLo = loEqtrackBar.Value / 100.0f;
+            float newEqLo = loEqTrackBar.Value / 100.0f;
             m_practiceSharpLogic.EqualizerLoBand = newEqLo;
 
-            // TODO: Value Label
-            //volumeValueLabel.Text = (newVolume * 100).ToString() + "%";
+            // Update Value Label
+            loEqValueLabel.Text = (newEqLo * 100).ToString() + "%";
         }
 
 
@@ -1144,12 +1145,18 @@ namespace BigMansStuff.PracticeSharp.UI
         {
             float newEqMed = medEqTrackBar.Value / 100.0f;
             m_practiceSharpLogic.EqualizerMedBand = newEqMed;
+
+            // Update Value Label
+            medEqValueLabel.Text = (newEqMed * 100).ToString() + "%";
         }
 
         private void hiEqTrackBar_ValueChanged(object sender, EventArgs e)
         {
             float newEqHi = hiEqTrackBar.Value / 100.0f;
             m_practiceSharpLogic.EqualizerHiBand = newEqHi;
+
+            // Update Value Label
+            hiEqValueLabel.Text = (newEqHi * 100).ToString() + "%";
         }
 
         private void equalizerHoverLabel_Click(object sender, EventArgs e)
@@ -1161,22 +1168,22 @@ namespace BigMansStuff.PracticeSharp.UI
 
         private void loEqHoverLabel_Click(object sender, EventArgs e)
         {
-            loEqtrackBar.Value = 0;
+            loEqTrackBar.Value = Convert.ToInt32(PresetData.DefaultLoEq);
         }
 
         private void medEqHoverLabel_Click(object sender, EventArgs e)
         {
-            medEqTrackBar.Value = 0;
+            medEqTrackBar.Value = Convert.ToInt32(PresetData.DefaultMedEq);
         }
 
         private void hiEqHoverLabel_Click(object sender, EventArgs e)
         {
-            hiEqTrackBar.Value = 0;
+            hiEqTrackBar.Value = Convert.ToInt32(PresetData.DefaultHiEq);
         }
 
         private void loEqtrackBar_MouseDown(object sender, MouseEventArgs e)
         {
-            UpdateVerticalTrackBarByMousePosition(loEqtrackBar, e);
+            UpdateVerticalTrackBarByMousePosition(loEqTrackBar, e);
         }
 
         private void medEqTrackBar_MouseDown(object sender, MouseEventArgs e)
@@ -1329,7 +1336,14 @@ namespace BigMansStuff.PracticeSharp.UI
                 m_practiceSharpLogic.LoadFile(filename);
 
                 // Load Presets Bank for this input file
-                LoadPresetsBank();
+                m_presetBankFile = new PresetBankFile(m_appDataFolder,m_appVersion.ToString(),m_currentFilename);
+                string activePresetId = m_presetBankFile.LoadPresetsBank(m_presetControls);
+                if (activePresetId != null)
+                {
+                    m_currentPreset = m_presetControls[activePresetId];
+                    m_currentPreset.State = PresetControl.PresetStates.Selected;
+                }
+
 
                 EnableControls(true);
 
@@ -1592,97 +1606,12 @@ namespace BigMansStuff.PracticeSharp.UI
         #region Presets
 
         /// <summary>
-        /// Loads the presets from the preset bank file
+        /// Re-Writes the presets bank file with data from the current presets - Delegates handling to PresetBankFile
         /// </summary>
-        private void LoadPresetsBank()
+        private void RewritePresetsBankFile()
         {
-            m_presetsBankFilename = m_appDataFolder + "\\" + Path.GetFileName(m_currentFilename) + ".practicesharpbank.xml";
-
-            if (!File.Exists(m_presetsBankFilename))
-            {
-                return;
-            }
-
-            try
-            {
-                // Loads the presets bank XML file
-                XmlDocument doc = new XmlDocument();
-                doc.Load(m_presetsBankFilename);
-
-                XmlElement root = doc.DocumentElement;
-                XmlNode presetsBankNode = root.SelectSingleNode("/" + XML_Node_Root + "/" + XML_Node_PresetsBank);
-                string activePresetId = presetsBankNode.Attributes[XML_Attr_ActivePreset].Value;
-                XmlNodeList presetNodes = presetsBankNode.SelectNodes(XML_Node_Preset);
-                // Load all preset nodes
-                foreach (XmlNode presetNode in presetNodes)
-                {
-                    string presetId = presetNode.Attributes[XML_Attr_Id].Value;
-                    // Load XML values into PresetData object
-                    PresetData presetData = m_presetControls[presetId].PresetData;
-                    presetData.Tempo = Convert.ToSingle(presetNode.Attributes[XML_Attr_Tempo].Value);
-                    presetData.Pitch = Convert.ToSingle(presetNode.Attributes[XML_Attr_Pitch].Value);
-                    presetData.Volume = Convert.ToSingle(presetNode.Attributes[XML_Attr_Volume].Value);
-
-                    presetData.CurrentPlayTime = TimeSpan.Parse(presetNode.Attributes[XML_Attr_PlayTime].Value);
-                    presetData.StartMarker = TimeSpan.Parse(presetNode.Attributes[XML_Attr_LoopStartMarker].Value);
-                    presetData.EndMarker = TimeSpan.Parse(presetNode.Attributes[XML_Attr_LoopEndMarker].Value);
-                    presetData.Loop = Convert.ToBoolean(presetNode.Attributes[XML_Attr_IsLoop].Value);
-                    presetData.Cue = TimeSpan.Parse(presetNode.Attributes[XML_Attr_Cue].Value);
-                    presetData.Description = Convert.ToString(presetNode.Attributes[XML_Attr_Description].Value);
-
-                    PresetControl presetControl = m_presetControls[presetId];
-                    presetControl.PresetDescription = presetData.Description;
-                }
-
-                m_currentPreset = m_presetControls[activePresetId];
-                m_currentPreset.State = PresetControl.PresetStates.Selected;
-            }
-            catch (Exception)
-            {
-                MessageBox.Show(this, "Failed loading Presets Bank for file: " + m_currentFilename, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-
-            }
-
-        }
-
-        /// <summary>
-        /// Writes a full Preset Bank XML into a file
-        /// </summary>
-        private void WritePresetsBank()
-        {
-            // Create an XML Document
-            XmlDocument doc = new XmlDocument();
-            XmlElement elRoot = (XmlElement)doc.AppendChild(doc.CreateElement(XML_Node_Root));
-            elRoot.SetAttribute(XML_Attr_Version, m_appVersion.ToString());
-            XmlElement elPresets = (XmlElement)elRoot.AppendChild(doc.CreateElement(XML_Node_PresetsBank));
-            elPresets.SetAttribute(XML_Attr_Filename, Path.GetFileName(m_currentFilename));
-            elPresets.SetAttribute(XML_Attr_ActivePreset, m_currentPreset.Id);
-
-            // Write XML Nodes for each Preset
-            foreach (PresetControl presetControl in m_presetControls.Values)
-            {
-                PresetData presetData = presetControl.PresetData;
-
-                XmlElement elPreset = (XmlElement)elPresets.AppendChild(doc.CreateElement(XML_Node_Preset));
-                // Write Preset Attributes
-                elPreset.SetAttribute(XML_Attr_Id, presetControl.Id);
-                elPreset.SetAttribute(XML_Attr_Tempo, presetData.Tempo.ToString());
-                elPreset.SetAttribute(XML_Attr_Pitch, presetData.Pitch.ToString());
-                elPreset.SetAttribute(XML_Attr_Volume, presetData.Volume.ToString());
-                elPreset.SetAttribute(XML_Attr_PlayTime, presetData.CurrentPlayTime.ToString());
-                elPreset.SetAttribute(XML_Attr_LoopStartMarker, presetData.StartMarker.ToString());
-                elPreset.SetAttribute(XML_Attr_LoopEndMarker, presetData.EndMarker.ToString());
-                elPreset.SetAttribute(XML_Attr_IsLoop, presetData.Loop.ToString());
-                elPreset.SetAttribute(XML_Attr_Cue, presetData.Cue.ToString());
-                elPreset.SetAttribute(XML_Attr_IsLoop, presetData.Loop.ToString());
-                elPreset.SetAttribute(XML_Attr_Description, presetData.Description);
-            }
-
-            // Write to XML file
-            using (StreamWriter writer = new StreamWriter(m_presetsBankFilename, false, Encoding.UTF8))
-            {
-                writer.Write(doc.OuterXml);
-            }
+            // (Re-)Write preset bank file
+            m_presetBankFile.WritePresetsBank(m_presetControls, m_currentPreset.Id);
         }
 
         /// <summary>
@@ -1695,6 +1624,13 @@ namespace BigMansStuff.PracticeSharp.UI
             tempoTrackBar.Value = Convert.ToInt32(presetData.Tempo * 100.0f);
             pitchTrackBar.Value = Convert.ToInt32(presetData.Pitch * 96.0f);
             volumeTrackBar.Value = Convert.ToInt32(presetData.Volume * 100.0f);
+            loEqTrackBar.Value = Convert.ToInt32(presetData.LoEqValue * 100.0f);
+            loEqTrackBar_ValueChanged(this, new EventArgs());
+            medEqTrackBar.Value = Convert.ToInt32(presetData.MedEqValue * 100.0f);
+            medEqTrackBar_ValueChanged(this, new EventArgs());
+            hiEqTrackBar.Value = Convert.ToInt32(presetData.HiEqValue * 100.0f);
+            hiEqTrackBar_ValueChanged(this, new EventArgs());
+
             if (m_practiceSharpLogic.FilePlayDuration == TimeSpan.Zero)
             {
                 playTimeTrackBar.Value = playTimeTrackBar.Minimum;
@@ -1748,7 +1684,7 @@ namespace BigMansStuff.PracticeSharp.UI
         private DateTime m_currentControlsMaskOutTime = DateTime.Now;
 
         private string m_currentFilename;
-        private string m_presetsBankFilename;
+        private PresetBankFile m_presetBankFile;
         private string m_appDataFolder;
         private Version m_appVersion;
 
@@ -1766,26 +1702,6 @@ namespace BigMansStuff.PracticeSharp.UI
         const int MarkerHeight = 10;
 
         const int MaxRecentDisplayLength = 60;
-
-        #endregion
-   
-        #region XML Constants
-        const string XML_Node_Root = "PracticeSharp";
-        const string XML_Node_PresetsBank = "PresetsBank";
-        const string XML_Node_Preset = "Preset";
-        const string XML_Attr_ActivePreset = "ActivePreset";
-        const string XML_Attr_Version = "Version";
-        const string XML_Attr_Filename = "Filename";
-        const string XML_Attr_Id = "Id";
-        const string XML_Attr_Tempo = "Tempo";
-        const string XML_Attr_Pitch = "Pitch";
-        const string XML_Attr_Volume = "Volume";         
-        const string XML_Attr_PlayTime = "PlayTime";
-        const string XML_Attr_LoopStartMarker = "LoopStartMarker";
-        const string XML_Attr_LoopEndMarker = "LoopEndMarker";
-        const string XML_Attr_IsLoop = "IsLoop";
-        const string XML_Attr_Cue = "Cue";
-        const string XML_Attr_Description = "Description";
 
         #endregion
     }

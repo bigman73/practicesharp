@@ -115,26 +115,29 @@ namespace BigMansStuff.PracticeSharp.UI
             this.vol50Label = new System.Windows.Forms.Label();
             this.vol75Label = new System.Windows.Forms.Label();
             this.vol25Label = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
-            this.label10 = new System.Windows.Forms.Label();
+            this.speed15XLabel = new System.Windows.Forms.Label();
+            this.speed05XLabel = new System.Windows.Forms.Label();
             this.play2QDurationLabel = new System.Windows.Forms.Label();
             this.play3QDurationLabel = new System.Windows.Forms.Label();
             this.play1QDurationLabel = new System.Windows.Forms.Label();
             this.controlPanel = new System.Windows.Forms.Panel();
-            this.label11 = new System.Windows.Forms.Label();
-            this.label12 = new System.Windows.Forms.Label();
+            this.pitchM05Label = new System.Windows.Forms.Label();
+            this.pitch05Label = new System.Windows.Forms.Label();
             this.pitchValueLabel = new System.Windows.Forms.Label();
-            this.label15 = new System.Windows.Forms.Label();
-            this.label16 = new System.Windows.Forms.Label();
-            this.label17 = new System.Windows.Forms.Label();
+            this.pitch1Label = new System.Windows.Forms.Label();
+            this.pitchM1Label = new System.Windows.Forms.Label();
+            this.pitch0Label = new System.Windows.Forms.Label();
             this.pitchTrackBar = new System.Windows.Forms.TrackBar();
             this.trackBarPanel = new System.Windows.Forms.Panel();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
+            this.hiEqValueLabel = new System.Windows.Forms.Label();
+            this.medEqValueLabel = new System.Windows.Forms.Label();
+            this.loEqValueLabel = new System.Windows.Forms.Label();
+            this.eqM100Label = new System.Windows.Forms.Label();
+            this.eq100Label = new System.Windows.Forms.Label();
+            this.eq0Label = new System.Windows.Forms.Label();
             this.hiEqTrackBar = new System.Windows.Forms.TrackBar();
             this.medEqTrackBar = new System.Windows.Forms.TrackBar();
-            this.loEqtrackBar = new System.Windows.Forms.TrackBar();
+            this.loEqTrackBar = new System.Windows.Forms.TrackBar();
             this.menuStrip = new System.Windows.Forms.MenuStrip();
             this.recentFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.recent1ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -181,7 +184,7 @@ namespace BigMansStuff.PracticeSharp.UI
             this.trackBarPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.hiEqTrackBar)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.medEqTrackBar)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.loEqtrackBar)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.loEqTrackBar)).BeginInit();
             this.menuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -194,7 +197,7 @@ namespace BigMansStuff.PracticeSharp.UI
             this.tempoTrackBar.Name = "tempoTrackBar";
             this.tempoTrackBar.Size = new System.Drawing.Size(287, 45);
             this.tempoTrackBar.SmallChange = 5;
-            this.tempoTrackBar.TabIndex = 2;
+            this.tempoTrackBar.TabIndex = 0;
             this.tempoTrackBar.TickFrequency = 10;
             this.tempoTrackBar.TickStyle = System.Windows.Forms.TickStyle.Both;
             this.tempoTrackBar.Value = 100;
@@ -213,7 +216,7 @@ namespace BigMansStuff.PracticeSharp.UI
             this.volumeTrackBar.Name = "volumeTrackBar";
             this.volumeTrackBar.Orientation = System.Windows.Forms.Orientation.Vertical;
             this.volumeTrackBar.Size = new System.Drawing.Size(45, 151);
-            this.volumeTrackBar.TabIndex = 8;
+            this.volumeTrackBar.TabIndex = 2;
             this.volumeTrackBar.TickFrequency = 10;
             this.volumeTrackBar.TickStyle = System.Windows.Forms.TickStyle.Both;
             this.volumeTrackBar.Value = 25;
@@ -240,7 +243,7 @@ namespace BigMansStuff.PracticeSharp.UI
             this.playTimeTrackBar.Name = "playTimeTrackBar";
             this.playTimeTrackBar.Size = new System.Drawing.Size(520, 45);
             this.playTimeTrackBar.SmallChange = 5;
-            this.playTimeTrackBar.TabIndex = 10;
+            this.playTimeTrackBar.TabIndex = 6;
             this.playTimeTrackBar.TickFrequency = 5;
             this.playTimeTrackBar.TickStyle = System.Windows.Forms.TickStyle.TopLeft;
             this.playTimeTrackBar.ValueChanged += new System.EventHandler(this.playTimeTrackBar_ValueChanged);
@@ -832,27 +835,27 @@ namespace BigMansStuff.PracticeSharp.UI
             this.vol25Label.TabIndex = 59;
             this.vol25Label.Text = "25%";
             // 
-            // label6
+            // speed15XLabel
             // 
-            this.label6.AutoSize = true;
-            this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.label6.Location = new System.Drawing.Point(246, 38);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(26, 12);
-            this.label6.TabIndex = 60;
-            this.label6.Text = "X 1.5";
+            this.speed15XLabel.AutoSize = true;
+            this.speed15XLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.speed15XLabel.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.speed15XLabel.Location = new System.Drawing.Point(246, 38);
+            this.speed15XLabel.Name = "speed15XLabel";
+            this.speed15XLabel.Size = new System.Drawing.Size(26, 12);
+            this.speed15XLabel.TabIndex = 60;
+            this.speed15XLabel.Text = "X 1.5";
             // 
-            // label10
+            // speed05XLabel
             // 
-            this.label10.AutoSize = true;
-            this.label10.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label10.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.label10.Location = new System.Drawing.Point(111, 38);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(26, 12);
-            this.label10.TabIndex = 61;
-            this.label10.Text = "X 0.5";
+            this.speed05XLabel.AutoSize = true;
+            this.speed05XLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.speed05XLabel.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.speed05XLabel.Location = new System.Drawing.Point(111, 38);
+            this.speed05XLabel.Name = "speed05XLabel";
+            this.speed05XLabel.Size = new System.Drawing.Size(26, 12);
+            this.speed05XLabel.TabIndex = 61;
+            this.speed05XLabel.Text = "X 0.5";
             // 
             // play2QDurationLabel
             // 
@@ -899,27 +902,27 @@ namespace BigMansStuff.PracticeSharp.UI
             this.controlPanel.Size = new System.Drawing.Size(575, 88);
             this.controlPanel.TabIndex = 2;
             // 
-            // label11
+            // pitchM05Label
             // 
-            this.label11.AutoSize = true;
-            this.label11.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label11.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.label11.Location = new System.Drawing.Point(118, 123);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(21, 12);
-            this.label11.TabIndex = 72;
-            this.label11.Text = "-0.5";
+            this.pitchM05Label.AutoSize = true;
+            this.pitchM05Label.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.pitchM05Label.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.pitchM05Label.Location = new System.Drawing.Point(118, 123);
+            this.pitchM05Label.Name = "pitchM05Label";
+            this.pitchM05Label.Size = new System.Drawing.Size(21, 12);
+            this.pitchM05Label.TabIndex = 72;
+            this.pitchM05Label.Text = "-0.5";
             // 
-            // label12
+            // pitch05Label
             // 
-            this.label12.AutoSize = true;
-            this.label12.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label12.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.label12.Location = new System.Drawing.Point(249, 122);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(23, 12);
-            this.label12.TabIndex = 71;
-            this.label12.Text = "+0.5";
+            this.pitch05Label.AutoSize = true;
+            this.pitch05Label.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.pitch05Label.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.pitch05Label.Location = new System.Drawing.Point(249, 122);
+            this.pitch05Label.Name = "pitch05Label";
+            this.pitch05Label.Size = new System.Drawing.Size(23, 12);
+            this.pitch05Label.TabIndex = 71;
+            this.pitch05Label.Text = "+0.5";
             // 
             // pitchValueLabel
             // 
@@ -930,38 +933,38 @@ namespace BigMansStuff.PracticeSharp.UI
             this.pitchValueLabel.TabIndex = 3;
             this.pitchValueLabel.Text = "-";
             // 
-            // label15
+            // pitch1Label
             // 
-            this.label15.AutoSize = true;
-            this.label15.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label15.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.label15.Location = new System.Drawing.Point(315, 122);
-            this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(15, 12);
-            this.label15.TabIndex = 68;
-            this.label15.Text = "+1";
+            this.pitch1Label.AutoSize = true;
+            this.pitch1Label.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.pitch1Label.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.pitch1Label.Location = new System.Drawing.Point(315, 122);
+            this.pitch1Label.Name = "pitch1Label";
+            this.pitch1Label.Size = new System.Drawing.Size(15, 12);
+            this.pitch1Label.TabIndex = 68;
+            this.pitch1Label.Text = "+1";
             // 
-            // label16
+            // pitchM1Label
             // 
-            this.label16.AutoSize = true;
-            this.label16.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label16.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.label16.Location = new System.Drawing.Point(51, 122);
-            this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(13, 12);
-            this.label16.TabIndex = 67;
-            this.label16.Text = "-1";
+            this.pitchM1Label.AutoSize = true;
+            this.pitchM1Label.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.pitchM1Label.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.pitchM1Label.Location = new System.Drawing.Point(51, 122);
+            this.pitchM1Label.Name = "pitchM1Label";
+            this.pitchM1Label.Size = new System.Drawing.Size(13, 12);
+            this.pitchM1Label.TabIndex = 67;
+            this.pitchM1Label.Text = "-1";
             // 
-            // label17
+            // pitch0Label
             // 
-            this.label17.AutoSize = true;
-            this.label17.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label17.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.label17.Location = new System.Drawing.Point(188, 123);
-            this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(10, 12);
-            this.label17.TabIndex = 66;
-            this.label17.Text = "0";
+            this.pitch0Label.AutoSize = true;
+            this.pitch0Label.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.pitch0Label.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.pitch0Label.Location = new System.Drawing.Point(188, 123);
+            this.pitch0Label.Name = "pitch0Label";
+            this.pitch0Label.Size = new System.Drawing.Size(10, 12);
+            this.pitch0Label.TabIndex = 66;
+            this.pitch0Label.Text = "0";
             // 
             // pitchTrackBar
             // 
@@ -972,7 +975,7 @@ namespace BigMansStuff.PracticeSharp.UI
             this.pitchTrackBar.Name = "pitchTrackBar";
             this.pitchTrackBar.Size = new System.Drawing.Size(287, 45);
             this.pitchTrackBar.SmallChange = 8;
-            this.pitchTrackBar.TabIndex = 5;
+            this.pitchTrackBar.TabIndex = 1;
             this.pitchTrackBar.TickFrequency = 8;
             this.pitchTrackBar.TickStyle = System.Windows.Forms.TickStyle.Both;
             this.pitchTrackBar.ValueChanged += new System.EventHandler(this.pitchTrackBar_ValueChanged);
@@ -980,31 +983,34 @@ namespace BigMansStuff.PracticeSharp.UI
             // 
             // trackBarPanel
             // 
-            this.trackBarPanel.Controls.Add(this.label3);
-            this.trackBarPanel.Controls.Add(this.label2);
-            this.trackBarPanel.Controls.Add(this.label1);
+            this.trackBarPanel.Controls.Add(this.hiEqValueLabel);
+            this.trackBarPanel.Controls.Add(this.medEqValueLabel);
+            this.trackBarPanel.Controls.Add(this.loEqValueLabel);
+            this.trackBarPanel.Controls.Add(this.eqM100Label);
+            this.trackBarPanel.Controls.Add(this.eq100Label);
+            this.trackBarPanel.Controls.Add(this.eq0Label);
             this.trackBarPanel.Controls.Add(this.equalizerHoverLabel);
             this.trackBarPanel.Controls.Add(this.hiEqHoverLabel);
             this.trackBarPanel.Controls.Add(this.medEqHoverLabel);
             this.trackBarPanel.Controls.Add(this.loEqHoverLabel);
             this.trackBarPanel.Controls.Add(this.hiEqTrackBar);
             this.trackBarPanel.Controls.Add(this.medEqTrackBar);
-            this.trackBarPanel.Controls.Add(this.loEqtrackBar);
+            this.trackBarPanel.Controls.Add(this.loEqTrackBar);
             this.trackBarPanel.Controls.Add(this.positionMarkersPanel);
             this.trackBarPanel.Controls.Add(this.speedValueLabel);
-            this.trackBarPanel.Controls.Add(this.label11);
+            this.trackBarPanel.Controls.Add(this.pitchM05Label);
             this.trackBarPanel.Controls.Add(this.tempoTrackBar);
-            this.trackBarPanel.Controls.Add(this.label12);
+            this.trackBarPanel.Controls.Add(this.pitch05Label);
             this.trackBarPanel.Controls.Add(this.volumeTrackBar);
             this.trackBarPanel.Controls.Add(this.pitchValueLabel);
             this.trackBarPanel.Controls.Add(this.speed1XLabel);
             this.trackBarPanel.Controls.Add(this.pitchLabel);
             this.trackBarPanel.Controls.Add(this.playTimeTrackBar);
-            this.trackBarPanel.Controls.Add(this.label15);
+            this.trackBarPanel.Controls.Add(this.pitch1Label);
             this.trackBarPanel.Controls.Add(this.speed01XLabel);
-            this.trackBarPanel.Controls.Add(this.label16);
+            this.trackBarPanel.Controls.Add(this.pitchM1Label);
             this.trackBarPanel.Controls.Add(this.speed2XLabel);
-            this.trackBarPanel.Controls.Add(this.label17);
+            this.trackBarPanel.Controls.Add(this.pitch0Label);
             this.trackBarPanel.Controls.Add(this.speedLabel);
             this.trackBarPanel.Controls.Add(this.pitchTrackBar);
             this.trackBarPanel.Controls.Add(this.volumeLabel);
@@ -1015,9 +1021,9 @@ namespace BigMansStuff.PracticeSharp.UI
             this.trackBarPanel.Controls.Add(this.positionLabel);
             this.trackBarPanel.Controls.Add(this.play2QDurationLabel);
             this.trackBarPanel.Controls.Add(this.play0Label);
-            this.trackBarPanel.Controls.Add(this.label10);
+            this.trackBarPanel.Controls.Add(this.speed05XLabel);
             this.trackBarPanel.Controls.Add(this.playDurationLabel);
-            this.trackBarPanel.Controls.Add(this.label6);
+            this.trackBarPanel.Controls.Add(this.speed15XLabel);
             this.trackBarPanel.Controls.Add(this.vol25Label);
             this.trackBarPanel.Controls.Add(this.volumeValueLabel);
             this.trackBarPanel.Controls.Add(this.vol75Label);
@@ -1027,38 +1033,68 @@ namespace BigMansStuff.PracticeSharp.UI
             this.trackBarPanel.Size = new System.Drawing.Size(584, 266);
             this.trackBarPanel.TabIndex = 1;
             // 
-            // label3
+            // hiEqValueLabel
             // 
-            this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.label3.Location = new System.Drawing.Point(429, 171);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(31, 12);
-            this.label3.TabIndex = 83;
-            this.label3.Text = "-100%";
+            this.hiEqValueLabel.AutoSize = true;
+            this.hiEqValueLabel.Location = new System.Drawing.Point(537, 190);
+            this.hiEqValueLabel.Name = "hiEqValueLabel";
+            this.hiEqValueLabel.Size = new System.Drawing.Size(10, 13);
+            this.hiEqValueLabel.TabIndex = 86;
+            this.hiEqValueLabel.Text = "-";
+            this.hiEqValueLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // label2
+            // medEqValueLabel
             // 
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.label2.Location = new System.Drawing.Point(432, 39);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(28, 12);
-            this.label2.TabIndex = 82;
-            this.label2.Text = "100%";
+            this.medEqValueLabel.AutoSize = true;
+            this.medEqValueLabel.Location = new System.Drawing.Point(498, 190);
+            this.medEqValueLabel.Name = "medEqValueLabel";
+            this.medEqValueLabel.Size = new System.Drawing.Size(10, 13);
+            this.medEqValueLabel.TabIndex = 85;
+            this.medEqValueLabel.Text = "-";
+            this.medEqValueLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // label1
+            // loEqValueLabel
             // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.label1.Location = new System.Drawing.Point(442, 108);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(18, 12);
-            this.label1.TabIndex = 81;
-            this.label1.Text = "0%";
+            this.loEqValueLabel.AutoSize = true;
+            this.loEqValueLabel.Location = new System.Drawing.Point(459, 190);
+            this.loEqValueLabel.Name = "loEqValueLabel";
+            this.loEqValueLabel.Size = new System.Drawing.Size(10, 13);
+            this.loEqValueLabel.TabIndex = 84;
+            this.loEqValueLabel.Text = "-";
+            this.loEqValueLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // eqM100Label
+            // 
+            this.eqM100Label.AutoSize = true;
+            this.eqM100Label.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.eqM100Label.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.eqM100Label.Location = new System.Drawing.Point(429, 171);
+            this.eqM100Label.Name = "eqM100Label";
+            this.eqM100Label.Size = new System.Drawing.Size(31, 12);
+            this.eqM100Label.TabIndex = 83;
+            this.eqM100Label.Text = "-100%";
+            // 
+            // eq100Label
+            // 
+            this.eq100Label.AutoSize = true;
+            this.eq100Label.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.eq100Label.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.eq100Label.Location = new System.Drawing.Point(432, 39);
+            this.eq100Label.Name = "eq100Label";
+            this.eq100Label.Size = new System.Drawing.Size(28, 12);
+            this.eq100Label.TabIndex = 82;
+            this.eq100Label.Text = "100%";
+            // 
+            // eq0Label
+            // 
+            this.eq0Label.AutoSize = true;
+            this.eq0Label.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.eq0Label.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.eq0Label.Location = new System.Drawing.Point(442, 108);
+            this.eq0Label.Name = "eq0Label";
+            this.eq0Label.Size = new System.Drawing.Size(18, 12);
+            this.eq0Label.TabIndex = 81;
+            this.eq0Label.Text = "0%";
             // 
             // hiEqTrackBar
             // 
@@ -1070,7 +1106,7 @@ namespace BigMansStuff.PracticeSharp.UI
             this.hiEqTrackBar.Orientation = System.Windows.Forms.Orientation.Vertical;
             this.hiEqTrackBar.Size = new System.Drawing.Size(45, 151);
             this.hiEqTrackBar.SmallChange = 5;
-            this.hiEqTrackBar.TabIndex = 76;
+            this.hiEqTrackBar.TabIndex = 5;
             this.hiEqTrackBar.TickFrequency = 20;
             this.hiEqTrackBar.ValueChanged += new System.EventHandler(this.hiEqTrackBar_ValueChanged);
             this.hiEqTrackBar.MouseDown += new System.Windows.Forms.MouseEventHandler(this.hiEqTrackBar_MouseDown);
@@ -1085,25 +1121,25 @@ namespace BigMansStuff.PracticeSharp.UI
             this.medEqTrackBar.Orientation = System.Windows.Forms.Orientation.Vertical;
             this.medEqTrackBar.Size = new System.Drawing.Size(45, 151);
             this.medEqTrackBar.SmallChange = 5;
-            this.medEqTrackBar.TabIndex = 75;
+            this.medEqTrackBar.TabIndex = 4;
             this.medEqTrackBar.TickFrequency = 20;
             this.medEqTrackBar.ValueChanged += new System.EventHandler(this.medEqTrackBar_ValueChanged);
             this.medEqTrackBar.MouseDown += new System.Windows.Forms.MouseEventHandler(this.medEqTrackBar_MouseDown);
             // 
-            // loEqtrackBar
+            // loEqTrackBar
             // 
-            this.loEqtrackBar.LargeChange = 10;
-            this.loEqtrackBar.Location = new System.Drawing.Point(459, 39);
-            this.loEqtrackBar.Maximum = 100;
-            this.loEqtrackBar.Minimum = -100;
-            this.loEqtrackBar.Name = "loEqtrackBar";
-            this.loEqtrackBar.Orientation = System.Windows.Forms.Orientation.Vertical;
-            this.loEqtrackBar.Size = new System.Drawing.Size(45, 151);
-            this.loEqtrackBar.SmallChange = 5;
-            this.loEqtrackBar.TabIndex = 74;
-            this.loEqtrackBar.TickFrequency = 20;
-            this.loEqtrackBar.ValueChanged += new System.EventHandler(this.loEqtrackBar_ValueChanged);
-            this.loEqtrackBar.MouseDown += new System.Windows.Forms.MouseEventHandler(this.loEqtrackBar_MouseDown);
+            this.loEqTrackBar.LargeChange = 10;
+            this.loEqTrackBar.Location = new System.Drawing.Point(459, 39);
+            this.loEqTrackBar.Maximum = 100;
+            this.loEqTrackBar.Minimum = -100;
+            this.loEqTrackBar.Name = "loEqTrackBar";
+            this.loEqTrackBar.Orientation = System.Windows.Forms.Orientation.Vertical;
+            this.loEqTrackBar.Size = new System.Drawing.Size(45, 151);
+            this.loEqTrackBar.SmallChange = 5;
+            this.loEqTrackBar.TabIndex = 3;
+            this.loEqTrackBar.TickFrequency = 20;
+            this.loEqTrackBar.ValueChanged += new System.EventHandler(this.loEqTrackBar_ValueChanged);
+            this.loEqTrackBar.MouseDown += new System.Windows.Forms.MouseEventHandler(this.loEqtrackBar_MouseDown);
             // 
             // menuStrip
             // 
@@ -1297,7 +1333,10 @@ namespace BigMansStuff.PracticeSharp.UI
             presetData1.CurrentPlayTime = System.TimeSpan.Parse("00:00:00");
             presetData1.Description = "";
             presetData1.EndMarker = System.TimeSpan.Parse("00:00:00");
+            presetData1.HiEqValue = 0F;
+            presetData1.LoEqValue = 0F;
             presetData1.Loop = false;
+            presetData1.MedEqValue = 0F;
             presetData1.Pitch = 0F;
             presetData1.StartMarker = System.TimeSpan.Parse("00:00:00");
             presetData1.Tempo = 1F;
@@ -1322,7 +1361,10 @@ namespace BigMansStuff.PracticeSharp.UI
             presetData2.CurrentPlayTime = System.TimeSpan.Parse("00:00:00");
             presetData2.Description = "";
             presetData2.EndMarker = System.TimeSpan.Parse("00:00:00");
+            presetData2.HiEqValue = 0F;
+            presetData2.LoEqValue = 0F;
             presetData2.Loop = false;
+            presetData2.MedEqValue = 0F;
             presetData2.Pitch = 0F;
             presetData2.StartMarker = System.TimeSpan.Parse("00:00:00");
             presetData2.Tempo = 1F;
@@ -1347,7 +1389,10 @@ namespace BigMansStuff.PracticeSharp.UI
             presetData3.CurrentPlayTime = System.TimeSpan.Parse("00:00:00");
             presetData3.Description = "";
             presetData3.EndMarker = System.TimeSpan.Parse("00:00:00");
+            presetData3.HiEqValue = 0F;
+            presetData3.LoEqValue = 0F;
             presetData3.Loop = false;
+            presetData3.MedEqValue = 0F;
             presetData3.Pitch = 0F;
             presetData3.StartMarker = System.TimeSpan.Parse("00:00:00");
             presetData3.Tempo = 1F;
@@ -1372,7 +1417,10 @@ namespace BigMansStuff.PracticeSharp.UI
             presetData4.CurrentPlayTime = System.TimeSpan.Parse("00:00:00");
             presetData4.Description = "";
             presetData4.EndMarker = System.TimeSpan.Parse("00:00:00");
+            presetData4.HiEqValue = 0F;
+            presetData4.LoEqValue = 0F;
             presetData4.Loop = false;
+            presetData4.MedEqValue = 0F;
             presetData4.Pitch = 0F;
             presetData4.StartMarker = System.TimeSpan.Parse("00:00:00");
             presetData4.Tempo = 1F;
@@ -1436,7 +1484,7 @@ namespace BigMansStuff.PracticeSharp.UI
             this.trackBarPanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.hiEqTrackBar)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.medEqTrackBar)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.loEqtrackBar)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.loEqTrackBar)).EndInit();
             this.menuStrip.ResumeLayout(false);
             this.menuStrip.PerformLayout();
             this.ResumeLayout(false);
@@ -1508,19 +1556,19 @@ namespace BigMansStuff.PracticeSharp.UI
         private System.Windows.Forms.Label vol50Label;
         private System.Windows.Forms.Label vol75Label;
         private System.Windows.Forms.Label vol25Label;
-        private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.Label speed15XLabel;
+        private System.Windows.Forms.Label speed05XLabel;
         private System.Windows.Forms.Label play2QDurationLabel;
         private System.Windows.Forms.Label play3QDurationLabel;
         private System.Windows.Forms.Label play1QDurationLabel;
         private System.Windows.Forms.Panel controlPanel;
-        private System.Windows.Forms.Label label11;
-        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.Label pitchM05Label;
+        private System.Windows.Forms.Label pitch05Label;
         private System.Windows.Forms.Label pitchValueLabel;
         private HoverLabel pitchLabel;
-        private System.Windows.Forms.Label label15;
-        private System.Windows.Forms.Label label16;
-        private System.Windows.Forms.Label label17;
+        private System.Windows.Forms.Label pitch1Label;
+        private System.Windows.Forms.Label pitchM1Label;
+        private System.Windows.Forms.Label pitch0Label;
         private System.Windows.Forms.TrackBar pitchTrackBar;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel4;
         private System.Windows.Forms.ToolStripStatusLabel playStatusToolStripLabel;
@@ -1541,14 +1589,17 @@ namespace BigMansStuff.PracticeSharp.UI
         private System.Windows.Forms.ToolTip toolTip;
         private System.Windows.Forms.TrackBar hiEqTrackBar;
         private System.Windows.Forms.TrackBar medEqTrackBar;
-        private System.Windows.Forms.TrackBar loEqtrackBar;
+        private System.Windows.Forms.TrackBar loEqTrackBar;
         private HoverLabel equalizerHoverLabel;
         private HoverLabel hiEqHoverLabel;
         private HoverLabel medEqHoverLabel;
         private HoverLabel loEqHoverLabel;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label eqM100Label;
+        private System.Windows.Forms.Label eq100Label;
+        private System.Windows.Forms.Label eq0Label;
+        private System.Windows.Forms.Label hiEqValueLabel;
+        private System.Windows.Forms.Label medEqValueLabel;
+        private System.Windows.Forms.Label loEqValueLabel;
     }
 }
 

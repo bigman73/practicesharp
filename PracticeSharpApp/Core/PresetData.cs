@@ -56,6 +56,10 @@ namespace BigMansStuff.PracticeSharp.Core
         public bool Loop { get; set; }
         public string Description { get; set; }
 
+        public float LoEqValue { get; set; }
+        public float MedEqValue { get; set; }
+        public float HiEqValue { get; set; }
+
         #endregion
 
         #region Public Methods
@@ -74,6 +78,10 @@ namespace BigMansStuff.PracticeSharp.Core
             Cue = TimeSpan.Zero;
             Loop = false;
             Description = string.Empty;
+
+            LoEqValue = DefaultLoEq;
+            MedEqValue = DefaultMedEq;
+            HiEqValue = DefaultHiEq;
         }
         #endregion
 
@@ -82,6 +90,11 @@ namespace BigMansStuff.PracticeSharp.Core
         public const float DefaultVolume = 0.5f;
         public const float DefaultTempo = 1.0f; // 1 = 100%/regular speed
         public const float DefaultPitch = 0.0f; // 0 = Regular pitch
+
+        public const float DefaultLoEq = 0;
+        public const float DefaultMedEq = 0;
+        public const float DefaultHiEq = 0;
+
         #endregion
     }
 }

@@ -103,6 +103,7 @@
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
     <Compile Include="UI\MRUManager.cs" />
+    <Compile Include="UI\PresetBankFile.cs" />
     <Compile Include="UI\PresetControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
