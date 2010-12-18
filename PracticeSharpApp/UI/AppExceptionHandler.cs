@@ -27,6 +27,9 @@ using System.Text;
 using NLog;
 using System.Windows.Forms;
 using System.Threading;
+using NLog.Config;
+using NLog.Targets;
+using NLog.Layouts;
 
 namespace BigMansStuff.PracticeSharp.UI
 {
@@ -42,6 +45,9 @@ namespace BigMansStuff.PracticeSharp.UI
 
         #region Initialization
 
+        /// <summary>
+        /// Initialize the application central exception handlers
+        /// </summary>
         public static void InitializeExceptionHandling()
         {
             AppDomain currentDomain = AppDomain.CurrentDomain;
@@ -71,26 +77,44 @@ namespace BigMansStuff.PracticeSharp.UI
 
             HandleUnhandledException(ex);
         }
-
-        // Creates the error message and displays it.
-        private static DialogResult ShowThreadExceptionDialog(string title, Exception e)
-        {
-            string errorMsg = "An application error occurred. Please contact the author " +
-                "with the following information:\n\n";
-            errorMsg = errorMsg + e.Message + "\n\nStack Trace:\n" + e.StackTrace;
-            return MessageBox.Show(errorMsg, title, MessageBoxButtons.AbortRetryIgnore,
-                MessageBoxIcon.Stop);
-        }
-
+    
         // Handle the UI exceptions by showing a dialog box, and asking the user whether
         // or not they wish to abort execution.
         private static void Application_ThreadException(object sender, ThreadExceptionEventArgs t)
         {
-            m_logger.FatalException("Application - Thread Exception", t.Exception);
+            m_logger.FatalException("Application - Thread Exception" + t.Exception.ToString(), t.Exception);
 
             HandleUnhandledException(t.Exception);
         }
 
+        /// <summary>
+        /// Creates the error message and displays it.
+        /// </summary>
+        /// <param name="title"></param>
+        /// <param name="e"></param>
+        /// <returns></returns>
+        private static DialogResult ShowThreadExceptionDialog(string title, Exception e)
+        {
+            //string logFilename = LogManager.Configuration.AllTargets[0].
+            LoggingConfiguration config = LogManager.Configuration; 
+            FileTarget standardTarget = config.FindTargetByName("logfile") as FileTarget;
+            string logFilename = string.Empty;
+            if ( standardTarget != null )
+            {
+                logFilename = SimpleLayout.Evaluate(standardTarget.FileName.ToString());
+            }
+
+           string errorMsg = string.Format(
+                        "An application error occurred.\nDescription: {0}, {1}\n\nFull details are available in the log file: {2}\n\nPlease contact the author at {3}.",
+                        e.GetType().Name, e.Message, logFilename, "http://code.google.com/p/practicesharp/issues/list" );
+            
+            return MessageBox.Show(errorMsg, title, MessageBoxButtons.AbortRetryIgnore, MessageBoxIcon.Stop);
+        }
+
+        /// <summary>
+        /// Generic handler for unhandled exceptions - Show a message error and allows the user to Abort/Retry/Ignore 
+        /// </summary>
+        /// <param name="ex"></param>
         private static void HandleUnhandledException(Exception ex)
         {
             DialogResult result = DialogResult.Cancel;
