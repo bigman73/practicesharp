@@ -30,6 +30,7 @@ using System.Threading;
 using System.IO;
 using BigMansStuff.NAudio.Ogg;
 using NAudio.WindowsMediaFormat;
+using NLog;
 
 namespace BigMansStuff.PracticeSharp.Core
 {
@@ -39,6 +40,10 @@ namespace BigMansStuff.PracticeSharp.Core
     /// </summary>
     public class PracticeSharpLogic: IDisposable
     {
+        #region Logger
+        private static Logger m_logger = LogManager.GetCurrentClassLogger();
+        #endregion
+
         #region Public Methods
         
         /// <summary>
@@ -47,17 +52,9 @@ namespace BigMansStuff.PracticeSharp.Core
         public void Initialize()
         {
             ChangeStatus(Statuses.Initializing);
-            try
-            {
-                m_startMarker = TimeSpan.Zero;
-                m_endMarker = TimeSpan.Zero;
-                m_cue = TimeSpan.Zero;
-            }
-            catch (Exception ex)
-            {
-                ChangeStatus(Statuses.Error);
-                throw ex;
-            }
+            m_startMarker = TimeSpan.Zero;
+            m_endMarker = TimeSpan.Zero;
+            m_cue = TimeSpan.Zero;
         }
 
         /// <summary>
@@ -92,6 +89,12 @@ namespace BigMansStuff.PracticeSharp.Core
 
             m_filename = filename;
             m_status = Statuses.Loading;
+
+            // TODO: CHECK WHY RE-ENTRY HAPPENS?!?
+            if ( m_audioProcessingThread != null)
+            {
+                System.Diagnostics.Debug.Assert(true, "m_audioProcessingThread re-entry - already exists");
+            }
 
             // Create the Audio Processing Worker (Thread)
             m_audioProcessingThread = new Thread( new ThreadStart( audioProcessingWorker_DoWork) );
@@ -140,17 +143,31 @@ namespace BigMansStuff.PracticeSharp.Core
         ///  </remarks>
         public void Stop()
         {
-            if (m_status == Statuses.Initializing || m_status == Statuses.Initialized )
+           /* if (m_status == Statuses.Initializing || m_status == Statuses.Initialized )
             {
                 // Nothing to stop, the core never start playing
                 return; 
-            }
+            }*/
 
+            // Stop NAudio play back
             if (m_waveOutDevice != null)
             {
+                // Workaround to crashes/locks that sometimes occur due to threading issues.
+                //   Solution: Resume paused playback BEFORE stopping to release NAudio pause state 
+                if (m_waveOutDevice.PlaybackState == PlaybackState.Paused)
+                {
+                    m_logger.Debug("Experimental - Resume paused playback BEFORE loading another file");
+                    // Mute volume when Resume play - we don't it to really play, just to release the playback thread
+                    m_waveOutDevice.Volume = 0;
+                    m_waveOutDevice.Play();
+                    // Give the NAudio playback some short time to release itself
+                    Thread.Sleep(10);
+                }
+
                 m_waveOutDevice.Stop();
             }
 
+            // Stop the audio processing thread
             if ( m_audioProcessingThread != null )
             {
                 m_stopWorker = true;
@@ -162,6 +179,7 @@ namespace BigMansStuff.PracticeSharp.Core
                 m_audioProcessingThread = null;
             }
 
+            // Playback status changed to -> Stopped
             ChangeStatus(Statuses.Stopped);
         }
 
@@ -170,6 +188,9 @@ namespace BigMansStuff.PracticeSharp.Core
         /// </summary>
         public void Pause()
         {
+            m_logger.Debug("Pause() requested");
+
+            // Playback status changed to -> Pausing
             ChangeStatus(Statuses.Pausing);
             m_waveOutDevice.Pause();
         }
@@ -326,6 +347,12 @@ namespace BigMansStuff.PracticeSharp.Core
                 {
                     m_newPlayTime = value;
                     m_newPlayTimeRequested = true;
+
+                    if (m_status == Statuses.Pausing || m_status == Statuses.Initialized || m_status == Statuses.Stopped)
+                    {
+                        m_currentPlayTime = m_newPlayTime;
+                        // RaisePlayTimeChangedEvent();
+                    }
                 }
             }
         }
@@ -455,6 +482,7 @@ namespace BigMansStuff.PracticeSharp.Core
                     if (!m_newPlayTimeRequested && m_currentPlayTime >= m_waveChannel.TotalTime)
                         m_currentPlayTime = TimeSpan.Zero;
 
+                    // Playback status changed to -> Initialized
                     ChangeStatus(Statuses.Initialized);
                 }
                 finally
@@ -476,6 +504,7 @@ namespace BigMansStuff.PracticeSharp.Core
                     return;
 
                 m_waveOutDevice.Play();
+                // Playback status changed to -> Playing
                 ChangeStatus(Statuses.Playing);
 
                 try
@@ -484,6 +513,8 @@ namespace BigMansStuff.PracticeSharp.Core
                 }
                 finally
                 {
+                    m_audioProcessingThread = null;
+
                     // Dispose of NAudio in context of thread (for WMF it will must be disposed in the same thread)
                     TerminateNAudio();
 
@@ -492,7 +523,7 @@ namespace BigMansStuff.PracticeSharp.Core
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Exception: " + ex.ToString());
+                m_logger.ErrorException("Exception in audioProcessingWorker_DoWork", ex);
                 ChangeStatus( Statuses.Error );
             }
         }
@@ -510,6 +541,8 @@ namespace BigMansStuff.PracticeSharp.Core
         {
             m_stopWorker = false;
             m_workerRunning = true;
+            m_logger.Debug("ProcessAudio() started");
+
             try
             {
                 #region Setup
@@ -653,6 +686,7 @@ namespace BigMansStuff.PracticeSharp.Core
                 } // while
 
                 #region Stop PlayBack 
+                m_logger.Debug("ProcessAudio() finished - stop playback");
                 // Stop listening to PlayPositionChanged events
                 m_inputProvider.PlayPositionChanged -= new EventHandler(inputProvider_PlayPositionChanged);
 
@@ -696,26 +730,23 @@ namespace BigMansStuff.PracticeSharp.Core
                     m_eqEffect.HiGainFactor.Value = m_eqEffect.HiGainFactor.Maximum * m_eqHi;
                     //m_eqEffect.HiDriveFactor.Value = (m_eqHi + 1.0f) / 2 * 100.0f;
 
-                    Console.WriteLine("LoEq:" + m_eqEffect.LoGainFactor.Value + "," + m_eqEffect.LoDriveFactor.Value);
-                    Console.WriteLine("MedEq:" + m_eqEffect.MedGainFactor.Value + "," + m_eqEffect.MedDriveFactor.Value);
-                    Console.WriteLine("HiEq:" + m_eqEffect.HiGainFactor.Value + "," + m_eqEffect.HiDriveFactor.Value);
-
                     m_eqEffect.OnFactorChanges();
 
                     m_eqParamsChanged = false;
                 }
             }
 
-            for(int sample = 0; sample < samples; sample+=2)
+            // Run each sample in the buffer through the equalizer effect
+            for(int sample = 0; sample < samples; sample += 2)
             {
-                // get the sample(s)
+                // Get the samples, per audio channel
                 float sampleLeft = buffer[sample];
                 float sampleRight = buffer[sample + 1];
                
-                // Run these samples through the equalizer effect
+                // Apply the equalizer effect to the samples
                 m_eqEffect.Sample(ref sampleLeft, ref sampleRight);
 
-                // put the samples back into the buffer
+                // Put the modified samples back into the buffer
                 buffer[sample] = sampleLeft;
                 buffer[sample + 1] = sampleRight;
             }
@@ -736,7 +767,7 @@ namespace BigMansStuff.PracticeSharp.Core
             }
             catch (Exception initException)
             {
-                Console.WriteLine(String.Format("{0}", initException.Message), "Error Initializing Output");
+                m_logger.ErrorException("Exception in InitializeFileAudio - m_waveOutDevice.Init", initException);
 
                 throw;
             }
@@ -861,7 +892,11 @@ namespace BigMansStuff.PracticeSharp.Core
                 m_currentPlayTime = (e as BufferedPlayEventArgs).PlayTime;
             }
 
-            
+            RaisePlayTimeChangedEvent();
+        }
+
+        private void RaisePlayTimeChangedEvent()
+        {
             if (PlayTimeChanged != null)
             {
                 // explicitly invoke each subscribed event handler *asynchronously*
@@ -960,7 +995,7 @@ namespace BigMansStuff.PracticeSharp.Core
             }
             catch (Exception driverCreateException)
             {
-                Console.WriteLine("NAudio Driver Creation Failed" + driverCreateException.ToString());
+                m_logger.ErrorException("NAudio Driver Creation Failed", driverCreateException);
                 throw driverCreateException;
             }
         }
@@ -1002,7 +1037,10 @@ namespace BigMansStuff.PracticeSharp.Core
         /// </summary>
         public void Dispose()
         {
-            Terminate();
+            if (m_status != Statuses.Terminated)
+            {
+                Terminate();
+            }
 
             GC.SuppressFinalize(this);
         }
@@ -1045,7 +1083,7 @@ namespace BigMansStuff.PracticeSharp.Core
                 m_waveOutDevice = null;
             }
 
-            Console.WriteLine("NAudio terminated");
+            m_logger.Debug("NAudio terminated");
         }
 
         /// <summary>
