@@ -34,6 +34,7 @@ using System.Threading;
 using System.Xml;
 using System.Configuration;
 using System.Diagnostics;
+using NLog;
 
 namespace BigMansStuff.PracticeSharp.UI
 {
@@ -42,6 +43,10 @@ namespace BigMansStuff.PracticeSharp.UI
     /// </summary>
     public partial class MainForm : Form
     {
+        #region Logger
+        private static Logger m_logger = LogManager.GetCurrentClassLogger();
+        #endregion
+
         #region Construction
 
         /// <summary>
@@ -59,6 +64,8 @@ namespace BigMansStuff.PracticeSharp.UI
         /// <param name="e"></param>
         private void MainForm_Load(object sender, EventArgs e)
         {
+            InitializeLogger();
+
             try
             {
                 InitializeApplication();
@@ -77,6 +84,14 @@ namespace BigMansStuff.PracticeSharp.UI
             else
                 // No command line argument - Try to load the last played file
                 AutoLoadLastFile();
+        }
+
+        private void InitializeLogger()
+        {
+            // TODO: Delete the previous log file if its size is greater than some threshold (e.g. 1MB)
+            // if ( File.Exists( m_logger.Lo
+            m_logger.Info("-------------------------------------------------------------");
+            m_logger.Info("Practice# application started");
         }
 
         /// <summary>
@@ -153,11 +168,13 @@ namespace BigMansStuff.PracticeSharp.UI
             System.Reflection.Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly();
             m_appVersion = assembly.GetName().Version;
             string appVersionString = m_appVersion.ToString();
+            m_logger.Info("Practice# version: " + appVersionString);
 
             // Upgrade user settings from last version to current version, if needed
             string appVersionSetting = Properties.Settings.Default.ApplicationVersion;
             if (appVersionSetting != m_appVersion.ToString())
             {
+                m_logger.Info("Old application version (" + appVersionSetting + "), Settings upgrades is required" );
                 Properties.Settings.Default.Upgrade();
                 Properties.Settings.Default.ApplicationVersion = appVersionString;
                 Properties.Settings.Default.Save();
@@ -556,10 +573,17 @@ namespace BigMansStuff.PracticeSharp.UI
             if (m_ignorePlayTimeUIEvents)
                 return;
 
+            TimeSpan currentPlayTime = new TimeSpan(0, 0, Convert.ToInt32(currentMinuteUpDown.Value), Convert.ToInt32(currentSecondUpDown.Value), Convert.ToInt32(currentMilliUpDown.Value));
             // Mask out PracticeSharpLogic events to eliminate 'Racing' between GUI and PracticeSharpLogic over current playtime
             m_currentControlsMaskOutTime = DateTime.Now.AddMilliseconds(500);
 
-            UpdateCoreCurrentPlayTime();
+            UpdateCoreCurrentPlayTime( ref currentPlayTime );
+
+            if (m_practiceSharpLogic.Status != PracticeSharpLogic.Statuses.Playing)
+            {
+                playTimeTrackBar.Value = Convert.ToInt32(100.0f * currentPlayTime.TotalSeconds / m_practiceSharpLogic.FilePlayDuration.TotalSeconds);
+            }
+
         }
 
         /// <summary>
@@ -578,8 +602,11 @@ namespace BigMansStuff.PracticeSharp.UI
             try
             {
                 // Show the open file dialog
+                openFileDialog.InitialDirectory = Properties.Settings.Default.LastAudioFolder;
                 if (DialogResult.OK == openFileDialog.ShowDialog(this))
                 {
+                    m_tempSavePausePlay = false;
+
                     // Get directory path and store it as a user settting
                     FileInfo fi = new FileInfo(openFileDialog.FileName);
                     Properties.Settings.Default.LastAudioFolder = fi.Directory.FullName;
@@ -592,6 +619,7 @@ namespace BigMansStuff.PracticeSharp.UI
             }
             finally
             {
+                // Only resume playing if the file was not opened (i.e. the dialog was cancelled)
                 if (m_tempSavePausePlay)
                 {
                     m_tempSavePausePlay = false;
@@ -1252,7 +1280,7 @@ namespace BigMansStuff.PracticeSharp.UI
                     playPauseButton.Image = Resources.Play_Normal;
                     playTimeUpdateTimer.Enabled = false;
 
-                    m_ignorePlayTimeUIEvents = true;
+                    // m_ignorePlayTimeUIEvents = true;
                     // Force a last refresh of play time controls
                     UpdateCurrentUpDownControls(m_practiceSharpLogic.CurrentPlayTime);
                     int currentPlayTimeValue = 0;
@@ -1430,9 +1458,17 @@ namespace BigMansStuff.PracticeSharp.UI
         /// <summary>
         /// Updates the CurrentPlayTime from the UI Current controls
         /// </summary>
-        private void UpdateCoreCurrentPlayTime()
+        private void UpdateCoreCurrentPlayTime( ref TimeSpan currentPlayTime )
         {
-            m_practiceSharpLogic.CurrentPlayTime = new TimeSpan(0, 0, (int)currentMinuteUpDown.Value, (int)currentSecondUpDown.Value, (int)currentMilliUpDown.Value);
+            // Clip to actual file duration limits (0..FilePlayDuration)
+            if ( currentPlayTime > m_practiceSharpLogic.FilePlayDuration )
+                currentPlayTime = m_practiceSharpLogic.FilePlayDuration;
+            else if (currentPlayTime < TimeSpan.Zero)
+                currentPlayTime = TimeSpan.Zero;
+
+            m_practiceSharpLogic.CurrentPlayTime = currentPlayTime;
+
+            UpdateCurrentUpDownControls( currentPlayTime );
         }
 
         /// <summary>
@@ -1531,10 +1567,22 @@ namespace BigMansStuff.PracticeSharp.UI
         /// <param name="playTime"></param>
         private void UpdateCurrentUpDownControls(TimeSpan playTime)
         {
-            // Update current play time controls
-            currentMinuteUpDown.Value = playTime.Minutes;
-            currentSecondUpDown.Value = playTime.Seconds;
-            currentMilliUpDown.Value = playTime.Milliseconds;
+            currentMinuteUpDown.ValueChanged -= currentUpDown_ValueChanged;
+            currentSecondUpDown.ValueChanged -= currentUpDown_ValueChanged;
+            currentMilliUpDown.ValueChanged -= currentUpDown_ValueChanged;
+            try
+            {
+                // Update current play time controls
+                currentMinuteUpDown.Value = playTime.Minutes;
+                currentSecondUpDown.Value = playTime.Seconds;
+                currentMilliUpDown.Value = playTime.Milliseconds;
+            }
+            finally
+            {
+                currentMinuteUpDown.ValueChanged += currentUpDown_ValueChanged;
+                currentSecondUpDown.ValueChanged += currentUpDown_ValueChanged;
+                currentMilliUpDown.ValueChanged += currentUpDown_ValueChanged;
+            }
         }
 
         /// <summary>
@@ -1730,5 +1778,6 @@ namespace BigMansStuff.PracticeSharp.UI
         const int MaxRecentDisplayLength = 60;
 
         #endregion
+
     }
 }
