@@ -41,6 +41,7 @@
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.label2 = new System.Windows.Forms.Label();
             this.codeProjectLinkLabel = new System.Windows.Forms.LinkLabel();
+            this.csVorbisLinkLabel = new System.Windows.Forms.LinkLabel();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.SuspendLayout();
@@ -164,6 +165,17 @@
             this.codeProjectLinkLabel.Text = "CodeProject Article Site";
             this.codeProjectLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.codeProjectLinkLabel_LinkClicked);
             // 
+            // csVorbisLinkLabel
+            // 
+            this.csVorbisLinkLabel.AutoSize = true;
+            this.csVorbisLinkLabel.Location = new System.Drawing.Point(12, 212);
+            this.csVorbisLinkLabel.Name = "csVorbisLinkLabel";
+            this.csVorbisLinkLabel.Size = new System.Drawing.Size(43, 13);
+            this.csVorbisLinkLabel.TabIndex = 12;
+            this.csVorbisLinkLabel.TabStop = true;
+            this.csVorbisLinkLabel.Text = "Vorbis#";
+            this.csVorbisLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.csVorbisLinkLabel_LinkClicked);
+            // 
             // AboutForm
             // 
             this.AcceptButton = this.closeButton;
@@ -171,6 +183,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.closeButton;
             this.ClientSize = new System.Drawing.Size(338, 283);
+            this.Controls.Add(this.csVorbisLinkLabel);
             this.Controls.Add(this.codeProjectLinkLabel);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.pictureBox2);
@@ -211,5 +224,6 @@
         private System.Windows.Forms.PictureBox pictureBox2;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.LinkLabel codeProjectLinkLabel;
+        private System.Windows.Forms.LinkLabel csVorbisLinkLabel;
     }
 }
