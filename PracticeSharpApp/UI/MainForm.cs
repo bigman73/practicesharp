@@ -88,8 +88,6 @@ namespace BigMansStuff.PracticeSharp.UI
 
         private void InitializeLogger()
         {
-            // TODO: Delete the previous log file if its size is greater than some threshold (e.g. 1MB)
-            // if ( File.Exists( m_logger.Lo
             m_logger.Info("-------------------------------------------------------------");
             m_logger.Info("Practice# application started");
         }
@@ -288,6 +286,10 @@ namespace BigMansStuff.PracticeSharp.UI
                       (m_practiceSharpLogic.Status == PracticeSharpLogic.Statuses.Initialized) )
             {
                 playPauseButton.Image = Resources.Pause_Hot;
+
+                // Mask the track bar & current controls updates - to remove jumps due to old play time positions
+                TempMaskOutPlayTimeTrackBar();
+                TempMaskOutCurrentControls();
 
                 m_practiceSharpLogic.Play();
             }
@@ -575,7 +577,7 @@ namespace BigMansStuff.PracticeSharp.UI
 
             TimeSpan currentPlayTime = new TimeSpan(0, 0, Convert.ToInt32(currentMinuteUpDown.Value), Convert.ToInt32(currentSecondUpDown.Value), Convert.ToInt32(currentMilliUpDown.Value));
             // Mask out PracticeSharpLogic events to eliminate 'Racing' between GUI and PracticeSharpLogic over current playtime
-            m_currentControlsMaskOutTime = DateTime.Now.AddMilliseconds(500);
+            TempMaskOutCurrentControls();
 
             UpdateCoreCurrentPlayTime( ref currentPlayTime );
 
@@ -805,8 +807,6 @@ namespace BigMansStuff.PracticeSharp.UI
         {
             m_playTimeTrackBarIsChanging = false;
         }
-
-      
 
         private void playTimeUpdateTimer_Tick(object sender, EventArgs e)
         {
@@ -1642,7 +1642,6 @@ namespace BigMansStuff.PracticeSharp.UI
                 newValue = 0;
 
             TimeSpan newPlayTime = new TimeSpan(0, 0, Convert.ToInt32(newValue));
-            m_practiceSharpLogic.CurrentPlayTime = newPlayTime;
 
             int newTrackBarValue = 0;
             if (duration != 0)
@@ -1650,6 +1649,8 @@ namespace BigMansStuff.PracticeSharp.UI
 
             if (m_practiceSharpLogic.Status == PracticeSharpLogic.Statuses.Playing)
             {
+                m_practiceSharpLogic.CurrentPlayTime = newPlayTime;
+
                 m_ignorePlayTimeUIEvents = true;
                 try
                 {
@@ -1670,12 +1671,21 @@ namespace BigMansStuff.PracticeSharp.UI
         }
 
         /// <summary>
-        /// Maskout playtime TrackBar update messages for some time to avoid trackbar jumps 
+        /// Mask out playtime TrackBar update messages for some time to avoid trackbar jumps 
         /// </summary>
         private void TempMaskOutPlayTimeTrackBar()
         {
-            m_playTimeTrackBarMaskOutTime = DateTime.Now.AddMilliseconds(500);
+            m_playTimeTrackBarMaskOutTime = DateTime.Now.AddMilliseconds(MaskOutInterval);
         }
+
+        /// <summary>
+        /// Mask out updates of current up-down controls to avoid jumps
+        /// </summary>
+        private void TempMaskOutCurrentControls()
+        {
+            m_currentControlsMaskOutTime = DateTime.Now.AddMilliseconds(MaskOutInterval);
+        }
+
 
         #region Presets
 
@@ -1776,6 +1786,8 @@ namespace BigMansStuff.PracticeSharp.UI
         const int MarkerHeight = 10;
 
         const int MaxRecentDisplayLength = 60;
+
+        const int MaskOutInterval = 450; // msec
 
         #endregion
 
