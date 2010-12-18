@@ -90,10 +90,9 @@ namespace BigMansStuff.PracticeSharp.Core
             m_filename = filename;
             m_status = Statuses.Loading;
 
-            // TODO: CHECK WHY RE-ENTRY HAPPENS?!?
             if ( m_audioProcessingThread != null)
             {
-                System.Diagnostics.Debug.Assert(true, "m_audioProcessingThread re-entry - already exists");
+                System.Diagnostics.Debug.Assert(true, "m_audioProcessingThread already exists");
             }
 
             // Create the Audio Processing Worker (Thread)
@@ -143,11 +142,9 @@ namespace BigMansStuff.PracticeSharp.Core
         ///  </remarks>
         public void Stop()
         {
-           /* if (m_status == Statuses.Initializing || m_status == Statuses.Initialized )
-            {
-                // Nothing to stop, the core never start playing
-                return; 
-            }*/
+            // Already stopped? Nothing to do
+            if (m_status == Statuses.Stopped)
+                return;
 
             // Stop NAudio play back
             if (m_waveOutDevice != null)
@@ -188,8 +185,6 @@ namespace BigMansStuff.PracticeSharp.Core
         /// </summary>
         public void Pause()
         {
-            m_logger.Debug("Pause() requested");
-
             // Playback status changed to -> Pausing
             ChangeStatus(Statuses.Pausing);
             m_waveOutDevice.Pause();
@@ -351,7 +346,10 @@ namespace BigMansStuff.PracticeSharp.Core
                     if (m_status == Statuses.Pausing || m_status == Statuses.Initialized || m_status == Statuses.Stopped)
                     {
                         m_currentPlayTime = m_newPlayTime;
-                        // RaisePlayTimeChangedEvent();
+                        if (m_waveChannel != null)
+                        {
+                            m_waveChannel.CurrentTime = m_newPlayTime;
+                        }
                     }
                 }
             }
@@ -824,7 +822,7 @@ namespace BigMansStuff.PracticeSharp.Core
         {
             m_status = newStatus;
 
-            Console.WriteLine("PracticeSharpLogic - Status changed: " + m_status);
+            if ( m_logger.IsDebugEnabled ) m_logger.Debug("PracticeSharpLogic - Status changed: " + m_status);
             // Raise StatusChanged Event
             if (StatusChanged != null)
             {
@@ -843,7 +841,6 @@ namespace BigMansStuff.PracticeSharp.Core
         /// <param name="filename"></param>
         private void CreateSoundTouchInputProvider(string filename)
         {
-            Console.WriteLine("Input file: " + filename);
             CreateInputWaveChannel(filename);
 
             WaveFormat format = m_waveChannel.WaveFormat;
@@ -1007,7 +1004,7 @@ namespace BigMansStuff.PracticeSharp.Core
         {
             m_soundTouchSharp = new SoundTouchSharp();
             m_soundTouchSharp.CreateInstance();
-            Console.WriteLine("SoundTouch Initialized - Version: " + m_soundTouchSharp.SoundTouchVersionId + ", " + m_soundTouchSharp.SoundTouchVersionString);
+            m_logger.Info("SoundTouch Initialized - Version: " + m_soundTouchSharp.SoundTouchVersionId + ", " + m_soundTouchSharp.SoundTouchVersionString);
         }
 
         /// <summary>
@@ -1097,7 +1094,7 @@ namespace BigMansStuff.PracticeSharp.Core
                 m_soundTouchSharp.Clear();
                 m_soundTouchSharp.Dispose();
                 m_soundTouchSharp = null;
-                Console.WriteLine("SoundTouch terminated");
+                m_logger.Debug("SoundTouch terminated");
             }
         }
         
