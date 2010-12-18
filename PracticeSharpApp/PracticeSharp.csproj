@@ -95,6 +95,7 @@
     <Compile Include="UI\AboutForm.Designer.cs">
       <DependentUpon>AboutForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="UI\AppExceptionHandler.cs" />
     <Compile Include="UI\FlickerFreePanel.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -153,6 +154,7 @@
     </None>
     <None Include="NLog.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -242,7 +244,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>copy $(ProjectDir)SoundTouchDLL\SoundTouch.dll $(TargetDir)
+    <PreBuildEvent>copy $(ProjectDir)3rdPartyDLL\SoundTouchDLL\SoundTouch.dll $(TargetDir)
 copy $(ProjectDir)LICENSES.txt $(TargetDir)
 </PreBuildEvent>
   </PropertyGroup>

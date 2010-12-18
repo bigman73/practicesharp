@@ -29,6 +29,7 @@ using System.IO;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.ComponentModel;
+using NLog;
 
 namespace BigMansStuff.PracticeSharp.UI
 {
@@ -39,6 +40,10 @@ namespace BigMansStuff.PracticeSharp.UI
     /// </summary>
     internal class VersionUpdater
     {
+        #region Logger
+        private static Logger m_logger = LogManager.GetCurrentClassLogger();
+        #endregion
+
         #region Construction
         /// <summary>
         /// Constructor
@@ -69,7 +74,6 @@ namespace BigMansStuff.PracticeSharp.UI
         #endregion
 
         #region Event Handlers
-
 
         /// <summary>
         /// Do the actual work of checking for a new version
@@ -133,12 +137,18 @@ namespace BigMansStuff.PracticeSharp.UI
                     }
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 // Ignore errors, we're just checking for a new version - the internet connection might be off
+                m_logger.ErrorException("Failed getting application version from the internet", ex);
             }
         }
 
+        /// <summary>
+        /// RunWorkerComplete event handler - Called when the Background Worker has completed
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             // Worker has completed - clean up members
@@ -182,7 +192,6 @@ namespace BigMansStuff.PracticeSharp.UI
                         return true;
                     }
                 }
-
             }
                 
             return false; 
