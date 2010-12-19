@@ -272,6 +272,7 @@ namespace BigMansStuff.PracticeSharp.UI
         /// <param name="value"></param>
         private void ChangeState(PresetStates value)
         {
+            PresetStates prevState = m_state;
             m_state = value;
 
             switch (m_state)
@@ -279,6 +280,13 @@ namespace BigMansStuff.PracticeSharp.UI
                 case PresetStates.Selected:
                     {
                         ShowSelectedLed();
+
+                        // Don't fire event in case this is a Cancel of WaitForSave
+                        if (prevState == PresetStates.WaitForSave)
+                        {
+                            break;
+                        }
+
                         if (PresetSelected != null)
                         {
                             PresetSelected(this, EventArgs.Empty);
