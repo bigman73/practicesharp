@@ -64,6 +64,9 @@ namespace BigMansStuff.PracticeSharp.UI
         /// <param name="e"></param>
         private void MainForm_Load(object sender, EventArgs e)
         {
+            // Note: Initialization of Application folders must come first, BEFORE the logger is initialized
+            InitializeApplicationFolders();
+
             InitializeLogger();
 
             try
@@ -177,14 +180,27 @@ namespace BigMansStuff.PracticeSharp.UI
                 Properties.Settings.Default.ApplicationVersion = appVersionString;
                 Properties.Settings.Default.Save();
             }
+
             // Show current application version
             this.Text = string.Format(Resources.AppTitle, m_appVersion.ToString());
-            // Initialize Application Date Folder - used for storing Preset Bank files
+        }
+
+
+        /// <summary>
+        /// Initializes the application folders (Data & Log)
+        /// </summary>
+        private void InitializeApplicationFolders()
+        {
+            // Initialize Application Data Folder - used for storing Preset Bank files
             m_appDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\PracticeSharp";
             if (!Directory.Exists(m_appDataFolder))
             {
                 Directory.CreateDirectory(m_appDataFolder);
             }
+
+            // Workaround for older Windows (XP or less) that don't have  LOCALAPPDATA environment variable
+            // This environment variable is used by NLog layout renderer (NLog.config)
+            Environment.SetEnvironmentVariable("PracticeSharpLogFolder", m_appDataFolder );
         }
 
         #endregion
@@ -1769,8 +1785,8 @@ namespace BigMansStuff.PracticeSharp.UI
 
         private string m_currentFilename;
         private PresetBankFile m_presetBankFile;
-        private string m_appDataFolder;
         private Version m_appVersion;
+        private string m_appDataFolder;
 
         private MRUManager m_mruManager;
         private string m_mruFile;
@@ -1790,6 +1806,5 @@ namespace BigMansStuff.PracticeSharp.UI
         const int MaskOutInterval = 450; // msec
 
         #endregion
-
     }
 }
