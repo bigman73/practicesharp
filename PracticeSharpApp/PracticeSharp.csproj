@@ -237,6 +237,10 @@
     <Content Include="Res\PracticeSharp.png" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\NAudioFLAC\Library\NAudioFLAC.csproj">
+      <Project>{A589C62F-4A8B-447D-BD85-6D6E4F985B80}</Project>
+      <Name>NAudioFLAC</Name>
+    </ProjectReference>
     <ProjectReference Include="..\NAudioOggVorbis\Library\NAudioOggVorbis.csproj">
       <Project>{B2D3B85A-252C-4A0E-BB07-816A62AB20A8}</Project>
       <Name>NAudioOggVorbis</Name>
@@ -245,6 +249,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>copy $(ProjectDir)3rdPartyDLL\SoundTouchDLL\SoundTouch.dll $(TargetDir)
+copy $(SolutionDir)..\NAudioFLAC\Library\LibFLACDLL $(TargetDir)
 copy $(ProjectDir)LICENSES.txt $(TargetDir)
 </PreBuildEvent>
   </PropertyGroup>

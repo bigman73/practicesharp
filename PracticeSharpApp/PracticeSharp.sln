@@ -5,6 +5,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PracticeSharp", "PracticeSh
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NAudioOggVorbis", "..\NAudioOggVorbis\Library\NAudioOggVorbis.csproj", "{B2D3B85A-252C-4A0E-BB07-816A62AB20A8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NAudioFLAC", "..\NAudioFLAC\Library\NAudioFLAC.csproj", "{A589C62F-4A8B-447D-BD85-6D6E4F985B80}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,6 +38,18 @@ Global
 		{B2D3B85A-252C-4A0E-BB07-816A62AB20A8}.Release|Mixed Platforms.Build.0 = Release|x86
 		{B2D3B85A-252C-4A0E-BB07-816A62AB20A8}.Release|x86.ActiveCfg = Release|x86
 		{B2D3B85A-252C-4A0E-BB07-816A62AB20A8}.Release|x86.Build.0 = Release|x86
+		{A589C62F-4A8B-447D-BD85-6D6E4F985B80}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A589C62F-4A8B-447D-BD85-6D6E4F985B80}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A589C62F-4A8B-447D-BD85-6D6E4F985B80}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{A589C62F-4A8B-447D-BD85-6D6E4F985B80}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{A589C62F-4A8B-447D-BD85-6D6E4F985B80}.Debug|x86.ActiveCfg = Debug|x86
+		{A589C62F-4A8B-447D-BD85-6D6E4F985B80}.Debug|x86.Build.0 = Debug|x86
+		{A589C62F-4A8B-447D-BD85-6D6E4F985B80}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A589C62F-4A8B-447D-BD85-6D6E4F985B80}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A589C62F-4A8B-447D-BD85-6D6E4F985B80}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{A589C62F-4A8B-447D-BD85-6D6E4F985B80}.Release|Mixed Platforms.Build.0 = Release|x86
+		{A589C62F-4A8B-447D-BD85-6D6E4F985B80}.Release|x86.ActiveCfg = Release|x86
+		{A589C62F-4A8B-447D-BD85-6D6E4F985B80}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

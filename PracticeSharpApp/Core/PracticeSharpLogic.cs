@@ -31,6 +31,7 @@ using System.IO;
 using BigMansStuff.NAudio.Ogg;
 using NAudio.WindowsMediaFormat;
 using NLog;
+using BigMansStuff.NAudio.FLAC;
 
 namespace BigMansStuff.PracticeSharp.Core
 {
@@ -200,7 +201,8 @@ namespace BigMansStuff.PracticeSharp.Core
             filename = filename.ToLower();
             bool result = filename.EndsWith(".mp3") || 
                           filename.EndsWith(".wav") || 
-                          filename.EndsWith(".ogg") || 
+                          filename.EndsWith(".ogg") ||
+                          filename.EndsWith(".flac") || 
                           filename.EndsWith(".wma");
 
             return result;
@@ -906,7 +908,7 @@ namespace BigMansStuff.PracticeSharp.Core
         }
 
         /// <summary>
-        /// Creates an input WaveChannel (Audio file reader for MP3/WAV/OGG/WMA/Other formats in the future)
+        /// Creates an input WaveChannel (Audio file reader for MP3/WAV/OGG/FLAC/WMA/Other formats in the future)
         /// </summary>
         /// <param name="filename"></param>
         private void CreateInputWaveChannel(string filename)
@@ -939,6 +941,23 @@ namespace BigMansStuff.PracticeSharp.Core
             else if (fileExt == OGGVExtension)
             {
                 m_waveReader = new OggVorbisFileReader(filename);
+                if (m_waveReader.WaveFormat.Encoding != WaveFormatEncoding.Pcm)
+                {
+                    m_waveReader = WaveFormatConversionStream.CreatePcmStream(m_waveReader);
+                    m_waveReader = new BlockAlignReductionStream(m_waveReader);
+                }
+                if (m_waveReader.WaveFormat.BitsPerSample != 16)
+                {
+                    var format = new WaveFormat(m_waveReader.WaveFormat.SampleRate,
+                       16, m_waveReader.WaveFormat.Channels);
+                    m_waveReader = new WaveFormatConversionStream(format, m_waveReader);
+                }
+
+                m_waveChannel = new WaveChannel32(m_waveReader);
+            }
+            else if (fileExt == FLACExtension)
+            {
+                m_waveReader = new FLACFileReader(filename);
                 if (m_waveReader.WaveFormat.Encoding != WaveFormatEncoding.Pcm)
                 {
                     m_waveReader = WaveFormatConversionStream.CreatePcmStream(m_waveReader);
@@ -1155,6 +1174,7 @@ namespace BigMansStuff.PracticeSharp.Core
         const string MP3Extension = ".mp3";
         const string WAVExtension = ".wav";
         const string OGGVExtension = ".ogg";
+        const string FLACExtension = ".flac";
         const string WMAExtension = ".wma";
 
         const int BusyQueuedBuffersThreshold = 3;

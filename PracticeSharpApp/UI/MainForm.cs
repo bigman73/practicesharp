@@ -1803,7 +1803,12 @@ namespace BigMansStuff.PracticeSharp.UI
 
         const int MaxRecentDisplayLength = 60;
 
-        const int MaskOutInterval = 450; // msec
+        const int MaskOutInterval = 450;
+
+        private void openFileDialog_FileOk(object sender, CancelEventArgs e)
+        {
+
+        } // msec
 
         #endregion
     }
