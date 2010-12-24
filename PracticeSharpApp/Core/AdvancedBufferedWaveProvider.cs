@@ -51,7 +51,13 @@ namespace BigMansStuff.PracticeSharp.Core
 
         #endregion
 
-        #region Public 
+        #region Events
+
+        public event EventHandler PlayPositionChanged;
+
+        #endregion
+
+        #region Public
 
         /// <summary>
         /// Maximum number of queued buffers
@@ -82,8 +88,6 @@ namespace BigMansStuff.PracticeSharp.Core
                 this.m_queue.Enqueue(new AudioBuffer(nbuffer, currentTime));
             }
         }
-
-        public event EventHandler PlayPositionChanged;
 
         /// <summary>
         /// Reads from this WaveProvider
@@ -180,7 +184,7 @@ namespace BigMansStuff.PracticeSharp.Core
     }
 
     /// <summary>
-    /// Internal helper class for a stored buffer
+    /// Internal helper class for a stored audio buffer
     /// </summary>
     internal class AudioBuffer
     {
@@ -209,13 +213,23 @@ namespace BigMansStuff.PracticeSharp.Core
         public TimeSpan CurrentTime { get; set; }
     }
 
+    /// <summary>
+    /// Custom Event Arguments class that is used by PlayPositionChanged event
+    /// </summary>
     public class BufferedPlayEventArgs : EventArgs
     {
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="playTime"></param>
         public BufferedPlayEventArgs(TimeSpan playTime)
         {
             this.PlayTime = playTime;
         }
 
+        /// <summary>
+        /// The current PlayTime of the buffer being played
+        /// </summary>
         public TimeSpan PlayTime;
     }
 

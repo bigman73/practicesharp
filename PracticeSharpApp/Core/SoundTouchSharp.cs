@@ -604,6 +604,8 @@ SOUNDTOUCHDLL_API int __stdcall soundtouch_isEmpty(HANDLE h);
         #endregion
     }
 
+    #region ByteAndFloatsConverter - Conversion Utility Structure (Byte[] <-> Float[])
+
     /// <summary>
     /// Helper Structure - Allows "C-Style forced pointer" conversion of Bytes array to Floats array and visa versa (C# does not allow this)
     /// The main benefit is performance - no need to iterate and convert each element in the array
@@ -619,4 +621,5 @@ SOUNDTOUCHDLL_API int __stdcall soundtouch_isEmpty(HANDLE h);
         public float[] Floats;
     }
 
+    #endregion
 }

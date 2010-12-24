@@ -62,21 +62,25 @@ namespace BigMansStuff.PracticeSharp.Core
     /// </summary>
     public abstract class DSPEffect
     {
-        protected List<DSPEffectFactor> m_factors;
-        public float SampleRate { get; set; }
-        public float Tempo { get; set; }
-        public bool Enabled { get; set; }
-
+        /// <summary>
+        /// Constructor
+        /// </summary>
         public DSPEffect()
         {
             m_factors = new List<DSPEffectFactor>();
             Enabled = true;
-            Tempo = 120;
             SampleRate = 44100;
         }
 
-        public IList<DSPEffectFactor> Factors { get { return m_factors; } }
-
+        /// <summary>
+        /// Builder method - Adds a DSP effect factor to the DSP effect
+        /// </summary>
+        /// <param name="defaultValue"></param>
+        /// <param name="minimum"></param>
+        /// <param name="maximum"></param>
+        /// <param name="increment"></param>
+        /// <param name="description"></param>
+        /// <returns></returns>
         public DSPEffectFactor AddFactor(float defaultValue, float minimum, float maximum, float increment, string description)
         {
             DSPEffectFactor factor = new DSPEffectFactor(defaultValue, minimum, maximum, increment, description);
@@ -85,7 +89,10 @@ namespace BigMansStuff.PracticeSharp.Core
         }
 
         public abstract string Name { get; }
-
+        public IList<DSPEffectFactor> Factors { get { return m_factors; } }
+        public float SampleRate { get; set; }
+        public bool Enabled { get; set; }
+        
         // helper base methods
         // these are primarily to enable derived classes to use a similar
         // syntax to JS effects
@@ -108,24 +115,30 @@ namespace BigMansStuff.PracticeSharp.Core
         protected float Pow(float a, float b) { return (float)Math.Pow(a, b); }
         protected float Sign(float a) { return Math.Sign(a); }
         protected float Log(float a) { return (float)Math.Log(a); }
-        //protected float PI { get { return (float)Math.PI; } }
 
         protected const float Db2log = 0.11512925464970228420089957273422f; // ln(10) / 20 
         protected const float PI = 3.1415926535f;
         protected const float HalfPi = 1.57079632675f; // pi / 2;
         protected const float HalfPiScaled = 2.218812643387445f; // halfpi * 1.41254f;
 
-
-        protected void Convolve_c(float[] buffer1, int offset1, float[] buffer2, int offset2, int count)
+        /// <summary>
+        /// Performs a convolution operations between buffer 1 and buffer 2
+        /// </summary>
+        /// <param name="buffer1"></param>
+        /// <param name="offset1"></param>
+        /// <param name="buffer2"></param>
+        /// <param name="offset2"></param>
+        /// <param name="count"></param>
+        protected void Convolve(float[] buffer1, int offset1, float[] buffer2, int offset2, int count)
         {
-            for (int i = 0; i < count * 2; i += 2)
+            for (int sampleIndex = 0; sampleIndex < count * 2; sampleIndex += 2)
             {
-                float r = buffer1[offset1 + i];
-                float im = buffer1[offset1 + i + 1];
-                float cr = buffer2[offset2 + i];
-                float ci = buffer2[offset2 + i + 1];
-                buffer1[offset1 + i] = r * cr - im * ci;
-                buffer1[offset1 + i + 1] = r * ci + im * cr;
+                float r = buffer1[offset1 + sampleIndex];
+                float im = buffer1[offset1 + sampleIndex + 1];
+                float cr = buffer2[offset2 + sampleIndex];
+                float ci = buffer2[offset2 + sampleIndex + 1];
+                buffer1[offset1 + sampleIndex] = r * cr - im * ci;
+                buffer1[offset1 + sampleIndex + 1] = r * ci + im * cr;
             }
         }
 
@@ -158,5 +171,9 @@ namespace BigMansStuff.PracticeSharp.Core
         {
             return Name;
         }
+
+        protected List<DSPEffectFactor> m_factors;
+
+        public const int DefaultSampleRate = 44100;        
     }
 }

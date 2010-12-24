@@ -62,9 +62,14 @@ namespace BigMansStuff.PracticeSharp.Core
     /// </summary>
     public class EqualizerEffect : DSPEffect
     {
+        #region Construction
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
         public EqualizerEffect()
         {
+            // Add the Equalizer DSP Effect Factors (Lo, Mid, Hi Drive & Gain, Lo-Mi frequencey & Mid-High frequency" );
             AddFactor(80, 0, 100, 0.1f, "lo drive%");
             AddFactor(0, -12, 12, 0.1f, "lo gain");
             AddFactor(0, 0, 100, 0.1f, "mid drive%");
@@ -75,35 +80,23 @@ namespace BigMansStuff.PracticeSharp.Core
             AddFactor(2400, 720, 12000, 10, "mid-high freq");
         }
 
+        #endregion
+
+        #region DSP Effect Factors
+
         public DSPEffectFactor LoDriveFactor { get { return m_factors[0]; } }
         public DSPEffectFactor LoGainFactor { get { return m_factors[1]; } }
         public DSPEffectFactor MedDriveFactor { get { return m_factors[2]; } }
         public DSPEffectFactor MedGainFactor { get { return m_factors[3]; } }
         public DSPEffectFactor HiDriveFactor { get { return m_factors[4]; } }
         public DSPEffectFactor HiGainFactor { get { return m_factors[5]; } }
+        #endregion
 
+        #region Overrides
         public override string Name
         {
             get { return "3 Band EQ"; }
         }
-
-        float mixl;
-        float mixm;
-        float mixh;
-        float al;
-        float ah;
-        float mixl1;
-        float mixm1;
-        float mixh1;
-        float gainl;
-        float gainm;
-        float gainh;
-        float mixlg;
-        float mixmg;
-        float mixhg;
-        float mixlg1;
-        float mixmg1;
-        float mixhg1;
 
         public override void OnFactorChanges()
         {
@@ -126,11 +119,6 @@ namespace BigMansStuff.PracticeSharp.Core
             mixhg1 = mixh1 * gainh;
         }
         
-        float lfl;
-        float lfh;
-        float rfh;
-        float rfl;
-
         public override void Sample(ref float spl0, ref float spl1)
         {
             float dry0 = spl0;
@@ -179,5 +167,31 @@ namespace BigMansStuff.PracticeSharp.Core
             spl0 = dry0 + wet0;
             spl1 = dry1 + wet1;
         }
+        #endregion
+
+        #region Private Members
+        float lfl;
+        float lfh;
+        float rfh;
+        float rfl;
+
+        float mixl;
+        float mixm;
+        float mixh;
+        float al;
+        float ah;
+        float mixl1;
+        float mixm1;
+        float mixh1;
+        float gainl;
+        float gainm;
+        float gainh;
+        float mixlg;
+        float mixmg;
+        float mixhg;
+        float mixlg1;
+        float mixmg1;
+        float mixhg1;
+        #endregion
     }
 }
