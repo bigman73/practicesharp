@@ -61,7 +61,6 @@ namespace BigMansStuff.NAudio.FLAC
                                                flacFileName, m_writeCallback, m_metadataCallback, m_errorCallback,
                                                IntPtr.Zero) != 0)
                 throw new ApplicationException("FLAC: Could not open stream for reading!");
-            // m_waveFormat = m_wmaStream.Format;
 
             // Process the meta-data (but not the audio frames) so we can prepare the NAudio wave format
             FLACCheck(
@@ -100,7 +99,7 @@ namespace BigMansStuff.NAudio.FLAC
 
         /// <summary>
         /// This is the length in bytes of data available to be read out from the Read method
-        /// (i.e. the decompressed WMA length)
+        /// (i.e. the decompressed FLAC length)
         /// n.b. this may return 0 for files whose length is unknown
         /// </summary>
         public override long Length
@@ -149,7 +148,7 @@ namespace BigMansStuff.NAudio.FLAC
         }
 
         /// <summary>
-        /// Reads decompressed PCM data from our WMA file.
+        /// Reads decompressed PCM data from our FLAC file.
         /// </summary>
         public override int Read(byte[] playbackSampleBuffer, int offset, int numBytes)
         {
@@ -261,9 +260,7 @@ namespace BigMansStuff.NAudio.FLAC
             try
             {
                 // Read the FLAC Frame into a memory samples buffer (m_flacSamples)
-
                 LibFLACSharp.FlacFrame flacFrame = (LibFLACSharp.FlacFrame)Marshal.PtrToStructure(frame, typeof(LibFLACSharp.FlacFrame));
-                // Console.WriteLine("FLAC_WriteCallback: " + flacFrame.Header.FrameOrSampleNumber);
 
                 if (m_flacSamples == null)
                 {
@@ -291,20 +288,6 @@ namespace BigMansStuff.NAudio.FLAC
 
         private void FLAC_MetadataCallback(IntPtr context, IntPtr metadata, IntPtr userData)
         {
-            Console.WriteLine("FLAC_MetadataCallback");
-            LibFLACSharp.FLACMetaData flacMetaData = (LibFLACSharp.FLACMetaData)Marshal.PtrToStructure(metadata, typeof(LibFLACSharp.FLACMetaData));
-
-            if (flacMetaData.MetaDataType == LibFLACSharp.FLACMetaDataType.StreamInfo  )
-            {
-           /*     var t = Marshal.SizeOf(typeof(LibFLACSharp.FLACStreamInfo));
-                GCHandle pinnedData = GCHandle.Alloc(flacMetaData.Data, GCHandleType.Pinned);
-                m_flacStreamInfo = (LibFLACSharp.FLACStreamInfo)Marshal.PtrToStructure(
-                    pinnedData.AddrOfPinnedObject(),
-                    typeof(LibFLACSharp.FLACStreamInfo));
-                
-                pinnedData.Free();
-             */   
-            }
         }
         
         private void FLAC_ErrorCallback(IntPtr context, LibFLACSharp.DecodeError status, IntPtr userData)
