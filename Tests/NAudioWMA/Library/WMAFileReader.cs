@@ -137,7 +137,7 @@ namespace BigMansStuff.NAudio.WMA
 
         private WaveFormat m_waveFormat;
         private object m_repositionLock = new object();
-        private WmaStream m_wmaStream;
+        private Yeti.WMFSDK.WmaStream m_wmaStream;
 
         #endregion
     }
