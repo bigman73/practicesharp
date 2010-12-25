@@ -98,6 +98,7 @@ namespace BigMansStuff.PracticeSharp.Core
 
             // Create the Audio Processing Worker (Thread)
             m_audioProcessingThread = new Thread( new ThreadStart( audioProcessingWorker_DoWork) );
+            m_audioProcessingThread.Name = "AudioProcessingThread";
             m_audioProcessingThread.IsBackground = true;
             m_audioProcessingThread.Priority = ThreadPriority.Highest;
             // Important: MTA is needed for WMFSDK to function properly (for WMA support)
@@ -154,7 +155,7 @@ namespace BigMansStuff.PracticeSharp.Core
                 //   Solution: Resume paused playback BEFORE stopping to release NAudio pause state 
                 if (m_waveOutDevice.PlaybackState == PlaybackState.Paused)
                 {
-                    m_logger.Debug("Experimental - Resume paused playback BEFORE loading another file");
+                    m_logger.Debug("Resume paused playback BEFORE loading another file");
                     // Mute volume when Resume play - we don't it to really play, just to release the playback thread
                     m_waveOutDevice.Volume = 0;
                     m_waveOutDevice.Play();
@@ -523,7 +524,7 @@ namespace BigMansStuff.PracticeSharp.Core
             }
             catch (Exception ex)
             {
-                m_logger.ErrorException("Exception in audioProcessingWorker_DoWork", ex);
+                m_logger.ErrorException("Exception in audioProcessingWorker_DoWork, ", ex);
                 ChangeStatus( Statuses.Error );
             }
         }
@@ -637,6 +638,7 @@ namespace BigMansStuff.PracticeSharp.Core
                         if (loop)
                         {
                             m_waveChannel.CurrentTime = this.StartMarker;
+
                             WaitForCue();
                         }
                         else
@@ -787,15 +789,7 @@ namespace BigMansStuff.PracticeSharp.Core
                 int pulseCount = 0;
                 while (!m_stopWorker && pulseCount < cue.TotalSeconds - 1)
                 {
-                    if (CueWaitPulsed != null)
-                    {
-                        // explicitly invoke each subscribed event handler *asynchronously*
-                        foreach (EventHandler subscriber in CueWaitPulsed.GetInvocationList())
-                        {
-                            // Event is unidirectional - No call back (i.e. EndInvoke) needed
-                            subscriber.BeginInvoke(this, new EventArgs(), null, subscriber);
-                        }
-                    }
+                    RaiseEventCueWaitPulsed();
 
                     Thread.Sleep(1000);
                     pulseCount++;
@@ -805,13 +799,26 @@ namespace BigMansStuff.PracticeSharp.Core
                 pulseCount = 0;
                 while (!m_stopWorker && pulseCount < 4)
                 {
-                    if (CueWaitPulsed != null)
-                    {
-                        CueWaitPulsed(this, new EventArgs());
-                    }
-
+                    RaiseEventCueWaitPulsed(); 
+                   
                     Thread.Sleep(250);
                     pulseCount++;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Raises the CueWaitPulsed event in an asynchronous way
+        /// </summary>
+        private void RaiseEventCueWaitPulsed()
+        {
+            if (CueWaitPulsed != null)
+            {
+                // explicitly invoke each subscribed event handler *asynchronously*
+                foreach (EventHandler subscriber in CueWaitPulsed.GetInvocationList())
+                {
+                    // Event is unidirectional - No call back (i.e. EndInvoke) needed
+                    subscriber.BeginInvoke(this, new EventArgs(), null, subscriber);
                 }
             }
         }
@@ -891,10 +898,13 @@ namespace BigMansStuff.PracticeSharp.Core
                 m_currentPlayTime = (e as BufferedPlayEventArgs).PlayTime;
             }
 
-            RaisePlayTimeChangedEvent();
+            RaiseEventPlayTimeChanged();
         }
 
-        private void RaisePlayTimeChangedEvent()
+        /// <summary>
+        /// Raises the PlayTimeChanged event in an asynchronous way
+        /// </summary>
+        private void RaiseEventPlayTimeChanged()
         {
             if (PlayTimeChanged != null)
             {
