@@ -42,6 +42,7 @@
             this.label2 = new System.Windows.Forms.Label();
             this.codeProjectLinkLabel = new System.Windows.Forms.LinkLabel();
             this.csVorbisLinkLabel = new System.Windows.Forms.LinkLabel();
+            this.libFlacLinkLabel = new System.Windows.Forms.LinkLabel();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.SuspendLayout();
@@ -176,6 +177,17 @@
             this.csVorbisLinkLabel.Text = "Vorbis#";
             this.csVorbisLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.csVorbisLinkLabel_LinkClicked);
             // 
+            // libFlacLinkLabel
+            // 
+            this.libFlacLinkLabel.AutoSize = true;
+            this.libFlacLinkLabel.Location = new System.Drawing.Point(12, 225);
+            this.libFlacLinkLabel.Name = "libFlacLinkLabel";
+            this.libFlacLinkLabel.Size = new System.Drawing.Size(37, 13);
+            this.libFlacLinkLabel.TabIndex = 13;
+            this.libFlacLinkLabel.TabStop = true;
+            this.libFlacLinkLabel.Text = "libFlac";
+            this.libFlacLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.libFlacLinkLabel_LinkClicked);
+            // 
             // AboutForm
             // 
             this.AcceptButton = this.closeButton;
@@ -183,6 +195,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.closeButton;
             this.ClientSize = new System.Drawing.Size(338, 283);
+            this.Controls.Add(this.libFlacLinkLabel);
             this.Controls.Add(this.csVorbisLinkLabel);
             this.Controls.Add(this.codeProjectLinkLabel);
             this.Controls.Add(this.label2);
@@ -225,5 +238,6 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.LinkLabel codeProjectLinkLabel;
         private System.Windows.Forms.LinkLabel csVorbisLinkLabel;
+        private System.Windows.Forms.LinkLabel libFlacLinkLabel;
     }
 }

@@ -90,10 +90,16 @@ namespace BigMansStuff.PracticeSharp.UI
         {
             LaunchWebSite("https://github.com/mono/csvorbis/");
         }
+
+        private void libFlacLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            LaunchWebSite("http://flac.sourceforge.net/");
+        }
+
         
         #endregion
 
-        #region Privte Methods
+        #region Private Methods
 
         /// <summary>
         /// Utility function - launches the web site url in the default browser
@@ -103,7 +109,6 @@ namespace BigMansStuff.PracticeSharp.UI
         {
             System.Diagnostics.Process.Start(webSiteUrl);
         }
-
 
         #endregion
     }
