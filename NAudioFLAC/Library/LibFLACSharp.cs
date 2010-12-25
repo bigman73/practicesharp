@@ -11,6 +11,8 @@ namespace BigMansStuff.NAudio.FLAC
     /// <remarks>
     /// Based a .NET/C# Interop wrapper by Stanimir Stoyanov - http://stoyanoff.info/blog/2010/07/26/decoding-flac-audio-files-in-c/
     /// using libFlac - http://flac.sourceforge.net
+    /// For a full description of libFlac Decoder API: http://flac.sourceforge.net/api/group__flac__stream__decoder.html
+    /// For a full description of libFlac Encoder API: http://flac.sourceforge.net/api/group__flac__stream__encoder.html
     /// </remarks>
     public class LibFLACSharp
     {
@@ -45,7 +47,6 @@ namespace BigMansStuff.NAudio.FLAC
 
         [DllImport(DLLName)]
         public static extern bool FLAC__stream_decoder_seek_absolute(IntPtr context, long newSamplePosition);
-        
         
         [DllImport(DLLName)]
         public static extern bool FLAC__stream_decoder_get_decode_position(IntPtr context, ref long position);
@@ -149,29 +150,33 @@ namespace BigMansStuff.NAudio.FLAC
  	        // Length, in bytes, of the block data as it appears in the stream.
             public int Length;
             // Polymorphic block data; use the type value to determine which to use.
-            public IntPtr Data;
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 100)]
+            public byte[] Data;
         }
 
-        [StructLayout(LayoutKind.Explicit,Pack = 1,Size = 36)]
+        [StructLayout(LayoutKind.Explicit,Pack = 1,Size = 40)]
         public struct FLACStreamInfo
         {
-            [FieldOffset(0)]
-            public Int32 MinBlocksize;
+            // Note Offsets 0..3 are the byte array length (header) - we just ingore these bytes and start with Offset 4
             [FieldOffset(4)]
-            public Int32 MaxBlocksize;
+            public Int32 MinBlocksize;
             [FieldOffset(8)]
-            public Int32 min_framesize;
+            public Int32 MaxBlocksize;
             [FieldOffset(12)]
-            public Int32 max_framesize;
+            public Int32 min_framesize;
             [FieldOffset(16)]
-            public Int32 sample_rate;
+            public Int32 max_framesize;
             [FieldOffset(20)]
-            public Int32 channels;
+            public Int32 SampleRate;
             [FieldOffset(24)]
-            public Int32 bits_per_sample;
+            public Int32 Channels;
             [FieldOffset(28)]
-            public UInt64 total_samples;
-           // [FieldOffset(36)]
+            public Int32 BitsPerSample;
+            [FieldOffset(32)]
+            public Int32 TotalSamplesHi;
+            [FieldOffset(36)]
+            public Int32 TotalSamplesLo;
+           // [FieldOffset(40)]
            // public byte[] md5sum;
         }
         #endregion
