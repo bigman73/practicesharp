@@ -349,10 +349,6 @@ namespace BigMansStuff.PracticeSharp.Core
                     if (m_status == Statuses.Pausing || m_status == Statuses.Initialized || m_status == Statuses.Stopped)
                     {
                         m_currentPlayTime = m_newPlayTime;
-                        if (m_waveChannel != null)
-                        {
-                            m_waveChannel.CurrentTime = m_newPlayTime;
-                        }
                     }
                 }
             }
