@@ -227,8 +227,9 @@ namespace BigMansStuff.NAudio.FLAC
 
         #endregion
 
-        #region Callbacks
+        #region libFlac Callbacks
 
+        //private 
 
         /// <summary>
         /// FLAC Write Call Back - libFlac notifies back on a frame that was read from the source file and written as a frame
@@ -239,32 +240,25 @@ namespace BigMansStuff.NAudio.FLAC
         /// <param name="clientData"></param>
         private void FLAC_WriteCallback(IntPtr context, IntPtr frame, IntPtr buffer, IntPtr clientData)
         {
-            try
+            // Read the FLAC Frame into a memory samples buffer (m_flacSamples)
+            LibFLACSharp.FlacFrame flacFrame = (LibFLACSharp.FlacFrame)Marshal.PtrToStructure(frame, typeof(LibFLACSharp.FlacFrame));
+
+            if (m_flacSamples == null)
             {
-                // Read the FLAC Frame into a memory samples buffer (m_flacSamples)
-                LibFLACSharp.FlacFrame flacFrame = (LibFLACSharp.FlacFrame)Marshal.PtrToStructure(frame, typeof(LibFLACSharp.FlacFrame));
-
-                if (m_flacSamples == null)
-                {
-                    // First time - Create Flac sample buffer
-                    m_samplesPerChannel = flacFrame.Header.BlockSize;
-                    m_flacSamples = new int[m_samplesPerChannel * m_flacStreamInfo.Channels];
-                    m_flacSampleIndex = 0;
-                }
-
-                // Iterate on all channels, copy the unmanaged channel bits (samples) to the a managed samples array
-                for (int inputChannel = 0; inputChannel < m_flacStreamInfo.Channels; inputChannel++)
-                {
-                    // Get pointer to channel bits, for the current channel
-                    IntPtr pChannelBits = Marshal.ReadIntPtr(buffer, inputChannel * IntPtr.Size);
-
-                    // Copy the unmanaged bits to managed memory
-                    Marshal.Copy(pChannelBits, m_flacSamples, inputChannel * m_samplesPerChannel, m_samplesPerChannel);
-                }
+                // First time - Create Flac sample buffer
+                m_samplesPerChannel = flacFrame.Header.BlockSize;
+                m_flacSamples = new int[m_samplesPerChannel * m_flacStreamInfo.Channels];
+                m_flacSampleIndex = 0;
             }
-            catch (Exception ex)
+
+            // Iterate on all channels, copy the unmanaged channel bits (samples) to the a managed samples array
+            for (int inputChannel = 0; inputChannel < m_flacStreamInfo.Channels; inputChannel++)
             {
-                Console.WriteLine("Exception in WriteCallBack: " + ex.ToString());
+                // Get pointer to channel bits, for the current channel
+                IntPtr pChannelBits = Marshal.ReadIntPtr(buffer, inputChannel * IntPtr.Size);
+
+                // Copy the unmanaged bits to managed memory
+                Marshal.Copy(pChannelBits, m_flacSamples, inputChannel * m_samplesPerChannel, m_samplesPerChannel);
             }
         }
 
