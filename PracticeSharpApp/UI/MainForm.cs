@@ -64,6 +64,8 @@ namespace BigMansStuff.PracticeSharp.UI
         /// <param name="e"></param>
         private void MainForm_Load(object sender, EventArgs e)
         {
+            Thread.CurrentThread.Name = "MainFormThread";
+
             // Note: Initialization of Application folders must come first, BEFORE the logger is initialized
             InitializeApplicationFolders();
 
