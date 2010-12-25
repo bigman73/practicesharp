@@ -9,7 +9,10 @@ namespace BigMansStuff.NAudio.FLAC
     /// C# (.NET) Wrapper for the libFlac library (Written in C++) 
     /// </summary>
     /// <remarks>
-    /// Based a .NET/C# Interop wrapper by Stanimir Stoyanov - http://stoyanoff.info/blog/2010/07/26/decoding-flac-audio-files-in-c/
+    /// Based a .NET/C# Interop wrapper by Stanimir Stoyanov - 
+    ///     http://stoyanoff.info/blog/2010/07/26/decoding-flac-audio-files-in-c/
+    ///     and
+    ///     http://stoyanoff.info/blog/2010/01/08/encoding-uncompressed-audio-with-flac-in-c/
     /// using libFlac - http://flac.sourceforge.net
     /// For a full description of libFlac Decoder API: http://flac.sourceforge.net/api/group__flac__stream__decoder.html
     /// For a full description of libFlac Encoder API: http://flac.sourceforge.net/api/group__flac__stream__encoder.html

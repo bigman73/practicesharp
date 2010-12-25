@@ -28,6 +28,7 @@ THE SOFTWARE.
 
 Source Code in NAudioFLAC is based a .NET/C# Interop wrapper by Stanimir Stoyanov:
 http://stoyanoff.info/blog/2010/07/26/decoding-flac-audio-files-in-c/
+http://stoyanoff.info/blog/2010/01/08/encoding-uncompressed-audio-with-flac-in-c/
 It has no license (i.e. unlicensed freeware)
 
 ********************************************************************************
