@@ -70,13 +70,14 @@ namespace BigMansStuff.PracticeSharp.Core
         public EqualizerEffect()
         {
             // Add the Equalizer DSP Effect Factors (Lo, Mid, Hi Drive & Gain, Lo-Mi frequencey & Mid-High frequency" );
-            AddFactor(80, 0, 100, 0.1f, "lo drive%");
+            // Note: Drive in this context means mix ratio
+            AddFactor(75, 0, 100, 0.1f, "lo drive%"); 
             AddFactor(0, -12, 12, 0.1f, "lo gain");
-            AddFactor(0, 0, 100, 0.1f, "mid drive%");
+            AddFactor(40, 0, 100, 0.1f, "mid drive%");
             AddFactor(0, -12, 12, 0.1f, "mid gain");
-            AddFactor(0, 0, 100, 0.1f, "hi drive%");
+            AddFactor(30, 0, 100, 0.1f, "hi drive%");
             AddFactor(0, -12, 12, 0.1f, "hi gain");
-            AddFactor(240, 60, 680, 1, "low-mid freq");
+            AddFactor(200, 60, 680, 1, "low-mid freq");
             AddFactor(2400, 720, 12000, 10, "mid-high freq");
         }
 
@@ -90,6 +91,8 @@ namespace BigMansStuff.PracticeSharp.Core
         public DSPEffectFactor MedGainFactor { get { return m_factors[3]; } }
         public DSPEffectFactor HiDriveFactor { get { return m_factors[4]; } }
         public DSPEffectFactor HiGainFactor { get { return m_factors[5]; } }
+        public DSPEffectFactor LoMedFrequencyFactor { get { return m_factors[6]; } }
+        public DSPEffectFactor MedHiFrequencyFactor { get { return m_factors[7]; } }
         #endregion
 
         #region Overrides
@@ -100,17 +103,27 @@ namespace BigMansStuff.PracticeSharp.Core
 
         public override void OnFactorChanges()
         {
-            mixl = Factor1 / 100;
-            mixm = Factor3 / 100;
-            mixh = Factor5 / 100;
-            al = Min(Factor7, SampleRate) / SampleRate;
-            ah = Max(Min(Factor8, SampleRate) / SampleRate, al);
+            // Low Mix
+            mixl = LoDriveFactor.Value / 100;
+            // Med Mix
+            mixm = MedDriveFactor.Value / 100;
+            // High Mix
+            mixh = HiDriveFactor.Value / 100;
+            
+            // Complement Mixes (useful for performance optimization as less calculations are made)
             mixl1 = 1 - mixl;
             mixm1 = 1 - mixm;
             mixh1 = 1 - mixh;
-            gainl = Exp(Factor2 * Db2log);
-            gainm = Exp(Factor4 * Db2log);
-            gainh = Exp(Factor6 * Db2log);
+
+            // Low frequency
+            al = Min(LoMedFrequencyFactor.Value, SampleRate) / SampleRate;
+            // High frequency
+            ah = Max(Min(MedHiFrequencyFactor.Value, SampleRate) / SampleRate, al);
+
+            gainl = Exp(LoGainFactor.Value * Db2log);
+            gainm = Exp(MedGainFactor.Value * Db2log);
+            gainh = Exp(HiGainFactor.Value * Db2log);
+            // Calculate combined Mix/Gain parameters
             mixlg = mixl * gainl;
             mixmg = mixm * gainm;
             mixhg = mixh * gainh;
@@ -119,6 +132,11 @@ namespace BigMansStuff.PracticeSharp.Core
             mixhg1 = mixh1 * gainh;
         }
         
+        /// <summary>
+        /// Applies the effect to a single sample
+        /// </summary>
+        /// <param name="spl0"></param>
+        /// <param name="spl1"></param>
         public override void Sample(ref float spl0, ref float spl1)
         {
             float dry0 = spl0;

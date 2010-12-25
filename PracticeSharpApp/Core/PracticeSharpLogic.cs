@@ -1040,11 +1040,11 @@ namespace BigMansStuff.PracticeSharp.Core
             // Initialize Equalizer
             m_eqEffect = new EqualizerEffect();
             m_eqEffect.SampleRate = m_waveChannel.WaveFormat.SampleRate;
-            m_eqEffect.LoDriveFactor.Value = 50;
+            m_eqEffect.LoDriveFactor.Value = 75;
             m_eqEffect.LoGainFactor.Value = 0;
-            m_eqEffect.MedDriveFactor.Value = 50;
+            m_eqEffect.MedDriveFactor.Value = 40;
             m_eqEffect.MedGainFactor.Value = 0;
-            m_eqEffect.HiDriveFactor.Value = 50;
+            m_eqEffect.HiDriveFactor.Value = 30;
             m_eqEffect.HiGainFactor.Value = 0;
             m_eqEffect.Init();
             m_eqEffect.OnFactorChanges();
