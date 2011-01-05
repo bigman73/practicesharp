@@ -122,7 +122,7 @@ namespace BigMansStuff.PracticeSharp.Core
         public void Play()
         {
             // Not playing now - Start the audio processing thread
-            if (m_status == Statuses.Initialized)
+            if (m_status == Statuses.Ready)
             {
                 lock (FirstPlayLock)
                 {
@@ -346,7 +346,7 @@ namespace BigMansStuff.PracticeSharp.Core
                     m_newPlayTime = value;
                     m_newPlayTimeRequested = true;
 
-                    if (m_status == Statuses.Pausing || m_status == Statuses.Initialized || m_status == Statuses.Stopped)
+                    if (m_status == Statuses.Pausing || m_status == Statuses.Ready || m_status == Statuses.Stopped)
                     {
                         m_currentPlayTime = m_newPlayTime;
                     }
@@ -453,7 +453,7 @@ namespace BigMansStuff.PracticeSharp.Core
 
         #region Enums
 
-        public enum Statuses { None, Initializing, Initialized, Loading, Playing, Stopped, Pausing, Terminating, Terminated, Error };
+        public enum Statuses { None, Initializing, Ready, Loading, Playing, Stopped, Pausing, Terminating, Terminated, Error };
 
         #endregion
 
@@ -480,7 +480,7 @@ namespace BigMansStuff.PracticeSharp.Core
                         m_currentPlayTime = TimeSpan.Zero;
 
                     // Playback status changed to -> Initialized
-                    ChangeStatus(Statuses.Initialized);
+                    ChangeStatus(Statuses.Ready);
                 }
                 finally
                 {
@@ -740,7 +740,9 @@ namespace BigMansStuff.PracticeSharp.Core
                 // Get the samples, per audio channel
                 float sampleLeft = buffer[sample];
                 float sampleRight = buffer[sample + 1];
-               
+
+                if (sampleLeft > 1)
+                    Console.WriteLine(sampleLeft);
                 // Apply the equalizer effect to the samples
                 m_eqEffect.Sample(ref sampleLeft, ref sampleRight);
 
