@@ -301,7 +301,7 @@ namespace BigMansStuff.PracticeSharp.UI
                 m_practiceSharpLogic.Pause();
             }
             else if ( (m_practiceSharpLogic.Status == PracticeSharpLogic.Statuses.Pausing ) ||
-                      (m_practiceSharpLogic.Status == PracticeSharpLogic.Statuses.Initialized) )
+                      (m_practiceSharpLogic.Status == PracticeSharpLogic.Statuses.Ready) )
             {
                 playPauseButton.Image = Resources.Pause_Hot;
 
@@ -359,10 +359,15 @@ namespace BigMansStuff.PracticeSharp.UI
         /// <param name="e"></param>
         private void positionMarkersPanel_Paint(object sender, PaintEventArgs e)
         {
-            if (m_practiceSharpLogic == null || m_practiceSharpLogic.Status == PracticeSharpLogic.Statuses.Initialized)
+            // don't paint if we are initializing or terminating/ed
+            if (m_practiceSharpLogic == null
+                || m_practiceSharpLogic.Status == PracticeSharpLogic.Statuses.Initializing
+                || m_practiceSharpLogic.Status == PracticeSharpLogic.Statuses.Terminating
+                || m_practiceSharpLogic.Status == PracticeSharpLogic.Statuses.Terminated )
             {
                 return;
             }
+            
 
             TimeSpan startMarker = m_practiceSharpLogic.StartMarker;
             TimeSpan endMarker = m_practiceSharpLogic.EndMarker;
