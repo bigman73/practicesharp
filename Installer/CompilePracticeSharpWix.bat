@@ -25,17 +25,28 @@ REM
 @ECHO    Compiling Practice# WiX Installation
 @ECHO ========================================
 
-ECHO Copying latest Release files
+ECHO+
+ECHO Copying latest Release files (Source Files)
 XCOPY /Y ..\PracticeSharpApp\bin\Release\PracticeSharp.exe Source\
 XCOPY /Y ..\PracticeSharpApp\bin\Release\PracticeSharp.exe.config Source\
 XCOPY /Y ..\PracticeSharpApp\bin\Release\NAudio.dll Source\
 XCOPY /Y ..\PracticeSharpApp\bin\Release\NAudio.WindowsMediaFormat.dll Source\
 XCOPY /Y ..\PracticeSharpApp\bin\Release\NAudioOggVorbis.dll Source\
+XCOPY /Y ..\PracticeSharpApp\bin\Release\libFlac.dll Source\
+XCOPY /Y ..\PracticeSharpApp\bin\Release\NAudioFLAC.dll Source\
 XCOPY /Y ..\PracticeSharpApp\bin\Release\SoundTouch.dll Source\
+XCOPY /Y ..\PracticeSharpApp\bin\Release\LICENSES.txt Source\
+XCOPY /Y ..\PracticeSharpApp\bin\Release\NLog.dll Source\
+XCOPY /Y ..\PracticeSharpApp\bin\Release\NLog.config Source\
 
-SET PATH=%PATH%;C:\Program Files (x86)\Windows Installer XML v3\bin
+
+SET PATH=%PATH%;%ProgramFiles(x86)%\Windows Installer XML v3\bin
+
+ECHO+
 ECHO ==== Candle ====
 candle.exe PracticeSharp.wxs -out obj\PracticeSharp.wixobj
+
+ECHO+
 ECHO ==== Light ====
 light.exe -ext WixUIExtension obj\PracticeSharp.wixobj -out MSI\PracticeSharp.msi
 
