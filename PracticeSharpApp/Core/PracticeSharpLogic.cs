@@ -83,7 +83,7 @@ namespace BigMansStuff.PracticeSharp.Core
         public void LoadFile(string filename)
         {
             // Stop a previous file running
-            if (m_waveOutDevice != null)
+            if (m_audioProcessingThread != null)
             {
                 Stop();
             }
@@ -148,28 +148,23 @@ namespace BigMansStuff.PracticeSharp.Core
             if (m_status == Statuses.Stopped)
                 return;
 
-            // Stop NAudio play back
-            if (m_waveOutDevice != null)
-            {
-                // Workaround to crashes/locks that sometimes occur due to threading issues.
-                //   Solution: Resume paused playback BEFORE stopping to release NAudio pause state 
-                if (m_waveOutDevice.PlaybackState == PlaybackState.Paused)
-                {
-                    m_logger.Debug("Resume paused playback BEFORE loading another file");
-                    // Mute volume when Resume play - we don't it to really play, just to release the playback thread
-                    m_waveOutDevice.Volume = 0;
-                    m_waveOutDevice.Play();
-                    // Give the NAudio playback some short time to release itself
-                    Thread.Sleep(10);
-                }
+            m_stopWorker = true;
 
-                m_waveOutDevice.Stop();
+            // Workaround to crashes/locks that sometimes occur due to threading issues.
+            //   Solution: Resume paused playback BEFORE stopping to release NAudio pause state 
+            if (m_waveOutDevice != null && m_waveOutDevice.PlaybackState == PlaybackState.Paused)
+            {
+                m_logger.Debug("Resume paused playback BEFORE loading another file");
+                // Mute volume when Resume play - we don't it to really play, just to release the playback thread
+                m_waveOutDevice.Volume = 0;
+                m_waveOutDevice.Play();
+                // Give the NAudio playback some short time to release itself
+                Thread.Sleep(250);
             }
 
             // Stop the audio processing thread
             if ( m_audioProcessingThread != null )
             {
-                m_stopWorker = true;
                 while (m_workerRunning)
                 {
                     Thread.Sleep(10);
@@ -177,9 +172,6 @@ namespace BigMansStuff.PracticeSharp.Core
 
                 m_audioProcessingThread = null;
             }
-
-            // Playback status changed to -> Stopped
-            ChangeStatus(Statuses.Stopped);
         }
 
         /// <summary>
@@ -685,6 +677,7 @@ namespace BigMansStuff.PracticeSharp.Core
 
                 #region Stop PlayBack 
                 m_logger.Debug("ProcessAudio() finished - stop playback");
+                m_waveOutDevice.Stop();
                 // Stop listening to PlayPositionChanged events
                 m_inputProvider.PlayPositionChanged -= new EventHandler(inputProvider_PlayPositionChanged);
 
@@ -697,6 +690,8 @@ namespace BigMansStuff.PracticeSharp.Core
                     }
                 }
 
+
+                // Playback status changed to -> Stopped
                 ChangeStatus(Statuses.Stopped);
                 #endregion
             }
