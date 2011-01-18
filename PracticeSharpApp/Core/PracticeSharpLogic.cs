@@ -82,7 +82,7 @@ namespace BigMansStuff.PracticeSharp.Core
         /// <param name="filename"></param>
         public void LoadFile(string filename)
         {
-            // Stop a previous file running
+            // Stop a previous file that is currently being played
             if (m_audioProcessingThread != null)
             {
                 Stop();
@@ -90,11 +90,6 @@ namespace BigMansStuff.PracticeSharp.Core
 
             m_filename = filename;
             m_status = Statuses.Loading;
-
-            if ( m_audioProcessingThread != null)
-            {
-                System.Diagnostics.Debug.Assert(true, "m_audioProcessingThread already exists");
-            }
 
             // Create the Audio Processing Worker (Thread)
             m_audioProcessingThread = new Thread( new ThreadStart( audioProcessingWorker_DoWork) );
@@ -158,7 +153,7 @@ namespace BigMansStuff.PracticeSharp.Core
                 // Mute volume when Resume play - we don't it to really play, just to release the playback thread
                 m_waveOutDevice.Volume = 0;
                 m_waveOutDevice.Play();
-                // Give the NAudio playback some short time to release itself
+                // Give the NAudio playback some short time to release itself from pause state
                 Thread.Sleep(250);
             }
 
@@ -170,6 +165,7 @@ namespace BigMansStuff.PracticeSharp.Core
                     Thread.Sleep(10);
                 }
 
+                m_audioProcessingThread.Join();
                 m_audioProcessingThread = null;
             }
         }
@@ -458,6 +454,7 @@ namespace BigMansStuff.PracticeSharp.Core
         {
             try
             {
+                // Initialize audio playback
                 try
                 {
                     InitializeSoundTouchSharp();
@@ -488,25 +485,28 @@ namespace BigMansStuff.PracticeSharp.Core
                 {
                     Monitor.Wait(FirstPlayLock);
                 }
-                // Safety guard - if thread never really started playing but PracticeSharpLogic was terminated
+                // Safety guard - if thread never really started playing but PracticeSharpLogic was terminated ore started terminating
                 if (m_status == Statuses.Terminating || m_status == Statuses.Terminated)
                     return;
 
+                // Command NAudio to start playing
                 m_waveOutDevice.Play();
                 // Playback status changed to -> Playing
                 ChangeStatus(Statuses.Playing);
 
                 try
                 {
+                    // ==============================================
+                    // ====  Perform the actual audio processing ====
                     ProcessAudio();
+                    // ==============================================
                 }
                 finally
                 {
-                    m_audioProcessingThread = null;
-
                     // Dispose of NAudio in context of thread (for WMF it will must be disposed in the same thread)
                     TerminateNAudio();
 
+                    // Dispose of SoundTouchSharp
                     TerminateSoundTouchSharp();
                 }
             }
@@ -736,8 +736,6 @@ namespace BigMansStuff.PracticeSharp.Core
                 float sampleLeft = buffer[sample];
                 float sampleRight = buffer[sample + 1];
 
-                if (sampleLeft > 1)
-                    Console.WriteLine(sampleLeft);
                 // Apply the equalizer effect to the samples
                 m_eqEffect.Sample(ref sampleLeft, ref sampleRight);
 
@@ -1069,10 +1067,13 @@ namespace BigMansStuff.PracticeSharp.Core
         /// </summary>
         private void TerminateNAudio()
         {
-            if (m_waveReader != null)
+            if (m_inputProvider != null)
             {
-                m_waveReader.Dispose();
-                m_waveReader = null;
+                if (m_inputProvider is IDisposable)
+                {
+                    (m_inputProvider as IDisposable).Dispose();
+                }
+                m_inputProvider = null;
             }
 
             if (m_waveChannel != null)
@@ -1087,13 +1088,10 @@ namespace BigMansStuff.PracticeSharp.Core
                 m_blockAlignedStream = null;
             }
 
-            if (m_inputProvider != null)
+            if (m_waveReader != null)
             {
-                if (m_inputProvider is IDisposable)
-                {
-                    (m_inputProvider as IDisposable).Dispose();
-                }
-                m_inputProvider = null;
+                m_waveReader.Dispose();
+                m_waveReader = null;
             }
 
             if (m_waveOutDevice != null)
