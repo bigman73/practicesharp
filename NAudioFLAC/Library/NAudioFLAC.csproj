@@ -63,7 +63,7 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="NAudio">
-      <HintPath>..\..\3rdParty\naudio\NAudio\bin\x86\Release\NAudio.dll</HintPath>
+      <HintPath>..\..\PracticeSharpApp\3rdPartyDLL\NAudioDLL\NAudio.dll</HintPath>
     </Reference>
     <Reference Include="System" />
   </ItemGroup>
