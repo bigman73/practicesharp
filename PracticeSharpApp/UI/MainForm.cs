@@ -229,7 +229,7 @@ namespace BigMansStuff.PracticeSharp.UI
                 m_practiceSharpLogic.Dispose();
                 m_practiceSharpLogic = null;
 
-                // Let previous events from practice sharp logic to finish - To avoid racing on MainForm which causes exceptions in PracticeSharp event handlers
+                // Allow previous events from practice sharp logic to finish - To avoid racing on MainForm which causes exceptions in PracticeSharp event handlers
                 Thread.Sleep(100);
                 Application.DoEvents();
             }

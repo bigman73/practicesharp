@@ -171,7 +171,7 @@ namespace BigMansStuff.PracticeSharp.UI
         {
             newVersion = null;
 
-            // Web Scrape the Google Code LatestVersion wiki page
+            // Web Scrape   Google Code LatestVersion wiki page
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(LatestVersionWebPageURL);
             HttpWebResponse response = (HttpWebResponse)request.GetResponse();
 
