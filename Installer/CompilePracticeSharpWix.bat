@@ -1,3 +1,4 @@
+@ECHO OFF
 REM Practice Sharp
 REM 
 REM    © Copyright 2010, Yuval Naveh.
@@ -18,8 +19,6 @@ REM
 REM    You should have received a copy of the GNU Lesser Public License
 REM    along with Practice Sharp.  If not, see <http://www.gnu.org/licenses/>.
 REM
-
-@ECHO OFF
 
 @ECHO ========================================
 @ECHO    Compiling Practice# WiX Installation
