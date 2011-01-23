@@ -23,8 +23,8 @@
 	
 	
   <?define RTMProductVersion="0.6.0" ?>
-  <?define ProductVersion="1.0.0" ?>
-  <?define ProductName="Practice# 1.0" ?>
+  <?define ProductVersion="1.0.1" ?>
+  <?define ProductName="Practice# 1.0.1" ?>
   <?define ProductTitle="Practice#" ?>
   <?define UpgradeCode="{698FDA6C-C8E8-4C2B-8705-28A99B39E171}"?>
   <?define Manufacturer="Yuval Naveh" ?>
