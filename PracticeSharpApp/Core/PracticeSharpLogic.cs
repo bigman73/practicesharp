@@ -165,7 +165,6 @@ namespace BigMansStuff.PracticeSharp.Core
                     Thread.Sleep(10);
                 }
 
-                m_audioProcessingThread.Join();
                 m_audioProcessingThread = null;
             }
         }
