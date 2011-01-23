@@ -61,18 +61,6 @@ namespace BigMansStuff.PracticeSharp.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("11/27/2010 12:00:00")]
-        public global::System.DateTime LastVersionCheckDateTime {
-            get {
-                return ((global::System.DateTime)(this["LastVersionCheckDateTime"]));
-            }
-            set {
-                this["LastVersionCheckDateTime"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool SupressVersionCheck {
             get {
@@ -104,6 +92,78 @@ namespace BigMansStuff.PracticeSharp.Properties {
             }
             set {
                 this["Latency"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("12/18/2010 12:00:00")]
+        public global::System.DateTime LastVersionCheckDateTime {
+            get {
+                return ((global::System.DateTime)(this["LastVersionCheckDateTime"]));
+            }
+            set {
+                this["LastVersionCheckDateTime"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        public int SoundTouch_USE_AA_FILTER {
+            get {
+                return ((int)(this["SoundTouch_USE_AA_FILTER"]));
+            }
+            set {
+                this["SoundTouch_USE_AA_FILTER"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("128")]
+        public int SoundTouch_AA_FILTER_LENGTH {
+            get {
+                return ((int)(this["SoundTouch_AA_FILTER_LENGTH"]));
+            }
+            set {
+                this["SoundTouch_AA_FILTER_LENGTH"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("-1")]
+        public int SoundTouch_SEQUENCE_MS {
+            get {
+                return ((int)(this["SoundTouch_SEQUENCE_MS"]));
+            }
+            set {
+                this["SoundTouch_SEQUENCE_MS"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("-1")]
+        public int SoundTouch_SEEKWINDOW_MS {
+            get {
+                return ((int)(this["SoundTouch_SEEKWINDOW_MS"]));
+            }
+            set {
+                this["SoundTouch_SEEKWINDOW_MS"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("-1")]
+        public int SoundTouch_OVERLAP_MS {
+            get {
+                return ((int)(this["SoundTouch_OVERLAP_MS"]));
+            }
+            set {
+                this["SoundTouch_OVERLAP_MS"] = value;
             }
         }
     }

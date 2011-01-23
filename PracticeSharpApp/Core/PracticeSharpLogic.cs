@@ -845,7 +845,7 @@ namespace BigMansStuff.PracticeSharp.Core
             WaveFormat format = m_waveChannel.WaveFormat;
             m_inputProvider = new AdvancedBufferedWaveProvider(format);
             m_inputProvider.PlayPositionChanged += new EventHandler(inputProvider_PlayPositionChanged);
-            m_inputProvider.MaxQueuedBuffers = 1000;
+            m_inputProvider.MaxQueuedBuffers = 100;
 
             m_soundTouchSharp.SetSampleRate(format.SampleRate);
             m_soundTouchSharp.SetChannels(format.Channels);
@@ -857,8 +857,20 @@ namespace BigMansStuff.PracticeSharp.Core
             m_soundTouchSharp.SetTempo(m_tempo);
 
             m_soundTouchSharp.SetSetting(SoundTouchSharp.SoundTouchSettings.SETTING_USE_QUICKSEEK, 0);
-            m_soundTouchSharp.SetSetting(SoundTouchSharp.SoundTouchSettings.SETTING_USE_AA_FILTER, 1);
-            m_soundTouchSharp.SetSetting(SoundTouchSharp.SoundTouchSettings.SETTING_AA_FILTER_LENGTH, 128);
+            m_soundTouchSharp.SetSetting(SoundTouchSharp.SoundTouchSettings.SETTING_USE_AA_FILTER, Properties.Settings.Default.SoundTouch_USE_AA_FILTER);
+            m_soundTouchSharp.SetSetting(SoundTouchSharp.SoundTouchSettings.SETTING_AA_FILTER_LENGTH, Properties.Settings.Default.SoundTouch_AA_FILTER_LENGTH);
+            if ( Properties.Settings.Default.SoundTouch_OVERLAP_MS != -1)
+            {
+                 m_soundTouchSharp.SetSetting(SoundTouchSharp.SoundTouchSettings.SETTING_OVERLAP_MS, Properties.Settings.Default.SoundTouch_OVERLAP_MS);
+            }
+            if (Properties.Settings.Default.SoundTouch_SEQUENCE_MS != -1)
+            {
+                m_soundTouchSharp.SetSetting(SoundTouchSharp.SoundTouchSettings.SETTING_SEQUENCE_MS, Properties.Settings.Default.SoundTouch_SEQUENCE_MS);
+            }
+            if (Properties.Settings.Default.SoundTouch_SEEKWINDOW_MS != -1)
+            {
+                m_soundTouchSharp.SetSetting(SoundTouchSharp.SoundTouchSettings.SETTING_SEEKWINDOW_MS, Properties.Settings.Default.SoundTouch_SEEKWINDOW_MS);
+            }
         }
 
         /// <summary>

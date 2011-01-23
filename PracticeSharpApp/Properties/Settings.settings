@@ -11,9 +11,6 @@
     <Setting Name="ApplicationVersion" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="LastVersionCheckDateTime" Type="System.DateTime" Scope="User">
-      <Value Profile="(Default)">11/27/2010 12:00:00</Value>
-    </Setting>
     <Setting Name="SupressVersionCheck" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
@@ -22,6 +19,24 @@
     </Setting>
     <Setting Name="Latency" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">125</Value>
+    </Setting>
+    <Setting Name="LastVersionCheckDateTime" Type="System.DateTime" Scope="User">
+      <Value Profile="(Default)">12/18/2010 12:00:00</Value>
+    </Setting>
+    <Setting Name="SoundTouch_USE_AA_FILTER" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">1</Value>
+    </Setting>
+    <Setting Name="SoundTouch_AA_FILTER_LENGTH" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">128</Value>
+    </Setting>
+    <Setting Name="SoundTouch_SEQUENCE_MS" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">-1</Value>
+    </Setting>
+    <Setting Name="SoundTouch_SEEKWINDOW_MS" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">-1</Value>
+    </Setting>
+    <Setting Name="SoundTouch_OVERLAP_MS" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">-1</Value>
     </Setting>
   </Settings>
 </SettingsFile>
