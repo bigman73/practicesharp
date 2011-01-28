@@ -89,6 +89,7 @@ namespace BigMansStuff.PracticeSharp.UI
                 elPreset.SetAttribute(PresetBankFile.XML_Attr_Cue, presetData.Cue.ToString());
                 elPreset.SetAttribute(PresetBankFile.XML_Attr_IsLoop, presetData.Loop.ToString());
                 elPreset.SetAttribute(PresetBankFile.XML_Attr_Description, presetData.Description);
+                elPreset.SetAttribute(PresetBankFile.XML_Attr_TimeStretchProfileId, presetData.TimeStretchProfile.Id);
             }
 
             // Write to XML file
@@ -141,6 +142,18 @@ namespace BigMansStuff.PracticeSharp.UI
                     presetData.Loop = Convert.ToBoolean(presetNode.Attributes[PresetBankFile.XML_Attr_IsLoop].Value);
                     presetData.Cue = TimeSpan.Parse(presetNode.Attributes[PresetBankFile.XML_Attr_Cue].Value);
                     presetData.Description = Convert.ToString(presetNode.Attributes[PresetBankFile.XML_Attr_Description].Value);
+
+                    TimeStretchProfile timeStretchProfile = TimeStretchProfileManager.DefaultProfile;
+                    if (presetNode.Attributes[PresetBankFile.XML_Attr_TimeStretchProfileId] != null)
+                    {
+                        string timeStretchProfileId = Convert.ToString(presetNode.Attributes[PresetBankFile.XML_Attr_TimeStretchProfileId].Value);
+                        if (!TimeStretchProfileManager.TimeStretchProfiles.TryGetValue(timeStretchProfileId, out timeStretchProfile))
+                        {
+                            // Handle a mismatched profile by using the default profile
+                            timeStretchProfile = TimeStretchProfileManager.DefaultProfile;
+                        }
+                    }
+                    presetData.TimeStretchProfile = timeStretchProfile;
 
                     PresetControl presetControl = presetControls[presetId];
                     presetControl.PresetDescription = presetData.Description;
@@ -218,6 +231,7 @@ namespace BigMansStuff.PracticeSharp.UI
         const string XML_Attr_IsLoop = "IsLoop";
         const string XML_Attr_Cue = "Cue";
         const string XML_Attr_Description = "Description";
+        const string XML_Attr_TimeStretchProfileId = "TimeStretchProfileId";
 
         #endregion
     }

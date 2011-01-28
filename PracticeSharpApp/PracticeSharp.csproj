@@ -82,6 +82,8 @@
     <Compile Include="Core\PracticeSharpLogic.cs" />
     <Compile Include="Core\SoundTouchSharp.cs" />
     <Compile Include="Core\PresetData.cs" />
+    <Compile Include="Core\TimeStretchProfile.cs" />
+    <Compile Include="Core\TimeStretchProfileManager.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources.Designer.cs">

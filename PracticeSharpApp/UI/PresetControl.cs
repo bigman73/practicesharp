@@ -176,7 +176,6 @@ namespace BigMansStuff.PracticeSharp.UI
             }
         }
 
-
         /// <summary>
         /// Property for the Preset Data that contains the actual preset values
         /// </summary>

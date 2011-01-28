@@ -1,6 +1,8 @@
 ﻿using System;
 using NAudio.Wave;
+using NAudio.WindowsMediaFormat;
 using BigMansStuff.NAudio.WMA;
+using System.IO;
 
 namespace BigMansStuff.NAudio.WMA
 {
@@ -10,7 +12,7 @@ namespace BigMansStuff.NAudio.WMA
         {
             IWavePlayer waveOutDevice;
             WaveStream mainOutputStream;
-            string fileName = @"C:\Users\Yuval\Sources\PracticeSharpProject\Audio\test.wma";
+            string fileName = @"C:\Users\Yuval\Sources\PracticeSharpProject\Audio\Ringtone 01.wma";
 
             Console.WriteLine("Initiailizing NAudio");
             try
@@ -75,7 +77,19 @@ namespace BigMansStuff.NAudio.WMA
             }
             else if (fileName.EndsWith(".wma"))
             {
-                readerStream = new WMAFileReader(fileName);
+//                readerStream = new WMAFileReader2(fileName);
+
+                MemoryStream memoryStream = new MemoryStream();
+                using ( FileStream infile = new FileStream(fileName, FileMode.Open, FileAccess.Read) )
+                {
+                    while (infile.Position < infile.Length)
+                    {
+                        byte data = (byte) infile.ReadByte();
+                        memoryStream.WriteByte( data );
+                    }
+                }
+                memoryStream.Position = 0;
+                readerStream = new WMAFileReader2(memoryStream);
             }
             else
             {

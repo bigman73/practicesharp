@@ -60,6 +60,8 @@ namespace BigMansStuff.PracticeSharp.Core
         public float MedEqValue { get; set; }
         public float HiEqValue { get; set; }
 
+        public TimeStretchProfile TimeStretchProfile { get; set; }
+
         #endregion
 
         #region Public Methods
@@ -82,6 +84,8 @@ namespace BigMansStuff.PracticeSharp.Core
             LoEqValue = DefaultLoEq;
             MedEqValue = DefaultMedEq;
             HiEqValue = DefaultHiEq;
+
+            TimeStretchProfile = TimeStretchProfileManager.DefaultProfile;
         }
         #endregion
 

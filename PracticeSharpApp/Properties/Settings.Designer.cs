@@ -85,18 +85,6 @@ namespace BigMansStuff.PracticeSharp.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("125")]
-        public int Latency {
-            get {
-                return ((int)(this["Latency"]));
-            }
-            set {
-                this["Latency"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("12/18/2010 12:00:00")]
         public global::System.DateTime LastVersionCheckDateTime {
             get {
@@ -109,61 +97,13 @@ namespace BigMansStuff.PracticeSharp.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1")]
-        public int SoundTouch_USE_AA_FILTER {
+        [global::System.Configuration.DefaultSettingValueAttribute("150")]
+        public int Latency {
             get {
-                return ((int)(this["SoundTouch_USE_AA_FILTER"]));
+                return ((int)(this["Latency"]));
             }
             set {
-                this["SoundTouch_USE_AA_FILTER"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("128")]
-        public int SoundTouch_AA_FILTER_LENGTH {
-            get {
-                return ((int)(this["SoundTouch_AA_FILTER_LENGTH"]));
-            }
-            set {
-                this["SoundTouch_AA_FILTER_LENGTH"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("-1")]
-        public int SoundTouch_SEQUENCE_MS {
-            get {
-                return ((int)(this["SoundTouch_SEQUENCE_MS"]));
-            }
-            set {
-                this["SoundTouch_SEQUENCE_MS"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("-1")]
-        public int SoundTouch_SEEKWINDOW_MS {
-            get {
-                return ((int)(this["SoundTouch_SEEKWINDOW_MS"]));
-            }
-            set {
-                this["SoundTouch_SEEKWINDOW_MS"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("-1")]
-        public int SoundTouch_OVERLAP_MS {
-            get {
-                return ((int)(this["SoundTouch_OVERLAP_MS"]));
-            }
-            set {
-                this["SoundTouch_OVERLAP_MS"] = value;
+                this["Latency"] = value;
             }
         }
     }

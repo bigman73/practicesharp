@@ -57,8 +57,11 @@
     <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="ComStreamWrapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WMAFileReader.cs" />
+    <Compile Include="WmaFileReader2.cs" />
+    <Compile Include="WmaStream2.cs" />
     <Compile Include="yeti.wmfsdk\BufferTypes.cs" />
     <Compile Include="yeti.wmfsdk\CommonTypes.cs" />
     <Compile Include="yeti.wmfsdk\MediaTypes.cs" />

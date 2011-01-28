@@ -140,6 +140,21 @@ namespace BigMansStuff.PracticeSharp.UI
             pitchTrackBar_ValueChanged(this, new EventArgs());
             volumeTrackBar_ValueChanged(this, new EventArgs());
             playTimeTrackBar_ValueChanged(this, new EventArgs());
+
+            // Load Time Stretch Profiles
+            TimeStretchProfileManager.Initialize();
+            int defaultProfileIndex = 0;
+            foreach (TimeStretchProfile timeStretchProfile in TimeStretchProfileManager.TimeStretchProfiles.Values)
+            {
+                int itemIndex = timeStretchProfileComboBox.Items.Add(timeStretchProfile);
+                if (timeStretchProfile == TimeStretchProfileManager.DefaultProfile)
+                {
+                    defaultProfileIndex = itemIndex;
+                }
+            }
+
+            // Select default profile
+            timeStretchProfileComboBox.SelectedIndex = defaultProfileIndex;
         }
        
         /// <summary>
@@ -529,6 +544,7 @@ namespace BigMansStuff.PracticeSharp.UI
                     presetControl.PresetData.Cue = m_practiceSharpLogic.Cue;
                     presetControl.PresetData.Loop = m_practiceSharpLogic.Loop;
                     presetControl.PresetData.Description = presetControl.PresetDescription;
+                    presetControl.PresetData.TimeStretchProfile = m_practiceSharpLogic.TimeStretchProfile;
                 }
             }
 
@@ -756,6 +772,11 @@ namespace BigMansStuff.PracticeSharp.UI
         {
             m_practiceSharpLogic.Cue = new TimeSpan(0, 0, Convert.ToInt32(cueComboBox.Text));
         }
+
+        private void timeStretchProfileComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            m_practiceSharpLogic.TimeStretchProfile = timeStretchProfileComboBox.Items[timeStretchProfileComboBox.SelectedIndex] as TimeStretchProfile;
+        } 
 
         #region Menu Items
 
@@ -1757,6 +1778,18 @@ namespace BigMansStuff.PracticeSharp.UI
             cueComboBox.SelectedIndex = cueItemIndex;
             loopCheckBox.Checked = presetData.Loop;
             positionMarkersPanel.Refresh();
+
+            // Find matching Time Stretch Profile
+            for ( int itemIndex = 0; itemIndex < timeStretchProfileComboBox.Items.Count; itemIndex++ )
+            {
+                TimeStretchProfile profile = timeStretchProfileComboBox.Items[itemIndex] as TimeStretchProfile;
+                if (profile.Id == presetData.TimeStretchProfile.Id)
+                {
+                    timeStretchProfileComboBox.SelectedIndex = itemIndex;
+                    break;
+                }
+            }
+            timeStretchProfileComboBox.SelectedValue = presetData.TimeStretchProfile;
         }
 
         #endregion
@@ -1810,12 +1843,9 @@ namespace BigMansStuff.PracticeSharp.UI
 
         const int MaxRecentDisplayLength = 60;
 
-        const int MaskOutInterval = 450;
+        const int MaskOutInterval = 450; // msec
 
-        private void openFileDialog_FileOk(object sender, CancelEventArgs e)
-        {
-
-        } // msec
+      
 
         #endregion
     }

@@ -52,10 +52,10 @@ namespace BigMansStuff.PracticeSharp.UI
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            BigMansStuff.PracticeSharp.Core.PresetData presetData5 = new BigMansStuff.PracticeSharp.Core.PresetData();
-            BigMansStuff.PracticeSharp.Core.PresetData presetData6 = new BigMansStuff.PracticeSharp.Core.PresetData();
-            BigMansStuff.PracticeSharp.Core.PresetData presetData7 = new BigMansStuff.PracticeSharp.Core.PresetData();
-            BigMansStuff.PracticeSharp.Core.PresetData presetData8 = new BigMansStuff.PracticeSharp.Core.PresetData();
+            BigMansStuff.PracticeSharp.Core.PresetData presetData1 = new BigMansStuff.PracticeSharp.Core.PresetData();
+            BigMansStuff.PracticeSharp.Core.PresetData presetData2 = new BigMansStuff.PracticeSharp.Core.PresetData();
+            BigMansStuff.PracticeSharp.Core.PresetData presetData3 = new BigMansStuff.PracticeSharp.Core.PresetData();
+            BigMansStuff.PracticeSharp.Core.PresetData presetData4 = new BigMansStuff.PracticeSharp.Core.PresetData();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.tempoTrackBar = new System.Windows.Forms.TrackBar();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
@@ -133,6 +133,8 @@ namespace BigMansStuff.PracticeSharp.UI
             this.pitch0Label = new System.Windows.Forms.Label();
             this.pitchTrackBar = new System.Windows.Forms.TrackBar();
             this.trackBarPanel = new System.Windows.Forms.Panel();
+            this.timeStretchProfileComboBox = new System.Windows.Forms.ComboBox();
+            this.timeStretchProfileLabel = new System.Windows.Forms.Label();
             this.hiEqValueLabel = new System.Windows.Forms.Label();
             this.medEqValueLabel = new System.Windows.Forms.Label();
             this.loEqValueLabel = new System.Windows.Forms.Label();
@@ -208,7 +210,6 @@ namespace BigMansStuff.PracticeSharp.UI
             // 
             this.openFileDialog.Filter = "All Music Files|*.mp3;*.wav;*.ogg;*.flac;*.wma|MP3 files|*.mp3|WAV files|*.wav|Og" +
                 "g Vorbis files|*.ogg|FLAC files|*.flac|WMA files|*.wma";
-            this.openFileDialog.FileOk += new System.ComponentModel.CancelEventHandler(this.openFileDialog_FileOk);
             // 
             // volumeTrackBar
             // 
@@ -716,19 +717,20 @@ namespace BigMansStuff.PracticeSharp.UI
             this.presetControl3.Id = "3";
             this.presetControl3.Location = new System.Drawing.Point(336, 3);
             this.presetControl3.Name = "presetControl3";
-            presetData5.Cue = System.TimeSpan.Parse("00:00:00");
-            presetData5.CurrentPlayTime = System.TimeSpan.Parse("00:00:00");
-            presetData5.Description = "";
-            presetData5.EndMarker = System.TimeSpan.Parse("00:00:00");
-            presetData5.HiEqValue = 0F;
-            presetData5.LoEqValue = 0F;
-            presetData5.Loop = false;
-            presetData5.MedEqValue = 0F;
-            presetData5.Pitch = 0F;
-            presetData5.StartMarker = System.TimeSpan.Parse("00:00:00");
-            presetData5.Tempo = 1F;
-            presetData5.Volume = 0.5F;
-            this.presetControl3.PresetData = presetData5;
+            presetData1.Cue = System.TimeSpan.Parse("00:00:00");
+            presetData1.CurrentPlayTime = System.TimeSpan.Parse("00:00:00");
+            presetData1.Description = "";
+            presetData1.EndMarker = System.TimeSpan.Parse("00:00:00");
+            presetData1.HiEqValue = 0F;
+            presetData1.LoEqValue = 0F;
+            presetData1.Loop = false;
+            presetData1.MedEqValue = 0F;
+            presetData1.Pitch = 0F;
+            presetData1.StartMarker = System.TimeSpan.Parse("00:00:00");
+            presetData1.Tempo = 1F;
+            presetData1.TimeStretchProfile = null;
+            presetData1.Volume = 0.5F;
+            this.presetControl3.PresetData = presetData1;
             this.presetControl3.PresetDescription = "";
             this.presetControl3.Size = new System.Drawing.Size(101, 118);
             this.presetControl3.State = BigMansStuff.PracticeSharp.UI.PresetControl.PresetStates.Off;
@@ -744,19 +746,20 @@ namespace BigMansStuff.PracticeSharp.UI
             this.presetControl1.Id = "1";
             this.presetControl1.Location = new System.Drawing.Point(83, 3);
             this.presetControl1.Name = "presetControl1";
-            presetData6.Cue = System.TimeSpan.Parse("00:00:00");
-            presetData6.CurrentPlayTime = System.TimeSpan.Parse("00:00:00");
-            presetData6.Description = "";
-            presetData6.EndMarker = System.TimeSpan.Parse("00:00:00");
-            presetData6.HiEqValue = 0F;
-            presetData6.LoEqValue = 0F;
-            presetData6.Loop = false;
-            presetData6.MedEqValue = 0F;
-            presetData6.Pitch = 0F;
-            presetData6.StartMarker = System.TimeSpan.Parse("00:00:00");
-            presetData6.Tempo = 1F;
-            presetData6.Volume = 0.5F;
-            this.presetControl1.PresetData = presetData6;
+            presetData2.Cue = System.TimeSpan.Parse("00:00:00");
+            presetData2.CurrentPlayTime = System.TimeSpan.Parse("00:00:00");
+            presetData2.Description = "";
+            presetData2.EndMarker = System.TimeSpan.Parse("00:00:00");
+            presetData2.HiEqValue = 0F;
+            presetData2.LoEqValue = 0F;
+            presetData2.Loop = false;
+            presetData2.MedEqValue = 0F;
+            presetData2.Pitch = 0F;
+            presetData2.StartMarker = System.TimeSpan.Parse("00:00:00");
+            presetData2.Tempo = 1F;
+            presetData2.TimeStretchProfile = null;
+            presetData2.Volume = 0.5F;
+            this.presetControl1.PresetData = presetData2;
             this.presetControl1.PresetDescription = "";
             this.presetControl1.Size = new System.Drawing.Size(101, 118);
             this.presetControl1.State = BigMansStuff.PracticeSharp.UI.PresetControl.PresetStates.Off;
@@ -772,19 +775,20 @@ namespace BigMansStuff.PracticeSharp.UI
             this.presetControl2.Id = "2";
             this.presetControl2.Location = new System.Drawing.Point(209, 3);
             this.presetControl2.Name = "presetControl2";
-            presetData7.Cue = System.TimeSpan.Parse("00:00:00");
-            presetData7.CurrentPlayTime = System.TimeSpan.Parse("00:00:00");
-            presetData7.Description = "";
-            presetData7.EndMarker = System.TimeSpan.Parse("00:00:00");
-            presetData7.HiEqValue = 0F;
-            presetData7.LoEqValue = 0F;
-            presetData7.Loop = false;
-            presetData7.MedEqValue = 0F;
-            presetData7.Pitch = 0F;
-            presetData7.StartMarker = System.TimeSpan.Parse("00:00:00");
-            presetData7.Tempo = 1F;
-            presetData7.Volume = 0.5F;
-            this.presetControl2.PresetData = presetData7;
+            presetData3.Cue = System.TimeSpan.Parse("00:00:00");
+            presetData3.CurrentPlayTime = System.TimeSpan.Parse("00:00:00");
+            presetData3.Description = "";
+            presetData3.EndMarker = System.TimeSpan.Parse("00:00:00");
+            presetData3.HiEqValue = 0F;
+            presetData3.LoEqValue = 0F;
+            presetData3.Loop = false;
+            presetData3.MedEqValue = 0F;
+            presetData3.Pitch = 0F;
+            presetData3.StartMarker = System.TimeSpan.Parse("00:00:00");
+            presetData3.Tempo = 1F;
+            presetData3.TimeStretchProfile = null;
+            presetData3.Volume = 0.5F;
+            this.presetControl2.PresetData = presetData3;
             this.presetControl2.PresetDescription = "";
             this.presetControl2.Size = new System.Drawing.Size(101, 118);
             this.presetControl2.State = BigMansStuff.PracticeSharp.UI.PresetControl.PresetStates.Off;
@@ -800,19 +804,20 @@ namespace BigMansStuff.PracticeSharp.UI
             this.presetControl4.Id = "4";
             this.presetControl4.Location = new System.Drawing.Point(464, 3);
             this.presetControl4.Name = "presetControl4";
-            presetData8.Cue = System.TimeSpan.Parse("00:00:00");
-            presetData8.CurrentPlayTime = System.TimeSpan.Parse("00:00:00");
-            presetData8.Description = "";
-            presetData8.EndMarker = System.TimeSpan.Parse("00:00:00");
-            presetData8.HiEqValue = 0F;
-            presetData8.LoEqValue = 0F;
-            presetData8.Loop = false;
-            presetData8.MedEqValue = 0F;
-            presetData8.Pitch = 0F;
-            presetData8.StartMarker = System.TimeSpan.Parse("00:00:00");
-            presetData8.Tempo = 1F;
-            presetData8.Volume = 0.5F;
-            this.presetControl4.PresetData = presetData8;
+            presetData4.Cue = System.TimeSpan.Parse("00:00:00");
+            presetData4.CurrentPlayTime = System.TimeSpan.Parse("00:00:00");
+            presetData4.Description = "";
+            presetData4.EndMarker = System.TimeSpan.Parse("00:00:00");
+            presetData4.HiEqValue = 0F;
+            presetData4.LoEqValue = 0F;
+            presetData4.Loop = false;
+            presetData4.MedEqValue = 0F;
+            presetData4.Pitch = 0F;
+            presetData4.StartMarker = System.TimeSpan.Parse("00:00:00");
+            presetData4.Tempo = 1F;
+            presetData4.TimeStretchProfile = null;
+            presetData4.Volume = 0.5F;
+            this.presetControl4.PresetData = presetData4;
             this.presetControl4.PresetDescription = "";
             this.presetControl4.Size = new System.Drawing.Size(101, 118);
             this.presetControl4.State = BigMansStuff.PracticeSharp.UI.PresetControl.PresetStates.Off;
@@ -1035,7 +1040,7 @@ namespace BigMansStuff.PracticeSharp.UI
             this.pitchM05Label.AutoSize = true;
             this.pitchM05Label.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.pitchM05Label.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.pitchM05Label.Location = new System.Drawing.Point(118, 123);
+            this.pitchM05Label.Location = new System.Drawing.Point(118, 112);
             this.pitchM05Label.Name = "pitchM05Label";
             this.pitchM05Label.Size = new System.Drawing.Size(21, 12);
             this.pitchM05Label.TabIndex = 72;
@@ -1046,7 +1051,7 @@ namespace BigMansStuff.PracticeSharp.UI
             this.pitch05Label.AutoSize = true;
             this.pitch05Label.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.pitch05Label.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.pitch05Label.Location = new System.Drawing.Point(249, 122);
+            this.pitch05Label.Location = new System.Drawing.Point(249, 111);
             this.pitch05Label.Name = "pitch05Label";
             this.pitch05Label.Size = new System.Drawing.Size(23, 12);
             this.pitch05Label.TabIndex = 71;
@@ -1055,7 +1060,7 @@ namespace BigMansStuff.PracticeSharp.UI
             // pitchValueLabel
             // 
             this.pitchValueLabel.AutoSize = true;
-            this.pitchValueLabel.Location = new System.Drawing.Point(10, 122);
+            this.pitchValueLabel.Location = new System.Drawing.Point(10, 111);
             this.pitchValueLabel.Name = "pitchValueLabel";
             this.pitchValueLabel.Size = new System.Drawing.Size(10, 13);
             this.pitchValueLabel.TabIndex = 3;
@@ -1066,7 +1071,7 @@ namespace BigMansStuff.PracticeSharp.UI
             this.pitch1Label.AutoSize = true;
             this.pitch1Label.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.pitch1Label.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.pitch1Label.Location = new System.Drawing.Point(315, 122);
+            this.pitch1Label.Location = new System.Drawing.Point(315, 111);
             this.pitch1Label.Name = "pitch1Label";
             this.pitch1Label.Size = new System.Drawing.Size(15, 12);
             this.pitch1Label.TabIndex = 68;
@@ -1077,7 +1082,7 @@ namespace BigMansStuff.PracticeSharp.UI
             this.pitchM1Label.AutoSize = true;
             this.pitchM1Label.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.pitchM1Label.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.pitchM1Label.Location = new System.Drawing.Point(51, 122);
+            this.pitchM1Label.Location = new System.Drawing.Point(51, 111);
             this.pitchM1Label.Name = "pitchM1Label";
             this.pitchM1Label.Size = new System.Drawing.Size(13, 12);
             this.pitchM1Label.TabIndex = 67;
@@ -1088,7 +1093,7 @@ namespace BigMansStuff.PracticeSharp.UI
             this.pitch0Label.AutoSize = true;
             this.pitch0Label.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.pitch0Label.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.pitch0Label.Location = new System.Drawing.Point(188, 123);
+            this.pitch0Label.Location = new System.Drawing.Point(188, 112);
             this.pitch0Label.Name = "pitch0Label";
             this.pitch0Label.Size = new System.Drawing.Size(10, 12);
             this.pitch0Label.TabIndex = 66;
@@ -1097,7 +1102,7 @@ namespace BigMansStuff.PracticeSharp.UI
             // pitchTrackBar
             // 
             this.pitchTrackBar.LargeChange = 16;
-            this.pitchTrackBar.Location = new System.Drawing.Point(51, 139);
+            this.pitchTrackBar.Location = new System.Drawing.Point(51, 128);
             this.pitchTrackBar.Maximum = 96;
             this.pitchTrackBar.Minimum = -96;
             this.pitchTrackBar.Name = "pitchTrackBar";
@@ -1111,6 +1116,8 @@ namespace BigMansStuff.PracticeSharp.UI
             // 
             // trackBarPanel
             // 
+            this.trackBarPanel.Controls.Add(this.timeStretchProfileComboBox);
+            this.trackBarPanel.Controls.Add(this.timeStretchProfileLabel);
             this.trackBarPanel.Controls.Add(this.hiEqValueLabel);
             this.trackBarPanel.Controls.Add(this.medEqValueLabel);
             this.trackBarPanel.Controls.Add(this.loEqValueLabel);
@@ -1160,6 +1167,26 @@ namespace BigMansStuff.PracticeSharp.UI
             this.trackBarPanel.Name = "trackBarPanel";
             this.trackBarPanel.Size = new System.Drawing.Size(584, 266);
             this.trackBarPanel.TabIndex = 1;
+            // 
+            // timeStretchProfileComboBox
+            // 
+            this.timeStretchProfileComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.timeStretchProfileComboBox.FormattingEnabled = true;
+            this.timeStretchProfileComboBox.Location = new System.Drawing.Point(137, 184);
+            this.timeStretchProfileComboBox.Name = "timeStretchProfileComboBox";
+            this.timeStretchProfileComboBox.Size = new System.Drawing.Size(193, 21);
+            this.timeStretchProfileComboBox.TabIndex = 88;
+            this.timeStretchProfileComboBox.SelectedIndexChanged += new System.EventHandler(this.timeStretchProfileComboBox_SelectedIndexChanged);
+            // 
+            // timeStretchProfileLabel
+            // 
+            this.timeStretchProfileLabel.AutoSize = true;
+            this.timeStretchProfileLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.timeStretchProfileLabel.Location = new System.Drawing.Point(3, 187);
+            this.timeStretchProfileLabel.Name = "timeStretchProfileLabel";
+            this.timeStretchProfileLabel.Size = new System.Drawing.Size(123, 13);
+            this.timeStretchProfileLabel.TabIndex = 87;
+            this.timeStretchProfileLabel.Text = "Time Stretch Profile:";
             // 
             // hiEqValueLabel
             // 
@@ -1325,7 +1352,7 @@ namespace BigMansStuff.PracticeSharp.UI
             // 
             this.pitchLabel.AutoSize = true;
             this.pitchLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.pitchLabel.Location = new System.Drawing.Point(6, 149);
+            this.pitchLabel.Location = new System.Drawing.Point(6, 138);
             this.pitchLabel.Name = "pitchLabel";
             this.pitchLabel.Size = new System.Drawing.Size(36, 13);
             this.pitchLabel.TabIndex = 4;
@@ -1616,6 +1643,8 @@ namespace BigMansStuff.PracticeSharp.UI
         private System.Windows.Forms.Label hiEqValueLabel;
         private System.Windows.Forms.Label medEqValueLabel;
         private System.Windows.Forms.Label loEqValueLabel;
+        private System.Windows.Forms.ComboBox timeStretchProfileComboBox;
+        private System.Windows.Forms.Label timeStretchProfileLabel;
     }
 }
 
