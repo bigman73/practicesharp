@@ -1040,7 +1040,7 @@ namespace BigMansStuff.PracticeSharp.UI
             this.pitchM05Label.AutoSize = true;
             this.pitchM05Label.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.pitchM05Label.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.pitchM05Label.Location = new System.Drawing.Point(118, 112);
+            this.pitchM05Label.Location = new System.Drawing.Point(118, 125);
             this.pitchM05Label.Name = "pitchM05Label";
             this.pitchM05Label.Size = new System.Drawing.Size(21, 12);
             this.pitchM05Label.TabIndex = 72;
@@ -1051,7 +1051,7 @@ namespace BigMansStuff.PracticeSharp.UI
             this.pitch05Label.AutoSize = true;
             this.pitch05Label.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.pitch05Label.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.pitch05Label.Location = new System.Drawing.Point(249, 111);
+            this.pitch05Label.Location = new System.Drawing.Point(249, 124);
             this.pitch05Label.Name = "pitch05Label";
             this.pitch05Label.Size = new System.Drawing.Size(23, 12);
             this.pitch05Label.TabIndex = 71;
@@ -1060,7 +1060,7 @@ namespace BigMansStuff.PracticeSharp.UI
             // pitchValueLabel
             // 
             this.pitchValueLabel.AutoSize = true;
-            this.pitchValueLabel.Location = new System.Drawing.Point(10, 111);
+            this.pitchValueLabel.Location = new System.Drawing.Point(10, 124);
             this.pitchValueLabel.Name = "pitchValueLabel";
             this.pitchValueLabel.Size = new System.Drawing.Size(10, 13);
             this.pitchValueLabel.TabIndex = 3;
@@ -1071,7 +1071,7 @@ namespace BigMansStuff.PracticeSharp.UI
             this.pitch1Label.AutoSize = true;
             this.pitch1Label.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.pitch1Label.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.pitch1Label.Location = new System.Drawing.Point(315, 111);
+            this.pitch1Label.Location = new System.Drawing.Point(315, 124);
             this.pitch1Label.Name = "pitch1Label";
             this.pitch1Label.Size = new System.Drawing.Size(15, 12);
             this.pitch1Label.TabIndex = 68;
@@ -1082,7 +1082,7 @@ namespace BigMansStuff.PracticeSharp.UI
             this.pitchM1Label.AutoSize = true;
             this.pitchM1Label.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.pitchM1Label.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.pitchM1Label.Location = new System.Drawing.Point(51, 111);
+            this.pitchM1Label.Location = new System.Drawing.Point(51, 124);
             this.pitchM1Label.Name = "pitchM1Label";
             this.pitchM1Label.Size = new System.Drawing.Size(13, 12);
             this.pitchM1Label.TabIndex = 67;
@@ -1093,7 +1093,7 @@ namespace BigMansStuff.PracticeSharp.UI
             this.pitch0Label.AutoSize = true;
             this.pitch0Label.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.pitch0Label.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.pitch0Label.Location = new System.Drawing.Point(188, 112);
+            this.pitch0Label.Location = new System.Drawing.Point(188, 125);
             this.pitch0Label.Name = "pitch0Label";
             this.pitch0Label.Size = new System.Drawing.Size(10, 12);
             this.pitch0Label.TabIndex = 66;
@@ -1102,7 +1102,7 @@ namespace BigMansStuff.PracticeSharp.UI
             // pitchTrackBar
             // 
             this.pitchTrackBar.LargeChange = 16;
-            this.pitchTrackBar.Location = new System.Drawing.Point(51, 128);
+            this.pitchTrackBar.Location = new System.Drawing.Point(51, 141);
             this.pitchTrackBar.Maximum = 96;
             this.pitchTrackBar.Minimum = -96;
             this.pitchTrackBar.Name = "pitchTrackBar";
@@ -1176,6 +1176,7 @@ namespace BigMansStuff.PracticeSharp.UI
             this.timeStretchProfileComboBox.Name = "timeStretchProfileComboBox";
             this.timeStretchProfileComboBox.Size = new System.Drawing.Size(193, 21);
             this.timeStretchProfileComboBox.TabIndex = 88;
+            this.timeStretchProfileComboBox.Visible = false;
             this.timeStretchProfileComboBox.SelectedIndexChanged += new System.EventHandler(this.timeStretchProfileComboBox_SelectedIndexChanged);
             // 
             // timeStretchProfileLabel
@@ -1187,6 +1188,7 @@ namespace BigMansStuff.PracticeSharp.UI
             this.timeStretchProfileLabel.Size = new System.Drawing.Size(123, 13);
             this.timeStretchProfileLabel.TabIndex = 87;
             this.timeStretchProfileLabel.Text = "Time Stretch Profile:";
+            this.timeStretchProfileLabel.Visible = false;
             // 
             // hiEqValueLabel
             // 
@@ -1352,7 +1354,7 @@ namespace BigMansStuff.PracticeSharp.UI
             // 
             this.pitchLabel.AutoSize = true;
             this.pitchLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.pitchLabel.Location = new System.Drawing.Point(6, 138);
+            this.pitchLabel.Location = new System.Drawing.Point(6, 151);
             this.pitchLabel.Name = "pitchLabel";
             this.pitchLabel.Size = new System.Drawing.Size(36, 13);
             this.pitchLabel.TabIndex = 4;

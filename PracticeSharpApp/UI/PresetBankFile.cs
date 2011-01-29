@@ -130,7 +130,7 @@ namespace BigMansStuff.PracticeSharp.UI
                     PresetData presetData = presetControls[presetId].PresetData;
                     presetData.Tempo = ReadXMLAttributeFloat(presetNode, PresetBankFile.XML_Attr_Tempo, PresetData.DefaultTempo);
                     presetData.Pitch = ReadXMLAttributeFloat(presetNode, PresetBankFile.XML_Attr_Pitch, PresetData.DefaultPitch);
-                    presetData.Volume = ReadXMLAttributeFloat(presetNode, PresetBankFile.XML_Attr_Volume, PresetData.DefaultVolume);
+                    presetData.Volume = ReadXMLAttributeFloat(presetNode, PresetBankFile.XML_Attr_Volume, Properties.Settings.Default.DefaultVolume);
 
                     presetData.LoEqValue = ReadXMLAttributeFloat(presetNode, PresetBankFile.XML_Attr_LoEq, PresetData.DefaultLoEq);
                     presetData.MedEqValue = ReadXMLAttributeFloat(presetNode, PresetBankFile.XML_Attr_MedEq, PresetData.DefaultMedEq);

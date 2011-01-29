@@ -141,8 +141,22 @@ namespace BigMansStuff.PracticeSharp.UI
             volumeTrackBar_ValueChanged(this, new EventArgs());
             playTimeTrackBar_ValueChanged(this, new EventArgs());
 
+            InitializeTimeStretchProfiles();
+        }
+
+        /// <summary>
+        /// Initialize time stretch profiles and their UI controls
+        /// </summary>
+        private void InitializeTimeStretchProfiles()
+        {
             // Load Time Stretch Profiles
             TimeStretchProfileManager.Initialize();
+
+            if (Properties.Settings.Default.ShowTimeStretchProfilesControls)
+            {
+                timeStretchProfileLabel.Visible = true;
+                timeStretchProfileComboBox.Visible = true;
+            }
             int defaultProfileIndex = 0;
             foreach (TimeStretchProfile timeStretchProfile in TimeStretchProfileManager.TimeStretchProfiles.Values)
             {
@@ -299,6 +313,14 @@ namespace BigMansStuff.PracticeSharp.UI
             else if (!e.Control && !e.Alt && !e.Shift && e.KeyCode == Keys.F1)
             {
                 aboutMenuItem.PerformClick();
+                e.Handled = true;
+            }
+            else if (e.Control && e.Alt && !e.Shift && e.KeyCode == Keys.P)
+            {
+                // toggle visibility of Time Stretch Profile' UI Controls
+                timeStretchProfileLabel.Visible = !timeStretchProfileLabel.Visible;
+                timeStretchProfileComboBox.Visible = !timeStretchProfileComboBox.Visible;
+
                 e.Handled = true;
             }
         }
@@ -721,7 +743,7 @@ namespace BigMansStuff.PracticeSharp.UI
         /// <param name="e"></param>
         private void volumeLabel_Click(object sender, EventArgs e)
         {
-            volumeTrackBar.Value = Convert.ToInt32( PresetData.DefaultVolume * 100 );
+            volumeTrackBar.Value = Convert.ToInt32(Properties.Settings.Default.DefaultVolume * 100);
         }
 
         /// <summary>

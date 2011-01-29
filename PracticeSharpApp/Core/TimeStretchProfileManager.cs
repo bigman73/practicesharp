@@ -57,13 +57,13 @@ namespace BigMansStuff.PracticeSharp.Core
             TimeStretchProfiles.Add(profile.Id, profile);
 
             profile = new TimeStretchProfile();
-            profile.Id = "Practice#_Speech";
-            profile.UseAAFilter = false;
+            profile.Id = "Practice#_Optimum";
+            profile.UseAAFilter = true;
             profile.AAFilterLength = 128;
-            profile.SeekWindow = 30;
-            profile.Sequence = 8;
-            profile.Overlap = 8;
-            profile.Description = "Speech 2 w/o AA Filter";
+            profile.SeekWindow = 80;
+            profile.Sequence = 20;
+            profile.Overlap = 20;
+            profile.Description = "Optimum for Music and Speech";
             TimeStretchProfiles.Add(profile.Id, profile);
 
             if (TimeStretchProfiles.TryGetValue(Properties.Settings.Default.DefaultTimeStretchProfile, out profile))

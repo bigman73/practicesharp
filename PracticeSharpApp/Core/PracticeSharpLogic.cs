@@ -231,7 +231,7 @@ namespace BigMansStuff.PracticeSharp.Core
         public float Tempo
         {
             get { lock (TempoLock) return m_tempo; }
-            set { lock (TempoLock) { m_tempo = value; } }
+            set { lock (TempoLock) { m_tempo = value; m_tempoChanged = true; } }
         }
 
         /// <summary>
@@ -247,7 +247,7 @@ namespace BigMansStuff.PracticeSharp.Core
         public float Pitch
         {
             get { lock (PropertiesLock) return m_pitch; }
-            set { lock (PropertiesLock) { m_pitch = value; } }
+            set { lock (PropertiesLock) { m_pitch = value; m_pitchChanged = true; } }
         }
 
         /// <summary>
@@ -893,11 +893,23 @@ namespace BigMansStuff.PracticeSharp.Core
 
         private void ApplySoundTouchTimeStretchProfile()
         {
-            m_soundTouchSharp.SetSetting(SoundTouchSharp.SoundTouchSettings.SETTING_USE_AA_FILTER, m_timeStretchProfile.UseAAFilter ? 1 : 0);
-            m_soundTouchSharp.SetSetting(SoundTouchSharp.SoundTouchSettings.SETTING_AA_FILTER_LENGTH, m_timeStretchProfile.AAFilterLength);
-            m_soundTouchSharp.SetSetting(SoundTouchSharp.SoundTouchSettings.SETTING_OVERLAP_MS, m_timeStretchProfile.Overlap);
-            m_soundTouchSharp.SetSetting(SoundTouchSharp.SoundTouchSettings.SETTING_SEQUENCE_MS, m_timeStretchProfile.Sequence);
-            m_soundTouchSharp.SetSetting(SoundTouchSharp.SoundTouchSettings.SETTING_SEEKWINDOW_MS, m_timeStretchProfile.SeekWindow);
+            // "Disable" sound touch AA and revert to Automatic settings at regular tempo (to remove side effects)
+            if (Math.Abs(m_tempo - 1) < 0.001)
+            {
+                m_soundTouchSharp.SetSetting(SoundTouchSharp.SoundTouchSettings.SETTING_USE_AA_FILTER, 0);
+                m_soundTouchSharp.SetSetting(SoundTouchSharp.SoundTouchSettings.SETTING_AA_FILTER_LENGTH, 0);
+                m_soundTouchSharp.SetSetting(SoundTouchSharp.SoundTouchSettings.SETTING_OVERLAP_MS, 0);
+                m_soundTouchSharp.SetSetting(SoundTouchSharp.SoundTouchSettings.SETTING_SEQUENCE_MS, 0);
+                m_soundTouchSharp.SetSetting(SoundTouchSharp.SoundTouchSettings.SETTING_SEEKWINDOW_MS, 0);
+            }
+            else
+            {
+                m_soundTouchSharp.SetSetting(SoundTouchSharp.SoundTouchSettings.SETTING_USE_AA_FILTER, m_timeStretchProfile.UseAAFilter ? 1 : 0);
+                m_soundTouchSharp.SetSetting(SoundTouchSharp.SoundTouchSettings.SETTING_AA_FILTER_LENGTH, m_timeStretchProfile.AAFilterLength);
+                m_soundTouchSharp.SetSetting(SoundTouchSharp.SoundTouchSettings.SETTING_OVERLAP_MS, m_timeStretchProfile.Overlap);
+                m_soundTouchSharp.SetSetting(SoundTouchSharp.SoundTouchSettings.SETTING_SEQUENCE_MS, m_timeStretchProfile.Sequence);
+                m_soundTouchSharp.SetSetting(SoundTouchSharp.SoundTouchSettings.SETTING_SEEKWINDOW_MS, m_timeStretchProfile.SeekWindow);
+            }
         }
 
         /// <summary>
@@ -907,12 +919,23 @@ namespace BigMansStuff.PracticeSharp.Core
         /// <param name="pitch"></param>
         private void SetSoundSharpValues()
         {
-            float tempo = this.Tempo;
-            float pitch = this.Pitch;
-            // Assign updated tempo
-            m_soundTouchSharp.SetTempo(tempo);
-            // Assign updated pitch
-            m_soundTouchSharp.SetPitchOctaves(pitch);
+            if (m_tempoChanged)
+            {
+                float tempo = this.Tempo;
+                // Assign updated tempo
+                m_soundTouchSharp.SetTempo(tempo);
+                m_tempoChanged = false;
+
+                ApplySoundTouchTimeStretchProfile();
+            }
+
+            if (m_pitchChanged)
+            {
+                float pitch = this.Pitch;
+                // Assign updated pitch
+                m_soundTouchSharp.SetPitchOctaves(pitch);
+                m_pitchChanged = false;
+            }
         }
 
         /// <summary>
@@ -1198,6 +1221,9 @@ namespace BigMansStuff.PracticeSharp.Core
         private TimeSpan m_currentPlayTime;
         private TimeSpan m_newPlayTime;
         private bool m_newPlayTimeRequested;
+
+        private bool m_tempoChanged = true;
+        private bool m_pitchChanged = true;
 
         private List<DSPEffect> m_dspEffects = new List<DSPEffect>();
 
