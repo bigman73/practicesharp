@@ -142,5 +142,17 @@ namespace BigMansStuff.PracticeSharp.Properties {
                 this["DefaultVolume"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("DirectSound")]
+        public string SoundOutput {
+            get {
+                return ((string)(this["SoundOutput"]));
+            }
+            set {
+                this["SoundOutput"] = value;
+            }
+        }
     }
 }

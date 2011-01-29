@@ -315,11 +315,18 @@ namespace BigMansStuff.PracticeSharp.UI
                 aboutMenuItem.PerformClick();
                 e.Handled = true;
             }
+            // ALT+CTRL P - Toggle visibility of Time Stretch Profile' UI Controls
             else if (e.Control && e.Alt && !e.Shift && e.KeyCode == Keys.P)
             {
-                // toggle visibility of Time Stretch Profile' UI Controls
                 timeStretchProfileLabel.Visible = !timeStretchProfileLabel.Visible;
                 timeStretchProfileComboBox.Visible = !timeStretchProfileComboBox.Visible;
+
+                e.Handled = true;
+            }
+            // ALT+CTRL D - Opens User Settings Folder through shell
+            else if (e.Control && e.Alt && !e.Shift && e.KeyCode == Keys.D)
+            {
+                Process.Start("explorer.exe", m_appDataFolder);
 
                 e.Handled = true;
             }
@@ -1823,7 +1830,7 @@ namespace BigMansStuff.PracticeSharp.UI
 
         private bool m_isUpdatePlayTimeNeeded;
         private PracticeSharpLogic m_practiceSharpLogic;
-        
+
         /// <summary>
         /// PresetControls dictionary:
         /// Key = Id

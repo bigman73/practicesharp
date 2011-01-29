@@ -1069,9 +1069,23 @@ namespace BigMansStuff.PracticeSharp.Core
             try
             {
                 m_latency = BigMansStuff.PracticeSharp.Properties.Settings.Default.Latency;
-                // TODO: Provide configuration property for the other two options (WasapiOut, ASIO)
-                // m_waveOutDevice = new WasapiOut(global::NAudio.CoreAudioApi.AudioClientShareMode.Shared, m_latency);
-                m_waveOutDevice = new DirectSoundOut(m_latency);
+
+                m_logger.Info("Wave Output Device that was requested: {0}", Properties.Settings.Default.SoundOutput);
+                
+                // Set the wave output device based on the configuration setting
+                switch (Properties.Settings.Default.SoundOutput)
+                {
+                    case "WasapiOut":
+                        m_waveOutDevice = new WasapiOut(global::NAudio.CoreAudioApi.AudioClientShareMode.Shared, m_latency);
+                        break;
+
+                    default:
+                    case "DirectSound":
+                        m_waveOutDevice = new DirectSoundOut(m_latency);
+                        break;
+                }
+
+                m_logger.Info("Wave Output Device that is actually being used: {0}", m_waveOutDevice.GetType().ToString());
             }
             catch (Exception driverCreateException)
             {
