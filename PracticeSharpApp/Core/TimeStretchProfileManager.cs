@@ -14,6 +14,8 @@ namespace BigMansStuff.PracticeSharp.Core
             TimeStretchProfiles = new Dictionary<string, TimeStretchProfile>();
 
             // TODO: Load all profiles from an XML file
+
+            // TODO: AutomaticAA must be kept hard coded/built in the code
             TimeStretchProfile profile = new TimeStretchProfile();
             profile.Id = "AutomaticAA";
             profile.UseAAFilter = true;
@@ -25,7 +27,7 @@ namespace BigMansStuff.PracticeSharp.Core
             TimeStretchProfiles.Add(profile.Id, profile);
 
             profile = new TimeStretchProfile();
-            profile.Id = "Practice#_RockPop";
+            profile.Id = "Practice#_RockPop1";
             profile.UseAAFilter = true;
             profile.AAFilterLength = 192;
             profile.SeekWindow = 90;
@@ -33,8 +35,6 @@ namespace BigMansStuff.PracticeSharp.Core
             profile.Overlap = 30;
             profile.Description = "Rock/Pop 1 with Strong AA Filter";
             TimeStretchProfiles.Add(profile.Id, profile);
-            DefaultProfile = profile;
-
 
             profile = new TimeStretchProfile();
             profile.Id = "Practice#_RockPop2";
@@ -65,6 +65,12 @@ namespace BigMansStuff.PracticeSharp.Core
             profile.Overlap = 8;
             profile.Description = "Speech 2 w/o AA Filter";
             TimeStretchProfiles.Add(profile.Id, profile);
+
+            if (TimeStretchProfiles.TryGetValue(Properties.Settings.Default.DefaultTimeStretchProfile, out profile))
+                DefaultProfile = profile;
+            else
+                DefaultProfile = TimeStretchProfiles["AutomaticAA"];
+
         }
 
         public static TimeStretchProfile DefaultProfile {get; private set;}
