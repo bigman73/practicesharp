@@ -97,13 +97,25 @@ namespace BigMansStuff.PracticeSharp.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("150")]
+        [global::System.Configuration.DefaultSettingValueAttribute("125")]
         public int Latency {
             get {
                 return ((int)(this["Latency"]));
             }
             set {
                 this["Latency"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Practice#_RockPop1")]
+        public string DefaultTimeStretchProfile {
+            get {
+                return ((string)(this["DefaultTimeStretchProfile"]));
+            }
+            set {
+                this["DefaultTimeStretchProfile"] = value;
             }
         }
     }

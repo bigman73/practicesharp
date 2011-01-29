@@ -21,7 +21,10 @@
       <Value Profile="(Default)">12/18/2010 12:00:00</Value>
     </Setting>
     <Setting Name="Latency" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">150</Value>
+      <Value Profile="(Default)">125</Value>
+    </Setting>
+    <Setting Name="DefaultTimeStretchProfile" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Practice#_RockPop1</Value>
     </Setting>
   </Settings>
 </SettingsFile>
