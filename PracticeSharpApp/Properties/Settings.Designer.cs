@@ -109,13 +109,37 @@ namespace BigMansStuff.PracticeSharp.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Practice#_RockPop1")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Practice#_Optimum")]
         public string DefaultTimeStretchProfile {
             get {
                 return ((string)(this["DefaultTimeStretchProfile"]));
             }
             set {
                 this["DefaultTimeStretchProfile"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool ShowTimeStretchProfilesControls {
+            get {
+                return ((bool)(this["ShowTimeStretchProfilesControls"]));
+            }
+            set {
+                this["ShowTimeStretchProfilesControls"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0.75")]
+        public float DefaultVolume {
+            get {
+                return ((float)(this["DefaultVolume"]));
+            }
+            set {
+                this["DefaultVolume"] = value;
             }
         }
     }

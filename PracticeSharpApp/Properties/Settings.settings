@@ -24,7 +24,13 @@
       <Value Profile="(Default)">125</Value>
     </Setting>
     <Setting Name="DefaultTimeStretchProfile" Type="System.String" Scope="User">
-      <Value Profile="(Default)">Practice#_RockPop1</Value>
+      <Value Profile="(Default)">Practice#_Optimum</Value>
+    </Setting>
+    <Setting Name="ShowTimeStretchProfilesControls" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="DefaultVolume" Type="System.Single" Scope="User">
+      <Value Profile="(Default)">0.75</Value>
     </Setting>
   </Settings>
 </SettingsFile>
