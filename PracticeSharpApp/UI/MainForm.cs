@@ -305,7 +305,7 @@ namespace BigMansStuff.PracticeSharp.UI
                 playPauseButton.PerformClick();
                 e.Handled = true;
             }
-            else if (!e.Control && !e.Alt && !e.Shift && e.KeyCode == Keys.Home)
+            else if (!e.Control && !e.Alt && !e.Shift && e.KeyCode == Keys.F5)
             {
                 positionLabel.PerformClick();
                 e.Handled = true;
@@ -780,6 +780,12 @@ namespace BigMansStuff.PracticeSharp.UI
             {
                 m_practiceSharpLogic.CurrentPlayTime = TimeSpan.Zero;
             }
+
+            // When not in play mode, track bar does not get updated so update manually
+            if (m_practiceSharpLogic.Status != PracticeSharpLogic.Statuses.Playing)
+            {
+                UpdatePlayTimeTrackBarCurrentValue();
+            }
         }
     
         /// <summary>
@@ -905,13 +911,7 @@ namespace BigMansStuff.PracticeSharp.UI
 
                 if (!m_playTimeTrackBarIsChanging && DateTime.Now > m_playTimeTrackBarMaskOutTime)
                 {
-                    int currentPlayTimeValue = Convert.ToInt32(100.0f * m_practiceSharpLogic.CurrentPlayTime.TotalSeconds / m_practiceSharpLogic.FilePlayDuration.TotalSeconds);
-                    if (currentPlayTimeValue > playTimeTrackBar.Maximum)
-                    {
-                        currentPlayTimeValue = playTimeTrackBar.Maximum;
-                    }
-
-                    playTimeTrackBar.Value = currentPlayTimeValue;
+                    UpdatePlayTimeTrackBarCurrentValue();
                 }
 
                 positionMarkersPanel.Refresh();
@@ -1744,6 +1744,20 @@ namespace BigMansStuff.PracticeSharp.UI
         }
 
         /// <summary>
+        /// Helper function - Updates the play time track bar value to the CurrentPlayTime
+        /// </summary>
+        private void UpdatePlayTimeTrackBarCurrentValue()
+        {
+            int currentPlayTimeValue = Convert.ToInt32(100.0f * m_practiceSharpLogic.CurrentPlayTime.TotalSeconds / m_practiceSharpLogic.FilePlayDuration.TotalSeconds);
+            if (currentPlayTimeValue > playTimeTrackBar.Maximum)
+            {
+                currentPlayTimeValue = playTimeTrackBar.Maximum;
+            }
+
+            playTimeTrackBar.Value = currentPlayTimeValue;
+        }
+
+        /// <summary>
         /// Mask out playtime TrackBar update messages for some time to avoid trackbar jumps 
         /// </summary>
         private void TempMaskOutPlayTimeTrackBar()
@@ -1794,6 +1808,7 @@ namespace BigMansStuff.PracticeSharp.UI
             }
             else
             {
+                // Set the PlayTimeTrackBar value to the preset's CurrentPlayTime
                 playTimeTrackBar.Value = Convert.ToInt32(100.0f * presetData.CurrentPlayTime.TotalSeconds / m_practiceSharpLogic.FilePlayDuration.TotalSeconds);
             }
 
