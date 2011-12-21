@@ -1,6 +1,6 @@
 dnl SoundTouch configure.ac, by David W. Durham
 dnl
-dnl $Id: configure.ac 89 2010-04-03 15:30:08Z oparviai $
+dnl $Id: configure.ac 104 2011-02-13 19:13:57Z oparviai $
 dnl
 dnl This file is part of SoundTouch, an audio processing library for pitch/time adjustments
 dnl 
@@ -19,7 +19,7 @@ dnl this program; if not, write to the Free Software Foundation, Inc., 59 Temple
 dnl Place - Suite 330, Boston, MA  02111-1307, USA
 # Process this file with autoconf to produce a configure script.
 
-AC_INIT(SoundTouch, 1.5.0, [http://www.surina.net/soundtouch])
+AC_INIT(SoundTouch, 1.6.0, [http://www.surina.net/soundtouch])
 AC_CONFIG_AUX_DIR(config)
 AM_CONFIG_HEADER([include/soundtouch_config.h])
 AM_INIT_AUTOMAKE
@@ -80,10 +80,10 @@ AC_ARG_ENABLE(integer-samples,
       
 if test "x$enable_integer_samples" = "xyes"; then
         echo "****** Integer sample type enabled ******"
-        AC_DEFINE(INTEGER_SAMPLES,1,[Use Integer as Sample type])
+        AC_DEFINE(SOUNDTOUCH_INTEGER_SAMPLES,1,[Use Integer as Sample type])
 else
         echo "****** Float sample type enabled ******"
-        AC_DEFINE(FLOAT_SAMPLES,1,[Use Float as Sample type])
+        AC_DEFINE(SOUNDTOUCH_FLOAT_SAMPLES,1,[Use Float as Sample type])
 fi
 
 

@@ -13,10 +13,10 @@
 ///
 ////////////////////////////////////////////////////////////////////////////////
 //
-// Last changed  : $Date: 2010-01-24 07:40:30 -0500 (Sun, 24 Jan 2010) $
+// Last changed  : $Date: 2011-02-13 21:13:57 +0200 (Sun, 13 Feb 2011) $
 // File revision : $Revision: 1.12 $
 //
-// $Id: TDStretch.cpp 88 2010-01-24 12:40:30Z oparviai $
+// $Id: TDStretch.cpp 104 2011-02-13 19:13:57Z oparviai $
 //
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -646,7 +646,6 @@ void TDStretch::processSamples()
 
     // Process samples as long as there are enough samples in 'inputBuffer'
     // to form a processing frame.
-//    while ((int)inputBuffer.numSamples() >= sampleReq - (outDebt / 4)) 
     while ((int)inputBuffer.numSamples() >= sampleReq) 
     {
         // If tempo differs from the normal ('SCALE'), scan for the best overlapping
@@ -661,16 +660,8 @@ void TDStretch::processSamples()
         outputBuffer.putSamples((uint)overlapLength);
 
         // ... then copy sequence samples from 'inputBuffer' to output:
-        temp = (seekLength / 2 - offset);
-
-        // compensate cumulated output length diff vs. ideal output
-//        temp -= outDebt / 4;
-
-        // update ideal vs. true output difference 
-//        outDebt += temp;
 
         // length of sequence
-//        temp += (seekWindowLength - 2 * overlapLength);
         temp = (seekWindowLength - 2 * overlapLength);
 
         // crosscheck that we don't have buffer overflow...
@@ -753,24 +744,24 @@ TDStretch * TDStretch::newInstance()
 
     // Check if MMX/SSE instruction set extensions supported by CPU
 
-#ifdef ALLOW_MMX
+#ifdef SOUNDTOUCH_ALLOW_MMX
     // MMX routines available only with integer sample types
     if (uExtensions & SUPPORT_MMX)
     {
         return ::new TDStretchMMX;
     }
     else
-#endif // ALLOW_MMX
+#endif // SOUNDTOUCH_ALLOW_MMX
 
 
-#ifdef ALLOW_SSE
+#ifdef SOUNDTOUCH_ALLOW_SSE
     if (uExtensions & SUPPORT_SSE)
     {
         // SSE support
         return ::new TDStretchSSE;
     }
     else
-#endif // ALLOW_SSE
+#endif // SOUNDTOUCH_ALLOW_SSE
 
     {
         // ISA optimizations not supported, use plain C version
@@ -785,7 +776,7 @@ TDStretch * TDStretch::newInstance()
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#ifdef INTEGER_SAMPLES
+#ifdef SOUNDTOUCH_INTEGER_SAMPLES
 
 // Slopes the amplitude of the 'midBuffer' samples so that cross correlation
 // is faster to calculate
@@ -914,14 +905,14 @@ long TDStretch::calcCrossCorrStereo(const short *mixingPos, const short *compare
     return (long)((double)corr * SHRT_MAX / sqrt((double)norm));
 }
 
-#endif // INTEGER_SAMPLES
+#endif // SOUNDTOUCH_INTEGER_SAMPLES
 
 //////////////////////////////////////////////////////////////////////////////
 //
 // Floating point arithmetics specific algorithm implementations.
 //
 
-#ifdef FLOAT_SAMPLES
+#ifdef SOUNDTOUCH_FLOAT_SAMPLES
 
 
 // Slopes the amplitude of the 'midBuffer' samples so that cross correlation
@@ -1032,4 +1023,4 @@ double TDStretch::calcCrossCorrStereo(const float *mixingPos, const float *compa
     return corr / sqrt(norm);
 }
 
-#endif // FLOAT_SAMPLES
+#endif // SOUNDTOUCH_FLOAT_SAMPLES

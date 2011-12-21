@@ -11,10 +11,10 @@
 ///
 ////////////////////////////////////////////////////////////////////////////////
 //
-// Last changed  : $Date: 2010-04-23 06:31:02 -0400 (Fri, 23 Apr 2010) $
+// Last changed  : $Date: 2011-07-16 15:27:51 +0300 (Sat, 16 Jul 2011) $
 // File revision : $Revision: 4 $
 //
-// $Id: cpu_detect_x86_gcc.cpp 90 2010-04-23 10:31:02Z oparviai $
+// $Id: cpu_detect_x86_gcc.cpp 123 2011-07-16 12:27:51Z oparviai $
 //
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -68,7 +68,7 @@ void disableExtensions(uint dwDisableMask)
 /// Checks which instruction set extensions are supported by the CPU.
 uint detectCPUextensions(void)
 {
-#if (!(ALLOW_X86_OPTIMIZATIONS) || !(__GNUC__))
+#if (!(SOUNDTOUCH_ALLOW_X86_OPTIMIZATIONS) || !(__GNUC__))
 
     return 0; // always disable extensions on non-x86 platforms.
 

@@ -9,7 +9,7 @@
 ///
 ////////////////////////////////////////////////////////////////////////////////
 //
-// $Id: SoundTouchDLL.h 65 2009-02-23 08:33:13Z oparviai $
+// $Id: SoundTouchDLL.h 94 2010-12-12 18:28:49Z oparviai $
 //
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -58,8 +58,8 @@ SOUNDTOUCHDLL_API void __stdcall soundtouch_destroyInstance(HANDLE h);
 /// Get SoundTouch library version string
 SOUNDTOUCHDLL_API const char *__stdcall soundtouch_getVersionString();
 
-// Yuval Naveh - 12/7/2010 - .NET Compliant function
-/// Get SoundTouch library version string
+/// Get SoundTouch library version string - alternative function for 
+/// environments that can't properly handle character string as return value
 SOUNDTOUCHDLL_API void __stdcall soundtouch_getVersionString2(char* versionString, int bufferSize);
 
 /// Get SoundTouch library version Id

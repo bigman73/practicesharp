@@ -17,10 +17,10 @@
 ///
 ////////////////////////////////////////////////////////////////////////////////
 //
-// Last changed  : $Date: 2009-02-21 11:00:14 -0500 (Sat, 21 Feb 2009) $
+// Last changed  : $Date: 2011-07-16 11:46:37 +0300 (Sat, 16 Jul 2011) $
 // File revision : $Revision: 4 $
 //
-// $Id: WavFile.cpp 63 2009-02-21 16:00:14Z oparviai $
+// $Id: WavFile.cpp 120 2011-07-16 08:46:37Z oparviai $
 //
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -250,7 +250,7 @@ int WavInFile::read(char *buffer, int maxElems)
     }
 
     assert(buffer);
-    numBytes = fread(buffer, 1, numBytes, fptr);
+    numBytes = (int)fread(buffer, 1, numBytes, fptr);
     dataRead += numBytes;
 
     return numBytes;
@@ -281,7 +281,14 @@ int WavInFile::read(short *buffer, int maxElems)
     else
     {
         // 16 bit format
-        assert(header.format.bits_per_sample == 16);
+        if (header.format.bits_per_sample != 16)
+        {
+            string msg = "WAV file bits per sample format not supported: ";
+            msg += (int)header.format.bits_per_sample;
+            msg += " bits per sample.";
+            throw runtime_error(msg);
+        }
+
         assert(sizeof(short) == 2);
 
         numBytes = maxElems * 2;
@@ -293,7 +300,7 @@ int WavInFile::read(short *buffer, int maxElems)
             assert(numBytes >= 0);
         }
 
-        numBytes = fread(buffer, 1, numBytes, fptr);
+        numBytes = (int)fread(buffer, 1, numBytes, fptr);
         dataRead += numBytes;
         numElems = numBytes / 2;
 
@@ -645,7 +652,7 @@ void WavOutFile::writeHeader()
 
     // write the supplemented header in the beginning of the file
     fseek(fptr, 0, SEEK_SET);
-    res = fwrite(&hdrTemp, sizeof(hdrTemp), 1, fptr);
+    res = (int)fwrite(&hdrTemp, sizeof(hdrTemp), 1, fptr);
     if (res != 1)
     {
         throw runtime_error("Error while writing to a wav file.");
@@ -667,7 +674,7 @@ void WavOutFile::write(const char *buffer, int numElems)
     }
     assert(sizeof(char) == 1);
 
-    res = fwrite(buffer, 1, numElems, fptr);
+    res = (int)fwrite(buffer, 1, numElems, fptr);
     if (res != numElems) 
     {
         throw runtime_error("Error while writing to a wav file.");
@@ -702,13 +709,19 @@ void WavOutFile::write(const short *buffer, int numElems)
         // 16bit format
         unsigned short *pTemp = new unsigned short[numElems];
 
-        assert(header.format.bits_per_sample == 16);
+        if (header.format.bits_per_sample != 16)
+        {
+            string msg = "WAV file bits per sample format not supported: ";
+            msg += (int)header.format.bits_per_sample;
+            msg += " bits per sample.";
+            throw runtime_error(msg);
+        }
 
         // allocate temp buffer to swap byte order if necessary
         memcpy(pTemp, buffer, numElems * 2);
         _swap16Buffer(pTemp, numElems);
 
-        res = fwrite(pTemp, 2, numElems, fptr);
+        res = (int)fwrite(pTemp, 2, numElems, fptr);
 
         delete[] pTemp;
 

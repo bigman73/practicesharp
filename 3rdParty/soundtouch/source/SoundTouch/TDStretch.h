@@ -13,10 +13,10 @@
 ///
 ////////////////////////////////////////////////////////////////////////////////
 //
-// Last changed  : $Date: 2010-01-24 07:40:30 -0500 (Sun, 24 Jan 2010) $
+// Last changed  : $Date: 2011-02-13 21:13:57 +0200 (Sun, 13 Feb 2011) $
 // File revision : $Revision: 4 $
 //
-// $Id: TDStretch.h 88 2010-01-24 12:40:30Z oparviai $
+// $Id: TDStretch.h 104 2011-02-13 19:13:57Z oparviai $
 //
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -233,13 +233,25 @@ public:
             uint numSamples                         ///< Number of samples in 'samples' so that one sample
                                                     ///< contains both channels if stereo
             );
+
+	/// return nominal input sample requirement for triggering a processing batch
+	int getInputSampleReq() const
+	{
+		return (int)(nominalSkip + 0.5);
+	}
+
+	/// return nominal output sample amount when running a processing batch
+	int getOutputBatchSize() const
+	{
+		return seekWindowLength - overlapLength;
+	}
 };
 
 
 
 // Implementation-specific class declarations:
 
-#ifdef ALLOW_MMX
+#ifdef SOUNDTOUCH_ALLOW_MMX
     /// Class that implements MMX optimized routines for 16bit integer samples type.
     class TDStretchMMX : public TDStretch
     {
@@ -248,10 +260,10 @@ public:
         virtual void overlapStereo(short *output, const short *input) const;
         virtual void clearCrossCorrState();
     };
-#endif /// ALLOW_MMX
+#endif /// SOUNDTOUCH_ALLOW_MMX
 
 
-#ifdef ALLOW_SSE
+#ifdef SOUNDTOUCH_ALLOW_SSE
     /// Class that implements SSE optimized routines for floating point samples type.
     class TDStretchSSE : public TDStretch
     {
@@ -259,7 +271,7 @@ public:
         double calcCrossCorrStereo(const float *mixingPos, const float *compare) const;
     };
 
-#endif /// ALLOW_SSE
+#endif /// SOUNDTOUCH_ALLOW_SSE
 
 }
 #endif  /// TDStretch_H

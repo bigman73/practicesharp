@@ -8,10 +8,10 @@
 ///
 ////////////////////////////////////////////////////////////////////////////////
 //
-// Last changed  : $Date: 2009-12-28 15:32:10 -0500 (Mon, 28 Dec 2009) $
+// Last changed  : $Date: 2011-07-16 11:55:23 +0300 (Sat, 16 Jul 2011) $
 // File revision : $Revision: 4 $
 //
-// $Id: main.cpp 79 2009-12-28 20:32:10Z oparviai $
+// $Id: main.cpp 121 2011-07-16 08:55:23Z oparviai $
 //
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -55,7 +55,7 @@ using namespace std;
     #include <fcntl.h>
 
     // Macro for Win32 standard input/output stream support: Sets a file stream into binary mode
-    #define SET_STREAM_TO_BIN_MODE(f) (_setmode(fileno(f), _O_BINARY))
+    #define SET_STREAM_TO_BIN_MODE(f) (_setmode(_fileno(f), _O_BINARY))
 #else
     // Not needed for GNU environment... 
     #define SET_STREAM_TO_BIN_MODE(f) {}
@@ -64,7 +64,7 @@ using namespace std;
 
 static const char _helloText[] = 
     "\n"
-    "   SoundStretch v%s -  Written by Olli Parviainen 2001 - 2009\n"
+    "   SoundStretch v%s -  Written by Olli Parviainen 2001 - 2011\n"
     "==================================================================\n"
     "author e-mail: <oparviai"
     "@"
@@ -146,10 +146,10 @@ static void setup(SoundTouch *pSoundTouch, const WavInFile *inFile, const RunPar
     // print processing information
     if (params->outFileName)
     {
-#ifdef INTEGER_SAMPLES
+#ifdef SOUNDTOUCH_INTEGER_SAMPLES
         fprintf(stderr, "Uses 16bit integer sample type in processing.\n\n");
 #else
-    #ifndef FLOAT_SAMPLES
+    #ifndef SOUNDTOUCH_FLOAT_SAMPLES
         #error "Sampletype not defined"
     #endif
         fprintf(stderr, "Uses 32bit floating point sample type in processing.\n\n");

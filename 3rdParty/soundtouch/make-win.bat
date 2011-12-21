@@ -7,7 +7,7 @@
 @REM Copyright (c) Olli Parviainen
 @REM File Created: 09/Sep/2003
 @REM
-@REM $Id: make-win.bat 44 2008-12-25 18:12:41Z oparviai $ 
+@REM $Id: make-win.bat 98 2010-12-12 19:17:13Z oparviai $ 
 
 @rem ****************************
 @rem try first for VS6.0 support
@@ -30,10 +30,17 @@ goto end
 
 md bin
 md lib
+devenv source\SoundTouch\SoundTouch.vcproj /upgrade
 devenv source\SoundTouch\SoundTouch.vcproj /build debug
 devenv source\SoundTouch\SoundTouch.vcproj /build release
+
+devenv source\SoundStretch\SoundStretch.vcproj /upgrade
 devenv source\SoundStretch\SoundStretch.vcproj /build debug
 devenv source\SoundStretch\SoundStretch.vcproj /build release
+
+devenv source\SoundTouchDll\SoundTouchDll.vcproj /upgrade
+devenv source\SoundTouchDll\SoundTouchDll.vcproj /build debug
+devenv source\SoundTouchDll\SoundTouchDll.vcproj /build release
 
 @goto end
 
