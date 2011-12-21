@@ -151,7 +151,7 @@ namespace BigMansStuff.PracticeSharp.Core
             {
                 m_logger.Debug("Resume paused playback BEFORE loading another file");
                 // Mute volume when Resume play - we don't it to really play, just to release the playback thread
-                m_waveOutDevice.Volume = 0;
+                m_waveChannel.Volume = 0;
                 m_waveOutDevice.Play();
                 // Give the NAudio playback some short time to release itself from pause state
                 Thread.Sleep(250);
@@ -198,7 +198,8 @@ namespace BigMansStuff.PracticeSharp.Core
                           filename.EndsWith(".wav") || 
                           filename.EndsWith(".ogg") ||
                           filename.EndsWith(".flac") || 
-                          filename.EndsWith(".wma");
+                          filename.EndsWith(".wma") ||
+                          filename.EndsWith(".aiff");
 
             return result;
         }
@@ -970,7 +971,7 @@ namespace BigMansStuff.PracticeSharp.Core
         }
 
         /// <summary>
-        /// Creates an input WaveChannel (Audio file reader for MP3/WAV/OGG/FLAC/WMA/Other formats in the future)
+        /// Creates an input WaveChannel (Audio file reader for MP3/WAV/OGG/FLAC/WMA/AIFF/Other formats in the future)
         /// </summary>
         /// <param name="filename"></param>
         private void CreateInputWaveChannel(string filename)
@@ -1049,6 +1050,11 @@ namespace BigMansStuff.PracticeSharp.Core
                     m_waveReader = new WaveFormatConversionStream(format, m_waveReader);
                 }
 
+                m_waveChannel = new WaveChannel32(m_waveReader);
+            }
+            else if (fileExt == AIFFExtension)
+            {
+                m_waveReader = new AiffFileReader(filename);
                 m_waveChannel = new WaveChannel32(m_waveReader);
             }
             else
@@ -1258,6 +1264,7 @@ namespace BigMansStuff.PracticeSharp.Core
         const string OGGVExtension = ".ogg";
         const string FLACExtension = ".flac";
         const string WMAExtension = ".wma";
+        const string AIFFExtension = ".aiff";
 
         const int BusyQueuedBuffersThreshold = 3;
             
