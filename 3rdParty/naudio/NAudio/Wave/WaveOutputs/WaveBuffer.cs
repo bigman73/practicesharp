@@ -11,7 +11,7 @@ namespace NAudio.Wave
     /// Implicit casting is now supported to float[], byte[], int[], short[].
     /// You must not use Length on returned arrays.
     /// 
-    /// NOT YET USED.
+    /// n.b. FieldOffset is 8 now to allow it to work natively on 64 bit
     /// </summary>
     [StructLayout(LayoutKind.Explicit, Pack = 2)]
     public class WaveBuffer : IWaveBuffer
@@ -21,13 +21,13 @@ namespace NAudio.Wave
         /// </summary>
         [FieldOffset(0)]
         public int numberOfBytes;
-        [FieldOffset(4)]
+        [FieldOffset(8)]
         private byte[] byteBuffer;
-        [FieldOffset(4)]
+        [FieldOffset(8)]
         private float[] floatBuffer;
-        [FieldOffset(4)]
+        [FieldOffset(8)]
         private short[] shortBuffer;
-        [FieldOffset(4)]
+        [FieldOffset(8)]
         private int[] intBuffer;
 
         /// <summary>
@@ -58,10 +58,11 @@ namespace NAudio.Wave
         /// <param name="bufferToBoundTo">A byte buffer to bound the WaveBuffer to.</param>
         public void BindTo(byte[] bufferToBoundTo)
         {   
-            if ( (bufferToBoundTo.Length % 4) != 0 )
+            /* WaveBuffer assumes the caller knows what they are doing. We will let this pass
+             * if ( (bufferToBoundTo.Length % 4) != 0 )
             {
                 throw new ArgumentException("The byte buffer to bound must be 4 bytes aligned");
-            }
+            }*/
             byteBuffer = bufferToBoundTo;
             numberOfBytes = 0;
         }

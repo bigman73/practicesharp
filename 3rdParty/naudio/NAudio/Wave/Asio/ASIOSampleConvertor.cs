@@ -21,11 +21,6 @@ namespace NAudio.Wave.Asio
             SampleConvertor convertor = null;
             bool is2Channels = waveFormat.Channels == 2;
 
-            if (waveFormat.BitsPerSample != 16 && waveFormat.BitsPerSample != 32)
-            {
-                throw new ArgumentException(String.Format("WaveFormat BitsPerSample {0} is not yet supported", waveFormat.BitsPerSample));
-            }
-
             // TODO : IMPLEMENTS OTHER CONVERTOR TYPES
             switch (asioType)
             {
@@ -51,9 +46,30 @@ namespace NAudio.Wave.Asio
                             break;
                     }
                     break;
+                case ASIOSampleType.ASIOSTInt24LSB:                    
+                    switch (waveFormat.BitsPerSample)
+                    {
+                        case 16:
+                            throw new ArgumentException("Not a supported conversion");
+                        case 32:
+                            convertor = ConverterFloatTo24LSBGeneric;
+                            break;
+                    }
+                    break;
+                case ASIOSampleType.ASIOSTFloat32LSB:
+                    switch (waveFormat.BitsPerSample)
+                    {
+                        case 16:
+                            throw new ArgumentException("Not a supported conversion");
+                        case 32:
+                            convertor = ConverterFloatToFloatGeneric;
+                            break;
+                    }
+                    break;
+
                 default:
                     throw new ArgumentException(
-                        String.Format("ASIO Buffer Type {0} is not yet supported. ASIO Int32 buffer is only supported.",
+                        String.Format("ASIO Buffer Type {0} is not yet supported.",
                                       Enum.GetName(typeof(ASIOSampleType), asioType)));
             }
             return convertor;
@@ -109,8 +125,8 @@ namespace NAudio.Wave.Asio
                 {
                     for (int j = 0; j < nbChannels; j++)
                     {
-                        *samples[i] = *inputSamples++;
-                        samples[i] += 2;
+                        *samples[j] = *inputSamples++;
+                        samples[j] += 2;
                     }
                 }
             }
@@ -125,7 +141,6 @@ namespace NAudio.Wave.Asio
             unsafe
             {
                 float* inputSamples = (float*)inputInterleavedBuffer;
-                // Use a trick (short instead of int to avoid any convertion from 16Bit to 32Bit)
                 int* leftSamples = (int*)asioOutputBuffers[0];
                 int* rightSamples = (int*)asioOutputBuffers[1];
 
@@ -146,7 +161,6 @@ namespace NAudio.Wave.Asio
             unsafe
             {
                 float* inputSamples = (float*)inputInterleavedBuffer;
-                // Use a trick (short instead of int to avoid any convertion from 16Bit to 32Bit)
                 float*[] samples = new float*[nbChannels];
                 for (int i = 0; i < nbChannels; i++)
                 {
@@ -157,7 +171,7 @@ namespace NAudio.Wave.Asio
                 {
                     for (int j = 0; j < nbChannels; j++)
                     {
-                        *samples[i]++ = clampToInt(*inputSamples++);
+                        *samples[j]++ = clampToInt(*inputSamples++);
                     }
                 }
             }
@@ -196,12 +210,16 @@ namespace NAudio.Wave.Asio
                 short* inputSamples = (short*)inputInterleavedBuffer;
                 // Use a trick (short instead of int to avoid any convertion from 16Bit to 32Bit)
                 short*[] samples = new short*[nbChannels];
+                for (int i = 0; i < nbChannels; i++)
+                {
+                    samples[i] = (short*)asioOutputBuffers[i];
+                }
 
                 for (int i = 0; i < nbSamples; i++)
                 {
                     for (int j = 0; j < nbChannels; j++)
                     {
-                        *(samples[i]++) = *inputSamples++;
+                        *(samples[j]++) = *inputSamples++;
                     }
                 }
             }
@@ -248,10 +266,68 @@ namespace NAudio.Wave.Asio
                 {
                     for (int j = 0; j < nbChannels; j++)
                     {
-                        *(samples[i]++) = clampToShort(*inputSamples++);
+                        *(samples[j]++) = clampToShort(*inputSamples++);
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// Generic converter 24 LSB
+        /// </summary>
+        public static void ConverterFloatTo24LSBGeneric(IntPtr inputInterleavedBuffer, IntPtr[] asioOutputBuffers, int nbChannels, int nbSamples)
+        {
+            unsafe
+            {
+                float* inputSamples = (float*)inputInterleavedBuffer;
+                
+                byte*[] samples = new byte*[nbChannels];
+                for (int i = 0; i < nbChannels; i++)
+                {
+                    samples[i] = (byte*)asioOutputBuffers[i];
+                }
+
+                for (int i = 0; i < nbSamples; i++)
+                {
+                    for (int j = 0; j < nbChannels; j++)
+                    {
+                        int sample24 = clampTo24Bit(*inputSamples++);
+                        *(samples[j]++) = (byte)(sample24);
+                        *(samples[j]++) = (byte)(sample24 >> 8);
+                        *(samples[j]++) = (byte)(sample24 >> 16);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Generic convertor for float
+        /// </summary>
+        public static void ConverterFloatToFloatGeneric(IntPtr inputInterleavedBuffer, IntPtr[] asioOutputBuffers, int nbChannels, int nbSamples)
+        {
+            unsafe
+            {
+                float* inputSamples = (float*)inputInterleavedBuffer;
+                float*[] samples = new float*[nbChannels];
+                for (int i = 0; i < nbChannels; i++)
+                {
+                    samples[i] = (float*)asioOutputBuffers[i];
+                }
+
+                for (int i = 0; i < nbSamples; i++)
+                {
+                    for (int j = 0; j < nbChannels; j++)
+                    {
+                        *(samples[j]++) = *inputSamples++;
+                    }
+                }
+            }
+        }
+
+        private static int clampTo24Bit(double sampleValue)
+        {
+            sampleValue = (sampleValue < -1.0) ? -1.0 : (sampleValue > 1.0) ? 1.0 : sampleValue;
+            return (int)(sampleValue * 8388607.0);
         }
 
         private static int clampToInt(double sampleValue)

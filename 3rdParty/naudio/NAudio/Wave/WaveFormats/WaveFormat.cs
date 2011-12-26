@@ -165,6 +165,9 @@ namespace NAudio.Wave
                 case WaveFormatEncoding.Adpcm:
                     waveFormat = (AdpcmWaveFormat)Marshal.PtrToStructure(pointer, typeof(AdpcmWaveFormat));
                     break;
+                case WaveFormatEncoding.Gsm610:
+                    waveFormat = (Gsm610WaveFormat)Marshal.PtrToStructure(pointer, typeof(Gsm610WaveFormat));
+                    break;
                 default:
                     if (waveFormat.ExtraSize > 0)
                     {
@@ -216,7 +219,7 @@ namespace NAudio.Wave
             if (formatChunkLength > 16)
             {
                 this.extraSize = br.ReadInt16();
-                if (this.extraSize > formatChunkLength - 18)
+                if (this.extraSize != formatChunkLength - 18)
                 {
                     Debug.WriteLine("Format chunk mismatch");
                     this.extraSize = (short)(formatChunkLength - 18);

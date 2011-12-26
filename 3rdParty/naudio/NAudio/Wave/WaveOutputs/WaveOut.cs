@@ -1,6 +1,8 @@
 using System;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Diagnostics;
+using System.Threading;
 
 namespace NAudio.Wave 
 {
@@ -12,13 +14,13 @@ namespace NAudio.Wave
         private IntPtr hWaveOut;
         private WaveOutBuffer[] buffers;
         private IWaveProvider waveStream;
-        
         private volatile PlaybackState playbackState;
         private WaveInterop.WaveCallback callback;
-        
         private float volume = 1;
         private WaveCallbackInfo callbackInfo;
         private object waveOutLock;
+        private int queuedBuffers;
+        private SynchronizationContext syncContext;
 
         /// <summary>
         /// Indicates playback has stopped automatically
@@ -71,10 +73,11 @@ namespace NAudio.Wave
 
         /// <summary>
         /// Creates a default WaveOut device
-        /// WARNING: only use this constructor on a GUI thread
+        /// Will use window callbacks if called from a GUI thread, otherwise function
+        /// callbacks
         /// </summary>
         public WaveOut()
-            : this(WaveCallbackInfo.NewWindow())
+            : this(SynchronizationContext.Current == null ? WaveCallbackInfo.FunctionCallback() : WaveCallbackInfo.NewWindow())
         {
         }
 
@@ -93,10 +96,11 @@ namespace NAudio.Wave
         /// </summary>
         public WaveOut(WaveCallbackInfo callbackInfo)
         {
+            this.syncContext = SynchronizationContext.Current;
             // set default values up
             this.DeviceNumber = 0;
             this.DesiredLatency = 300;
-            this.NumberOfBuffers = 3;
+            this.NumberOfBuffers = 2;
 
             this.callback = new WaveInterop.WaveCallback(Callback);
             this.waveOutLock = new object();
@@ -136,19 +140,38 @@ namespace NAudio.Wave
             if (playbackState == PlaybackState.Stopped)
             {
                 playbackState = PlaybackState.Playing;
-                for (int n = 0; n < NumberOfBuffers; n++)
-                {
-                    System.Diagnostics.Debug.Assert(buffers[n].InQueue == false, "Adding a buffer that was already queued on play");
-                    if (!buffers[n].OnDone())
-                    {
-                        playbackState = PlaybackState.Stopped;
-                    }
-                }
+                Debug.Assert(queuedBuffers == 0, "Buffers already queued on play");
+                EnqueueBuffers();
             }
             else if (playbackState == PlaybackState.Paused)
             {
+                EnqueueBuffers();
                 Resume();
                 playbackState = PlaybackState.Playing;
+            }
+        }
+
+        private void EnqueueBuffers()
+        {
+            for (int n = 0; n < NumberOfBuffers; n++)
+            {
+                if (!buffers[n].InQueue)
+                {
+                    if (buffers[n].OnDone())
+                    {
+                        Interlocked.Increment(ref queuedBuffers);
+                    }
+                    else
+                    {
+                        playbackState = PlaybackState.Stopped;
+                        break;
+                    }
+                    //Debug.WriteLine(String.Format("Resume from Pause: Buffer [{0}] requeued", n));
+                }
+                else
+                {
+                    //Debug.WriteLine(String.Format("Resume from Pause: Buffer [{0}] already queued", n));
+                }
             }
         }
 
@@ -199,9 +222,12 @@ namespace NAudio.Wave
         {
             if (playbackState != PlaybackState.Stopped)
             {
-                MmResult result;
+
+                // in the call to waveOutReset with function callbacks
+                // some drivers will block here until OnDone is called
+                // for every buffer
                 playbackState = PlaybackState.Stopped; // set this here to avoid a problem with some drivers whereby 
-                // in the call to waveOutReset they don't return until an OnDone is called
+                MmResult result;
                 lock (waveOutLock)
                 {
                     result = WaveInterop.waveOutReset(hWaveOut);
@@ -210,6 +236,35 @@ namespace NAudio.Wave
                 {
                     throw new MmException(result, "waveOutReset");
                 }
+
+                // with function callbacks, waveOutReset will call OnDone,
+                // and so PlaybackStopped must not be raised from the handler
+                // we know playback has definitely stopped now, so raise callback
+                if (callbackInfo.Strategy == WaveCallbackStrategy.FunctionCallback)
+                {
+                    RaisePlaybackStoppedEvent();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets the current position in bytes from the wave output device.
+        /// (n.b. this is not the same thing as the position within your reader
+        /// stream - it calls directly into waveOutGetPosition)
+        /// </summary>
+        /// <returns>Position in bytes</returns>
+        public long GetPosition()
+        {
+            lock (waveOutLock)
+            {
+                MmTime mmTime = new MmTime();
+                mmTime.wType = MmTime.TIME_BYTES; // request results in bytes, TODO: perhaps make this a little more flexible and support the other types?
+                MmException.Try(WaveInterop.waveOutGetPosition(hWaveOut, out mmTime, Marshal.SizeOf(mmTime)), "waveOutGetPosition");
+
+                if (mmTime.wType != MmTime.TIME_BYTES)
+                    throw new Exception(string.Format("waveOutGetPosition: wType -> Expected {0}, Received {1}", MmTime.TIME_BYTES, mmTime.wType));
+
+                return mmTime.cb;
             }
         }
 
@@ -308,12 +363,34 @@ namespace NAudio.Wave
             {
                 GCHandle hBuffer = (GCHandle)wavhdr.userData;
                 WaveOutBuffer buffer = (WaveOutBuffer)hBuffer.Target;
+                Interlocked.Decrement(ref queuedBuffers);
                 // check that we're not here through pressing stop
                 if (PlaybackState == PlaybackState.Playing)
                 {
-                    if(!buffer.OnDone())
+                    // to avoid deadlocks in Function callback mode,
+                    // we lock round this whole thing, which will include the
+                    // reading from the stream.
+                    // this protects us from calling waveOutReset on another 
+                    // thread while a WaveOutWrite is in progress
+                    lock (waveOutLock) 
                     {
-                        playbackState = PlaybackState.Stopped;
+                        if (buffer.OnDone())
+                        {
+                            Interlocked.Increment(ref queuedBuffers);
+                        }
+                    }
+                }
+                if (queuedBuffers == 0)
+                {
+                    if (callbackInfo.Strategy == WaveCallbackStrategy.FunctionCallback && playbackState == Wave.PlaybackState.Stopped)
+                    {
+                        // the user has pressed stop
+                        // DO NOT raise the playback stopped event from here
+                        // since on the main thread we are still in the waveOutReset function
+                        // Playback stopped will be raised elsewhere
+                    }
+                    else
+                    {
                         RaisePlaybackStoppedEvent();
                     }
                 }
@@ -324,9 +401,17 @@ namespace NAudio.Wave
 
         private void RaisePlaybackStoppedEvent()
         {
-            if (PlaybackStopped != null)
+            EventHandler handler = PlaybackStopped;
+            if (handler != null)
             {
-                PlaybackStopped(this, EventArgs.Empty);
+                if (this.syncContext == null)
+                {
+                    handler(this, EventArgs.Empty);
+                }
+                else
+                {
+                    this.syncContext.Post(state => handler(this, EventArgs.Empty), null);
+                }
             }
         }
     }

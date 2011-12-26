@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>NAudioWpfDemo</RootNamespace>
     <AssemblyName>NAudioWpfDemo</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
@@ -33,6 +33,7 @@
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -43,6 +44,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -52,37 +54,25 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\x86\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DebugType>full</DebugType>
     <PlatformTarget>x86</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
-    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
-    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
-    <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
-    <OutputPath>bin\x86\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
-    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
-    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
-    <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="nunit.framework">
+      <HintPath>..\packages\NUnit.2.5.10.11092\lib\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.mocks">
+      <HintPath>..\packages\NUnit.2.5.10.11092\lib\nunit.mocks.dll</HintPath>
+    </Reference>
+    <Reference Include="pnunit.framework">
+      <HintPath>..\packages\NUnit.2.5.10.11092\lib\pnunit.framework.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
@@ -111,11 +101,17 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="ControlPanel.xaml">
+    <Page Include="AudioPlaybackDemo\AudioPlaybackDemoView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
-      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="DrumMachineDemo\DrumMachineDemoView.xaml">
       <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="DrumMachineDemo\DrumPatternEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="PolygonWaveFormControl.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -151,23 +147,42 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="AudioPlaybackDemo\AudioPlaybackDemoPlugin.cs" />
+    <Compile Include="AudioPlaybackDemo\AudioPlaybackDemoView.xaml.cs">
+      <DependentUpon>AudioPlaybackDemoView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="AudioPlaybackDemo\PolylineWaveFormVisualization.cs" />
+    <Compile Include="AudioPlaybackDemo\IVisualizationPlugin.cs" />
+    <Compile Include="AudioPlaybackDemo\PolygonWaveFormVisualization.cs" />
+    <Compile Include="AudioPlaybackDemo\SpectrumAnalyzerVisualization.cs" />
+    <Compile Include="DrumMachineDemo\DrumKit.cs" />
+    <Compile Include="DrumMachineDemo\DrumMachineDemoPlugin.cs" />
+    <Compile Include="DrumMachineDemo\DrumMachineDemoView.xaml.cs">
+      <DependentUpon>DrumMachineDemoView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="DrumMachineDemo\DrumMachineDemoViewModel.cs" />
+    <Compile Include="DrumMachineDemo\DrumPattern.cs" />
+    <Compile Include="DrumMachineDemo\DrumPatternEditor.xaml.cs">
+      <DependentUpon>DrumPatternEditor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="DrumMachineDemo\MusicSampleProvider.cs" />
+    <Compile Include="DrumMachineDemo\DrumPatternSampleProvider.cs" />
+    <Compile Include="DrumMachineDemo\PatternSequencer.cs" />
+    <Compile Include="DrumMachineDemo\PatternSequencerTests.cs" />
+    <Compile Include="DrumMachineDemo\SampleSource.cs" />
+    <Compile Include="IModule.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AudioCapture.cs" />
-    <Compile Include="AudioGraph.cs" />
-    <Compile Include="AudioPlayback.cs" />
-    <Compile Include="ControlPanel.xaml.cs">
-      <DependentUpon>ControlPanel.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="ControlPanelViewModel.cs" />
+    <Compile Include="AudioPlaybackDemo\AudioPlayback.cs" />
+    <Compile Include="AudioPlaybackDemo\AudioPlaybackViewModel.cs" />
+    <Compile Include="MainWindowViewModel.cs" />
     <Compile Include="PolygonWaveFormControl.xaml.cs">
       <DependentUpon>PolygonWaveFormControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="IgnoreDisposeStream.cs" />
     <Compile Include="IWaveFormRenderer.cs" />
     <Compile Include="PolylineWaveFormControl.xaml.cs">
       <DependentUpon>PolylineWaveFormControl.xaml</DependentUpon>
@@ -186,18 +201,20 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="RelayCommand.cs" />
-    <Compile Include="SampleAggregator.cs" />
+    <Compile Include="AudioPlaybackDemo\SampleAggregator.cs" />
     <Compile Include="SpectrumAnalyser.xaml.cs">
       <DependentUpon>SpectrumAnalyser.xaml</DependentUpon>
     </Compile>
     <Compile Include="WaveFormControl.xaml.cs">
       <DependentUpon>WaveFormControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="WaveformVisual.cs" />
+    <Compile Include="AudioPlaybackDemo\WaveformVisual.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="app.config" />
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -226,6 +243,28 @@
       <ProductName>Windows Installer 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\SampleData\Drums\closed-hat-trimmed.wav">
+      <Link>Samples\closed-hat-trimmed.wav</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\SampleData\Drums\crash-trimmed.wav">
+      <Link>Samples\crash-trimmed.wav</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\SampleData\Drums\kick-trimmed.wav">
+      <Link>Samples\kick-trimmed.wav</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\SampleData\Drums\open-hat-trimmed.wav">
+      <Link>Samples\open-hat-trimmed.wav</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\SampleData\Drums\snare-trimmed.wav">
+      <Link>Samples\snare-trimmed.wav</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

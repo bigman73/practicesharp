@@ -50,8 +50,8 @@
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <DocumentationFile>bin\Debug\NAudio.XML</DocumentationFile>
-    <PlatformTarget>x86</PlatformTarget>
-    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <CodeAnalysisRuleSet>NAudio.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -63,30 +63,7 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <PlatformTarget>x86</PlatformTarget>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\x86\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <DocumentationFile>bin\Debug\NAudio.XML</DocumentationFile>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
-    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
-    <OutputPath>bin\x86\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
-    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
-    <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
+    <DocumentationFile>bin\Release\NAudio.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -96,6 +73,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Codecs\ALawDecoder.cs" />
+    <Compile Include="Codecs\ALawEncoder.cs" />
+    <Compile Include="Codecs\G722Codec.cs" />
+    <Compile Include="Codecs\MuLawDecoder.cs" />
+    <Compile Include="Codecs\MuLawEncoder.cs" />
     <Compile Include="CoreAudioApi\AudioCaptureClient.cs" />
     <Compile Include="CoreAudioApi\AudioClient.cs" />
     <Compile Include="CoreAudioApi\AudioClientBufferFlags.cs" />
@@ -145,14 +127,15 @@
     <Compile Include="FileFormats\Map\CakewalkDrumMapping.cs" />
     <Compile Include="FileFormats\Map\CakewalkMapFile.cs" />
     <Compile Include="FileFormats\Map\MapBlockHeader.cs" />
+    <Compile Include="FileFormats\Mp3\ChannelMode.cs" />
     <Compile Include="FileFormats\Mp3\DmoMp3FrameDecompressor.cs" />
     <Compile Include="FileFormats\Mp3\Id3v2Tag.cs" />
     <Compile Include="FileFormats\Mp3\IMp3FrameDecompressor.cs" />
     <Compile Include="FileFormats\Mp3\Mp3Frame.cs" />
     <Compile Include="FileFormats\Mp3\Mp3FrameDecompressor.cs" />
+    <Compile Include="FileFormats\Mp3\MpegLayer.cs" />
+    <Compile Include="FileFormats\Mp3\MpegVersion.cs" />
     <Compile Include="FileFormats\Mp3\XingHeader.cs" />
-    <Compile Include="FileFormats\Ogg\OggEncoder.cs" />
-    <Compile Include="FileFormats\Ogg\OggInterop.cs" />
     <Compile Include="FileFormats\Sfz\SfzFileReader.cs" />
     <Compile Include="FileFormats\SoundFont\Generator.cs" />
     <Compile Include="FileFormats\SoundFont\GeneratorBuilder.cs" />
@@ -280,11 +263,13 @@
     <Compile Include="Mixer\SignedMixerControl.cs" />
     <Compile Include="Mixer\UnsignedMixerControl.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utils\BufferHelpers.cs" />
     <Compile Include="Utils\ByteEncoding.cs" />
     <Compile Include="Utils\CircularBuffer.cs" />
     <Compile Include="Utils\Decibels.cs" />
     <Compile Include="Utils\FileAssociations.cs" />
     <Compile Include="Utils\HResult.cs" />
+    <Compile Include="Utils\IgnoreDisposeStream.cs" />
     <Compile Include="Utils\MergeSort.cs" />
     <Compile Include="Utils\ProgressEventArgs.cs" />
     <Compile Include="Utils\ProgressLog.cs">
@@ -347,6 +332,7 @@
     <Compile Include="Wave\MmeInterop\Manufacturers.cs" />
     <Compile Include="Wave\MmeInterop\MmException.cs" />
     <Compile Include="Wave\MmeInterop\MmResult.cs" />
+    <Compile Include="Wave\MmeInterop\MmTime.cs" />
     <Compile Include="Wave\MmeInterop\WaveHeader.cs" />
     <Compile Include="Wave\MmeInterop\WaveHeaderFlags.cs" />
     <Compile Include="Wave\MmeInterop\WaveIn.cs" />
@@ -358,9 +344,22 @@
     <Compile Include="Wave\MmeInterop\WaveWindow.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Wave\SampleChunkConverters\ISampleChunkConverter.cs" />
+    <Compile Include="Wave\SampleChunkConverters\Mono16SampleChunkConverter.cs" />
+    <Compile Include="Wave\SampleChunkConverters\Mono24SampleChunkConverter.cs" />
+    <Compile Include="Wave\SampleChunkConverters\Mono8SampleChunkConverter.cs" />
+    <Compile Include="Wave\SampleChunkConverters\MonoFloatSampleChunkConverter.cs" />
+    <Compile Include="Wave\SampleChunkConverters\Stereo16SampleChunkConverter.cs" />
+    <Compile Include="Wave\SampleChunkConverters\Stereo24SampleChunkConverter.cs" />
+    <Compile Include="Wave\SampleChunkConverters\Stereo8SampleChunkConverter.cs" />
+    <Compile Include="Wave\SampleChunkConverters\StereoFloatSampleChunkConverter.cs" />
+    <Compile Include="Wave\SampleProviders\MixingSampleProvider.cs" />
+    <Compile Include="Wave\SampleProviders\PanningSampleProvider.cs" />
+    <Compile Include="Wave\WaveFormats\Gsm610WaveFormat.cs" />
     <Compile Include="Wave\WaveFormats\ImaAdpcmWaveFormat.cs" />
     <Compile Include="Wave\WaveFormats\Mp3WaveFormat.cs" />
     <Compile Include="Wave\WaveFormats\OggWaveFormat.cs" />
+    <Compile Include="Wave\WaveFormats\TrueSpeechWaveFormat.cs" />
     <Compile Include="Wave\WaveFormats\WaveFormat.cs" />
     <Compile Include="Wave\WaveFormats\AdpcmWaveFormat.cs" />
     <Compile Include="Wave\WaveFormats\WaveFormatCustomMarshaler.cs" />
@@ -375,6 +374,7 @@
     <Compile Include="Wave\WaveOutputs\IWavePlayer.cs" />
     <Compile Include="Wave\WaveOutputs\IWaveProvider.cs" />
     <Compile Include="Wave\WaveOutputs\DirectSoundOut.cs" />
+    <Compile Include="Wave\WaveOutputs\IWaveProviderFloat.cs" />
     <Compile Include="Wave\WaveOutputs\PlaybackState.cs" />
     <Compile Include="Wave\WaveOutputs\WasapiOut.cs" />
     <Compile Include="Wave\WaveOutputs\WaveBuffer.cs" />
@@ -382,29 +382,44 @@
     <Compile Include="Wave\MmeInterop\WaveCallbackStrategy.cs" />
     <Compile Include="Wave\WaveOutputs\WaveFileWriter.cs" />
     <Compile Include="Wave\WaveOutputs\WaveOut.cs" />
+    <Compile Include="Wave\WaveOutputs\WaveOutEvent.cs" />
     <Compile Include="Wave\WaveOutputs\WaveOutThreadSafe.cs" />
+    <Compile Include="Wave\SampleProviders\MeteringSampleProvider.cs" />
+    <Compile Include="Wave\SampleProviders\NotifyingSampleProvider.cs" />
+    <Compile Include="Wave\SampleProviders\VolumeSampleProvider.cs" />
+    <Compile Include="Wave\SampleProviders\SampleProviderConverterBase.cs" />
+    <Compile Include="Wave\SampleProviders\SampleToWaveProvider.cs" />
     <Compile Include="Wave\WaveProviders\BufferedWaveProvider.cs" />
+    <Compile Include="Wave\SampleProviders\MonoToStereoSampleProvider.cs" />
+    <Compile Include="Wave\WaveProviders\StereoToMonoProvider16.cs" />
+    <Compile Include="Wave\WaveProviders\MonoToStereoProvider16.cs" />
     <Compile Include="Wave\WaveProviders\WaveFloatTo16Provider.cs" />
     <Compile Include="Wave\WaveProviders\Wave16ToFloatProvider.cs" />
     <Compile Include="Wave\WaveProviders\WaveInProvider.cs" />
     <Compile Include="Wave\WaveProviders\WaveProvider16.cs" />
     <Compile Include="Wave\WaveProviders\WaveProvider32.cs" />
+    <Compile Include="Wave\SampleProviders\WaveToSampleProvider.cs" />
     <Compile Include="Wave\WaveProviders\WaveRecorder.cs" />
+    <Compile Include="Wave\WaveStreams\AiffFileReader.cs" />
+    <Compile Include="Wave\WaveStreams\AudioFileReader.cs" />
     <Compile Include="Wave\WaveStreams\BlockAlignReductionStream.cs" />
     <Compile Include="Wave\WaveStreams\CueList.cs" />
     <Compile Include="Wave\WaveStreams\CueWaveFileReader.cs" />
     <Compile Include="Wave\WaveStreams\ISampleNotifier.cs" />
     <Compile Include="Wave\WaveStreams\Mp3FileReader.cs" />
+    <Compile Include="Wave\SampleProviders\Pcm16BitToSampleProvider.cs" />
+    <Compile Include="Wave\SampleProviders\Pcm24BitToSampleProvider.cs" />
+    <Compile Include="Wave\SampleProviders\Pcm8BitToSampleProvider.cs" />
     <Compile Include="Wave\WaveStreams\RawSourceWaveStream.cs" />
     <Compile Include="Wave\WaveStreams\ResamplerDmoStream.cs" />
     <Compile Include="Wave\WaveStreams\RiffChunk.cs" />
     <Compile Include="Wave\WaveStreams\SimpleCompressorStream.cs" />
     <Compile Include="Wave\WaveStreams\Wave32To16Stream.cs" />
     <Compile Include="Wave\WaveStreams\WaveChannel32.cs" />
+    <Compile Include="Wave\SampleProviders\SampleChannel.cs" />
     <Compile Include="Wave\WaveStreams\WaveFileReader.cs" />
     <Compile Include="Wave\WaveStreams\WaveFormatConversionStream.cs" />
     <Compile Include="Wave\WaveStreams\WaveInBuffer.cs" />
-    <Compile Include="Wave\WaveStreams\WaveInStream.cs" />
     <Compile Include="Wave\WaveStreams\WaveMixerStream32.cs" />
     <Compile Include="Wave\WaveStreams\WaveOffsetStream.cs" />
     <Compile Include="Wave\WaveStreams\WaveOutBuffer.cs" />

@@ -7,6 +7,7 @@ using NAudio.Utils;
 namespace NAudioTests.WaveStreams
 {
     [TestFixture]
+    [Category("UnitTest")]
     public class CircularBufferTests
     {
         [Test]
@@ -55,15 +56,8 @@ namespace NAudioTests.WaveStreams
             CircularBuffer circularBuffer = new CircularBuffer(100);
             byte[] buffer = new byte[200];
                 
-            try
-            {
-                circularBuffer.Write(buffer, 0, 200);
-                Assert.Fail("Should have thrown an argument exception");
-            }
-            catch(ArgumentException)
-            {
-                // expected exception
-            }            
+            int written = circularBuffer.Write(buffer, 0, 200);
+            Assert.AreEqual(100, written, "Wrote the wrong amount");
         }
 
         [Test]
@@ -72,15 +66,8 @@ namespace NAudioTests.WaveStreams
             CircularBuffer circularBuffer = new CircularBuffer(100);
             byte[] buffer = new byte[200];
             circularBuffer.Write(buffer, 0, 75);
-            try
-            {
-                circularBuffer.Write(buffer, 0, 50);
-                Assert.Fail("Should have thrown an argument exception");
-            }
-            catch (ArgumentException)
-            {
-                // expected exception
-            }
+            int written = circularBuffer.Write(buffer, 0, 50);
+            Assert.AreEqual(25, written, "Wrote the wrong amount");
         }
 
         [Test]
@@ -89,15 +76,8 @@ namespace NAudioTests.WaveStreams
             CircularBuffer circularBuffer = new CircularBuffer(100);
             byte[] buffer = new byte[200];
             circularBuffer.Write(buffer, 0, 100);
-            try
-            {
-                circularBuffer.Write(buffer, 0, 50);
-                Assert.Fail("Should have thrown an argument exception");
-            }
-            catch (ArgumentException)
-            {
-                // expected exception
-            }
+            int written = circularBuffer.Write(buffer, 0, 50);
+            Assert.AreEqual(0, written, "Wrote the wrong amount");
         }
 
         [Test]
@@ -116,7 +96,7 @@ namespace NAudioTests.WaveStreams
             // read wraps round
             read = circularBuffer.Read(buffer, 0, 75);
             Assert.AreEqual(50, read, "Bytes Read 2");
-            Assert.AreEqual(0, circularBuffer.Count, "Final Count");                        
+            Assert.AreEqual(0, circularBuffer.Count, "Final Count");
         }
 
         [Test]

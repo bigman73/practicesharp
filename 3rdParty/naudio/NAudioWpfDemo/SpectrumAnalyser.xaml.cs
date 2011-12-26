@@ -20,25 +20,84 @@ namespace NAudioWpfDemo
     /// </summary>
     public partial class SpectrumAnalyser : UserControl
     {
-        private double yScale = 1000;
+        enum DrawMode
+        {
+            Polyline,
+            Bars,
+        }
+
         private double xScale = 200;
+        private int bins = 512; // guess a 1024 size FFT, bins is half FFT size
+
         public SpectrumAnalyser()
         {
             InitializeComponent();
+            CalculateXScale();
+            this.SizeChanged += new SizeChangedEventHandler(SpectrumAnalyser_SizeChanged);
         }
+
+        void SpectrumAnalyser_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            CalculateXScale();
+        }
+
+        private void CalculateXScale()
+        {
+            this.xScale = this.ActualWidth / (bins / binsPerPoint);
+        }
+
+        private const int binsPerPoint = 2; // reduce the number of points we plot for a less jagged line?
+        private int updateCount;
 
         public void Update(Complex[] fftResults)
         {
-            for (int n = 0; n < fftResults.Length / 2; n++)
+            // no need to repaint too many frames per second
+            if (updateCount++ % 2 == 0)
             {
-                double intensity = Math.Sqrt(fftResults[n].X * fftResults[n].X + fftResults[n].Y * fftResults[n].Y);
-                double yPos = intensity * yScale;
-                //double decibels = 10 * Math.Log10(fftResults[n].X * fftResults[n].X + fftResults[n].Y * fftResults[n].Y);
-                //double yPos = decibels * -1.0;
-                
-                
-                AddResult(n, yPos);
+                return;
             }
+
+            if (fftResults.Length / 2 != bins)
+            {
+                this.bins = fftResults.Length / 2;
+                CalculateXScale();
+            }
+            
+            for (int n = 0; n < fftResults.Length / 2; n+= binsPerPoint)
+            {
+                double yPos = GetYPosLog(fftResults[n]);
+                AddResult(n / binsPerPoint, yPos);
+            }
+        }
+
+        private double GetYPosIntensityOnly(Complex c)
+        {
+            double yScale = 1000;
+            double intensity = Math.Sqrt(c.X * c.X + c.Y * c.Y);
+            double yPos = this.ActualHeight - intensity * yScale;
+            return yPos;
+        }
+
+        private double GetYPosLog(Complex c)
+        {
+            // in theory should be 20x to get the power, but doesn't seem to give me sensible values (may be because we throw half the FFT away - bin 0 might need to be halved)
+            double intensityDB = 10 * Math.Log(Math.Sqrt(c.X * c.X + c.Y * c.Y));
+            double minDB = -96;
+            if (intensityDB < minDB) intensityDB = minDB;
+            double percent = intensityDB / minDB;
+            // we want 0dB to be at the top (i.e. yPos = 0)
+            double yPos = percent * this.ActualHeight;
+            return yPos;
+        }
+
+        private double GetYPosAnotherTry(Complex c, int binNumber, int fftLength)
+        {
+            // this technique based on http://www.mathworks.com/support/tech-notes/1700/1702.html
+            double abs = Math.Sqrt(c.X * c.X + c.Y * c.Y); // do not scale by FFT length as NAudio already does this.
+            abs = abs * abs;
+            if (binNumber != 0) abs *= 2;
+            double yPos = abs * this.ActualHeight;
+            return yPos;
         }
 
         private void AddResult(int index, double power)
@@ -57,7 +116,7 @@ namespace NAudioWpfDemo
         private double CalculateXPos(int bin)
         {
             if (bin == 0) return 0;
-            return Math.Log10(bin) * xScale;
+            return bin * xScale; // Math.Log10(bin) * xScale;
         }
     }
 }

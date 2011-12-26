@@ -59,33 +59,15 @@
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\x86\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
-    <CodeAnalysisIgnoreBuiltInRuleSets>true</CodeAnalysisIgnoreBuiltInRuleSets>
-    <CodeAnalysisIgnoreBuiltInRules>true</CodeAnalysisIgnoreBuiltInRules>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
-    <OutputPath>bin\x86\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
-    <CodeAnalysisIgnoreBuiltInRuleSets>true</CodeAnalysisIgnoreBuiltInRuleSets>
-    <CodeAnalysisIgnoreBuiltInRules>true</CodeAnalysisIgnoreBuiltInRules>
-    <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
-  </PropertyGroup>
   <ItemGroup>
-    <Reference Include="nunit.framework, Version=2.4.7.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Lib\NUnit\nunit.framework.dll</HintPath>
+    <Reference Include="nunit.framework, Version=2.5.10.11092, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+      <HintPath>..\packages\NUnit.2.5.10.11092\lib\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.mocks, Version=2.5.10.11092, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+      <HintPath>..\packages\NUnit.2.5.10.11092\lib\nunit.mocks.dll</HintPath>
+    </Reference>
+    <Reference Include="pnunit.framework">
+      <HintPath>..\packages\NUnit.2.5.10.11092\lib\pnunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -96,24 +78,32 @@
   <ItemGroup>
     <Compile Include="Acm\AcmDriverTests.cs" />
     <Compile Include="Acm\WaveFormatConversionStreamTests.cs" />
+    <Compile Include="Aiff\AiffReaderTests.cs" />
+    <Compile Include="DirectSound\DirectSoundTests.cs" />
     <Compile Include="Dmo\DmoMp3FrameDecompressorTests.cs" />
     <Compile Include="Dmo\DmoTests.cs" />
     <Compile Include="Dmo\ResamplerDmoStreamTests.cs" />
     <Compile Include="Dmo\ResamplerDmoTests.cs" />
     <Compile Include="Midi\MidiEventCollectionTest.cs" />
+    <Compile Include="Midi\PitchWheelChangeEventTests.cs" />
     <Compile Include="Mixer\MixerApiTests.cs" />
+    <Compile Include="Mp3\Mp3FileReaderTests.cs" />
     <Compile Include="Mp3\Mp3FrameTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utils\BlockAlignedWaveStream.cs" />
     <Compile Include="Utils\NullWaveStream.cs" />
+    <Compile Include="Utils\OSUtils.cs" />
     <Compile Include="Wasapi\AudioClientTests.cs" />
     <Compile Include="Wasapi\MMDeviceEnumeratorTests.cs" />
     <Compile Include="WaveFormats\AdpcmWaveFormatTests.cs" />
     <Compile Include="WaveIn\WaveInDevicesTests.cs" />
     <Compile Include="WaveStreams\BlockAlignmentReductionStreamTests.cs" />
     <Compile Include="WaveStreams\CircularBufferTests.cs" />
+    <Compile Include="WaveStreams\MonoToStereoProvider16Tests.cs" />
+    <Compile Include="WaveStreams\StereoToMonoProvider16Tests.cs" />
     <Compile Include="WaveStreams\WaveChannel32Tests.cs" />
     <Compile Include="WaveStreams\WaveFileReaderTests.cs" />
+    <Compile Include="WaveStreams\WaveFileWriterTests.cs" />
     <Compile Include="WindowsMedia\WindowsMediaTests.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -128,6 +118,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="NAudioTests.nunit" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
@@ -147,6 +138,9 @@
     </BootstrapperPackage>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>"$(SolutionDir)Tools\nuget" install "$(ProjectDir)packages.config" -o "$(SolutionDir)Packages"</PreBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

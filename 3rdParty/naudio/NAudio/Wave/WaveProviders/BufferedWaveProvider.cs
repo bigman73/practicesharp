@@ -3,17 +3,18 @@ using System.Collections.Generic;
 using System.Text;
 using System.Collections;
 using NAudio.Wave;
+using NAudio.Utils;
 
 namespace NAudio.Wave
 {
     /// <summary>
     /// Provides a buffered store of samples
     /// Read method will return queued samples or fill buffer with zeroes
-    /// based on code from trentdevers (http://naudio.codeplex.com/Thread/View.aspx?ThreadId=54133)
+    /// Now backed by a circular buffer
     /// </summary>
     public class BufferedWaveProvider : IWaveProvider
     {
-        private Queue<AudioBuffer> queue;
+        private CircularBuffer circularBuffer;
         private WaveFormat waveFormat;
 
         /// <summary>
@@ -23,14 +24,50 @@ namespace NAudio.Wave
         public BufferedWaveProvider(WaveFormat waveFormat)
         {
             this.waveFormat = waveFormat;
-            this.queue = new Queue<AudioBuffer>();
-            this.MaxQueuedBuffers = 100;
+            this.BufferLength = waveFormat.AverageBytesPerSecond * 5;
         }
 
         /// <summary>
-        /// Maximum number of queued buffers
+        /// Buffer length in bytes
         /// </summary>
-        public int MaxQueuedBuffers { get; set; }
+        public int BufferLength { get; set; }
+
+        /// <summary>
+        /// Buffer duration
+        /// </summary>
+        public TimeSpan BufferDuration
+        {
+            get
+            {
+                return TimeSpan.FromSeconds((double)BufferLength / WaveFormat.AverageBytesPerSecond);
+            }
+            set
+            {
+                BufferLength = (int)(value.TotalSeconds * WaveFormat.AverageBytesPerSecond);
+            }
+        }
+
+        /// <summary>
+        /// If true, when the buffer is full, start throwing away data
+        /// if false, AddSamples will throw an exception when buffer is full
+        /// </summary>
+        public bool DiscardOnBufferOverflow { get; set; }
+
+        /// <summary>
+        /// The number of buffered bytes
+        /// </summary>
+        public int BufferedBytes
+        {
+            get { if (circularBuffer == null) return 0; return circularBuffer.Count; }
+        }
+
+        /// <summary>
+        /// Buffered Duration
+        /// </summary>
+        public TimeSpan BufferedDuration
+        {
+            get { return TimeSpan.FromSeconds((double)BufferedBytes / WaveFormat.AverageBytesPerSecond); }
+        }
 
         /// <summary>
         /// Gets the WaveFormat
@@ -45,15 +82,16 @@ namespace NAudio.Wave
         /// </summary>
         public void AddSamples(byte[] buffer, int offset, int count)
         {
-            byte[] nbuffer = new byte[count];
-            Buffer.BlockCopy(buffer, offset, nbuffer, 0, count);
-            lock (this.queue)
+            // create buffer here to allow user to customise buffer length
+            if (this.circularBuffer == null)
+            { 
+                this.circularBuffer = new CircularBuffer(this.BufferLength);
+            }
+
+            int written  = this.circularBuffer.Write(buffer, offset, count);
+            if (written < count && !DiscardOnBufferOverflow)
             {
-                if (this.queue.Count >= this.MaxQueuedBuffers)
-                {
-                    throw new InvalidOperationException("Too many queued buffers");
-                }
-                this.queue.Enqueue(new AudioBuffer(nbuffer));
+                throw new InvalidOperationException("Buffer full");
             }
         }
 
@@ -64,74 +102,16 @@ namespace NAudio.Wave
         public int Read(byte[] buffer, int offset, int count) 
         {
             int read = 0;
-            while (read < count) 
-            {
-                int required = count - read;
-                AudioBuffer audioBuffer = null;
-                lock (this.queue)
-                {
-                    if (this.queue.Count > 0)
-                    {
-                        audioBuffer = this.queue.Peek();
-                    }
-                }
-
-                if (audioBuffer == null) 
-                {
-                    // Return a zero filled buffer
-                    for (int n = 0; n < required; n++)
-                        buffer[offset + n] = 0;
-                    read += required;
-                } 
-                else 
-                {
-                    int nread = audioBuffer.Buffer.Length - audioBuffer.Position;
-
-                    // If this buffer must be read in it's entirety
-                    if (nread <= required) 
-                    {
-                        // Read entire buffer
-                        Buffer.BlockCopy(audioBuffer.Buffer, audioBuffer.Position, buffer, offset + read, nread);
-                        read += nread;
-
-                        lock (this.queue)
-                        {
-                            this.queue.Dequeue();
-                        }
-                    }
-                    else // the number of bytes that can be read is greater than that required
-                    {
-                        Buffer.BlockCopy(audioBuffer.Buffer, audioBuffer.Position, buffer, offset + read, required);
-                        audioBuffer.Position += required;
-                        read += required;
-                    }
-                }
+            if (this.circularBuffer != null) // not yet created
+            { 
+                read = this.circularBuffer.Read(buffer, offset, count);
             }
-            return read;
-        }
-
-        /// <summary>
-        /// Internal helper class for a stored buffer
-        /// </summary>
-        private class AudioBuffer
-        {
-            /// <summary>
-            /// Constructs a new AudioBuffer
-            /// </summary>
-            public AudioBuffer(byte[] buffer)
+            if (read < count)
             {
-                this.Buffer = buffer;
+                // zero the end of the buffer
+                Array.Clear(buffer, offset + read, count - read);
             }
-
-            /// <summary>
-            /// Gets the Buffer
-            /// </summary>
-            public byte[] Buffer { get; private set; }
-
-            /// <summary>
-            /// Gets or sets the position within the buffer we have read up to so far
-            /// </summary>
-            public int Position { get; set; }
+            return count;
         }
     }
 }

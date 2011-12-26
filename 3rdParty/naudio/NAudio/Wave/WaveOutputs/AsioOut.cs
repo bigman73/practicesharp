@@ -1,5 +1,6 @@
 ﻿using System;
 using NAudio.Wave.Asio;
+using System.Threading;
 
 namespace NAudio.Wave
 {
@@ -17,13 +18,16 @@ namespace NAudio.Wave
     /// </summary>
     public class AsioOut : IWavePlayer
     {
-        ASIODriverExt driver;
-        IWaveProvider sourceStream;
+        private ASIODriverExt driver;
+        private IWaveProvider sourceStream;
         private WaveFormat waveFormat;
-        PlaybackState playbackState;
+        private PlaybackState playbackState;
         private int nbSamples;
         private byte[] waveBuffer;
         private ASIOSampleConvertor.SampleConvertor convertor;
+        private string driverName;
+        private int channelOffset;
+        private SynchronizationContext syncContext;
 
         /// <summary>
         /// Playback Stopped
@@ -45,6 +49,7 @@ namespace NAudio.Wave
         /// <param name="driverName">Name of the device.</param>
         public AsioOut(String driverName)
         {
+            this.syncContext = SynchronizationContext.Current;
             initFromName(driverName);
         }
 
@@ -54,6 +59,7 @@ namespace NAudio.Wave
         /// <param name="driverIndex">Device number (zero based)</param>
         public AsioOut(int driverIndex)
         {
+            this.syncContext = SynchronizationContext.Current; 
             String[] names = GetDriverNames();
             if (names.Length == 0)
             {
@@ -63,7 +69,8 @@ namespace NAudio.Wave
             {
                 throw new ArgumentException(String.Format("Invalid device number. Must be in the range [0,{0}]", names.Length));
             }
-            initFromName(names[driverIndex]);
+            this.driverName = names[driverIndex];
+            initFromName(this.driverName);
         }
 
         /// <summary>
@@ -122,6 +129,7 @@ namespace NAudio.Wave
 
             // Instantiate the extended driver
             driver = new ASIODriverExt(basicDriver);
+            this.channelOffset = 0;
         }
 
         /// <summary>
@@ -151,6 +159,7 @@ namespace NAudio.Wave
         {
             playbackState = PlaybackState.Stopped;
             driver.Stop();
+            RaisePlaybackStopped();
         }
 
         /// <summary>
@@ -165,9 +174,13 @@ namespace NAudio.Wave
         /// <summary>
         /// Initialises to play
         /// </summary>
-        /// <param name="waveProvider"></param>
+        /// <param name="waveProvider">Source wave provider</param>
         public void Init(IWaveProvider waveProvider)
         {
+            if (this.sourceStream != null)
+            {
+                throw new InvalidOperationException("Already initialised this instance of AsioOut - dispose and create a new one");
+            }
             sourceStream = waveProvider;
             waveFormat = waveProvider.WaveFormat;
 
@@ -184,12 +197,13 @@ namespace NAudio.Wave
             }
 
             // Plug the callback
-            driver.FillBufferCalback = driver_BufferUpdate;
+            driver.FillBufferCallback = driver_BufferUpdate;
 
             // Used Prefered size of ASIO Buffer
             nbSamples = driver.CreateBuffers(waveFormat.Channels, false);
+            driver.SetChannelOffset(channelOffset); // will throw an exception if channel offset is too high
 
-            // make a buffer big enough to read enough from the sourceStream to fill the ASIO buffers
+            // make a buffer big enough to read enough from the sourceStream to fill the ASIO buffers            
             waveBuffer = new byte[nbSamples * waveFormat.Channels * waveFormat.BitsPerSample / 8];
         }
 
@@ -217,6 +231,11 @@ namespace NAudio.Wave
                     convertor(new IntPtr(pBuffer), bufferChannels, waveFormat.Channels, nbSamples);
                 }
             }
+
+            if (read == 0)
+            {
+                Stop();
+            }
         }
 
         /// <summary>
@@ -227,9 +246,30 @@ namespace NAudio.Wave
             get { return playbackState; }
         }
 
+        /// <summary>
+        /// Driver Name
+        /// </summary>
+        public string DriverName
+        {
+            get { return this.driverName; }
+        }
+
+        /// <summary>
+        /// By default the first channel on the input WaveProvider is sent to the first ASIO output.
+        /// This option sends it to the specified channel number.
+        /// Warning: make sure you don't set it higher than the number of available output channels - 
+        /// the number of source channels.
+        /// n.b. Future NAudio may modify this
+        /// </summary>
+        public int ChannelOffset
+        {
+            get { return this.channelOffset; }
+            set { this.channelOffset = value; }
+        }
 
         /// <summary>
         /// Sets the volume (1.0 is unity gain)
+        /// Not supported for ASIO Out. Set the volume on the input stream instead
         /// </summary>
         public float Volume
         {
@@ -240,15 +280,25 @@ namespace NAudio.Wave
             set
             {
                 if (value != 1.0f)
-                    throw new InvalidOperationException();
+                {
+                    throw new InvalidOperationException("AsioOut does not support setting the device volume");
+                }
             }
         }
 
         private void RaisePlaybackStopped()
         {
-            if (PlaybackStopped != null)
+            EventHandler handler = PlaybackStopped;
+            if (handler != null)
             {
-                PlaybackStopped(this, EventArgs.Empty);
+                if (this.syncContext == null)
+                {
+                    handler(this, EventArgs.Empty);
+                }
+                else
+                {
+                    this.syncContext.Post(state => handler(this, EventArgs.Empty), null);
+                }
             }
         }
     }
