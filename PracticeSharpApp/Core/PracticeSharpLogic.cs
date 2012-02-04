@@ -237,10 +237,8 @@ namespace BigMansStuff.PracticeSharp.Core
 
         /// <summary>
         /// Property for controlling the play back Pitch
-        /// Domain values - A floating number (-2.0 to 2.0 octaves)
+        /// Domain values - Semi-Tones (-12.0 to +12.0, -12 is one octave down/+12 is one octave up)
         /// 0.0 = Regular Pitch
-        /// greater than 0.0 = Higher
-        /// less than 0.0 = Lower
         /// </summary>
         /// <remarks>
         /// To be used from the controlling component (i.e. the GUI)
@@ -360,6 +358,11 @@ namespace BigMansStuff.PracticeSharp.Core
                     if (m_status == Statuses.Pausing || m_status == Statuses.Ready || m_status == Statuses.Stopped)
                     {
                         m_currentPlayTime = m_newPlayTime;
+                        // Limit minimum and maximum
+                        if (m_currentPlayTime < TimeSpan.Zero)
+                            m_currentPlayTime = TimeSpan.Zero;
+                        else if (m_currentPlayTime > m_filePlayDuration)
+                            m_currentPlayTime = m_filePlayDuration;
                     }
                 }
             }
@@ -934,7 +937,8 @@ namespace BigMansStuff.PracticeSharp.Core
             {
                 float pitch = this.Pitch;
                 // Assign updated pitch
-                m_soundTouchSharp.SetPitchOctaves(pitch);
+                // m_soundTouchSharp.SetPitchOctaves(pitch);
+                m_soundTouchSharp.SetPitchSemiTones(pitch);
                 m_pitchChanged = false;
             }
         }

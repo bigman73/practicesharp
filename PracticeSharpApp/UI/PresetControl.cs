@@ -225,6 +225,19 @@ namespace BigMansStuff.PracticeSharp.UI
             ChangeDescription();
         }
 
+        /// <summary>
+        /// Layout event handler
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void PresetControl_Layout(object sender, LayoutEventArgs e)
+        {
+            // Horizontally center led picture box above the preset button
+            //ledPictureBox.Left = presetButton.Left + (presetButton.Width - ledPictureBox.Width) / 2;
+
+            ledPictureBox.Left = presetButton.Right + 1;
+        }
+
         #endregion
 
         #region Private Methods
@@ -327,6 +340,6 @@ namespace BigMansStuff.PracticeSharp.UI
 
         private PresetStates m_state;
 
-        #endregion
+        #endregion     
     }
 }

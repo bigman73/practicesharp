@@ -53,16 +53,17 @@ namespace BigMansStuff.PracticeSharp.UI
         {
             this.presetButton = new System.Windows.Forms.Button();
             this.ledPictureBox = new System.Windows.Forms.PictureBox();
-            this.presetIdLabel = new HoverLabel();
+            this.presetIdLabel = new BigMansStuff.PracticeSharp.UI.HoverLabel();
             ((System.ComponentModel.ISupportInitialize)(this.ledPictureBox)).BeginInit();
             this.SuspendLayout();
             // 
             // presetButton
             // 
+            this.presetButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.presetButton.AutoEllipsis = true;
-            this.presetButton.Location = new System.Drawing.Point(1, 21);
+            this.presetButton.Location = new System.Drawing.Point(1, 3);
             this.presetButton.Name = "presetButton";
-            this.presetButton.Size = new System.Drawing.Size(64, 97);
+            this.presetButton.Size = new System.Drawing.Size(81, 56);
             this.presetButton.TabIndex = 44;
             this.presetButton.Text = "Preset 1";
             this.presetButton.UseVisualStyleBackColor = true;
@@ -70,7 +71,8 @@ namespace BigMansStuff.PracticeSharp.UI
             // 
             // ledPictureBox
             // 
-            this.ledPictureBox.Location = new System.Drawing.Point(25, 3);
+            this.ledPictureBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.ledPictureBox.Location = new System.Drawing.Point(83, 6);
             this.ledPictureBox.Name = "ledPictureBox";
             this.ledPictureBox.Size = new System.Drawing.Size(16, 16);
             this.ledPictureBox.TabIndex = 45;
@@ -78,11 +80,12 @@ namespace BigMansStuff.PracticeSharp.UI
             // 
             // presetIdLabel
             // 
+            this.presetIdLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.presetIdLabel.AutoSize = true;
-            this.presetIdLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 27.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.presetIdLabel.Location = new System.Drawing.Point(66, 6);
+            this.presetIdLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 21.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.presetIdLabel.Location = new System.Drawing.Point(77, 25);
             this.presetIdLabel.Name = "presetIdLabel";
-            this.presetIdLabel.Size = new System.Drawing.Size(39, 42);
+            this.presetIdLabel.Size = new System.Drawing.Size(31, 33);
             this.presetIdLabel.TabIndex = 48;
             this.presetIdLabel.Text = "1";
             this.presetIdLabel.Click += new System.EventHandler(this.presetIdLabel_Click);
@@ -91,12 +94,13 @@ namespace BigMansStuff.PracticeSharp.UI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.presetIdLabel);
             this.Controls.Add(this.ledPictureBox);
             this.Controls.Add(this.presetButton);
+            this.Controls.Add(this.presetIdLabel);
             this.Name = "PresetControl";
-            this.Size = new System.Drawing.Size(103, 121);
+            this.Size = new System.Drawing.Size(103, 60);
             this.Load += new System.EventHandler(this.PresetControl_Load);
+            this.Layout += new System.Windows.Forms.LayoutEventHandler(this.PresetControl_Layout);
             ((System.ComponentModel.ISupportInitialize)(this.ledPictureBox)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

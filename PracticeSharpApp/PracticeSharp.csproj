@@ -104,6 +104,12 @@
     <Compile Include="UI\HoverLabel.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="UI\KeyboardShortcutsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\KeyboardShortcutsForm.Designer.cs">
+      <DependentUpon>KeyboardShortcutsForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="UI\MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -143,6 +149,9 @@
     <EmbeddedResource Include="UI\AboutForm.resx">
       <DependentUpon>AboutForm.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\KeyboardShortcutsForm.resx">
+      <DependentUpon>KeyboardShortcutsForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UI\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
@@ -237,6 +246,7 @@
     <Content Include="LICENSES.txt" />
     <Content Include="Res\blue-off-16.png" />
     <Content Include="Res\blue-on-16.png" />
+    <Content Include="Res\KeyboardShortcuts.png" />
     <Content Include="Res\lgplv3-147x51.png" />
     <Content Include="Res\PracticeSharp.ico" />
     <Content Include="Res\PracticeSharp.png" />

@@ -134,6 +134,10 @@ namespace BigMansStuff.PracticeSharp.UI
             m_presetControls.Add("2", presetControl2);
             m_presetControls.Add("3", presetControl3);
             m_presetControls.Add("4", presetControl4);
+            m_presetControls.Add("5", presetControl5);
+            m_presetControls.Add("6", presetControl6);
+            m_presetControls.Add("7", presetControl7);
+            m_presetControls.Add("8", presetControl8);
 
             // Set defaults
             tempoTrackBar_ValueChanged(this, new EventArgs());
@@ -269,47 +273,177 @@ namespace BigMansStuff.PracticeSharp.UI
         #region GUI Event Handlers
 
         /// <summary>
-        /// Central key handler
+        /// Central key handler - KeyDown (As long as a key is pressed)
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void MainForm_KeyDown(object sender, KeyEventArgs e)
+        {
+            // > - Jump forward: Start
+            if (!e.Control && !e.Alt && !e.Shift && e.KeyValue == 190)
+            {
+                if (!m_jumpMode)
+                {
+                    m_jumpMode = true;
+                    m_preJumpStatus = m_practiceSharpLogic.Status;
+
+                    if (m_preJumpStatus == PracticeSharpLogic.Statuses.Playing)
+                    {
+                        m_practiceSharpLogic.Pause();
+                    }
+                }
+                JumpForward();
+                e.Handled = true;
+            }
+            // < - Jump Backward: Start
+            else if (!e.Control && !e.Alt && !e.Shift && e.KeyValue == 188)
+            {
+                if (!m_jumpMode)
+                {
+                    m_jumpMode = true;
+                    m_preJumpStatus = m_practiceSharpLogic.Status;
+
+                    if (m_preJumpStatus == PracticeSharpLogic.Statuses.Playing)
+                    {
+                        m_practiceSharpLogic.Pause();
+                    }
+                }
+
+                JumpBackward();
+                e.Handled = true;
+            }
+            // F - Faster tempo
+            else if (!e.Control && !e.Alt && !e.Shift && (e.KeyCode == Keys.F))
+            {
+                tempoTrackBar.Value = Math.Min(tempoTrackBar.Value + 4, tempoTrackBar.Maximum);
+
+                e.Handled = true;
+            }
+            // S - Faster tempo
+            else if (!e.Control && !e.Alt && !e.Shift && (e.KeyCode == Keys.S))
+            {
+                tempoTrackBar.Value = Math.Max( tempoTrackBar.Value - 4, tempoTrackBar.Minimum);
+
+                e.Handled = true;
+            }
+            // - Volume Down
+            else if (!e.Control && !e.Alt && !e.Shift && e.KeyCode == Keys.OemMinus)
+            {
+                volumeTrackBar.Value = Math.Max(volumeTrackBar.Value - 5, volumeTrackBar.Minimum);
+                e.Handled = true;
+            }
+            // + Volume Down
+            else if (!e.Control && !e.Alt && !e.Shift && e.KeyCode == Keys.Oemplus)
+            {
+                volumeTrackBar.Value = Math.Min(volumeTrackBar.Value + 5, volumeTrackBar.Maximum);
+                e.Handled = true;
+            }
+            // [ Pitch Down
+            else if (!e.Control && !e.Alt && !e.Shift && e.KeyCode == Keys.OemOpenBrackets)
+            {
+                // 8 = 1 semi-tone (8/96 = 1/12)
+                pitchTrackBar.Value =  Math.Max(pitchTrackBar.Value - 8, pitchTrackBar.Minimum);
+                e.Handled = true;
+            }
+            // ] Pitch Up
+            else if (!e.Control && !e.Alt && !e.Shift && e.KeyCode == Keys.OemCloseBrackets)
+            {
+                pitchTrackBar.Value = Math.Min(pitchTrackBar.Value + 8, pitchTrackBar.Maximum);
+
+                e.Handled = true;
+            }
+        } 
+
+        /// <summary>
+        /// Central key handler - KeyUp (when is released)
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void MainForm_KeyUp(object sender, KeyEventArgs e)
         {
-            if (!e.Control && e.Alt && !e.Shift && e.KeyCode == Keys.D1)
+            // Jump Mode (< or >): End
+            if (!e.Control && !e.Alt && !e.Shift && ( e.KeyValue == 190 || e.KeyValue == 188) )
+            {
+                m_jumpMode = false;
+
+                TempMaskOutPlayTimeTrackBar();
+                TempMaskOutCurrentControls();
+
+                if (m_preJumpStatus == PracticeSharpLogic.Statuses.Playing)
+                {
+                    m_practiceSharpLogic.Play();
+                }
+                e.Handled = true;
+            }
+          
+
+            // 1 - Preset #1
+            else if (!e.Control && !e.Alt && !e.Shift && e.KeyCode == Keys.D1)
             {
                 presetControl1.State = PresetControl.PresetStates.Selected;
                 e.Handled = true;
             }
-            else if (!e.Control && e.Alt && !e.Shift && e.KeyCode == Keys.D2)
+            // 2 - Preset #2
+            else if (!e.Control && !e.Alt && !e.Shift && e.KeyCode == Keys.D2)
             {
                 presetControl2.State = PresetControl.PresetStates.Selected;
                 e.Handled = true;
             }
-            else if (!e.Control && e.Alt && !e.Shift && e.KeyCode == Keys.D3)
+            // 3 - Preset #3
+            else if (!e.Control && !e.Alt && !e.Shift && e.KeyCode == Keys.D3)
             {
                 presetControl3.State = PresetControl.PresetStates.Selected;
                 e.Handled = true;
             }
-            else if (!e.Control && e.Alt && !e.Shift && e.KeyCode == Keys.D4)
+            // 4 - Preset #4
+            else if (!e.Control && !e.Alt && !e.Shift && e.KeyCode == Keys.D4)
             {
                 presetControl4.State = PresetControl.PresetStates.Selected;
                 e.Handled = true;
             }
+            // 5 - Preset #5
+            else if (!e.Control && !e.Alt && !e.Shift && e.KeyCode == Keys.D5)
+            {
+                presetControl5.State = PresetControl.PresetStates.Selected;
+                e.Handled = true;
+            }
+            // 6 - Preset #6
+            else if (!e.Control && !e.Alt && !e.Shift && e.KeyCode == Keys.D6)
+            {
+                presetControl6.State = PresetControl.PresetStates.Selected;
+                e.Handled = true;
+            }
+            // 7 - Preset #7
+            else if (!e.Control && !e.Alt && !e.Shift && e.KeyCode == Keys.D7)
+            {
+                presetControl7.State = PresetControl.PresetStates.Selected;
+                e.Handled = true;
+            }
+            // 8 - Preset #8
+            else if (!e.Control && !e.Alt && !e.Shift && e.KeyCode == Keys.D8)
+            {
+                presetControl8.State = PresetControl.PresetStates.Selected;
+                e.Handled = true;
+            }
+            // Ctrl + O - Open File
             else if (e.Control && !e.Alt && !e.Shift && e.KeyCode == Keys.O)
             {
                 openFileButton.PerformClick();
                 e.Handled = true;
             }
+            // Space - Pause/Play
             else if (!e.Control && !e.Alt && !e.Shift && e.KeyCode == Keys.Space)
             {
                 playPauseButton.PerformClick();
                 e.Handled = true;
             }
-            else if (!e.Control && !e.Alt && !e.Shift && e.KeyCode == Keys.F5)
+            // L - Jump to end of loop
+            else if (!e.Control && !e.Alt && !e.Shift && e.KeyCode == Keys.L)
             {
                 positionLabel.PerformClick();
                 e.Handled = true;
             }
+            // F1 - Help
             else if (!e.Control && !e.Alt && !e.Shift && e.KeyCode == Keys.F1)
             {
                 aboutMenuItem.PerformClick();
@@ -724,12 +858,12 @@ namespace BigMansStuff.PracticeSharp.UI
         private void pitchTrackBar_ValueChanged(object sender, EventArgs e)
         {
             // Convert to Percent 
-            float newPitch = pitchTrackBar.Value / 96.0f;
+            float newPitchSemiTones = pitchTrackBar.Value / 8.0f;
             // Assign new Pitch
-            m_practiceSharpLogic.Pitch = newPitch;
+            m_practiceSharpLogic.Pitch = newPitchSemiTones;
 
             // Update Pitch value label
-            pitchValueLabel.Text = newPitch.ToString( "0.00" );
+            pitchValueLabel.Text = newPitchSemiTones.ToString("0");
     
         } 
 
@@ -811,7 +945,20 @@ namespace BigMansStuff.PracticeSharp.UI
         private void timeStretchProfileComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             m_practiceSharpLogic.TimeStretchProfile = timeStretchProfileComboBox.Items[timeStretchProfileComboBox.SelectedIndex] as TimeStretchProfile;
-        } 
+        }
+
+        /// <summary>
+        /// Show the keyboard shortcuts
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void keyboardShortcutsMenuItem_Click(object sender, EventArgs e)
+        {
+            using (KeyboardShortcutsForm form = new KeyboardShortcutsForm())
+            {
+                form.ShowDialog(this);
+            }
+        }
 
         #region Menu Items
 
@@ -1336,7 +1483,7 @@ namespace BigMansStuff.PracticeSharp.UI
         /// <param name="newStatus"></param>
         private void practiceSharpLogic_StatusChanged(object sender, PracticeSharpLogic.Statuses newStatus)
         {
-            if (m_practiceSharpLogic == null || m_practiceSharpLogic.Status == PracticeSharpLogic.Statuses.Terminating || m_practiceSharpLogic.Status == PracticeSharpLogic.Statuses.Terminated)
+            if ( m_jumpMode || m_practiceSharpLogic == null || m_practiceSharpLogic.Status == PracticeSharpLogic.Statuses.Terminating || m_practiceSharpLogic.Status == PracticeSharpLogic.Statuses.Terminated)
                 return;
             
             this.BeginInvoke(new MethodInvoker(delegate()
@@ -1773,6 +1920,39 @@ namespace BigMansStuff.PracticeSharp.UI
             m_currentControlsMaskOutTime = DateTime.Now.AddMilliseconds(MaskOutInterval);
         }
 
+        /// <summary>
+        /// Jump a few seconds forward
+        /// </summary>
+        private void JumpForward()
+        {
+            TempMaskOutPlayTimeTrackBar();
+            TempMaskOutCurrentControls();
+
+            m_practiceSharpLogic.CurrentPlayTime = m_practiceSharpLogic.CurrentPlayTime.Add(new TimeSpan(0, 0, JumpSeconds));            
+
+            // When not in play mode, track bar does not get updated so update manually
+            if (m_practiceSharpLogic.Status != PracticeSharpLogic.Statuses.Playing)
+            {
+                UpdatePlayTimeTrackBarCurrentValue();
+            }
+        }
+
+        /// <summary>
+        /// Jump a few seconds backward
+        /// </summary>
+        private void JumpBackward()
+        {
+            TempMaskOutPlayTimeTrackBar();
+            TempMaskOutCurrentControls();
+
+            m_practiceSharpLogic.CurrentPlayTime = m_practiceSharpLogic.CurrentPlayTime.Subtract(new TimeSpan(0, 0, JumpSeconds));
+
+            // When not in play mode, track bar does not get updated so update manually
+            if (m_practiceSharpLogic.Status != PracticeSharpLogic.Statuses.Playing)
+            {
+                UpdatePlayTimeTrackBarCurrentValue();
+            }
+        }
 
         #region Presets
 
@@ -1878,6 +2058,9 @@ namespace BigMansStuff.PracticeSharp.UI
 
         private VersionUpdater m_versionUpdater;
 
+        private PracticeSharpLogic.Statuses m_preJumpStatus;
+        private bool m_jumpMode = false;
+
         #endregion
 
         #region Constants
@@ -1887,10 +2070,14 @@ namespace BigMansStuff.PracticeSharp.UI
 
         const int MaxRecentDisplayLength = 60;
 
-        const int MaskOutInterval = 450; // msec
+        // msec
+        const int MaskOutInterval = 450;
 
-      
+        const short JumpSeconds = 2;
+
 
         #endregion
+
+      
     }
 }
