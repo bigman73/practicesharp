@@ -51,32 +51,11 @@ namespace BigMansStuff.PracticeSharp.UI
         /// </summary>
         private void InitializeComponent()
         {
-            this.presetButton = new System.Windows.Forms.Button();
-            this.ledPictureBox = new System.Windows.Forms.PictureBox();
             this.presetIdLabel = new BigMansStuff.PracticeSharp.UI.HoverLabel();
+            this.presetButton = new BigMansStuff.PracticeSharp.UI.UltraButton();
+            this.ledPictureBox = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.ledPictureBox)).BeginInit();
             this.SuspendLayout();
-            // 
-            // presetButton
-            // 
-            this.presetButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.presetButton.AutoEllipsis = true;
-            this.presetButton.Location = new System.Drawing.Point(1, 3);
-            this.presetButton.Name = "presetButton";
-            this.presetButton.Size = new System.Drawing.Size(81, 56);
-            this.presetButton.TabIndex = 44;
-            this.presetButton.Text = "Preset 1";
-            this.presetButton.UseVisualStyleBackColor = true;
-            this.presetButton.Click += new System.EventHandler(this.presetButton_Click);
-            // 
-            // ledPictureBox
-            // 
-            this.ledPictureBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.ledPictureBox.Location = new System.Drawing.Point(83, 6);
-            this.ledPictureBox.Name = "ledPictureBox";
-            this.ledPictureBox.Size = new System.Drawing.Size(16, 16);
-            this.ledPictureBox.TabIndex = 45;
-            this.ledPictureBox.TabStop = false;
             // 
             // presetIdLabel
             // 
@@ -89,6 +68,31 @@ namespace BigMansStuff.PracticeSharp.UI
             this.presetIdLabel.TabIndex = 48;
             this.presetIdLabel.Text = "1";
             this.presetIdLabel.Click += new System.EventHandler(this.presetIdLabel_Click);
+            // 
+            // presetButton
+            // 
+            this.presetButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.presetButton.BackColor = System.Drawing.Color.Transparent;
+            this.presetButton.ButtonText = "";
+            this.presetButton.CornerRadius = 2;
+            this.presetButton.GlowAlphaFactor = 128;
+            this.presetButton.GlowColor = System.Drawing.Color.Red;
+            this.presetButton.ImageSize = new System.Drawing.Size(16, 16);
+            this.presetButton.Location = new System.Drawing.Point(1, 1);
+            this.presetButton.Name = "presetButton";
+            this.presetButton.Size = new System.Drawing.Size(82, 58);
+            this.presetButton.TabIndex = 49;
+            this.presetButton.Click += new System.EventHandler(this.presetButton_Click);
+            // 
+            // ledPictureBox
+            // 
+            this.ledPictureBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.ledPictureBox.Location = new System.Drawing.Point(84, 5);
+            this.ledPictureBox.Name = "ledPictureBox";
+            this.ledPictureBox.Size = new System.Drawing.Size(16, 16);
+            this.ledPictureBox.TabIndex = 50;
+            this.ledPictureBox.TabStop = false;
             // 
             // PresetControl
             // 
@@ -109,8 +113,8 @@ namespace BigMansStuff.PracticeSharp.UI
 
         #endregion
 
-        private System.Windows.Forms.PictureBox ledPictureBox;
-        private System.Windows.Forms.Button presetButton;
         private HoverLabel presetIdLabel;
+        private UltraButton presetButton;
+        private System.Windows.Forms.PictureBox ledPictureBox;
     }
 }

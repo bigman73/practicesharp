@@ -81,14 +81,10 @@ namespace BigMansStuff.PracticeSharp.UI
             this.currentMilliUpDown = new System.Windows.Forms.NumericUpDown();
             this.currentSecondUpDown = new System.Windows.Forms.NumericUpDown();
             this.currentMinuteUpDown = new System.Windows.Forms.NumericUpDown();
-            this.playPauseButton = new System.Windows.Forms.Button();
-            this.startLoopNowButton = new System.Windows.Forms.Button();
-            this.endLoopNowButton = new System.Windows.Forms.Button();
             this.volume100Label = new System.Windows.Forms.Label();
             this.volume0Label = new System.Windows.Forms.Label();
             this.play0Label = new System.Windows.Forms.Label();
             this.playDurationLabel = new System.Windows.Forms.Label();
-            this.writeBankButton = new System.Windows.Forms.Button();
             this.preferencesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tutorialToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -104,10 +100,8 @@ namespace BigMansStuff.PracticeSharp.UI
             this.filenameToolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
-            this.resetBankButton = new System.Windows.Forms.Button();
             this.presetPanel = new System.Windows.Forms.Panel();
             this.resetBankTimer = new System.Windows.Forms.Timer(this.components);
-            this.openFileButton = new System.Windows.Forms.Button();
             this.playTimeUpdateTimer = new System.Windows.Forms.Timer(this.components);
             this.cueComboBox = new System.Windows.Forms.ComboBox();
             this.cueLabel = new System.Windows.Forms.Label();
@@ -131,6 +125,7 @@ namespace BigMansStuff.PracticeSharp.UI
             this.pitch0Label = new System.Windows.Forms.Label();
             this.pitchTrackBar = new System.Windows.Forms.TrackBar();
             this.trackBarPanel = new System.Windows.Forms.Panel();
+            this.label1 = new System.Windows.Forms.Label();
             this.timeStretchProfileComboBox = new System.Windows.Forms.ComboBox();
             this.timeStretchProfileLabel = new System.Windows.Forms.Label();
             this.hiEqValueLabel = new System.Windows.Forms.Label();
@@ -156,7 +151,6 @@ namespace BigMansStuff.PracticeSharp.UI
             this.keyboardShortcutsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
-            this.label1 = new System.Windows.Forms.Label();
             this.equalizerHoverLabel = new BigMansStuff.PracticeSharp.UI.HoverLabel();
             this.hiEqHoverLabel = new BigMansStuff.PracticeSharp.UI.HoverLabel();
             this.medEqHoverLabel = new BigMansStuff.PracticeSharp.UI.HoverLabel();
@@ -166,6 +160,12 @@ namespace BigMansStuff.PracticeSharp.UI
             this.speedLabel = new BigMansStuff.PracticeSharp.UI.HoverLabel();
             this.volumeLabel = new BigMansStuff.PracticeSharp.UI.HoverLabel();
             this.positionLabel = new BigMansStuff.PracticeSharp.UI.HoverLabel();
+            this.openFileButton = new BigMansStuff.PracticeSharp.UI.UltraButton();
+            this.playPauseButton = new BigMansStuff.PracticeSharp.UI.UltraButton();
+            this.endLoopNowButton = new BigMansStuff.PracticeSharp.UI.UltraButton();
+            this.startLoopNowButton = new BigMansStuff.PracticeSharp.UI.UltraButton();
+            this.resetPresetButton = new BigMansStuff.PracticeSharp.UI.UltraButton();
+            this.writePresetButton = new BigMansStuff.PracticeSharp.UI.UltraButton();
             this.presetControl7 = new BigMansStuff.PracticeSharp.UI.PresetControl();
             this.presetControl5 = new BigMansStuff.PracticeSharp.UI.PresetControl();
             this.presetControl6 = new BigMansStuff.PracticeSharp.UI.PresetControl();
@@ -429,7 +429,7 @@ namespace BigMansStuff.PracticeSharp.UI
             // loopCheckBox
             // 
             this.loopCheckBox.AutoSize = true;
-            this.loopCheckBox.Location = new System.Drawing.Point(3, 16);
+            this.loopCheckBox.Location = new System.Drawing.Point(2, 27);
             this.loopCheckBox.Name = "loopCheckBox";
             this.loopCheckBox.Size = new System.Drawing.Size(50, 17);
             this.loopCheckBox.TabIndex = 18;
@@ -509,39 +509,6 @@ namespace BigMansStuff.PracticeSharp.UI
             this.currentMinuteUpDown.TabIndex = 4;
             this.currentMinuteUpDown.ValueChanged += new System.EventHandler(this.currentUpDown_ValueChanged);
             // 
-            // playPauseButton
-            // 
-            this.playPauseButton.ImageKey = "Play-Normal.png";
-            this.playPauseButton.Location = new System.Drawing.Point(70, 29);
-            this.playPauseButton.Name = "playPauseButton";
-            this.playPauseButton.Size = new System.Drawing.Size(56, 56);
-            this.playPauseButton.TabIndex = 1;
-            this.toolTip.SetToolTip(this.playPauseButton, "Play/Pause (Space)");
-            this.playPauseButton.UseVisualStyleBackColor = true;
-            this.playPauseButton.Click += new System.EventHandler(this.playPauseButton_Click);
-            this.playPauseButton.MouseEnter += new System.EventHandler(this.playPauseButton_MouseEnter);
-            this.playPauseButton.MouseLeave += new System.EventHandler(this.playPauseButton_MouseLeave);
-            // 
-            // startLoopNowButton
-            // 
-            this.startLoopNowButton.Location = new System.Drawing.Point(265, 1);
-            this.startLoopNowButton.Name = "startLoopNowButton";
-            this.startLoopNowButton.Size = new System.Drawing.Size(37, 23);
-            this.startLoopNowButton.TabIndex = 6;
-            this.startLoopNowButton.Text = "Now";
-            this.startLoopNowButton.UseVisualStyleBackColor = true;
-            this.startLoopNowButton.Click += new System.EventHandler(this.startLoopNowButton_Click);
-            // 
-            // endLoopNowButton
-            // 
-            this.endLoopNowButton.Location = new System.Drawing.Point(265, 26);
-            this.endLoopNowButton.Name = "endLoopNowButton";
-            this.endLoopNowButton.Size = new System.Drawing.Size(37, 23);
-            this.endLoopNowButton.TabIndex = 7;
-            this.endLoopNowButton.Text = "Now";
-            this.endLoopNowButton.UseVisualStyleBackColor = true;
-            this.endLoopNowButton.Click += new System.EventHandler(this.endLoopNowButton_Click);
-            // 
             // volume100Label
             // 
             this.volume100Label.AutoSize = true;
@@ -583,17 +550,6 @@ namespace BigMansStuff.PracticeSharp.UI
             this.playDurationLabel.Size = new System.Drawing.Size(34, 13);
             this.playDurationLabel.TabIndex = 36;
             this.playDurationLabel.Text = "00:00";
-            // 
-            // writeBankButton
-            // 
-            this.writeBankButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.writeBankButton.ForeColor = System.Drawing.SystemColors.Control;
-            this.writeBankButton.Location = new System.Drawing.Point(6, 3);
-            this.writeBankButton.Name = "writeBankButton";
-            this.writeBankButton.Size = new System.Drawing.Size(56, 56);
-            this.writeBankButton.TabIndex = 0;
-            this.writeBankButton.UseVisualStyleBackColor = true;
-            this.writeBankButton.Click += new System.EventHandler(this.writePresetButton_Click);
             // 
             // preferencesToolStripMenuItem
             // 
@@ -695,30 +651,20 @@ namespace BigMansStuff.PracticeSharp.UI
             this.toolStripStatusLabel1.Size = new System.Drawing.Size(118, 17);
             this.toolStripStatusLabel1.Text = "toolStripStatusLabel1";
             // 
-            // resetBankButton
-            // 
-            this.resetBankButton.Location = new System.Drawing.Point(6, 65);
-            this.resetBankButton.Name = "resetBankButton";
-            this.resetBankButton.Size = new System.Drawing.Size(56, 56);
-            this.resetBankButton.TabIndex = 1;
-            this.resetBankButton.UseVisualStyleBackColor = true;
-            this.resetBankButton.MouseDown += new System.Windows.Forms.MouseEventHandler(this.resetBankButton_MouseDown);
-            this.resetBankButton.MouseUp += new System.Windows.Forms.MouseEventHandler(this.resetBankButton_MouseUp);
-            // 
             // presetPanel
             // 
             this.presetPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.presetPanel.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.presetPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.presetPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.presetPanel.Controls.Add(this.resetPresetButton);
+            this.presetPanel.Controls.Add(this.writePresetButton);
             this.presetPanel.Controls.Add(this.presetControl7);
             this.presetPanel.Controls.Add(this.presetControl5);
             this.presetPanel.Controls.Add(this.presetControl6);
             this.presetPanel.Controls.Add(this.presetControl8);
             this.presetPanel.Controls.Add(this.presetControl3);
-            this.presetPanel.Controls.Add(this.resetBankButton);
             this.presetPanel.Controls.Add(this.presetControl1);
             this.presetPanel.Controls.Add(this.presetControl2);
-            this.presetPanel.Controls.Add(this.writeBankButton);
             this.presetPanel.Controls.Add(this.presetControl4);
             this.presetPanel.Location = new System.Drawing.Point(14, 382);
             this.presetPanel.Name = "presetPanel";
@@ -729,17 +675,6 @@ namespace BigMansStuff.PracticeSharp.UI
             // 
             this.resetBankTimer.Interval = 1000;
             this.resetBankTimer.Tick += new System.EventHandler(this.resetBankTimer_Tick);
-            // 
-            // openFileButton
-            // 
-            this.openFileButton.ImageKey = "Play-Normal.png";
-            this.openFileButton.Location = new System.Drawing.Point(3, 29);
-            this.openFileButton.Name = "openFileButton";
-            this.openFileButton.Size = new System.Drawing.Size(56, 56);
-            this.openFileButton.TabIndex = 0;
-            this.toolTip.SetToolTip(this.openFileButton, "Open File... (Ctrl+O)");
-            this.openFileButton.UseVisualStyleBackColor = true;
-            this.openFileButton.Click += new System.EventHandler(this.openFileButton_Click);
             // 
             // playTimeUpdateTimer
             // 
@@ -803,7 +738,7 @@ namespace BigMansStuff.PracticeSharp.UI
             // cuePictureBox
             // 
             this.cuePictureBox.Image = global::BigMansStuff.PracticeSharp.Resources.blue_off_16;
-            this.cuePictureBox.Location = new System.Drawing.Point(322, 5);
+            this.cuePictureBox.Location = new System.Drawing.Point(20, 6);
             this.cuePictureBox.Name = "cuePictureBox";
             this.cuePictureBox.Size = new System.Drawing.Size(18, 18);
             this.cuePictureBox.TabIndex = 55;
@@ -811,7 +746,10 @@ namespace BigMansStuff.PracticeSharp.UI
             // 
             // loopPanel
             // 
+            this.loopPanel.BackColor = System.Drawing.Color.Silver;
             this.loopPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.loopPanel.Controls.Add(this.endLoopNowButton);
+            this.loopPanel.Controls.Add(this.startLoopNowButton);
             this.loopPanel.Controls.Add(this.cueComboBox);
             this.loopPanel.Controls.Add(this.cuePictureBox);
             this.loopPanel.Controls.Add(this.cueLabel);
@@ -825,8 +763,6 @@ namespace BigMansStuff.PracticeSharp.UI
             this.loopPanel.Controls.Add(this.startLoopLabel);
             this.loopPanel.Controls.Add(this.endLoopLabel);
             this.loopPanel.Controls.Add(this.loopCheckBox);
-            this.loopPanel.Controls.Add(this.endLoopNowButton);
-            this.loopPanel.Controls.Add(this.startLoopNowButton);
             this.loopPanel.Location = new System.Drawing.Point(132, 30);
             this.loopPanel.Name = "loopPanel";
             this.loopPanel.Size = new System.Drawing.Size(443, 54);
@@ -920,12 +856,12 @@ namespace BigMansStuff.PracticeSharp.UI
             // controlPanel
             // 
             this.controlPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.controlPanel.Controls.Add(this.loopPanel);
+            this.controlPanel.Controls.Add(this.openFileButton);
             this.controlPanel.Controls.Add(this.playPauseButton);
+            this.controlPanel.Controls.Add(this.loopPanel);
             this.controlPanel.Controls.Add(this.currentLabel);
             this.controlPanel.Controls.Add(this.currentMilliUpDown);
             this.controlPanel.Controls.Add(this.currentMinuteUpDown);
-            this.controlPanel.Controls.Add(this.openFileButton);
             this.controlPanel.Controls.Add(this.currentSecondUpDown);
             this.controlPanel.Location = new System.Drawing.Point(14, 291);
             this.controlPanel.Name = "controlPanel";
@@ -1041,6 +977,17 @@ namespace BigMansStuff.PracticeSharp.UI
             this.trackBarPanel.Name = "trackBarPanel";
             this.trackBarPanel.Size = new System.Drawing.Size(584, 266);
             this.trackBarPanel.TabIndex = 1;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.label1.Location = new System.Drawing.Point(7, 138);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(54, 12);
+            this.label1.TabIndex = 89;
+            this.label1.Text = "Semi-Tones";
             // 
             // timeStretchProfileComboBox
             // 
@@ -1275,17 +1222,6 @@ namespace BigMansStuff.PracticeSharp.UI
             this.toolTip.InitialDelay = 1500;
             this.toolTip.ReshowDelay = 100;
             // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.label1.Location = new System.Drawing.Point(7, 138);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(54, 12);
-            this.label1.TabIndex = 89;
-            this.label1.Text = "Semi-Tones";
-            // 
             // equalizerHoverLabel
             // 
             this.equalizerHoverLabel.AutoSize = true;
@@ -1381,6 +1317,97 @@ namespace BigMansStuff.PracticeSharp.UI
             this.positionLabel.TabIndex = 9;
             this.positionLabel.Text = "Position";
             this.positionLabel.Click += new System.EventHandler(this.positionLabel_Click);
+            // 
+            // openFileButton
+            // 
+            this.openFileButton.BackColor = System.Drawing.Color.Transparent;
+            this.openFileButton.ButtonText = null;
+            this.openFileButton.GlowColor = System.Drawing.Color.Yellow;
+            this.openFileButton.ImageAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.openFileButton.ImageSize = new System.Drawing.Size(48, 48);
+            this.openFileButton.Location = new System.Drawing.Point(7, 28);
+            this.openFileButton.Name = "openFileButton";
+            this.openFileButton.Size = new System.Drawing.Size(56, 56);
+            this.openFileButton.TabIndex = 13;
+            this.openFileButton.Click += new System.EventHandler(this.openFileButton_Click);
+            // 
+            // playPauseButton
+            // 
+            this.playPauseButton.BackColor = System.Drawing.Color.Transparent;
+            this.playPauseButton.ButtonText = null;
+            this.playPauseButton.GlowColor = System.Drawing.Color.Yellow;
+            this.playPauseButton.ImageAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.playPauseButton.ImageSize = new System.Drawing.Size(48, 48);
+            this.playPauseButton.Location = new System.Drawing.Point(68, 28);
+            this.playPauseButton.Name = "playPauseButton";
+            this.playPauseButton.Size = new System.Drawing.Size(56, 56);
+            this.playPauseButton.TabIndex = 12;
+            this.playPauseButton.Click += new System.EventHandler(this.playPauseButton_Click);
+            // 
+            // endLoopNowButton
+            // 
+            this.endLoopNowButton.BackColor = System.Drawing.Color.Transparent;
+            this.endLoopNowButton.ButtonColor = System.Drawing.Color.Turquoise;
+            this.endLoopNowButton.ButtonText = "Now";
+            this.endLoopNowButton.CornerRadius = 2;
+            this.endLoopNowButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
+            this.endLoopNowButton.GlowColor = System.Drawing.Color.Yellow;
+            this.endLoopNowButton.HighlightColor = System.Drawing.Color.Black;
+            this.endLoopNowButton.ImageAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.endLoopNowButton.ImageSize = new System.Drawing.Size(48, 48);
+            this.endLoopNowButton.Location = new System.Drawing.Point(271, 28);
+            this.endLoopNowButton.Name = "endLoopNowButton";
+            this.endLoopNowButton.Size = new System.Drawing.Size(46, 21);
+            this.endLoopNowButton.TabIndex = 56;
+            this.endLoopNowButton.TextPadding = new System.Drawing.Size(1, 1);
+            this.endLoopNowButton.Click += new System.EventHandler(this.endLoopNowButton_Click);
+            // 
+            // startLoopNowButton
+            // 
+            this.startLoopNowButton.BackColor = System.Drawing.Color.Transparent;
+            this.startLoopNowButton.ButtonColor = System.Drawing.Color.Lime;
+            this.startLoopNowButton.ButtonText = "Now";
+            this.startLoopNowButton.CornerRadius = 2;
+            this.startLoopNowButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
+            this.startLoopNowButton.GlowColor = System.Drawing.Color.Yellow;
+            this.startLoopNowButton.HighlightColor = System.Drawing.Color.Black;
+            this.startLoopNowButton.ImageAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.startLoopNowButton.ImageSize = new System.Drawing.Size(48, 48);
+            this.startLoopNowButton.Location = new System.Drawing.Point(271, 1);
+            this.startLoopNowButton.Name = "startLoopNowButton";
+            this.startLoopNowButton.Size = new System.Drawing.Size(46, 22);
+            this.startLoopNowButton.TabIndex = 14;
+            this.startLoopNowButton.TextPadding = new System.Drawing.Size(1, 1);
+            this.startLoopNowButton.Click += new System.EventHandler(this.startLoopNowButton_Click);
+            // 
+            // resetPresetButton
+            // 
+            this.resetPresetButton.BackColor = System.Drawing.Color.Transparent;
+            this.resetPresetButton.ButtonColor = System.Drawing.Color.GhostWhite;
+            this.resetPresetButton.ButtonText = null;
+            this.resetPresetButton.GlowColor = System.Drawing.Color.Yellow;
+            this.resetPresetButton.ImageAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.resetPresetButton.ImageSize = new System.Drawing.Size(48, 48);
+            this.resetPresetButton.Location = new System.Drawing.Point(6, 63);
+            this.resetPresetButton.Name = "resetPresetButton";
+            this.resetPresetButton.Size = new System.Drawing.Size(56, 56);
+            this.resetPresetButton.TabIndex = 11;
+            this.resetPresetButton.MouseDown += new System.Windows.Forms.MouseEventHandler(this.resetBankButton_MouseDown);
+            this.resetPresetButton.MouseUp += new System.Windows.Forms.MouseEventHandler(this.resetBankButton_MouseUp);
+            // 
+            // writePresetButton
+            // 
+            this.writePresetButton.BackColor = System.Drawing.Color.Transparent;
+            this.writePresetButton.ButtonColor = System.Drawing.Color.GhostWhite;
+            this.writePresetButton.ButtonText = null;
+            this.writePresetButton.GlowColor = System.Drawing.Color.Yellow;
+            this.writePresetButton.ImageAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.writePresetButton.ImageSize = new System.Drawing.Size(48, 48);
+            this.writePresetButton.Location = new System.Drawing.Point(6, 4);
+            this.writePresetButton.Name = "writePresetButton";
+            this.writePresetButton.Size = new System.Drawing.Size(56, 56);
+            this.writePresetButton.TabIndex = 10;
+            this.writePresetButton.Click += new System.EventHandler(this.writePresetButton_Click);
             // 
             // presetControl7
             // 
@@ -1693,9 +1720,6 @@ namespace BigMansStuff.PracticeSharp.UI
         private System.Windows.Forms.NumericUpDown currentMilliUpDown;
         private System.Windows.Forms.NumericUpDown currentSecondUpDown;
         private System.Windows.Forms.NumericUpDown currentMinuteUpDown;
-        private System.Windows.Forms.Button playPauseButton;
-        private System.Windows.Forms.Button startLoopNowButton;
-        private System.Windows.Forms.Button endLoopNowButton;
         private HoverLabel speedLabel;
         private HoverLabel volumeLabel;
         private System.Windows.Forms.Label volume100Label;
@@ -1707,7 +1731,6 @@ namespace BigMansStuff.PracticeSharp.UI
         private PresetControl presetControl2;
         private PresetControl presetControl3;
         private PresetControl presetControl4;
-        private System.Windows.Forms.Button writeBankButton;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
@@ -1718,11 +1741,9 @@ namespace BigMansStuff.PracticeSharp.UI
         private System.Windows.Forms.ToolStripMenuItem preferencesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem tutorialToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
-        private System.Windows.Forms.Button resetBankButton;
         private System.Windows.Forms.Panel presetPanel;
         private System.Windows.Forms.Timer resetBankTimer;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel2;
-        private System.Windows.Forms.Button openFileButton;
         private System.Windows.Forms.Timer playTimeUpdateTimer;
         private System.Windows.Forms.ComboBox cueComboBox;
         private System.Windows.Forms.Label cueLabel;
@@ -1786,6 +1807,12 @@ namespace BigMansStuff.PracticeSharp.UI
         private System.Windows.Forms.ToolStripMenuItem keyboardShortcutsMenuItem;
         private System.Windows.Forms.ToolStripMenuItem aboutMenuItem;
         private System.Windows.Forms.Label label1;
+        private UltraButton writePresetButton;
+        private UltraButton resetPresetButton;
+        private UltraButton playPauseButton;
+        private UltraButton openFileButton;
+        private UltraButton startLoopNowButton;
+        private UltraButton endLoopNowButton;
     }
 }
 

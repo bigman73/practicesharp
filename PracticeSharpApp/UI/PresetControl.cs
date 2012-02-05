@@ -59,7 +59,7 @@ namespace BigMansStuff.PracticeSharp.UI
             ChangeState(PresetStates.Off);
             PresetData = new PresetData();
             presetIdLabel.Text = this.Id.ToString();
-            presetButton.Text = Resources.PresetNoDesc;
+            presetButton.ButtonText = Resources.PresetNoDesc;
         }
 
         #endregion
@@ -91,7 +91,7 @@ namespace BigMansStuff.PracticeSharp.UI
             PresetTextInputDialog inputDialog = new PresetTextInputDialog();
             if (presetButton.Tag != null)
             {
-                inputDialog.PresetText = presetButton.Text;
+                inputDialog.PresetText = presetButton.ButtonText;
             }
 
             if (DialogResult.OK == inputDialog.ShowDialog(this))
@@ -132,12 +132,12 @@ namespace BigMansStuff.PracticeSharp.UI
         {
             get
             {
-                return presetButton.Text;
+                return presetButton.ButtonText;
             }
 
             set
             {
-                presetButton.Text = value;
+                presetButton.ButtonText = value;
             }
         }
 
@@ -156,7 +156,7 @@ namespace BigMansStuff.PracticeSharp.UI
             get
             {
                 if (presetButton.Tag != null)
-                    return presetButton.Text;
+                    return presetButton.ButtonText;
                 else
                     return string.Empty;
             }
@@ -165,12 +165,12 @@ namespace BigMansStuff.PracticeSharp.UI
                 PresetData.Description = value;
                 if (value == string.Empty)
                 {
-                    presetButton.Text = Resources.PresetNoDesc;
+                    presetButton.ButtonText = Resources.PresetNoDesc;
                     presetButton.Tag = null;
                 }
                 else
                 {
-                    presetButton.Text = value;
+                    presetButton.ButtonText = value;
                     presetButton.Tag = "HasValue";
                 }
             }
@@ -232,10 +232,7 @@ namespace BigMansStuff.PracticeSharp.UI
         /// <param name="e"></param>
         private void PresetControl_Layout(object sender, LayoutEventArgs e)
         {
-            // Horizontally center led picture box above the preset button
-            //ledPictureBox.Left = presetButton.Left + (presetButton.Width - ledPictureBox.Width) / 2;
-
-            ledPictureBox.Left = presetButton.Right + 1;
+            //ledPictureBox.Left = presetButton.Right + 1;
         }
 
         #endregion
@@ -267,7 +264,7 @@ namespace BigMansStuff.PracticeSharp.UI
         /// </summary>
         private void ShowRegularLed()
         {
-            ledPictureBox.Image = Resources.green_off_16;
+            ledPictureBox.Image = Resources.red_off_16;
         }
 
         /// <summary>
@@ -275,7 +272,7 @@ namespace BigMansStuff.PracticeSharp.UI
         /// </summary>
         private void ShowSelectedLed()
         {
-            ledPictureBox.Image = Resources.green_on_16;
+            ledPictureBox.Image = Resources.red_on_16;
         }
 
         /// <summary>
@@ -308,13 +305,14 @@ namespace BigMansStuff.PracticeSharp.UI
                     }
                 case PresetStates.WaitForSave:
                     {
-                        ledPictureBox.Image = Resources.red_on_16;
+                        ledPictureBox.Image = Resources.amber_on_16;
+
 
                         break;
                     }
                 case PresetStates.Saving:
                     {
-                        BlinkLed(Resources.red_off_16, Resources.red_on_16, 2, 200);
+                        BlinkLed(Resources.red_off_16, Resources.amber_on_16, 2, 200);
 
                         if (PresetSaveSelected != null)
                         {

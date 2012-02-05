@@ -124,8 +124,8 @@ namespace BigMansStuff.PracticeSharp.UI
             openFileDialog.FilterIndex = Properties.Settings.Default.LastFilterIndex;
 
             playPauseButton.Image = Resources.Play_Normal;
-            writeBankButton.Image = Resources.save_icon;
-            resetBankButton.Image = Resources.Eraser_icon;
+            writePresetButton.Image = Resources.save_icon;
+            resetPresetButton.Image = Resources.Eraser_icon;
             openFileButton.Image = Resources.OpenFile_icon;
 
             cueComboBox.SelectedIndex = 0;
@@ -864,7 +864,6 @@ namespace BigMansStuff.PracticeSharp.UI
 
             // Update Pitch value label
             pitchValueLabel.Text = newPitchSemiTones.ToString("0");
-    
         } 
 
         /// <summary>
@@ -903,17 +902,8 @@ namespace BigMansStuff.PracticeSharp.UI
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void positionLabel_Click(object sender, EventArgs e)
-        {
-            // Reset current play time so it starts from the begining
-            if (m_practiceSharpLogic.Loop)
-            {
-                // In case of a loop, move the current play time to the start marker
-                m_practiceSharpLogic.CurrentPlayTime = m_practiceSharpLogic.StartMarker;
-            }
-            else
-            {
-                m_practiceSharpLogic.CurrentPlayTime = TimeSpan.Zero;
-            }
+        {        
+            m_practiceSharpLogic.ResetCurrentPlayTime();
 
             // When not in play mode, track bar does not get updated so update manually
             if (m_practiceSharpLogic.Status != PracticeSharpLogic.Statuses.Playing)
@@ -1314,6 +1304,11 @@ namespace BigMansStuff.PracticeSharp.UI
         }
 
 
+        /// <summary>
+        /// Click event handler for Start Loop Now button
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void startLoopNowButton_Click(object sender, EventArgs e)
         {
             // Handle special case when Now is clicked after the End marker
@@ -1329,6 +1324,11 @@ namespace BigMansStuff.PracticeSharp.UI
             startLoopMilliUpDown.Value = currentMilliUpDown.Value;
         }
 
+        /// <summary>
+        /// Click event handler for End Loop Now button
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void endLoopNowButton_Click(object sender, EventArgs e)
         {
             endLoopMinuteUpDown.Value = currentMinuteUpDown.Value;
@@ -1663,8 +1663,8 @@ namespace BigMansStuff.PracticeSharp.UI
             startLoopNowButton.Enabled = enabled;
             endLoopNowButton.Enabled = enabled;
             cueComboBox.Enabled = enabled;
-            writeBankButton.Enabled = enabled;
-            resetBankButton.Enabled = enabled;
+            writePresetButton.Enabled = enabled;
+            resetPresetButton.Enabled = enabled;
             presetControl1.Enabled = enabled;
             presetControl2.Enabled = enabled;
             presetControl3.Enabled = enabled;

@@ -187,6 +187,26 @@ namespace BigMansStuff.PracticeSharp.Core
         }
 
         /// <summary>
+        /// Reset the current play to the begining (start marker or begining of time)
+        /// </summary>
+        public void ResetCurrentPlayTime()
+        {
+            // Reset current play time so it starts from the begining
+            if (Loop)
+            {
+                // In case of a loop, move the current play time to the start marker
+                CurrentPlayTime = StartMarker;
+            }
+            else
+            {
+                CurrentPlayTime = TimeSpan.Zero;
+            }
+
+            // Signal the UI about the cue
+            CueWaitPulsed(this, EventArgs.Empty);
+        }
+
+        /// <summary>
         /// Utility function that identifies wether the file is an audio file or not
         /// </summary>
         /// <param name="filename"></param>
