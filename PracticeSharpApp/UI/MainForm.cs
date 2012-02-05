@@ -2013,6 +2013,9 @@ namespace BigMansStuff.PracticeSharp.UI
         /// </summary>
         private void ImmeidatelyWriteCurrentPreset()
         {
+            if (m_currentPreset == null)
+                return;
+
             bool isPlaying = false;
             if (m_practiceSharpLogic.Status == PracticeSharpLogic.Statuses.Playing)
             {
@@ -2033,10 +2036,12 @@ namespace BigMansStuff.PracticeSharp.UI
                 m_practiceSharpLogic.Play();
         }
 
-
+        /// <summary>
+        /// Updates the preset values of the given present control, with the current session values
+        /// </summary>
+        /// <param name="presetControl"></param>
         private void UpdatePresetValues(PresetControl presetControl)
         {
-            // Update the preset data with the values from the selected preset
             presetControl.PresetData.Tempo = m_practiceSharpLogic.Tempo;
             presetControl.PresetData.Pitch = m_practiceSharpLogic.Pitch;
             presetControl.PresetData.Volume = m_practiceSharpLogic.Volume;
@@ -2113,7 +2118,5 @@ namespace BigMansStuff.PracticeSharp.UI
 
         const short TicksPerSemitone = 8; // 96 ticks are 12 semitones => each 8 ticks is one semitone
         #endregion
-
-      
     }
 }
