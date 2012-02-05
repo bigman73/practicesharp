@@ -855,7 +855,10 @@ namespace BigMansStuff.PracticeSharp.UI
             m_practiceSharpLogic.Pitch = newPitchSemiTones;
 
             // Update Pitch value label
-            pitchValueLabel.Text = newPitchSemiTones.ToString("0");
+            string pitchValue;
+            pitchValue = (newPitchSemiTones > 0) ? "+" : string.Empty;
+            pitchValue += newPitchSemiTones.ToString("0");
+            pitchValueLabel.Text = pitchValue;
         } 
 
         /// <summary>
