@@ -166,6 +166,9 @@
     <EmbeddedResource Include="UI\PresetTextInputDialog.resx">
       <DependentUpon>PresetTextInputDialog.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="UI\UltraButton.resx">
+      <DependentUpon>UltraButton.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="app.config">
       <SubType>Designer</SubType>
     </None>
