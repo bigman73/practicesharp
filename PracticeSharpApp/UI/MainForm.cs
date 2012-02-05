@@ -340,15 +340,14 @@ namespace BigMansStuff.PracticeSharp.UI
             }
             // [ Pitch Down
             else if (!e.Control && !e.Alt && !e.Shift && e.KeyCode == Keys.OemOpenBrackets)
-            {
-                // 8 = 1 semi-tone (8/96 = 1/12)
-                pitchTrackBar.Value =  Math.Max(pitchTrackBar.Value - 8, pitchTrackBar.Minimum);
+            {              
+                pitchTrackBar.Value = Math.Max(pitchTrackBar.Value - TicksPerSemitone, pitchTrackBar.Minimum);
                 e.Handled = true;
             }
             // ] Pitch Up
             else if (!e.Control && !e.Alt && !e.Shift && e.KeyCode == Keys.OemCloseBrackets)
             {
-                pitchTrackBar.Value = Math.Min(pitchTrackBar.Value + 8, pitchTrackBar.Maximum);
+                pitchTrackBar.Value = Math.Min(pitchTrackBar.Value + TicksPerSemitone, pitchTrackBar.Maximum);
 
                 e.Handled = true;
             }
@@ -431,6 +430,12 @@ namespace BigMansStuff.PracticeSharp.UI
                 openFileButton.PerformClick();
                 e.Handled = true;
             }
+            // Ctrl + W - Immediate write of current preset
+            else if (e.Control && !e.Alt && !e.Shift && e.KeyCode == Keys.W)
+            {
+                ImmeidatelyWriteCurrentPreset();
+                e.Handled = true;
+            }
             // Space - Pause/Play
             else if (!e.Control && !e.Alt && !e.Shift && e.KeyCode == Keys.Space)
             {
@@ -449,7 +454,7 @@ namespace BigMansStuff.PracticeSharp.UI
                 aboutMenuItem.PerformClick();
                 e.Handled = true;
             }
-            // ALT+CTRL P - Toggle visibility of Time Stretch Profile' UI Controls
+            // ALT + CTRL P - Toggle visibility of Time Stretch Profile' UI Controls
             else if (e.Control && e.Alt && !e.Shift && e.KeyCode == Keys.P)
             {
                 timeStretchProfileLabel.Visible = !timeStretchProfileLabel.Visible;
@@ -694,20 +699,7 @@ namespace BigMansStuff.PracticeSharp.UI
                         presetControl.ChangeDescription();
                     }
 
-                    // Update the preset data with the values from the selected preset
-                    presetControl.PresetData.Tempo = m_practiceSharpLogic.Tempo;
-                    presetControl.PresetData.Pitch = m_practiceSharpLogic.Pitch;
-                    presetControl.PresetData.Volume = m_practiceSharpLogic.Volume;
-                    presetControl.PresetData.LoEqValue = m_practiceSharpLogic.EqualizerLoBand;
-                    presetControl.PresetData.MedEqValue = m_practiceSharpLogic.EqualizerMedBand;
-                    presetControl.PresetData.HiEqValue = m_practiceSharpLogic.EqualizerHiBand;
-                    presetControl.PresetData.CurrentPlayTime = m_practiceSharpLogic.CurrentPlayTime;
-                    presetControl.PresetData.StartMarker = m_practiceSharpLogic.StartMarker;
-                    presetControl.PresetData.EndMarker = m_practiceSharpLogic.EndMarker;
-                    presetControl.PresetData.Cue = m_practiceSharpLogic.Cue;
-                    presetControl.PresetData.Loop = m_practiceSharpLogic.Loop;
-                    presetControl.PresetData.Description = presetControl.PresetDescription;
-                    presetControl.PresetData.TimeStretchProfile = m_practiceSharpLogic.TimeStretchProfile;
+                    UpdatePresetValues(presetControl);
                 }
             }
 
@@ -858,7 +850,7 @@ namespace BigMansStuff.PracticeSharp.UI
         private void pitchTrackBar_ValueChanged(object sender, EventArgs e)
         {
             // Convert to Percent 
-            float newPitchSemiTones = pitchTrackBar.Value / 8.0f;
+            float newPitchSemiTones = pitchTrackBar.Value / TicksPerSemitone;
             // Assign new Pitch
             m_practiceSharpLogic.Pitch = newPitchSemiTones;
 
@@ -893,7 +885,7 @@ namespace BigMansStuff.PracticeSharp.UI
         /// <param name="e"></param>
         private void pitchLabel_Click(object sender, EventArgs e)
         {
-              pitchTrackBar.Value = Convert.ToInt32( PresetData.DefaultPitch * 100 );
+              pitchTrackBar.Value = Convert.ToInt32( PresetData.DefaultPitch );
         }
 
         /// <summary>
@@ -1973,7 +1965,7 @@ namespace BigMansStuff.PracticeSharp.UI
         {
             // Apply preset values
             tempoTrackBar.Value = Convert.ToInt32(presetData.Tempo * 100.0f);
-            pitchTrackBar.Value = Convert.ToInt32(presetData.Pitch * 96.0f);
+            pitchTrackBar.Value = Convert.ToInt32(presetData.Pitch * TicksPerSemitone);
             volumeTrackBar.Value = Convert.ToInt32(presetData.Volume * 100.0f);
             loEqTrackBar.Value = Convert.ToInt32(presetData.LoEqValue * 100.0f);
             loEqTrackBar_ValueChanged(this, new EventArgs());
@@ -2014,6 +2006,50 @@ namespace BigMansStuff.PracticeSharp.UI
                 }
             }
             timeStretchProfileComboBox.SelectedValue = presetData.TimeStretchProfile;
+        }
+
+        /// <summary>
+        /// Immediately writes the state into the currently selected preset, without going through the two-phase button write mechanism
+        /// </summary>
+        private void ImmeidatelyWriteCurrentPreset()
+        {
+            bool isPlaying = false;
+            if (m_practiceSharpLogic.Status == PracticeSharpLogic.Statuses.Playing)
+            {
+                m_practiceSharpLogic.Pause();
+                isPlaying = true;
+            }
+
+            m_currentPreset.State = PresetControl.PresetStates.Saving;
+
+            UpdatePresetValues(m_currentPreset);
+
+            // (Re-)Write preset bank file
+            RewritePresetsBankFile();
+
+            m_currentPreset.State = PresetControl.PresetStates.Selected;
+
+            if (isPlaying)
+                m_practiceSharpLogic.Play();
+        }
+
+
+        private void UpdatePresetValues(PresetControl presetControl)
+        {
+            // Update the preset data with the values from the selected preset
+            presetControl.PresetData.Tempo = m_practiceSharpLogic.Tempo;
+            presetControl.PresetData.Pitch = m_practiceSharpLogic.Pitch;
+            presetControl.PresetData.Volume = m_practiceSharpLogic.Volume;
+            presetControl.PresetData.LoEqValue = m_practiceSharpLogic.EqualizerLoBand;
+            presetControl.PresetData.MedEqValue = m_practiceSharpLogic.EqualizerMedBand;
+            presetControl.PresetData.HiEqValue = m_practiceSharpLogic.EqualizerHiBand;
+            presetControl.PresetData.CurrentPlayTime = m_practiceSharpLogic.CurrentPlayTime;
+            presetControl.PresetData.StartMarker = m_practiceSharpLogic.StartMarker;
+            presetControl.PresetData.EndMarker = m_practiceSharpLogic.EndMarker;
+            presetControl.PresetData.Cue = m_practiceSharpLogic.Cue;
+            presetControl.PresetData.Loop = m_practiceSharpLogic.Loop;
+            presetControl.PresetData.Description = presetControl.PresetDescription;
+            presetControl.PresetData.TimeStretchProfile = m_practiceSharpLogic.TimeStretchProfile;
         }
 
         #endregion
@@ -2075,7 +2111,7 @@ namespace BigMansStuff.PracticeSharp.UI
 
         const short JumpSeconds = 2;
 
-
+        const short TicksPerSemitone = 8; // 96 ticks are 12 semitones => each 8 ticks is one semitone
         #endregion
 
       

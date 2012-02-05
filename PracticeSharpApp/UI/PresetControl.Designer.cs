@@ -62,7 +62,7 @@ namespace BigMansStuff.PracticeSharp.UI
             this.presetIdLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.presetIdLabel.AutoSize = true;
             this.presetIdLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 21.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.presetIdLabel.Location = new System.Drawing.Point(77, 25);
+            this.presetIdLabel.Location = new System.Drawing.Point(80, 25);
             this.presetIdLabel.Name = "presetIdLabel";
             this.presetIdLabel.Size = new System.Drawing.Size(31, 33);
             this.presetIdLabel.TabIndex = 48;
@@ -76,7 +76,6 @@ namespace BigMansStuff.PracticeSharp.UI
             this.presetButton.BackColor = System.Drawing.Color.Transparent;
             this.presetButton.ButtonText = "";
             this.presetButton.CornerRadius = 2;
-            this.presetButton.GlowAlphaFactor = 128;
             this.presetButton.GlowColor = System.Drawing.Color.Red;
             this.presetButton.ImageSize = new System.Drawing.Size(16, 16);
             this.presetButton.Location = new System.Drawing.Point(1, 1);
@@ -88,7 +87,7 @@ namespace BigMansStuff.PracticeSharp.UI
             // ledPictureBox
             // 
             this.ledPictureBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.ledPictureBox.Location = new System.Drawing.Point(84, 5);
+            this.ledPictureBox.Location = new System.Drawing.Point(87, 5);
             this.ledPictureBox.Name = "ledPictureBox";
             this.ledPictureBox.Size = new System.Drawing.Size(16, 16);
             this.ledPictureBox.TabIndex = 50;
