@@ -75,8 +75,8 @@
             this.aboutLabel.Name = "aboutLabel";
             this.aboutLabel.Size = new System.Drawing.Size(157, 58);
             this.aboutLabel.TabIndex = 2;
-            this.aboutLabel.Text = "Practice# is a Windows tool for practicing playing an instrument with playback mu" +
-                "sic. It will turn your playing skills sharper!";
+            this.aboutLabel.Text = "Practice# is a tool for practicing a musical instrument with playback music. It w" +
+                "ill turn your playing skills sharper!";
             // 
             // naudioLinkLabel
             // 
@@ -114,9 +114,9 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(12, 97);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(68, 13);
+            this.label1.Size = new System.Drawing.Size(45, 13);
             this.label1.TabIndex = 6;
-            this.label1.Text = "This Version:";
+            this.label1.Text = "Version:";
             // 
             // thisVersionLabel
             // 
