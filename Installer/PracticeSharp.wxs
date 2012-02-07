@@ -22,13 +22,20 @@
 -->
 	
 	
-  <?define RTMProductVersion="1.2.0" ?>
-  <?define ProductVersion="1.3.0" ?>
-  <?define ProductName="Practice# 1.3.0" ?>
+  <!-- New version steps:
+	1. Modify RTMProductVersion to last version
+	2. Modify ProductVersion to new version
+	3. Modify ProductName to contain new version
+	4. Modify ProductCode value (new GUID)
+  -->
+  <?define RTMProductVersion="1.3.0" ?>
+  <?define ProductVersion="1.4.0" ?>
+  <?define ProductName="Practice# 1.4.0" ?>
   <?define ProductTitle="Practice#" ?>
   <?define UpgradeCode="{698FDA6C-C8E8-4C2B-8705-28A99B39E171}"?>
   <?define Manufacturer="Yuval Naveh" ?>
-  <?define ProductCode="{0C948700-3197-4DD6-819C-374AC67EDC87}"?>
+  <?define ProductCode="{25DCD3FE-0A9E-4AF4-90EC-9AA7A7632E1E}"?>
+  <!-- 1.3.0 ProductCode="{0C948700-3197-4DD6-819C-374AC67EDC87}" -->
   <!-- 1.2.0 ProductCode="{6ECEC93F-114B-4C46-8F40-CA39EC618CDA}" -->
 		
   <Product Name='$(var.ProductName)' Id='$(var.ProductCode)' UpgradeCode='$(var.UpgradeCode)'
