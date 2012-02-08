@@ -424,6 +424,20 @@ namespace BigMansStuff.PracticeSharp.UI
                 presetControl8.State = PresetControl.PresetStates.Selected;
                 e.Handled = true;
             }
+
+            // A - Set start marker Now
+            else if (!e.Control && !e.Alt && !e.Shift && e.KeyCode == Keys.A)
+            {
+                startLoopNowButton.PerformClick();
+                e.Handled = true;
+            }
+            // Z - Set end marker Now
+            else if (!e.Control && !e.Alt && !e.Shift && e.KeyCode == Keys.Z)
+            {
+                endLoopNowButton.PerformClick();
+                e.Handled = true;
+            }
+
             // Ctrl + O - Open File
             else if (e.Control && !e.Alt && !e.Shift && e.KeyCode == Keys.O)
             {
@@ -446,6 +460,12 @@ namespace BigMansStuff.PracticeSharp.UI
             else if (!e.Control && !e.Alt && !e.Shift && e.KeyCode == Keys.L)
             {
                 positionLabel.PerformClick();
+                e.Handled = true;
+            }
+            // Ctrl + L - Toggle Loop mode On/Off
+            else if (e.Control && !e.Alt && !e.Shift && e.KeyCode == Keys.L)
+            {
+                loopCheckBox.Checked = !loopCheckBox.Checked;
                 e.Handled = true;
             }
             // F1 - Help
