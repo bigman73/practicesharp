@@ -191,16 +191,8 @@ namespace BigMansStuff.PracticeSharp.Core
         /// </summary>
         public void ResetCurrentPlayTime()
         {
-            // Reset current play time so it starts from the begining
-            if (Loop)
-            {
-                // In case of a loop, move the current play time to the start marker
-                CurrentPlayTime = StartMarker;
-            }
-            else
-            {
-                CurrentPlayTime = TimeSpan.Zero;
-            }
+            // Reset current play time so it starts from the beginning
+            CurrentPlayTime = StartMarker;
 
             // Signal the UI about the cue
             CueWaitPulsed(this, EventArgs.Empty);
