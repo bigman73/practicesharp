@@ -149,9 +149,9 @@ namespace BigMansStuff.PracticeSharp.Core
         }
 
         /// <summary>
-        /// Clears the queue of any remaining buffers
+        /// Flushes the queue of any remaining audio buffers
         /// </summary>
-        public void ClearQueue()
+        public void Flush()
         {
             lock (m_queue)
             {

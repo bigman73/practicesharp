@@ -279,8 +279,25 @@ namespace BigMansStuff.PracticeSharp.UI
         /// <param name="e"></param>
         private void MainForm_KeyDown(object sender, KeyEventArgs e)
         {
+        }
+
+        private void MainForm_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            // [ Pitch Down
+            if (e.KeyChar == '[' )
+            {              
+                pitchTrackBar.Value = Math.Max(pitchTrackBar.Value - TicksPerSemitone, pitchTrackBar.Minimum);
+                e.Handled = true;
+            }
+            // ] Pitch Up
+            else if (e.KeyChar == ']' )
+            {
+                pitchTrackBar.Value = Math.Min(pitchTrackBar.Value + TicksPerSemitone, pitchTrackBar.Maximum);
+
+                e.Handled = true;
+            }
             // > - Jump forward: Start
-            if (!e.Control && !e.Alt && !e.Shift && e.KeyValue == 190)
+            else if ( e.KeyChar == '>' || e.KeyChar == '.')
             {
                 if (!m_jumpMode)
                 {
@@ -296,7 +313,7 @@ namespace BigMansStuff.PracticeSharp.UI
                 e.Handled = true;
             }
             // < - Jump Backward: Start
-            else if (!e.Control && !e.Alt && !e.Shift && e.KeyValue == 188)
+            else if (e.KeyChar == '<' || e.KeyChar == ',')
             {
                 if (!m_jumpMode)
                 {
@@ -312,46 +329,35 @@ namespace BigMansStuff.PracticeSharp.UI
                 JumpBackward();
                 e.Handled = true;
             }
-            // F - Faster tempo
-            else if (!e.Control && !e.Alt && !e.Shift && (e.KeyCode == Keys.F))
+            // S - Slower tempo
+            else if (e.KeyChar.ToString().ToUpper() == "S")
             {
-                tempoTrackBar.Value = Math.Min(tempoTrackBar.Value + 4, tempoTrackBar.Maximum);
+                tempoTrackBar.Value = Math.Max(tempoTrackBar.Value - tempoTrackBar.SmallChange, tempoTrackBar.Minimum);
 
                 e.Handled = true;
             }
-            // S - Faster tempo
-            else if (!e.Control && !e.Alt && !e.Shift && (e.KeyCode == Keys.S))
+            // F - Faster tempo
+            else if (e.KeyChar.ToString().ToUpper() == "F")
             {
-                tempoTrackBar.Value = Math.Max( tempoTrackBar.Value - 4, tempoTrackBar.Minimum);
+                tempoTrackBar.Value = Math.Min(tempoTrackBar.Value + tempoTrackBar.SmallChange, tempoTrackBar.Maximum);
 
                 e.Handled = true;
             }
             // - Volume Down
-            else if (!e.Control && !e.Alt && !e.Shift && e.KeyCode == Keys.OemMinus)
+            else if (e.KeyChar == '-')
             {
-                volumeTrackBar.Value = Math.Max(volumeTrackBar.Value - 5, volumeTrackBar.Minimum);
+                volumeTrackBar.Value = Math.Max(volumeTrackBar.Value - volumeTrackBar.SmallChange, volumeTrackBar.Minimum);
                 e.Handled = true;
             }
-            // + Volume Down
-            else if (!e.Control && !e.Alt && !e.Shift && e.KeyCode == Keys.Oemplus)
+            // + Volume Up
+            else if (e.KeyChar == '+' || e.KeyChar == '=')
             {
-                volumeTrackBar.Value = Math.Min(volumeTrackBar.Value + 5, volumeTrackBar.Maximum);
+                volumeTrackBar.Value = Math.Min(volumeTrackBar.Value + volumeTrackBar.SmallChange, volumeTrackBar.Maximum);
                 e.Handled = true;
             }
-            // [ Pitch Down
-            else if (!e.Control && !e.Alt && !e.Shift && e.KeyCode == Keys.OemOpenBrackets)
-            {              
-                pitchTrackBar.Value = Math.Max(pitchTrackBar.Value - TicksPerSemitone, pitchTrackBar.Minimum);
-                e.Handled = true;
-            }
-            // ] Pitch Up
-            else if (!e.Control && !e.Alt && !e.Shift && e.KeyCode == Keys.OemCloseBrackets)
-            {
-                pitchTrackBar.Value = Math.Min(pitchTrackBar.Value + TicksPerSemitone, pitchTrackBar.Maximum);
-
-                e.Handled = true;
-            }
+  
         } 
+
 
         /// <summary>
         /// Central key handler - KeyUp (when is released)
@@ -374,7 +380,16 @@ namespace BigMansStuff.PracticeSharp.UI
                 }
                 e.Handled = true;
             }
-          
+
+            // F12 - Show log file
+            else if (!e.Control && !e.Alt && !e.Shift && e.KeyCode == Keys.F12)
+            {
+                NLog.Targets.FileTarget target = LogManager.Configuration.FindTargetByName("logfileError") as NLog.Targets.FileTarget;
+                string appLogFilename = target.FileName.ToString();
+                appLogFilename = appLogFilename.Replace("${environment:PracticeSharpLogFolder}", m_appDataFolder);
+                Process.Start("notepad.exe", appLogFilename );
+                e.Handled = true;
+            }
 
             // 1 - Preset #1
             else if (!e.Control && !e.Alt && !e.Shift && e.KeyCode == Keys.D1)
@@ -1828,9 +1843,18 @@ namespace BigMansStuff.PracticeSharp.UI
         private void UpdateHorizontalTrackBarByMousePosition(TrackBar trackBar, MouseEventArgs e)
         {
             const int TrackBarMargin = 10;
-            float maxValue = trackBar.Maximum;
-            float minValue = trackBar.Minimum;
-            float newValue = minValue + (maxValue - minValue) * (((float)e.X - TrackBarMargin) / (trackBar.Width - TrackBarMargin * 2));
+            int maxValue = Convert.ToInt32( trackBar.Maximum );
+            int minValue = Convert.ToInt32( trackBar.Minimum );
+            int newValue = Convert.ToInt32(minValue + (maxValue - minValue) * (((float)e.X - TrackBarMargin) / (trackBar.Width - TrackBarMargin * 2)));
+
+            // Make value 'sticky' - it can only get a tick value
+            int mod = newValue % trackBar.SmallChange;
+            if (Math.Abs(mod) > trackBar.SmallChange / 2)
+                newValue = newValue + Math.Sign(mod) * trackBar.SmallChange - mod;
+            else
+                newValue = newValue - mod;
+            
+            // Limit new values
             if (newValue > maxValue)
                 newValue = maxValue;
             else if (newValue < minValue)
@@ -2139,7 +2163,9 @@ namespace BigMansStuff.PracticeSharp.UI
 
         const short JumpSeconds = 2;
 
-        const short TicksPerSemitone = 8; // 96 ticks are 12 semitones => each 8 ticks is one semitone
+        // 96 ticks are 12 semitones => each 8 ticks is one semitone
+        const short TicksPerSemitone = 8;
+
         #endregion
     }
 }

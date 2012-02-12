@@ -119,6 +119,7 @@ namespace BigMansStuff.PracticeSharp.UI
             this.speedValueLabel = new System.Windows.Forms.Label();
             this.cuePictureBox = new System.Windows.Forms.PictureBox();
             this.loopPanel = new System.Windows.Forms.Panel();
+            this.cueSecondsLabel = new System.Windows.Forms.Label();
             this.endLoopNowButton = new BigMansStuff.PracticeSharp.UI.UltraButton();
             this.startLoopNowButton = new BigMansStuff.PracticeSharp.UI.UltraButton();
             this.vol50Label = new System.Windows.Forms.Label();
@@ -173,7 +174,6 @@ namespace BigMansStuff.PracticeSharp.UI
             this.keyboardShortcutsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
-            this.cueSecondsLabel = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.tempoTrackBar)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.volumeTrackBar)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.playTimeTrackBar)).BeginInit();
@@ -239,7 +239,7 @@ namespace BigMansStuff.PracticeSharp.UI
             this.speed1XLabel.AutoSize = true;
             this.speed1XLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.speed1XLabel.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.speed1XLabel.Location = new System.Drawing.Point(176, 38);
+            this.speed1XLabel.Location = new System.Drawing.Point(178, 38);
             this.speed1XLabel.Name = "speed1XLabel";
             this.speed1XLabel.Size = new System.Drawing.Size(18, 12);
             this.speed1XLabel.TabIndex = 4;
@@ -1023,6 +1023,17 @@ namespace BigMansStuff.PracticeSharp.UI
             this.loopPanel.Size = new System.Drawing.Size(443, 54);
             this.loopPanel.TabIndex = 2;
             // 
+            // cueSecondsLabel
+            // 
+            this.cueSecondsLabel.AutoSize = true;
+            this.cueSecondsLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cueSecondsLabel.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.cueSecondsLabel.Location = new System.Drawing.Point(410, 7);
+            this.cueSecondsLabel.Name = "cueSecondsLabel";
+            this.cueSecondsLabel.Size = new System.Drawing.Size(23, 12);
+            this.cueSecondsLabel.TabIndex = 90;
+            this.cueSecondsLabel.Text = "sec.";
+            // 
             // endLoopNowButton
             // 
             this.endLoopNowButton.BackColor = System.Drawing.Color.Transparent;
@@ -1229,7 +1240,7 @@ namespace BigMansStuff.PracticeSharp.UI
             // 
             // pitchTrackBar
             // 
-            this.pitchTrackBar.LargeChange = 16;
+            this.pitchTrackBar.LargeChange = 0;
             this.pitchTrackBar.Location = new System.Drawing.Point(51, 141);
             this.pitchTrackBar.Maximum = 96;
             this.pitchTrackBar.Minimum = -96;
@@ -1310,7 +1321,7 @@ namespace BigMansStuff.PracticeSharp.UI
             // 
             this.timeStretchProfileComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.timeStretchProfileComboBox.FormattingEnabled = true;
-            this.timeStretchProfileComboBox.Location = new System.Drawing.Point(137, 184);
+            this.timeStretchProfileComboBox.Location = new System.Drawing.Point(146, 184);
             this.timeStretchProfileComboBox.Name = "timeStretchProfileComboBox";
             this.timeStretchProfileComboBox.Size = new System.Drawing.Size(193, 21);
             this.timeStretchProfileComboBox.TabIndex = 88;
@@ -1635,17 +1646,6 @@ namespace BigMansStuff.PracticeSharp.UI
             this.toolTip.InitialDelay = 1500;
             this.toolTip.ReshowDelay = 100;
             // 
-            // cueSecondsLabel
-            // 
-            this.cueSecondsLabel.AutoSize = true;
-            this.cueSecondsLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cueSecondsLabel.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.cueSecondsLabel.Location = new System.Drawing.Point(410, 7);
-            this.cueSecondsLabel.Name = "cueSecondsLabel";
-            this.cueSecondsLabel.Size = new System.Drawing.Size(23, 12);
-            this.cueSecondsLabel.TabIndex = 90;
-            this.cueSecondsLabel.Text = "sec.";
-            // 
             // MainForm
             // 
             this.AllowDrop = true;
@@ -1669,6 +1669,7 @@ namespace BigMansStuff.PracticeSharp.UI
             this.DragDrop += new System.Windows.Forms.DragEventHandler(this.MainForm_DragDrop);
             this.DragEnter += new System.Windows.Forms.DragEventHandler(this.MainForm_DragEnter);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MainForm_KeyDown);
+            this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.MainForm_KeyPress);
             this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.MainForm_KeyUp);
             ((System.ComponentModel.ISupportInitialize)(this.tempoTrackBar)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.volumeTrackBar)).EndInit();

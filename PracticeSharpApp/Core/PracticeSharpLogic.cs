@@ -143,36 +143,40 @@ namespace BigMansStuff.PracticeSharp.Core
             if (m_status == Statuses.Stopped)
                 return;
 
-            m_stopWorker = true;
-
             // Workaround to crashes/locks that sometimes occur due to threading issues.
             //   Solution: Resume paused playback BEFORE stopping to release NAudio pause state 
             if (m_waveOutDevice != null && m_waveOutDevice.PlaybackState == PlaybackState.Paused)
             {
-                m_logger.Debug("Resume paused playback BEFORE loading another file");
+                m_logger.Debug("Resume paused playback BEFORE STOP");
                 // Mute volume when Resume play - we don't it to really play, just to release the playback thread
                 m_waveChannel.Volume = 0;
+                Thread.Sleep(1);
                 m_waveOutDevice.Play();
                 // Give the NAudio playback some short time to release itself from pause state
-                Thread.Sleep(250);
+                Thread.Sleep(5);
             }
 
+            m_stopWorker = true;
+
+
             // Stop the audio processing thread
-            if ( m_audioProcessingThread != null )
+            if (m_waveOutDevice != null && m_waveOutDevice.PlaybackState == PlaybackState.Playing)
             {
-                
-
-                int counter = 5;
-                while (m_audioProcessingThread.IsAlive && counter > 0)
+                if (m_audioProcessingThread != null)
                 {
-                    Thread.Sleep(10);
-                    counter--;
+                    int counter = 5;
+                    while (m_audioProcessingThread.IsAlive && counter > 0)
+                    {
+                        Thread.Sleep(10);
+                        counter--;
+                    }
+
+                    // Last restort - Forcefully abort audio thread
+                    if (counter == 0)
+                        m_audioProcessingThread.Abort();
+
+                    m_audioProcessingThread = null;
                 }
-
-                if (counter == 0)
-                    m_audioProcessingThread.Abort();
-
-                m_audioProcessingThread = null;
             }
         }
 
@@ -602,6 +606,10 @@ namespace BigMansStuff.PracticeSharp.Core
                 {
                     if (m_newPlayTimeRequested)
                     {
+                        // Flush existing buffers
+                        m_soundTouchSharp.Flush();
+                        m_waveChannel.Flush();
+                        m_inputProvider.Flush();
                         m_waveChannel.CurrentTime = m_newPlayTime;
 
                         m_newPlayTimeRequested = false;
@@ -647,6 +655,7 @@ namespace BigMansStuff.PracticeSharp.Core
                     #region Flush left over samples
 
                     // ** End marker reached **
+                    m_inputProvider.Flush();
                     // Now the input buffer is processed, 'flush' some last samples that are
                     // hiding in the SoundTouch's internal processing pipeline.
                     m_soundTouchSharp.Flush();
@@ -701,7 +710,7 @@ namespace BigMansStuff.PracticeSharp.Core
                 do
                 {
                     // ***                Receive samples back from SoundTouch            ***
-                    // *** This is where Time Stretching and Pitch Changing is done *********
+                    // *** This is where Time Stretching and Pitch Changing are actually done *********
                     samplesProcessed = m_soundTouchSharp.ReceiveSamples(convertOutputBuffer.Floats, outBufferSizeFloats);
                     // **********************************************************************
 
