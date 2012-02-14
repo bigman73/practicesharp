@@ -66,7 +66,7 @@ namespace BigMansStuff.PracticeSharp.Core
         public void Terminate()
         {
             ChangeStatus(Statuses.Terminating);
-
+            
             Stop();
 
             // Release lock, just in case the thread is locked
@@ -134,7 +134,7 @@ namespace BigMansStuff.PracticeSharp.Core
                 if (m_newPlayTimeRequested)
                 {
                     // Flush existing buffers
-                    m_soundTouchSharp.Flush();
+                    m_soundTouchSharp.Clear();
                     m_waveChannel.Flush();
                     m_inputProvider.Flush();
                 }
@@ -156,21 +156,11 @@ namespace BigMansStuff.PracticeSharp.Core
             if (m_status == Statuses.Stopped)
                 return;
 
-            // Workaround to crashes/locks that sometimes occur due to threading issues.
-            //   Solution: Resume paused playback BEFORE stopping to release NAudio pause state 
-            if (m_waveOutDevice != null && m_waveOutDevice.PlaybackState == PlaybackState.Paused)
-            {
-                m_logger.Debug("Resume paused playback BEFORE STOP");
-                // Mute volume when Resume play - we don't it to really play, just to release the playback thread
-                m_waveChannel.Volume = 0;
-                Thread.Sleep(1);
-                m_waveOutDevice.Play();
-                // Give the NAudio playback some short time to release itself from pause state
-                Thread.Sleep(5);
-            }
-
             m_stopWorker = true;
+            Thread.Sleep(5);
 
+            if ( m_soundTouchSharp != null )
+                m_soundTouchSharp.Clear();
 
             // Stop the audio processing thread
             if (m_waveOutDevice != null && m_waveOutDevice.PlaybackState == PlaybackState.Playing)
@@ -661,7 +651,7 @@ namespace BigMansStuff.PracticeSharp.Core
                     // ** End marker reached **
                     // Now the input buffer is processed, 'flush' some last samples that are
                     // hiding in the SoundTouch's internal processing pipeline.
-                    m_soundTouchSharp.Flush();
+                    m_soundTouchSharp.Clear();
                     m_inputProvider.Flush();
                     m_waveChannel.Flush();
 
@@ -740,6 +730,7 @@ namespace BigMansStuff.PracticeSharp.Core
             } // while
 
             #region Stop PlayBack 
+           
             m_logger.Debug("ProcessAudio() finished - stop playback");
             m_waveOutDevice.Stop();
             // Stop listening to PlayPositionChanged events
@@ -1107,19 +1098,32 @@ namespace BigMansStuff.PracticeSharp.Core
             {
                 m_latency = Properties.Settings.Default.Latency;
 
-                string soundOutput = Properties.Settings.Default.SoundOutput;
+                string soundOutput;
+
+                m_logger.Info("OS Info: " + Environment.OSVersion.ToString());
+
+                if (Environment.OSVersion.Version.Major < 6)
+                    soundOutput = "WaveOut"; // XP
+                else
+                    soundOutput = "WasapiOut"; // Vista/7
+                
+                // Properties.Settings.Default.SoundOutput;
                 m_logger.Info("Wave Output Device that was requested: {0}", soundOutput);
                 
                 // Set the wave output device based on the configuration setting
                 switch (soundOutput)
                 {
+                    case "WasapiOut":
+                        m_waveOutDevice = new WasapiOut(global::NAudio.CoreAudioApi.AudioClientShareMode.Shared, m_latency);
+                        break;
+
                     case "DirectSound":
                         m_waveOutDevice = new DirectSoundOut(m_latency);
                         break;
 
                     default:
-                    case "WasapiOut":
-                        m_waveOutDevice = new WasapiOut(global::NAudio.CoreAudioApi.AudioClientShareMode.Shared, m_latency);
+                    case "WaveOut":
+                        m_waveOutDevice = new WaveOut();
                         break;
                 }
 

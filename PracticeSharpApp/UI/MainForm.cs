@@ -223,13 +223,13 @@ namespace BigMansStuff.PracticeSharp.UI
             {
                 // Note: DirectSound seems to be buggy with NAudio - it crashes randomly
                 //  WasapiOut is much more stable
-                Version appVersionNumber = new Version(appVersionConfigSetting);
+                /* Version appVersionNumber = new Version(appVersionConfigSetting);
                 if (appVersionNumber < new Version("1.4.3.0"))
                 {
                     m_logger.Info("Changing default sound output to WasapiOut");
                     Properties.Settings.Default.SoundOutput = "WasapiOut";
                     Properties.Settings.Default.Save();
-                }
+                }*/
             }
 
             // Show current application version
@@ -288,6 +288,7 @@ namespace BigMansStuff.PracticeSharp.UI
 
         #region GUI Event Handlers
 
+        #region Keyboard
         /// <summary>
         /// Central key handler - KeyDown (As long as a key is pressed)
         /// </summary>
@@ -374,7 +375,6 @@ namespace BigMansStuff.PracticeSharp.UI
   
         } 
 
-
         /// <summary>
         /// Central key handler - KeyUp (when is released)
         /// </summary>
@@ -400,10 +400,7 @@ namespace BigMansStuff.PracticeSharp.UI
             // F12 - Show log file
             else if (!e.Control && !e.Alt && !e.Shift && e.KeyCode == Keys.F12)
             {
-                NLog.Targets.FileTarget target = LogManager.Configuration.FindTargetByName("logfileError") as NLog.Targets.FileTarget;
-                string appLogFilename = target.FileName.ToString();
-                appLogFilename = appLogFilename.Replace("${environment:PracticeSharpLogFolder}", m_appDataFolder);
-                Process.Start("notepad.exe", appLogFilename );
+                showTechLogToolStripMenuItem.PerformClick();
                 e.Handled = true;
             }
 
@@ -536,7 +533,21 @@ namespace BigMansStuff.PracticeSharp.UI
                 e.Handled = true;
             }
         }
+        #endregion
 
+        /// <summary>
+        /// Event handler - Shows the technical log in notepad
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void showTechLogToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            NLog.Targets.FileTarget target = LogManager.Configuration.FindTargetByName("logfileError") as NLog.Targets.FileTarget;
+            string appLogFilename = target.FileName.ToString();
+            appLogFilename = appLogFilename.Replace("${environment:PracticeSharpLogFolder}", m_appDataFolder);
+            Process.Start("notepad.exe", appLogFilename);
+        }
+        
         /// <summary>
         /// Play/Pause button click event handler - Plays or Pauses the current play back of the file
         /// </summary>
@@ -2218,7 +2229,5 @@ namespace BigMansStuff.PracticeSharp.UI
         const short TicksPerSemitone = 8;
 
         #endregion
-
-    
     }
 }

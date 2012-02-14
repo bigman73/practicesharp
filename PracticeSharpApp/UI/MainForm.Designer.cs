@@ -149,10 +149,10 @@ namespace BigMansStuff.PracticeSharp.UI
             this.recent8ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.keyboardShortcutsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.aboutMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.showTechLogToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.aboutMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.equalizerHoverLabel = new BigMansStuff.PracticeSharp.UI.HoverLabel();
             this.hiEqHoverLabel = new BigMansStuff.PracticeSharp.UI.HoverLabel();
             this.medEqHoverLabel = new BigMansStuff.PracticeSharp.UI.HoverLabel();
@@ -629,7 +629,7 @@ namespace BigMansStuff.PracticeSharp.UI
             // playStatusToolStripLabel
             // 
             this.playStatusToolStripLabel.Name = "playStatusToolStripLabel";
-            this.playStatusToolStripLabel.Size = new System.Drawing.Size(26, 17);
+            this.playStatusToolStripLabel.Size = new System.Drawing.Size(25, 17);
             this.playStatusToolStripLabel.Text = "Idle";
             // 
             // toolStripStatusLabel5
@@ -642,7 +642,7 @@ namespace BigMansStuff.PracticeSharp.UI
             // filenameToolStripStatusLabel
             // 
             this.filenameToolStripStatusLabel.Name = "filenameToolStripStatusLabel";
-            this.filenameToolStripStatusLabel.Size = new System.Drawing.Size(29, 17);
+            this.filenameToolStripStatusLabel.Size = new System.Drawing.Size(25, 17);
             this.filenameToolStripStatusLabel.Text = "N/A";
             // 
             // toolStripStatusLabel2
@@ -1150,56 +1150,56 @@ namespace BigMansStuff.PracticeSharp.UI
             this.recent7ToolStripMenuItem,
             this.recent8ToolStripMenuItem});
             this.recentFilesToolStripMenuItem.Name = "recentFilesToolStripMenuItem";
-            this.recentFilesToolStripMenuItem.Size = new System.Drawing.Size(81, 20);
+            this.recentFilesToolStripMenuItem.Size = new System.Drawing.Size(77, 20);
             this.recentFilesToolStripMenuItem.Text = "Recent Files";
             this.recentFilesToolStripMenuItem.DropDownOpening += new System.EventHandler(this.recentFilesToolStripMenuItem_DropDownOpening);
             // 
             // recent1ToolStripMenuItem
             // 
             this.recent1ToolStripMenuItem.Name = "recent1ToolStripMenuItem";
-            this.recent1ToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
+            this.recent1ToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
             this.recent1ToolStripMenuItem.Text = "Recent1";
             // 
             // recent2ToolStripMenuItem
             // 
             this.recent2ToolStripMenuItem.Name = "recent2ToolStripMenuItem";
-            this.recent2ToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
+            this.recent2ToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
             this.recent2ToolStripMenuItem.Text = "Recent2";
             // 
             // recent3ToolStripMenuItem
             // 
             this.recent3ToolStripMenuItem.Name = "recent3ToolStripMenuItem";
-            this.recent3ToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
+            this.recent3ToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
             this.recent3ToolStripMenuItem.Text = "Recent3";
             // 
             // recent4ToolStripMenuItem
             // 
             this.recent4ToolStripMenuItem.Name = "recent4ToolStripMenuItem";
-            this.recent4ToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
+            this.recent4ToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
             this.recent4ToolStripMenuItem.Text = "Recent4";
             // 
             // recent5ToolStripMenuItem
             // 
             this.recent5ToolStripMenuItem.Name = "recent5ToolStripMenuItem";
-            this.recent5ToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
+            this.recent5ToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
             this.recent5ToolStripMenuItem.Text = "Recent5";
             // 
             // recent6ToolStripMenuItem
             // 
             this.recent6ToolStripMenuItem.Name = "recent6ToolStripMenuItem";
-            this.recent6ToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
+            this.recent6ToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
             this.recent6ToolStripMenuItem.Text = "Recent6";
             // 
             // recent7ToolStripMenuItem
             // 
             this.recent7ToolStripMenuItem.Name = "recent7ToolStripMenuItem";
-            this.recent7ToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
+            this.recent7ToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
             this.recent7ToolStripMenuItem.Text = "Recent7";
             // 
             // recent8ToolStripMenuItem
             // 
             this.recent8ToolStripMenuItem.Name = "recent8ToolStripMenuItem";
-            this.recent8ToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
+            this.recent8ToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
             this.recent8ToolStripMenuItem.Text = "Recent8";
             // 
             // helpToolStripMenuItem
@@ -1210,20 +1210,33 @@ namespace BigMansStuff.PracticeSharp.UI
             this.toolStripSeparator1,
             this.aboutMenuItem});
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(40, 20);
             this.helpToolStripMenuItem.Text = "Help";
             // 
             // keyboardShortcutsMenuItem
             // 
             this.keyboardShortcutsMenuItem.Name = "keyboardShortcutsMenuItem";
-            this.keyboardShortcutsMenuItem.Size = new System.Drawing.Size(189, 22);
+            this.keyboardShortcutsMenuItem.Size = new System.Drawing.Size(183, 22);
             this.keyboardShortcutsMenuItem.Text = "Keyboard Shortcuts..";
             this.keyboardShortcutsMenuItem.Click += new System.EventHandler(this.keyboardShortcutsMenuItem_Click);
+            // 
+            // showTechLogToolStripMenuItem
+            // 
+            this.showTechLogToolStripMenuItem.Name = "showTechLogToolStripMenuItem";
+            this.showTechLogToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F12;
+            this.showTechLogToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
+            this.showTechLogToolStripMenuItem.Text = "Show Tech. Log..";
+            this.showTechLogToolStripMenuItem.Click += new System.EventHandler(this.showTechLogToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(180, 6);
             // 
             // aboutMenuItem
             // 
             this.aboutMenuItem.Name = "aboutMenuItem";
-            this.aboutMenuItem.Size = new System.Drawing.Size(189, 22);
+            this.aboutMenuItem.Size = new System.Drawing.Size(183, 22);
             this.aboutMenuItem.Text = "About..";
             this.aboutMenuItem.Click += new System.EventHandler(this.aboutMenuItem_Click);
             // 
@@ -1232,18 +1245,6 @@ namespace BigMansStuff.PracticeSharp.UI
             this.toolTip.AutoPopDelay = 5000;
             this.toolTip.InitialDelay = 1500;
             this.toolTip.ReshowDelay = 100;
-            // 
-            // showTechLogToolStripMenuItem
-            // 
-            this.showTechLogToolStripMenuItem.Name = "showTechLogToolStripMenuItem";
-            this.showTechLogToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F12;
-            this.showTechLogToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
-            this.showTechLogToolStripMenuItem.Text = "Show Tech. Log..";
-            // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(186, 6);
             // 
             // equalizerHoverLabel
             // 
