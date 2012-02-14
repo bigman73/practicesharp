@@ -56,6 +56,8 @@ namespace BigMansStuff.PracticeSharp.Core
             m_startMarker = TimeSpan.Zero;
             m_endMarker = TimeSpan.Zero;
             m_cue = TimeSpan.Zero;
+
+            InitializeSoundTouchSharp();
         }
 
         /// <summary>
@@ -72,6 +74,9 @@ namespace BigMansStuff.PracticeSharp.Core
             {
                 Monitor.Pulse(FirstPlayLock);
             }
+
+            // Dispose of SoundTouchSharp
+            TerminateSoundTouchSharp();
 
             ChangeStatus(Statuses.Terminated);
         }
@@ -126,6 +131,14 @@ namespace BigMansStuff.PracticeSharp.Core
             }
             else if (m_status == Statuses.Pausing)
             {
+                if (m_newPlayTimeRequested)
+                {
+                    // Flush existing buffers
+                    m_soundTouchSharp.Flush();
+                    m_waveChannel.Flush();
+                    m_inputProvider.Flush();
+                }
+
                 m_waveOutDevice.Play();
                 ChangeStatus(Statuses.Playing);
             }
@@ -499,8 +512,6 @@ namespace BigMansStuff.PracticeSharp.Core
                 // Initialize audio playback
                 try
                 {
-                    InitializeSoundTouchSharp();
-
                     InitializeFileAudio();
 
                     InitializeEqualizerEffect();
@@ -545,11 +556,8 @@ namespace BigMansStuff.PracticeSharp.Core
                 }
                 finally
                 {
-                    // Dispose of NAudio in context of thread (for WMF it will must be disposed in the same thread)
+                    // Dispose of NAudio in context of thread (for WMF it must be disposed in the same thread)
                     TerminateNAudio();
-
-                    // Dispose of SoundTouchSharp
-                    TerminateSoundTouchSharp();
                 }
             }
             catch (Exception ex)
@@ -596,7 +604,7 @@ namespace BigMansStuff.PracticeSharp.Core
             {
                 lock (PropertiesLock)
                 {
-                    m_waveChannel.Volume = m_volume;
+                    m_waveChannel.Volume = m_volume;                   
                 }
 
                 #region Read samples from file
@@ -606,10 +614,6 @@ namespace BigMansStuff.PracticeSharp.Core
                 {
                     if (m_newPlayTimeRequested)
                     {
-                        // Flush existing buffers
-                        m_soundTouchSharp.Flush();
-                        m_waveChannel.Flush();
-                        m_inputProvider.Flush();
                         m_waveChannel.CurrentTime = m_newPlayTime;
 
                         m_newPlayTimeRequested = false;
@@ -655,10 +659,12 @@ namespace BigMansStuff.PracticeSharp.Core
                     #region Flush left over samples
 
                     // ** End marker reached **
-                    m_inputProvider.Flush();
                     // Now the input buffer is processed, 'flush' some last samples that are
                     // hiding in the SoundTouch's internal processing pipeline.
                     m_soundTouchSharp.Flush();
+                    m_inputProvider.Flush();
+                    m_waveChannel.Flush();
+
                     if (!m_stopWorker)
                     {
                         while (!m_stopWorker && samplesProcessed != 0)
@@ -1099,20 +1105,21 @@ namespace BigMansStuff.PracticeSharp.Core
         {
             try
             {
-                m_latency = BigMansStuff.PracticeSharp.Properties.Settings.Default.Latency;
+                m_latency = Properties.Settings.Default.Latency;
 
-                m_logger.Info("Wave Output Device that was requested: {0}", Properties.Settings.Default.SoundOutput);
+                string soundOutput = Properties.Settings.Default.SoundOutput;
+                m_logger.Info("Wave Output Device that was requested: {0}", soundOutput);
                 
                 // Set the wave output device based on the configuration setting
-                switch (Properties.Settings.Default.SoundOutput)
+                switch (soundOutput)
                 {
-                    case "WasapiOut":
-                        m_waveOutDevice = new WasapiOut(global::NAudio.CoreAudioApi.AudioClientShareMode.Shared, m_latency);
+                    case "DirectSound":
+                        m_waveOutDevice = new DirectSoundOut(m_latency);
                         break;
 
                     default:
-                    case "DirectSound":
-                        m_waveOutDevice = new DirectSoundOut(m_latency);
+                    case "WasapiOut":
+                        m_waveOutDevice = new WasapiOut(global::NAudio.CoreAudioApi.AudioClientShareMode.Shared, m_latency);
                         break;
                 }
 

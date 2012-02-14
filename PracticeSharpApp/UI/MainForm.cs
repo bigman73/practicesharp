@@ -36,6 +36,8 @@ using System.Configuration;
 using System.Diagnostics;
 using NLog;
 
+// TODO: for a file without a selected preset, select Preset 1 by default
+
 namespace BigMansStuff.PracticeSharp.UI
 {
     /// <summary>
@@ -198,7 +200,7 @@ namespace BigMansStuff.PracticeSharp.UI
         private void InitializeConfiguration()
         {
             Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.PerUserRoamingAndLocal);
-            Console.WriteLine("Local user config path: {0}", config.FilePath);
+            m_logger.Debug("Local user config path: {0}", config.FilePath);
 
             // Get current application version
             System.Reflection.Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly();
@@ -207,13 +209,27 @@ namespace BigMansStuff.PracticeSharp.UI
             m_logger.Info("Practice# version: " + appVersionString);
 
             // Upgrade user settings from last version to current version, if needed
-            string appVersionSetting = Properties.Settings.Default.ApplicationVersion;
-            if (appVersionSetting != m_appVersion.ToString())
+            string appVersionConfigSetting = Properties.Settings.Default.ApplicationVersion;
+            if (appVersionConfigSetting != m_appVersion.ToString())
             {
-                m_logger.Info("Old application version (" + appVersionSetting + "), Settings upgrades is required" );
+                m_logger.Info("Old application version (" + appVersionConfigSetting + "), Settings upgrades is required" );
                 Properties.Settings.Default.Upgrade();
                 Properties.Settings.Default.ApplicationVersion = appVersionString;
                 Properties.Settings.Default.Save();
+            }
+
+
+            if (appVersionConfigSetting != string.Empty)
+            {
+                // Note: DirectSound seems to be buggy with NAudio - it crashes randomly
+                //  WasapiOut is much more stable
+                Version appVersionNumber = new Version(appVersionConfigSetting);
+                if (appVersionNumber < new Version("1.4.3.0"))
+                {
+                    m_logger.Info("Changing default sound output to WasapiOut");
+                    Properties.Settings.Default.SoundOutput = "WasapiOut";
+                    Properties.Settings.Default.Save();
+                }
             }
 
             // Show current application version
@@ -465,6 +481,21 @@ namespace BigMansStuff.PracticeSharp.UI
                 ImmeidatelyWriteCurrentPreset();
                 e.Handled = true;
             }
+
+            // Ctrl + S - Reset speed
+            else if (e.Control && !e.Alt && !e.Shift && e.KeyCode == Keys.S)
+            {
+                speedLabel.PerformClick();
+                e.Handled = true;
+            }
+
+            // Ctrl + [ - Reset pitch
+            else if (e.Control && !e.Alt && !e.Shift && e.KeyCode == Keys.OemOpenBrackets)
+            {
+                pitchLabel.PerformClick();
+                e.Handled = true;
+            }
+
             // Space - Pause/Play
             else if (!e.Control && !e.Alt && !e.Shift && e.KeyCode == Keys.Space)
             {
@@ -774,11 +805,31 @@ namespace BigMansStuff.PracticeSharp.UI
         }
 
         /// <summary>
+        /// tempoTrackBar Mouse Up - Changes the tempo to the value under the current mouse position
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void tempoTrackBar_MouseUp(object sender, MouseEventArgs e)
+        {
+            UpdateHorizontalTrackBarByMousePosition(tempoTrackBar, e);
+        }
+
+        /// <summary>
         /// pitchTrackBar Mouse Down - Changes the pitch to the value under the current mouse position
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void pitchTrackBar_MouseDown(object sender, MouseEventArgs e)
+        {
+            UpdateHorizontalTrackBarByMousePosition(pitchTrackBar, e);
+        }
+
+        /// <summary>
+        /// pitchTrackBar Mouse Up - Changes the pitch to the value under the current mouse position
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void pitchTrackBar_MouseUp(object sender, MouseEventArgs e)
         {
             UpdateHorizontalTrackBarByMousePosition(pitchTrackBar, e);
         }
@@ -1642,11 +1693,13 @@ namespace BigMansStuff.PracticeSharp.UI
                 // Load Presets Bank for this input file
                 m_presetBankFile = new PresetBankFile(m_appDataFolder,m_appVersion.ToString(),m_currentFilename);
                 string activePresetId = m_presetBankFile.LoadPresetsBank(m_presetControls);
-                if (activePresetId != null)
-                {
-                    m_currentPreset = m_presetControls[activePresetId];
-                    m_currentPreset.State = PresetControl.PresetStates.Selected;
-                }
+
+                // If no preset is active, select the first one by default
+                if (activePresetId == null)
+                    activePresetId = "1";
+
+                m_currentPreset = m_presetControls[activePresetId];
+                m_currentPreset.State = PresetControl.PresetStates.Selected;
 
 
                 EnableControls(true);
@@ -1860,9 +1913,7 @@ namespace BigMansStuff.PracticeSharp.UI
             else if (newValue < minValue)
                 newValue = minValue;
 
-            int newTrackBarValue = Convert.ToInt32(newValue);
-
-            trackBar.Value = newTrackBarValue;
+            trackBar.Value = newValue;
         }
 
         /// <summary>
@@ -2167,5 +2218,7 @@ namespace BigMansStuff.PracticeSharp.UI
         const short TicksPerSemitone = 8;
 
         #endregion
+
+    
     }
 }

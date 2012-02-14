@@ -33,7 +33,7 @@
       <Value Profile="(Default)">0.75</Value>
     </Setting>
     <Setting Name="SoundOutput" Type="System.String" Scope="User">
-      <Value Profile="(Default)">DirectSound</Value>
+      <Value Profile="(Default)">WasapiOut</Value>
     </Setting>
   </Settings>
 </SettingsFile>
