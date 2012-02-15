@@ -816,7 +816,16 @@ namespace BigMansStuff.PracticeSharp.UI
         /// <param name="e"></param>
         private void tempoTrackBar_MouseDown(object sender, MouseEventArgs e)
         {
+            tempoTrackBar.Tag = "MouseDown";
             UpdateHorizontalTrackBarByMousePosition(tempoTrackBar, e);
+        }
+
+        private void tempoTrackBar_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (tempoTrackBar.Tag != null && tempoTrackBar.Tag.ToString() == "MouseDown")
+            {
+                UpdateHorizontalTrackBarByMousePosition(tempoTrackBar, e);
+            }
         }
 
         /// <summary>
@@ -826,6 +835,7 @@ namespace BigMansStuff.PracticeSharp.UI
         /// <param name="e"></param>
         private void tempoTrackBar_MouseUp(object sender, MouseEventArgs e)
         {
+            tempoTrackBar.Tag = string.Empty;
             UpdateHorizontalTrackBarByMousePosition(tempoTrackBar, e);
         }
 
@@ -836,8 +846,18 @@ namespace BigMansStuff.PracticeSharp.UI
         /// <param name="e"></param>
         private void pitchTrackBar_MouseDown(object sender, MouseEventArgs e)
         {
+            pitchTrackBar.Tag = "MouseDown";
             UpdateHorizontalTrackBarByMousePosition(pitchTrackBar, e);
         }
+
+        private void pitchTrackBar_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (pitchTrackBar.Tag != null && pitchTrackBar.Tag.ToString() == "MouseDown")
+            {
+                UpdateHorizontalTrackBarByMousePosition(pitchTrackBar, e);
+            }
+        }
+
 
         /// <summary>
         /// pitchTrackBar Mouse Up - Changes the pitch to the value under the current mouse position
@@ -846,6 +866,7 @@ namespace BigMansStuff.PracticeSharp.UI
         /// <param name="e"></param>
         private void pitchTrackBar_MouseUp(object sender, MouseEventArgs e)
         {
+            pitchTrackBar.Tag = string.Empty;
             UpdateHorizontalTrackBarByMousePosition(pitchTrackBar, e);
         }
 
@@ -950,10 +971,17 @@ namespace BigMansStuff.PracticeSharp.UI
         /// <param name="e"></param>
         private void pitchTrackBar_ValueChanged(object sender, EventArgs e)
         {
+            if ( m_practiceSharpLogic == null)
+                return;
+
             // Convert to Percent 
             float newPitchSemiTones = pitchTrackBar.Value / ( float ) TicksPerSemitone;
-            // Assign new Pitch
-            m_practiceSharpLogic.Pitch = newPitchSemiTones;
+
+            if (m_practiceSharpLogic != null)
+            {
+                // Assign new Pitch
+                m_practiceSharpLogic.Pitch = newPitchSemiTones;
+            }
 
             // Update Pitch value label
             string pitchValue;
@@ -1035,12 +1063,18 @@ namespace BigMansStuff.PracticeSharp.UI
         /// <param name="e"></param>
         private void cueComboBox_SelectedValueChanged(object sender, EventArgs e)
         {
-            m_practiceSharpLogic.Cue = new TimeSpan(0, 0, Convert.ToInt32(cueComboBox.Text));
+            if (m_practiceSharpLogic != null)
+            {
+                m_practiceSharpLogic.Cue = new TimeSpan(0, 0, Convert.ToInt32(cueComboBox.Text));
+            }
         }
 
         private void timeStretchProfileComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            m_practiceSharpLogic.TimeStretchProfile = timeStretchProfileComboBox.Items[timeStretchProfileComboBox.SelectedIndex] as TimeStretchProfile;
+            if (m_practiceSharpLogic != null)
+            {
+                m_practiceSharpLogic.TimeStretchProfile = timeStretchProfileComboBox.Items[timeStretchProfileComboBox.SelectedIndex] as TimeStretchProfile;
+            }
         }
 
         /// <summary>
@@ -1102,6 +1136,8 @@ namespace BigMansStuff.PracticeSharp.UI
         {
             // Don't allow re-entry of UI events when the track bar is being programmtically changed
             if (m_ignorePlayTimeUIEvents)
+                return;
+            if (m_practiceSharpLogic == null)
                 return;
 
             float playPosSeconds = (float)(playTimeTrackBar.Value / 100.0f * m_practiceSharpLogic.FilePlayDuration.TotalSeconds);
@@ -1302,6 +1338,8 @@ namespace BigMansStuff.PracticeSharp.UI
 
         private void startLoopSecondUpDown_ValueChanged(object sender, EventArgs e)
         {
+            if (m_practiceSharpLogic == null)
+                return;
             TimeSpan startMarker = m_practiceSharpLogic.StartMarker;
 
             if (startLoopSecondUpDown.Value < 0)
@@ -1322,6 +1360,9 @@ namespace BigMansStuff.PracticeSharp.UI
 
         private void startLoopMilliUpDown_ValueChanged(object sender, EventArgs e)
         {
+            if (m_practiceSharpLogic == null)
+                return;
+            
             TimeSpan startMarker = m_practiceSharpLogic.StartMarker;
 
             if (startLoopMilliUpDown.Value < 0)
@@ -1342,6 +1383,9 @@ namespace BigMansStuff.PracticeSharp.UI
 
         private void startLoopMinuteUpDown_ValueChanged(object sender, EventArgs e)
         {
+            if (m_practiceSharpLogic == null)
+                return;
+
             TimeSpan startMarker = m_practiceSharpLogic.StartMarker;
 
             if (startLoopMinuteUpDown.Value < 0)
@@ -1362,6 +1406,9 @@ namespace BigMansStuff.PracticeSharp.UI
 
         private void endLoopSecondUpDown_ValueChanged(object sender, EventArgs e)
         {
+            if (m_practiceSharpLogic == null)
+                return;
+
             TimeSpan endMarker = m_practiceSharpLogic.EndMarker;
 
             if (endLoopSecondUpDown.Value < 0)
@@ -1382,6 +1429,9 @@ namespace BigMansStuff.PracticeSharp.UI
 
         private void endLoopMinuteUpDown_ValueChanged(object sender, EventArgs e)
         {
+            if (m_practiceSharpLogic == null)
+                return;
+
             TimeSpan endMarker = m_practiceSharpLogic.EndMarker;
 
             if (endLoopMinuteUpDown.Value < 0)
@@ -1402,6 +1452,9 @@ namespace BigMansStuff.PracticeSharp.UI
 
         private void endLoopMilliUpDown_ValueChanged(object sender, EventArgs e)
         {
+            if (m_practiceSharpLogic == null)
+                return;
+
             TimeSpan endMarker = m_practiceSharpLogic.EndMarker;
 
             if (endLoopMilliUpDown.Value < 0)
@@ -1505,6 +1558,9 @@ namespace BigMansStuff.PracticeSharp.UI
 
         private void loEqTrackBar_ValueChanged(object sender, EventArgs e)
         {
+            if (m_practiceSharpLogic == null)
+                return;
+
             float newEqLo = loEqTrackBar.Value / 100.0f;
             m_practiceSharpLogic.EqualizerLoBand = newEqLo;
 
@@ -1514,6 +1570,9 @@ namespace BigMansStuff.PracticeSharp.UI
 
         private void medEqTrackBar_ValueChanged(object sender, EventArgs e)
         {
+            if (m_practiceSharpLogic == null)
+                return;
+
             float newEqMed = medEqTrackBar.Value / 100.0f;
             m_practiceSharpLogic.EqualizerMedBand = newEqMed;
 
@@ -1523,6 +1582,9 @@ namespace BigMansStuff.PracticeSharp.UI
 
         private void hiEqTrackBar_ValueChanged(object sender, EventArgs e)
         {
+            if (m_practiceSharpLogic == null)
+                return;
+
             float newEqHi = hiEqTrackBar.Value / 100.0f;
             m_practiceSharpLogic.EqualizerHiBand = newEqHi;
 
@@ -2257,5 +2319,6 @@ namespace BigMansStuff.PracticeSharp.UI
         const int TicksPerSemitone = 8;
 
         #endregion
+
     }
 }
