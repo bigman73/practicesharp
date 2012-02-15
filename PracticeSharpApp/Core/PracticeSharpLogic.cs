@@ -160,15 +160,13 @@ namespace BigMansStuff.PracticeSharp.Core
             // Stop the audio processing thread
             m_stopWorker = true;
 
-            // Wait for audio thread to stop
-            int counter = 10;
-            while (m_status != Statuses.Stopped && counter>0)
+            // Wait for audio thread to stop (Up to 500 msec), if not just give up
+            int counter = 25;
+            while (m_audioProcessingThread != null && counter>0)
             {
                 Thread.Sleep(20);
                 counter--;
             }
-
-            m_audioProcessingThread = null;
         }
 
         /// <summary>
@@ -551,6 +549,8 @@ namespace BigMansStuff.PracticeSharp.Core
                 {
                     // Dispose of NAudio in context of thread (for WMF it must be disposed in the same thread)
                     TerminateNAudio();
+
+                    m_audioProcessingThread = null;
                 }
             }
             catch (Exception ex)

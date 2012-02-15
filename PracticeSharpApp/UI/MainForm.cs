@@ -301,13 +301,13 @@ namespace BigMansStuff.PracticeSharp.UI
             // [ Pitch Down
             if (e.KeyChar == '[' )
             {              
-                pitchTrackBar.Value = Math.Max(pitchTrackBar.Value - TicksPerSemitone, pitchTrackBar.Minimum);
+                pitchTrackBar.Value = Math.Max(pitchTrackBar.Value - pitchTrackBar.SmallChange, pitchTrackBar.Minimum);
                 e.Handled = true;
             }
             // ] Pitch Up
             else if (e.KeyChar == ']' )
             {
-                pitchTrackBar.Value = Math.Min(pitchTrackBar.Value + TicksPerSemitone, pitchTrackBar.Maximum);
+                pitchTrackBar.Value = Math.Min(pitchTrackBar.Value + pitchTrackBar.SmallChange, pitchTrackBar.Maximum);
 
                 e.Handled = true;
             }
@@ -951,14 +951,24 @@ namespace BigMansStuff.PracticeSharp.UI
         private void pitchTrackBar_ValueChanged(object sender, EventArgs e)
         {
             // Convert to Percent 
-            float newPitchSemiTones = pitchTrackBar.Value / TicksPerSemitone;
+            float newPitchSemiTones = pitchTrackBar.Value / ( float ) TicksPerSemitone;
             // Assign new Pitch
             m_practiceSharpLogic.Pitch = newPitchSemiTones;
 
             // Update Pitch value label
             string pitchValue;
             pitchValue = (newPitchSemiTones > 0) ? "+" : string.Empty;
-            pitchValue += newPitchSemiTones.ToString("0");
+            if (Math.Abs(newPitchSemiTones) >= 1f || Math.Abs(newPitchSemiTones) == 0f)
+                pitchValue += Math.Truncate(newPitchSemiTones).ToString();
+            else if (newPitchSemiTones > -1f)
+                pitchValue = "-";
+            
+            float reminder = Math.Abs(newPitchSemiTones - (int)newPitchSemiTones);
+            if (reminder == 0.5f)
+            {
+                pitchValue += "½";
+            }
+
             pitchValueLabel.Text = pitchValue;
         } 
 
@@ -2244,7 +2254,7 @@ namespace BigMansStuff.PracticeSharp.UI
         const short JumpSeconds = 2;
 
         // 96 ticks are 12 semitones => each 8 ticks is one semitone
-        const short TicksPerSemitone = 8;
+        const int TicksPerSemitone = 8;
 
         #endregion
     }
