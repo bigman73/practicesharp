@@ -153,6 +153,7 @@ namespace BigMansStuff.PracticeSharp.UI
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.aboutMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.removeVocalsCheckBox = new System.Windows.Forms.CheckBox();
             this.equalizerHoverLabel = new BigMansStuff.PracticeSharp.UI.HoverLabel();
             this.hiEqHoverLabel = new BigMansStuff.PracticeSharp.UI.HoverLabel();
             this.medEqHoverLabel = new BigMansStuff.PracticeSharp.UI.HoverLabel();
@@ -629,7 +630,7 @@ namespace BigMansStuff.PracticeSharp.UI
             // playStatusToolStripLabel
             // 
             this.playStatusToolStripLabel.Name = "playStatusToolStripLabel";
-            this.playStatusToolStripLabel.Size = new System.Drawing.Size(25, 17);
+            this.playStatusToolStripLabel.Size = new System.Drawing.Size(26, 17);
             this.playStatusToolStripLabel.Text = "Idle";
             // 
             // toolStripStatusLabel5
@@ -642,7 +643,7 @@ namespace BigMansStuff.PracticeSharp.UI
             // filenameToolStripStatusLabel
             // 
             this.filenameToolStripStatusLabel.Name = "filenameToolStripStatusLabel";
-            this.filenameToolStripStatusLabel.Size = new System.Drawing.Size(25, 17);
+            this.filenameToolStripStatusLabel.Size = new System.Drawing.Size(29, 17);
             this.filenameToolStripStatusLabel.Text = "N/A";
             // 
             // toolStripStatusLabel2
@@ -936,6 +937,7 @@ namespace BigMansStuff.PracticeSharp.UI
             // 
             // trackBarPanel
             // 
+            this.trackBarPanel.Controls.Add(this.removeVocalsCheckBox);
             this.trackBarPanel.Controls.Add(this.label1);
             this.trackBarPanel.Controls.Add(this.timeStretchProfileComboBox);
             this.trackBarPanel.Controls.Add(this.timeStretchProfileLabel);
@@ -1002,7 +1004,7 @@ namespace BigMansStuff.PracticeSharp.UI
             // 
             this.timeStretchProfileComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.timeStretchProfileComboBox.FormattingEnabled = true;
-            this.timeStretchProfileComboBox.Location = new System.Drawing.Point(146, 184);
+            this.timeStretchProfileComboBox.Location = new System.Drawing.Point(146, 97);
             this.timeStretchProfileComboBox.Name = "timeStretchProfileComboBox";
             this.timeStretchProfileComboBox.Size = new System.Drawing.Size(193, 21);
             this.timeStretchProfileComboBox.TabIndex = 88;
@@ -1013,7 +1015,7 @@ namespace BigMansStuff.PracticeSharp.UI
             // 
             this.timeStretchProfileLabel.AutoSize = true;
             this.timeStretchProfileLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.timeStretchProfileLabel.Location = new System.Drawing.Point(6, 187);
+            this.timeStretchProfileLabel.Location = new System.Drawing.Point(6, 100);
             this.timeStretchProfileLabel.Name = "timeStretchProfileLabel";
             this.timeStretchProfileLabel.Size = new System.Drawing.Size(138, 15);
             this.timeStretchProfileLabel.TabIndex = 87;
@@ -1150,56 +1152,56 @@ namespace BigMansStuff.PracticeSharp.UI
             this.recent7ToolStripMenuItem,
             this.recent8ToolStripMenuItem});
             this.recentFilesToolStripMenuItem.Name = "recentFilesToolStripMenuItem";
-            this.recentFilesToolStripMenuItem.Size = new System.Drawing.Size(77, 20);
+            this.recentFilesToolStripMenuItem.Size = new System.Drawing.Size(81, 20);
             this.recentFilesToolStripMenuItem.Text = "Recent Files";
             this.recentFilesToolStripMenuItem.DropDownOpening += new System.EventHandler(this.recentFilesToolStripMenuItem_DropDownOpening);
             // 
             // recent1ToolStripMenuItem
             // 
             this.recent1ToolStripMenuItem.Name = "recent1ToolStripMenuItem";
-            this.recent1ToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
+            this.recent1ToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
             this.recent1ToolStripMenuItem.Text = "Recent1";
             // 
             // recent2ToolStripMenuItem
             // 
             this.recent2ToolStripMenuItem.Name = "recent2ToolStripMenuItem";
-            this.recent2ToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
+            this.recent2ToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
             this.recent2ToolStripMenuItem.Text = "Recent2";
             // 
             // recent3ToolStripMenuItem
             // 
             this.recent3ToolStripMenuItem.Name = "recent3ToolStripMenuItem";
-            this.recent3ToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
+            this.recent3ToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
             this.recent3ToolStripMenuItem.Text = "Recent3";
             // 
             // recent4ToolStripMenuItem
             // 
             this.recent4ToolStripMenuItem.Name = "recent4ToolStripMenuItem";
-            this.recent4ToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
+            this.recent4ToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
             this.recent4ToolStripMenuItem.Text = "Recent4";
             // 
             // recent5ToolStripMenuItem
             // 
             this.recent5ToolStripMenuItem.Name = "recent5ToolStripMenuItem";
-            this.recent5ToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
+            this.recent5ToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
             this.recent5ToolStripMenuItem.Text = "Recent5";
             // 
             // recent6ToolStripMenuItem
             // 
             this.recent6ToolStripMenuItem.Name = "recent6ToolStripMenuItem";
-            this.recent6ToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
+            this.recent6ToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
             this.recent6ToolStripMenuItem.Text = "Recent6";
             // 
             // recent7ToolStripMenuItem
             // 
             this.recent7ToolStripMenuItem.Name = "recent7ToolStripMenuItem";
-            this.recent7ToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
+            this.recent7ToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
             this.recent7ToolStripMenuItem.Text = "Recent7";
             // 
             // recent8ToolStripMenuItem
             // 
             this.recent8ToolStripMenuItem.Name = "recent8ToolStripMenuItem";
-            this.recent8ToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
+            this.recent8ToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
             this.recent8ToolStripMenuItem.Text = "Recent8";
             // 
             // helpToolStripMenuItem
@@ -1210,13 +1212,13 @@ namespace BigMansStuff.PracticeSharp.UI
             this.toolStripSeparator1,
             this.aboutMenuItem});
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            this.helpToolStripMenuItem.Size = new System.Drawing.Size(40, 20);
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
             this.helpToolStripMenuItem.Text = "Help";
             // 
             // keyboardShortcutsMenuItem
             // 
             this.keyboardShortcutsMenuItem.Name = "keyboardShortcutsMenuItem";
-            this.keyboardShortcutsMenuItem.Size = new System.Drawing.Size(183, 22);
+            this.keyboardShortcutsMenuItem.Size = new System.Drawing.Size(189, 22);
             this.keyboardShortcutsMenuItem.Text = "Keyboard Shortcuts..";
             this.keyboardShortcutsMenuItem.Click += new System.EventHandler(this.keyboardShortcutsMenuItem_Click);
             // 
@@ -1224,19 +1226,19 @@ namespace BigMansStuff.PracticeSharp.UI
             // 
             this.showTechLogToolStripMenuItem.Name = "showTechLogToolStripMenuItem";
             this.showTechLogToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F12;
-            this.showTechLogToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
+            this.showTechLogToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
             this.showTechLogToolStripMenuItem.Text = "Show Tech. Log..";
             this.showTechLogToolStripMenuItem.Click += new System.EventHandler(this.showTechLogToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(180, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(186, 6);
             // 
             // aboutMenuItem
             // 
             this.aboutMenuItem.Name = "aboutMenuItem";
-            this.aboutMenuItem.Size = new System.Drawing.Size(183, 22);
+            this.aboutMenuItem.Size = new System.Drawing.Size(189, 22);
             this.aboutMenuItem.Text = "About..";
             this.aboutMenuItem.Click += new System.EventHandler(this.aboutMenuItem_Click);
             // 
@@ -1245,6 +1247,17 @@ namespace BigMansStuff.PracticeSharp.UI
             this.toolTip.AutoPopDelay = 5000;
             this.toolTip.InitialDelay = 1500;
             this.toolTip.ReshowDelay = 100;
+            // 
+            // removeVocalsCheckBox
+            // 
+            this.removeVocalsCheckBox.AutoSize = true;
+            this.removeVocalsCheckBox.Location = new System.Drawing.Point(9, 184);
+            this.removeVocalsCheckBox.Name = "removeVocalsCheckBox";
+            this.removeVocalsCheckBox.Size = new System.Drawing.Size(104, 17);
+            this.removeVocalsCheckBox.TabIndex = 90;
+            this.removeVocalsCheckBox.Text = "Suppress vocals";
+            this.removeVocalsCheckBox.UseVisualStyleBackColor = true;
+            this.removeVocalsCheckBox.CheckedChanged += new System.EventHandler(this.removeVocalsCheckBox_CheckedChanged);
             // 
             // equalizerHoverLabel
             // 
@@ -1447,6 +1460,7 @@ namespace BigMansStuff.PracticeSharp.UI
             presetData1.Loop = false;
             presetData1.MedEqValue = 0F;
             presetData1.Pitch = 0F;
+            presetData1.RemoveVocals = false;
             presetData1.StartMarker = System.TimeSpan.Parse("00:00:00");
             presetData1.Tempo = 1F;
             presetData1.TimeStretchProfile = null;
@@ -1476,6 +1490,7 @@ namespace BigMansStuff.PracticeSharp.UI
             presetData2.Loop = false;
             presetData2.MedEqValue = 0F;
             presetData2.Pitch = 0F;
+            presetData2.RemoveVocals = false;
             presetData2.StartMarker = System.TimeSpan.Parse("00:00:00");
             presetData2.Tempo = 1F;
             presetData2.TimeStretchProfile = null;
@@ -1505,6 +1520,7 @@ namespace BigMansStuff.PracticeSharp.UI
             presetData3.Loop = false;
             presetData3.MedEqValue = 0F;
             presetData3.Pitch = 0F;
+            presetData3.RemoveVocals = false;
             presetData3.StartMarker = System.TimeSpan.Parse("00:00:00");
             presetData3.Tempo = 1F;
             presetData3.TimeStretchProfile = null;
@@ -1534,6 +1550,7 @@ namespace BigMansStuff.PracticeSharp.UI
             presetData4.Loop = false;
             presetData4.MedEqValue = 0F;
             presetData4.Pitch = 0F;
+            presetData4.RemoveVocals = false;
             presetData4.StartMarker = System.TimeSpan.Parse("00:00:00");
             presetData4.Tempo = 1F;
             presetData4.TimeStretchProfile = null;
@@ -1563,6 +1580,7 @@ namespace BigMansStuff.PracticeSharp.UI
             presetData5.Loop = false;
             presetData5.MedEqValue = 0F;
             presetData5.Pitch = 0F;
+            presetData5.RemoveVocals = false;
             presetData5.StartMarker = System.TimeSpan.Parse("00:00:00");
             presetData5.Tempo = 1F;
             presetData5.TimeStretchProfile = null;
@@ -1592,6 +1610,7 @@ namespace BigMansStuff.PracticeSharp.UI
             presetData6.Loop = false;
             presetData6.MedEqValue = 0F;
             presetData6.Pitch = 0F;
+            presetData6.RemoveVocals = false;
             presetData6.StartMarker = System.TimeSpan.Parse("00:00:00");
             presetData6.Tempo = 1F;
             presetData6.TimeStretchProfile = null;
@@ -1621,6 +1640,7 @@ namespace BigMansStuff.PracticeSharp.UI
             presetData7.Loop = false;
             presetData7.MedEqValue = 0F;
             presetData7.Pitch = 0F;
+            presetData7.RemoveVocals = false;
             presetData7.StartMarker = System.TimeSpan.Parse("00:00:00");
             presetData7.Tempo = 1F;
             presetData7.TimeStretchProfile = null;
@@ -1650,6 +1670,7 @@ namespace BigMansStuff.PracticeSharp.UI
             presetData8.Loop = false;
             presetData8.MedEqValue = 0F;
             presetData8.Pitch = 0F;
+            presetData8.RemoveVocals = false;
             presetData8.StartMarker = System.TimeSpan.Parse("00:00:00");
             presetData8.Tempo = 1F;
             presetData8.TimeStretchProfile = null;
@@ -1840,6 +1861,7 @@ namespace BigMansStuff.PracticeSharp.UI
         private System.Windows.Forms.Label cueSecondsLabel;
         private System.Windows.Forms.ToolStripMenuItem showTechLogToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.CheckBox removeVocalsCheckBox;
     }
 }
 

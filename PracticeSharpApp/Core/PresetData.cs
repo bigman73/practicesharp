@@ -62,6 +62,8 @@ namespace BigMansStuff.PracticeSharp.Core
 
         public TimeStretchProfile TimeStretchProfile { get; set; }
 
+        public bool RemoveVocals { get; set; }
+
         #endregion
 
         #region Public Methods

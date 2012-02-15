@@ -36,8 +36,6 @@ using System.Configuration;
 using System.Diagnostics;
 using NLog;
 
-// TODO: for a file without a selected preset, select Preset 1 by default
-
 namespace BigMansStuff.PracticeSharp.UI
 {
     /// <summary>
@@ -370,6 +368,12 @@ namespace BigMansStuff.PracticeSharp.UI
             else if (e.KeyChar == '+' || e.KeyChar == '=')
             {
                 volumeTrackBar.Value = Math.Min(volumeTrackBar.Value + volumeTrackBar.SmallChange, volumeTrackBar.Maximum);
+                e.Handled = true;
+            }
+            else if (e.KeyChar.ToString().ToUpper() == "V" )
+            {
+                // Toggle remove vocals mode
+                removeVocalsCheckBox.Checked = !removeVocalsCheckBox.Checked;
                 e.Handled = true;
             }
   
@@ -1041,6 +1045,17 @@ namespace BigMansStuff.PracticeSharp.UI
                 form.ShowDialog(this);
             }
         }
+
+        /// <summary>
+        /// CheckChange event handler for RemoveVocals check box
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void removeVocalsCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            m_practiceSharpLogic.RemoveVocals = removeVocalsCheckBox.Checked;
+        }
+
 
         #region Menu Items
 
@@ -2115,6 +2130,8 @@ namespace BigMansStuff.PracticeSharp.UI
                 }
             }
             timeStretchProfileComboBox.SelectedValue = presetData.TimeStretchProfile;
+
+            removeVocalsCheckBox.Checked = presetData.RemoveVocals;
         }
 
         /// <summary>
@@ -2164,6 +2181,7 @@ namespace BigMansStuff.PracticeSharp.UI
             presetControl.PresetData.Loop = m_practiceSharpLogic.Loop;
             presetControl.PresetData.Description = presetControl.PresetDescription;
             presetControl.PresetData.TimeStretchProfile = m_practiceSharpLogic.TimeStretchProfile;
+            presetControl.PresetData.RemoveVocals = m_practiceSharpLogic.RemoveVocals;
         }
 
         #endregion

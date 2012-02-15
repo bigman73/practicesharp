@@ -56,6 +56,7 @@ namespace BigMansStuff.PracticeSharp.Core
             m_startMarker = TimeSpan.Zero;
             m_endMarker = TimeSpan.Zero;
             m_cue = TimeSpan.Zero;
+            m_removeVocals = false;
 
             InitializeSoundTouchSharp();
         }
@@ -460,6 +461,21 @@ namespace BigMansStuff.PracticeSharp.Core
             }
         }
 
+        /// <summary>
+        /// TODO
+        /// </summary>
+        public bool RemoveVocals
+        {
+            get
+            {
+                lock (PropertiesLock) { return m_removeVocals; }
+            }
+            set
+            {
+                lock (PropertiesLock) { m_removeVocals = value; }
+            }
+        }
+
         #endregion
 
         #region Events
@@ -581,7 +597,7 @@ namespace BigMansStuff.PracticeSharp.Core
             {
                 lock (PropertiesLock)
                 {
-                    m_waveChannel.Volume = m_volume;                   
+                    m_waveChannel.Volume = m_volume;
                 }
 
                 #region Read samples from file
@@ -605,9 +621,10 @@ namespace BigMansStuff.PracticeSharp.Core
 
                 #endregion
 
-                #region Apply Equalizer Effect
 
-                ApplyEqualizerEffect(convertInputBuffer.Floats, floatsRead);
+                #region Apply DSP Effects (Equalizer, Vocal Removal, etc.)
+
+                ApplyDSPEffects(convertInputBuffer.Floats, floatsRead);
 
                 #endregion
 
@@ -747,13 +764,16 @@ namespace BigMansStuff.PracticeSharp.Core
         /// </summary>
         /// <param name="buffer"></param>
         /// <param name="count"></param>
-        private void ApplyEqualizerEffect( float[] buffer, int count)
+        private void ApplyDSPEffects( float[] buffer, int count)
         {
             int samples = count * 2;
 
+            bool removeVocals;
             // Apply Equalizer parameters (if they were changed)
             lock (PropertiesLock)
             {
+                removeVocals = m_removeVocals;
+
                 if (m_eqParamsChanged)
                 {
                     m_eqEffect.LoGainFactor.Value = m_eqEffect.LoGainFactor.Maximum * m_eqLo;
@@ -778,6 +798,14 @@ namespace BigMansStuff.PracticeSharp.Core
 
                 // Apply the equalizer effect to the samples
                 m_eqEffect.Sample(ref sampleLeft, ref sampleRight);
+
+                if (removeVocals)
+                {
+                    float vocalLeft = ( sampleLeft - sampleRight ) * 0.7f;
+                    float vocalRight = ( sampleLeft - sampleRight ) * 0.7f;
+                    sampleLeft = vocalLeft;
+                    sampleRight = vocalRight;
+                }
 
                 // Put the modified samples back into the buffer
                 buffer[sample] = sampleLeft;
@@ -1263,6 +1291,7 @@ namespace BigMansStuff.PracticeSharp.Core
         private TimeSpan m_startMarker;
         private TimeSpan m_endMarker;
         private TimeSpan m_cue;
+        private bool m_removeVocals;
 
         private TimeSpan m_currentPlayTime;
         private TimeSpan m_newPlayTime;

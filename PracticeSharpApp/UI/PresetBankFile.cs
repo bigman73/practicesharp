@@ -28,6 +28,7 @@ using System.Xml;
 using System.IO;
 using BigMansStuff.PracticeSharp.Core;
 using System.Windows.Forms;
+using NLog;
 
 namespace BigMansStuff.PracticeSharp.UI
 {
@@ -36,6 +37,10 @@ namespace BigMansStuff.PracticeSharp.UI
     /// </summary>
     class PresetBankFile
     {
+        #region Logger
+        private static Logger m_logger = LogManager.GetCurrentClassLogger();
+        #endregion
+
         #region Construction
         /// <summary>
         /// Constructor
@@ -90,6 +95,7 @@ namespace BigMansStuff.PracticeSharp.UI
                 elPreset.SetAttribute(PresetBankFile.XML_Attr_IsLoop, presetData.Loop.ToString());
                 elPreset.SetAttribute(PresetBankFile.XML_Attr_Description, presetData.Description);
                 elPreset.SetAttribute(PresetBankFile.XML_Attr_TimeStretchProfileId, presetData.TimeStretchProfile.Id);
+                elPreset.SetAttribute(PresetBankFile.XML_Attr_RemoveVocals, presetData.RemoveVocals.ToString());
             }
 
             // Write to XML file
@@ -155,14 +161,20 @@ namespace BigMansStuff.PracticeSharp.UI
                     }
                     presetData.TimeStretchProfile = timeStretchProfile;
 
+                    if (presetNode.Attributes[PresetBankFile.XML_Attr_RemoveVocals] != null)
+                    {
+                        presetData.RemoveVocals = Convert.ToBoolean(presetNode.Attributes[PresetBankFile.XML_Attr_RemoveVocals].Value);
+                    }
+
                     PresetControl presetControl = presetControls[presetId];
                     presetControl.PresetDescription = presetData.Description;
                 }
 
                 return activePresetId;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                m_logger.ErrorException("Failed loading Presets Bank for file: " + m_currentAudioFilename, ex);
                 MessageBox.Show(null, "Failed loading Presets Bank for file: " + m_currentAudioFilename, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
@@ -232,6 +244,7 @@ namespace BigMansStuff.PracticeSharp.UI
         const string XML_Attr_Cue = "Cue";
         const string XML_Attr_Description = "Description";
         const string XML_Attr_TimeStretchProfileId = "TimeStretchProfileId";
+        const string XML_Attr_RemoveVocals = "RemoveVocals";
 
         #endregion
     }
