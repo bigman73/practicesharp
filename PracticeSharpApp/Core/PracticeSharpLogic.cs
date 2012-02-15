@@ -111,7 +111,7 @@ namespace BigMansStuff.PracticeSharp.Core
             // Wait for thread for finish initialization
             lock (InitializedLock)
             {
-                Monitor.Wait(InitializedLock);
+                Monitor.Wait(InitializedLock, 1000);
             }
 
         }
@@ -156,31 +156,18 @@ namespace BigMansStuff.PracticeSharp.Core
             if (m_status == Statuses.Stopped)
                 return;
 
-            m_stopWorker = true;
-            Thread.Sleep(5);
-
-            if ( m_soundTouchSharp != null )
-                m_soundTouchSharp.Clear();
-
             // Stop the audio processing thread
-            if (m_waveOutDevice != null && m_waveOutDevice.PlaybackState == PlaybackState.Playing)
+            m_stopWorker = true;
+
+            // Wait for audio thread to stop
+            int counter = 10;
+            while (m_status != Statuses.Stopped && counter>0)
             {
-                if (m_audioProcessingThread != null)
-                {
-                    int counter = 5;
-                    while (m_audioProcessingThread.IsAlive && counter > 0)
-                    {
-                        Thread.Sleep(10);
-                        counter--;
-                    }
-
-                    // Last restort - Forcefully abort audio thread
-                    if (counter == 0)
-                        m_audioProcessingThread.Abort();
-
-                    m_audioProcessingThread = null;
-                }
+                Thread.Sleep(20);
+                counter--;
             }
+
+            m_audioProcessingThread = null;
         }
 
         /// <summary>
@@ -213,12 +200,12 @@ namespace BigMansStuff.PracticeSharp.Core
         public static bool IsAudioFile(string filename)
         {
             filename = filename.ToLower();
-            bool result = filename.EndsWith(".mp3") || 
-                          filename.EndsWith(".wav") || 
-                          filename.EndsWith(".ogg") ||
-                          filename.EndsWith(".flac") || 
-                          filename.EndsWith(".wma") ||
-                          filename.EndsWith(".aiff");
+            bool result = filename.EndsWith(MP3Extension) || 
+                          filename.EndsWith(WAVExtension) || 
+                          filename.EndsWith(OGGVExtension) ||
+                          filename.EndsWith(FLACExtension) || 
+                          filename.EndsWith(WMAExtension) ||
+                          filename.EndsWith(AIFFExtension);
 
             return result;
         }
@@ -719,6 +706,7 @@ namespace BigMansStuff.PracticeSharp.Core
                         // **********************************************************************
 
                         // Wait for queue to free up - only then add continue reading from the file
+                        // >> Note: when paused, loop runs infinitely
                         while (!m_stopWorker && m_inputProvider.GetQueueCount() > BusyQueuedBuffersThreshold)
                         {
                             Thread.Sleep(10);
@@ -745,6 +733,8 @@ namespace BigMansStuff.PracticeSharp.Core
                 }
             }
 
+            // Clear left over buffers
+            m_soundTouchSharp.Clear();
 
             // Playback status changed to -> Stopped
             ChangeStatus(Statuses.Stopped);
