@@ -820,6 +820,11 @@ namespace BigMansStuff.PracticeSharp.UI
             UpdateHorizontalTrackBarByMousePosition(tempoTrackBar, e);
         }
 
+        /// <summary>
+        /// MouseMove event handler for tempo track bar
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void tempoTrackBar_MouseMove(object sender, MouseEventArgs e)
         {
             if (tempoTrackBar.Tag != null && tempoTrackBar.Tag.ToString() == "MouseDown")
@@ -850,6 +855,11 @@ namespace BigMansStuff.PracticeSharp.UI
             UpdateHorizontalTrackBarByMousePosition(pitchTrackBar, e);
         }
 
+        /// <summary>
+        /// MouseMove event handler for pitch track bar
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void pitchTrackBar_MouseMove(object sender, MouseEventArgs e)
         {
             if (pitchTrackBar.Tag != null && pitchTrackBar.Tag.ToString() == "MouseDown")
@@ -984,17 +994,24 @@ namespace BigMansStuff.PracticeSharp.UI
             }
 
             // Update Pitch value label
-            string pitchValue;
-            pitchValue = (newPitchSemiTones > 0) ? "+" : string.Empty;
-            if (Math.Abs(newPitchSemiTones) >= 1f || Math.Abs(newPitchSemiTones) == 0f)
-                pitchValue += Math.Truncate(newPitchSemiTones).ToString();
-            else if (newPitchSemiTones > -1f)
-                pitchValue = "-";
-            
-            float reminder = Math.Abs(newPitchSemiTones - (int)newPitchSemiTones);
-            if (reminder == 0.5f)
+            string pitchValue = string.Empty;
+            if (newPitchSemiTones == 0)
+                pitchValue = "==";
+            else
             {
-                pitchValue += "½";
+                if (newPitchSemiTones > 0)
+                    pitchValue = "+";
+                else // ( newPitchSemiTones < 0 )
+                    pitchValue = "-";
+
+                double intPart = Math.Truncate(newPitchSemiTones);
+                float reminder = Math.Abs(newPitchSemiTones - (int)newPitchSemiTones);
+
+                pitchValue += intPart.ToString();
+                if (reminder == 0.5f)
+                {
+                    pitchValue += "½";
+                }
             }
 
             pitchValueLabel.Text = pitchValue;
@@ -2319,6 +2336,5 @@ namespace BigMansStuff.PracticeSharp.UI
         const int TicksPerSemitone = 8;
 
         #endregion
-
     }
 }
