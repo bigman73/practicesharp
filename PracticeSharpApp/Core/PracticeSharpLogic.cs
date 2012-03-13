@@ -56,7 +56,7 @@ namespace BigMansStuff.PracticeSharp.Core
             m_startMarker = TimeSpan.Zero;
             m_endMarker = TimeSpan.Zero;
             m_cue = TimeSpan.Zero;
-            m_removeVocals = false;
+            m_suppressVocals = false;
 
             InitializeSoundTouchSharp();
         }
@@ -460,17 +460,17 @@ namespace BigMansStuff.PracticeSharp.Core
         }
 
         /// <summary>
-        /// TODO
+        /// Supresses the vocals part of the song
         /// </summary>
-        public bool RemoveVocals
+        public bool SuppressVocals
         {
             get
             {
-                lock (PropertiesLock) { return m_removeVocals; }
+                lock (PropertiesLock) { return m_suppressVocals; }
             }
             set
             {
-                lock (PropertiesLock) { m_removeVocals = value; }
+                lock (PropertiesLock) { m_suppressVocals = value; }
             }
         }
 
@@ -768,11 +768,11 @@ namespace BigMansStuff.PracticeSharp.Core
         {
             int samples = count * 2;
 
-            bool removeVocals;
+            bool suppressVocals;
             // Apply Equalizer parameters (if they were changed)
             lock (PropertiesLock)
             {
-                removeVocals = m_removeVocals;
+                suppressVocals = m_suppressVocals;
 
                 if (m_eqParamsChanged)
                 {
@@ -799,12 +799,13 @@ namespace BigMansStuff.PracticeSharp.Core
                 // Apply the equalizer effect to the samples
                 m_eqEffect.Sample(ref sampleLeft, ref sampleRight);
 
-                if (removeVocals)
+                if (suppressVocals)
                 {
-                    float vocalLeft = ( sampleLeft - sampleRight ) * 0.7f;
-                    float vocalRight = ( sampleLeft - sampleRight ) * 0.7f;
-                    sampleLeft = vocalLeft;
-                    sampleRight = vocalRight;
+                    // Suppression of vocals assumes vocals are recorded in the 'Center'
+                    // The suppression results in two mono channels (instead of the original Stereo)
+                    float supressedVocalChannel = (sampleLeft - sampleRight) * 0.7f;
+                    sampleLeft = supressedVocalChannel;
+                    sampleRight = supressedVocalChannel;
                 }
 
                 // Put the modified samples back into the buffer
@@ -1291,7 +1292,7 @@ namespace BigMansStuff.PracticeSharp.Core
         private TimeSpan m_startMarker;
         private TimeSpan m_endMarker;
         private TimeSpan m_cue;
-        private bool m_removeVocals;
+        private bool m_suppressVocals;
 
         private TimeSpan m_currentPlayTime;
         private TimeSpan m_newPlayTime;

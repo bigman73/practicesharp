@@ -1114,7 +1114,7 @@ namespace BigMansStuff.PracticeSharp.UI
         /// <param name="e"></param>
         private void removeVocalsCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            m_practiceSharpLogic.RemoveVocals = removeVocalsCheckBox.Checked;
+            m_practiceSharpLogic.SuppressVocals = removeVocalsCheckBox.Checked;
         }
 
 
@@ -2270,7 +2270,7 @@ namespace BigMansStuff.PracticeSharp.UI
             presetControl.PresetData.Loop = m_practiceSharpLogic.Loop;
             presetControl.PresetData.Description = presetControl.PresetDescription;
             presetControl.PresetData.TimeStretchProfile = m_practiceSharpLogic.TimeStretchProfile;
-            presetControl.PresetData.RemoveVocals = m_practiceSharpLogic.RemoveVocals;
+            presetControl.PresetData.RemoveVocals = m_practiceSharpLogic.SuppressVocals;
         }
 
         #endregion
