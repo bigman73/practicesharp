@@ -123,7 +123,7 @@ namespace BigMansStuff.PracticeSharp.UI
         #region Private Methods
 
         /// <summary>
-        /// Clears items
+        /// Clears MRU items
         /// </summary>
         private void ClearItems()
         {
@@ -131,7 +131,7 @@ namespace BigMansStuff.PracticeSharp.UI
         }
 
         /// <summary>
-        /// Saves to file.
+        /// Saves MRU Items to file
         /// </summary>
         private void SaveToFile()
         {
@@ -155,7 +155,7 @@ namespace BigMansStuff.PracticeSharp.UI
         }
 
         /// <summary>
-        /// Loads MRU items from file.
+        /// Loads MRU items from file
         /// </summary>
         private void LoadFromFile()
         {
@@ -164,7 +164,9 @@ namespace BigMansStuff.PracticeSharp.UI
 
             ClearItems();
 
-            using (StreamReader reader = new StreamReader(m_mruFilename))
+            // Open MRU file with read access
+            using ( FileStream fileStream = File.OpenRead( m_mruFilename ) )
+            using ( StreamReader reader = new StreamReader( fileStream ) )
             {
                 while (!reader.EndOfStream && m_items.Count < m_limit)
                 {
@@ -175,7 +177,7 @@ namespace BigMansStuff.PracticeSharp.UI
         }
 
         /// <summary>
-        /// Removes the extra items.
+        /// Removes the extra items
         /// </summary>
         private void RemoveExtraItems()
         {
