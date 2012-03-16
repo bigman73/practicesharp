@@ -2193,7 +2193,16 @@ namespace BigMansStuff.PracticeSharp.UI
             }
             else
             {
+                // Protect against invalid preset values
+                if (presetData.CurrentPlayTime.TotalSeconds > m_practiceSharpLogic.FilePlayDuration.TotalSeconds)
+                {
+                    presetData.CurrentPlayTime = TimeSpan.Zero;
+                    presetData.StartMarker = TimeSpan.Zero;
+                    presetData.EndMarker = TimeSpan.Zero;
+                }
+
                 // Set the PlayTimeTrackBar value to the preset's CurrentPlayTime
+                
                 playTimeTrackBar.Value = Convert.ToInt32(100.0f * presetData.CurrentPlayTime.TotalSeconds / m_practiceSharpLogic.FilePlayDuration.TotalSeconds);
             }
 
