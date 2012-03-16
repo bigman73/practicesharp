@@ -73,6 +73,7 @@ namespace BigMansStuff.PracticeSharp.Core
             // Release lock, just in case the thread is locked
             lock (FirstPlayLock)
             {
+                m_logger.Debug("Monitor: Pulse FirstPlayLock"); 
                 Monitor.Pulse(FirstPlayLock);
             }
 
@@ -112,7 +113,10 @@ namespace BigMansStuff.PracticeSharp.Core
             // Wait for thread for finish initialization
             lock (InitializedLock)
             {
-                Monitor.Wait(InitializedLock, 1000);
+                if (!Monitor.Wait(InitializedLock, 5000))
+                {
+                    m_logger.Error("Initialization lock timeout");
+                }
             }
 
         }
@@ -122,11 +126,13 @@ namespace BigMansStuff.PracticeSharp.Core
         /// </summary>
         public void Play()
         {
+            m_logger.Debug("Play - " + m_status.ToString());
             // Not playing now - Start the audio processing thread
             if (m_status == Statuses.Ready)
             {
                 lock (FirstPlayLock)
                 {
+                    m_logger.Debug("Monitor: Play(), Pulse FirstPlayLock");
                     Monitor.Pulse(FirstPlayLock);
                 }
             }
@@ -520,6 +526,7 @@ namespace BigMansStuff.PracticeSharp.Core
                     // Pulse the initialized lock to release the client (UI) that is waiting for initialization to finish
                     lock (InitializedLock)
                     {
+                        m_logger.Debug("Monitor: Pulse InitializedLock");
                         Monitor.Pulse(InitializedLock);
                     }
                 }
@@ -527,8 +534,11 @@ namespace BigMansStuff.PracticeSharp.Core
                 // Wait for first Play to pulse and free lock
                 lock (FirstPlayLock)
                 {
+                    m_logger.Debug("Monitor: Wait for FirstPlayLock");
                     Monitor.Wait(FirstPlayLock);
                 }
+                m_logger.Debug("Monitor: FirstPlayLock got pulsed");
+
                 // Safety guard - if thread never really started playing but PracticeSharpLogic was terminated ore started terminating
                 if (m_status == Statuses.Terminating || m_status == Statuses.Terminated)
                     return;
