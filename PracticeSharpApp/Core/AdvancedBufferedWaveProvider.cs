@@ -90,7 +90,7 @@ namespace BigMansStuff.PracticeSharp.Core
         }
 
         /// <summary>
-        /// Reads from this WaveProvider
+        /// IWaveProvider.Read implementation - Reads from the next queued audioBuffer into the internal NAudio buffer
         /// Will always return count bytes, since we will zero-fill the buffer if not enough available
         /// </summary>
         public int Read(byte[] buffer, int offset, int count) 
