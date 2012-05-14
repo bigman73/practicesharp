@@ -1,4 +1,4 @@
-@ECHO OFF
+﻿@ECHO OFF
 REM Practice Sharp
 REM 
 REM    © Copyright 2010, Yuval Naveh.
@@ -38,8 +38,9 @@ XCOPY /Y ..\PracticeSharpApp\bin\Release\LICENSES.txt Source\
 XCOPY /Y ..\PracticeSharpApp\bin\Release\NLog.dll Source\
 XCOPY /Y ..\PracticeSharpApp\bin\Release\NLog.config Source\
 
-
-SET PATH=%PATH%;%ProgramFiles(x86)%\Windows Installer XML v3\bin
+REM NOTE: ** Download once wix35-binaries.zip and unzip it into this folder, before running this batch file ** 
+REM Download URL: http://wix.sourceforge.net/
+SET PATH=%PATH%;.\wix35-binaries
 
 ECHO+
 ECHO ==== Candle ====
