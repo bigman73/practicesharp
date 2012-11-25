@@ -39,6 +39,18 @@ namespace BigMansStuff.PracticeSharp.UI
             if (disposing && (components != null))
             {
                 components.Dispose();
+
+                if (m_versionUpdater != null)
+                {
+                    m_versionUpdater.Dispose();
+                    m_versionUpdater = null;
+                }
+
+                if (m_practiceSharpLogic != null)
+                {
+                    m_practiceSharpLogic.Dispose();
+                    m_practiceSharpLogic = null;
+                }
             }
             base.Dispose(disposing);
         }
@@ -94,10 +106,9 @@ namespace BigMansStuff.PracticeSharp.UI
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip = new System.Windows.Forms.StatusStrip();
-            this.toolStripStatusLabel4 = new System.Windows.Forms.ToolStripStatusLabel();
-            this.playStatusToolStripLabel = new System.Windows.Forms.ToolStripStatusLabel();
-            this.toolStripStatusLabel5 = new System.Windows.Forms.ToolStripStatusLabel();
-            this.filenameToolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
+            this.appStatusDescLabel = new System.Windows.Forms.ToolStripStatusLabel();
+            this.appStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
+            this.filenameLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.presetPanel = new System.Windows.Forms.Panel();
@@ -154,6 +165,7 @@ namespace BigMansStuff.PracticeSharp.UI
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.aboutMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.filenameDescLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.equalizerHoverLabel = new BigMansStuff.PracticeSharp.UI.HoverLabel();
             this.hiEqHoverLabel = new BigMansStuff.PracticeSharp.UI.HoverLabel();
             this.medEqHoverLabel = new BigMansStuff.PracticeSharp.UI.HoverLabel();
@@ -223,7 +235,7 @@ namespace BigMansStuff.PracticeSharp.UI
             // openFileDialog
             // 
             this.openFileDialog.Filter = "All Music Files|*.mp3;*.wav;*.ogg;*.flac;*.wma;*.aiff|MP3 files|*.mp3|WAV files|*" +
-                ".wav|Ogg Vorbis files|*.ogg|FLAC files|*.flac|WMA files|*.wma|AIFF files|*.aiff";
+    ".wav|Ogg Vorbis files|*.ogg|FLAC files|*.flac|WMA files|*.wma|AIFF files|*.aiff";
             // 
             // volumeTrackBar
             // 
@@ -246,9 +258,9 @@ namespace BigMansStuff.PracticeSharp.UI
             this.speed1XLabel.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
             this.speed1XLabel.Location = new System.Drawing.Point(178, 38);
             this.speed1XLabel.Name = "speed1XLabel";
-            this.speed1XLabel.Size = new System.Drawing.Size(18, 12);
+            this.speed1XLabel.Size = new System.Drawing.Size(15, 12);
             this.speed1XLabel.TabIndex = 4;
-            this.speed1XLabel.Text = "X 1";
+            this.speed1XLabel.Text = "x1";
             this.speed1XLabel.Click += new System.EventHandler(this.speedLabel_Click);
             // 
             // playTimeTrackBar
@@ -274,9 +286,9 @@ namespace BigMansStuff.PracticeSharp.UI
             this.speed01XLabel.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
             this.speed01XLabel.Location = new System.Drawing.Point(51, 38);
             this.speed01XLabel.Name = "speed01XLabel";
-            this.speed01XLabel.Size = new System.Drawing.Size(26, 12);
+            this.speed01XLabel.Size = new System.Drawing.Size(23, 12);
             this.speed01XLabel.TabIndex = 6;
-            this.speed01XLabel.Text = "X 0.1";
+            this.speed01XLabel.Text = "x0.1";
             // 
             // speed2XLabel
             // 
@@ -285,9 +297,9 @@ namespace BigMansStuff.PracticeSharp.UI
             this.speed2XLabel.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
             this.speed2XLabel.Location = new System.Drawing.Point(315, 38);
             this.speed2XLabel.Name = "speed2XLabel";
-            this.speed2XLabel.Size = new System.Drawing.Size(18, 12);
+            this.speed2XLabel.Size = new System.Drawing.Size(15, 12);
             this.speed2XLabel.TabIndex = 7;
-            this.speed2XLabel.Text = "X 2";
+            this.speed2XLabel.Text = "x2";
             // 
             // startLoopMinuteUpDown
             // 
@@ -610,10 +622,10 @@ namespace BigMansStuff.PracticeSharp.UI
             // statusStrip
             // 
             this.statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripStatusLabel4,
-            this.playStatusToolStripLabel,
-            this.toolStripStatusLabel5,
-            this.filenameToolStripStatusLabel});
+            this.appStatusDescLabel,
+            this.appStatusLabel,
+            this.filenameDescLabel,
+            this.filenameLabel});
             this.statusStrip.Location = new System.Drawing.Point(0, 510);
             this.statusStrip.Name = "statusStrip";
             this.statusStrip.Size = new System.Drawing.Size(603, 22);
@@ -621,31 +633,27 @@ namespace BigMansStuff.PracticeSharp.UI
             this.statusStrip.TabIndex = 4;
             this.statusStrip.Text = "statusStrip1";
             // 
-            // toolStripStatusLabel4
+            // appStatusDescLabel
             // 
-            this.toolStripStatusLabel4.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.toolStripStatusLabel4.Name = "toolStripStatusLabel4";
-            this.toolStripStatusLabel4.Size = new System.Drawing.Size(45, 17);
-            this.toolStripStatusLabel4.Text = "Status:";
+            this.appStatusDescLabel.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.appStatusDescLabel.Name = "appStatusDescLabel";
+            this.appStatusDescLabel.Size = new System.Drawing.Size(45, 17);
+            this.appStatusDescLabel.Text = "Status:";
             // 
-            // playStatusToolStripLabel
+            // appStatusLabel
             // 
-            this.playStatusToolStripLabel.Name = "playStatusToolStripLabel";
-            this.playStatusToolStripLabel.Size = new System.Drawing.Size(26, 17);
-            this.playStatusToolStripLabel.Text = "Idle";
+            this.appStatusLabel.Name = "appStatusLabel";
+            this.appStatusLabel.Padding = new System.Windows.Forms.Padding(5, 0, 10, 0);
+            this.appStatusLabel.Size = new System.Drawing.Size(41, 17);
+            this.appStatusLabel.Text = "Idle";
+            this.appStatusLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // toolStripStatusLabel5
+            // filenameLabel
             // 
-            this.toolStripStatusLabel5.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.toolStripStatusLabel5.Name = "toolStripStatusLabel5";
-            this.toolStripStatusLabel5.Size = new System.Drawing.Size(29, 17);
-            this.toolStripStatusLabel5.Text = "File:";
-            // 
-            // filenameToolStripStatusLabel
-            // 
-            this.filenameToolStripStatusLabel.Name = "filenameToolStripStatusLabel";
-            this.filenameToolStripStatusLabel.Size = new System.Drawing.Size(29, 17);
-            this.filenameToolStripStatusLabel.Text = "N/A";
+            this.filenameLabel.Name = "filenameLabel";
+            this.filenameLabel.Padding = new System.Windows.Forms.Padding(5, 0, 0, 0);
+            this.filenameLabel.Size = new System.Drawing.Size(34, 17);
+            this.filenameLabel.Text = "N/A";
             // 
             // toolStripStatusLabel2
             // 
@@ -818,9 +826,9 @@ namespace BigMansStuff.PracticeSharp.UI
             this.speed15XLabel.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
             this.speed15XLabel.Location = new System.Drawing.Point(246, 38);
             this.speed15XLabel.Name = "speed15XLabel";
-            this.speed15XLabel.Size = new System.Drawing.Size(26, 12);
+            this.speed15XLabel.Size = new System.Drawing.Size(23, 12);
             this.speed15XLabel.TabIndex = 60;
-            this.speed15XLabel.Text = "X 1.5";
+            this.speed15XLabel.Text = "x1.5";
             // 
             // speed05XLabel
             // 
@@ -829,9 +837,9 @@ namespace BigMansStuff.PracticeSharp.UI
             this.speed05XLabel.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
             this.speed05XLabel.Location = new System.Drawing.Point(111, 38);
             this.speed05XLabel.Name = "speed05XLabel";
-            this.speed05XLabel.Size = new System.Drawing.Size(26, 12);
+            this.speed05XLabel.Size = new System.Drawing.Size(23, 12);
             this.speed05XLabel.TabIndex = 61;
-            this.speed05XLabel.Text = "X 0.5";
+            this.speed05XLabel.Text = "x0.5";
             // 
             // play2QDurationLabel
             // 
@@ -1260,6 +1268,13 @@ namespace BigMansStuff.PracticeSharp.UI
             this.toolTip.AutoPopDelay = 5000;
             this.toolTip.InitialDelay = 1500;
             this.toolTip.ReshowDelay = 100;
+            // 
+            // filenameDescLabel
+            // 
+            this.filenameDescLabel.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.filenameDescLabel.Name = "filenameDescLabel";
+            this.filenameDescLabel.Size = new System.Drawing.Size(29, 17);
+            this.filenameDescLabel.Text = "File:";
             // 
             // equalizerHoverLabel
             // 
@@ -1799,7 +1814,7 @@ namespace BigMansStuff.PracticeSharp.UI
         private System.Windows.Forms.Label speedValueLabel;
         private System.Windows.Forms.PictureBox cuePictureBox;
         private System.Windows.Forms.Panel loopPanel;
-        private System.Windows.Forms.ToolStripStatusLabel filenameToolStripStatusLabel;
+        private System.Windows.Forms.ToolStripStatusLabel filenameLabel;
         private System.Windows.Forms.Label vol50Label;
         private System.Windows.Forms.Label vol75Label;
         private System.Windows.Forms.Label vol25Label;
@@ -1815,9 +1830,8 @@ namespace BigMansStuff.PracticeSharp.UI
         private System.Windows.Forms.Label pitchM1Label;
         private System.Windows.Forms.Label pitch0Label;
         private System.Windows.Forms.TrackBar pitchTrackBar;
-        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel4;
-        private System.Windows.Forms.ToolStripStatusLabel playStatusToolStripLabel;
-        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel5;
+        private System.Windows.Forms.ToolStripStatusLabel appStatusDescLabel;
+        private System.Windows.Forms.ToolStripStatusLabel appStatusLabel;
         private System.Windows.Forms.Panel trackBarPanel;
         private System.Windows.Forms.MenuStrip menuStrip;
         private System.Windows.Forms.ToolStripMenuItem recentFilesToolStripMenuItem;
@@ -1864,6 +1878,7 @@ namespace BigMansStuff.PracticeSharp.UI
         private System.Windows.Forms.ToolStripMenuItem showTechLogToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.CheckBox removeVocalsCheckBox;
+        private System.Windows.Forms.ToolStripStatusLabel filenameDescLabel;
     }
 }
 

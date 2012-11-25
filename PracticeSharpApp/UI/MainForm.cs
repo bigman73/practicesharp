@@ -970,7 +970,7 @@ namespace BigMansStuff.PracticeSharp.UI
             m_practiceSharpLogic.Tempo = newTempo;
             
             // Update speed value label
-            speedValueLabel.Text = newTempo.ToString();
+            speedValueLabel.Text = string.Format("x{0}", newTempo);
         }
 
         /// <summary>
@@ -1687,7 +1687,7 @@ namespace BigMansStuff.PracticeSharp.UI
                 if (m_practiceSharpLogic == null || m_practiceSharpLogic.Status == PracticeSharpLogic.Statuses.Terminating || m_practiceSharpLogic.Status == PracticeSharpLogic.Statuses.Terminated)
                     return;
 
-                playStatusToolStripLabel.Text = newStatus.ToString();
+                appStatusLabel.Text = newStatus.ToString();
 
                 if ( (newStatus == PracticeSharpLogic.Statuses.Stopped)
                    || (newStatus == PracticeSharpLogic.Statuses.Pausing)
@@ -1802,7 +1802,7 @@ namespace BigMansStuff.PracticeSharp.UI
                 }
                 ApplyPresetValueUIControls(m_presetControls["1"].PresetData);
                 m_currentFilename = filename;
-                filenameToolStripStatusLabel.Text = Path.GetFileName( filename );
+                filenameLabel.Text = Path.GetFileName( filename );
                 m_practiceSharpLogic.LoadFile(filename);
 
                 // Load Presets Bank for this input file

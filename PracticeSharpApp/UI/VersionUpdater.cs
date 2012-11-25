@@ -38,7 +38,7 @@ namespace BigMansStuff.PracticeSharp.UI
     /// Performs a WebScrape of the Latest Version Wiki Page on Practice# Google Code site,
     ///   and compares to the currently installed version
     /// </summary>
-    internal class VersionUpdater
+    internal class VersionUpdater: IDisposable
     {
         #region Logger
         private static Logger m_logger = LogManager.GetCurrentClassLogger();
@@ -54,6 +54,28 @@ namespace BigMansStuff.PracticeSharp.UI
         {
             m_mainForm = mainForm;
             m_installedVersion = installedVersion;
+        }
+
+        #endregion
+
+        #region Dispose
+        
+        /// <summary>
+        /// Dispose all resources
+        /// </summary>
+        public void Dispose()
+        {
+            DisposeWorker();
+        }
+
+        // Dispose of the background worker 
+        private void DisposeWorker()
+        {
+            if (m_worker != null)
+            {
+                m_worker.Dispose();
+                m_worker = null;
+            }
         }
 
         #endregion
@@ -153,9 +175,11 @@ namespace BigMansStuff.PracticeSharp.UI
         {
             // Worker has completed - clean up members
             m_mainForm = null;
-            m_worker = null;
+            DisposeWorker();
             m_installedVersion = null;
         }
+
+       
 
         #endregion
 
@@ -212,6 +236,6 @@ namespace BigMansStuff.PracticeSharp.UI
         private const string DownloadsWebPageURL = "http://code.google.com/p/practicesharp/downloads/list";
         private const string LatestVersionWebPageURL = "http://practicesharp.googlecode.com/svn/wiki/LatestVersion.wiki";
 
-        #endregion
+        #endregion  
     }
 }
