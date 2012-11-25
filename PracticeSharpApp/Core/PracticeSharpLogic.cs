@@ -29,9 +29,10 @@ using System.ComponentModel;
 using System.Threading;
 using System.IO;
 using BigMansStuff.NAudio.Ogg;
+using BigMansStuff.NAudio.FLAC;
+using BigMansStuff.PracticeSharp.SoundTouch;
 using NAudio.WindowsMediaFormat;
 using NLog;
-using BigMansStuff.NAudio.FLAC;
 
 namespace BigMansStuff.PracticeSharp.Core
 {
@@ -59,28 +60,6 @@ namespace BigMansStuff.PracticeSharp.Core
             m_suppressVocals = false;
 
             InitializeSoundTouchSharp();
-        }
-
-        /// <summary>
-        /// Terminates all current play back and resources
-        /// </summary>
-        public void Terminate()
-        {
-            ChangeStatus(Statuses.Terminating);
-            
-            Stop();
-
-            // Release lock, just in case the thread is locked
-            lock (FirstPlayLock)
-            {
-                m_logger.Debug("Monitor: Pulse FirstPlayLock"); 
-                Monitor.Pulse(FirstPlayLock);
-            }
-
-            // Dispose of SoundTouchSharp
-            TerminateSoundTouchSharp();
-
-            ChangeStatus(Statuses.Terminated);
         }
 
         /// <summary>
@@ -1200,6 +1179,10 @@ namespace BigMansStuff.PracticeSharp.Core
         /// <summary>
         /// Disposes of the current allocated resources
         /// </summary>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2213:DisposableFieldsShouldBeDisposed", MessageId = "m_waveReader"), 
+        System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2213:DisposableFieldsShouldBeDisposed", MessageId = "m_blockAlignedStream"), 
+        System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2213:DisposableFieldsShouldBeDisposed", MessageId = "m_waveChannel"), 
+        System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2213:DisposableFieldsShouldBeDisposed", MessageId = "m_waveOutDevice")]
         public void Dispose()
         {
             if (m_status != Statuses.Terminated)
@@ -1208,6 +1191,29 @@ namespace BigMansStuff.PracticeSharp.Core
             }
 
             GC.SuppressFinalize(this);
+        }
+
+
+        /// <summary>
+        /// Terminates all current play back and resources
+        /// </summary>
+        public void Terminate()
+        {
+            ChangeStatus(Statuses.Terminating);
+
+            Stop();
+
+            // Release lock, just in case the thread is locked
+            lock (FirstPlayLock)
+            {
+                m_logger.Debug("Monitor: Pulse FirstPlayLock");
+                Monitor.Pulse(FirstPlayLock);
+            }
+
+            // Dispose of SoundTouchSharp
+            TerminateSoundTouchSharp();
+
+            ChangeStatus(Statuses.Terminated);
         }
 
         /// <summary>
