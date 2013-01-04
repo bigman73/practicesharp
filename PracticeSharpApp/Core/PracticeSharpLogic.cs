@@ -582,6 +582,8 @@ namespace BigMansStuff.PracticeSharp.Core
 
             #endregion
 
+            bool isWaitForCue = (Cue.TotalSeconds > 0);
+
             while (!m_stopWorker && m_waveChannel.Position < m_waveChannel.Length)
             {
                 lock (PropertiesLock)
@@ -589,16 +591,30 @@ namespace BigMansStuff.PracticeSharp.Core
                     m_waveChannel.Volume = m_volume;
                 }
 
-                #region Read samples from file
+                #region Wait for Cue
 
+                if (isWaitForCue || (m_newPlayTimeRequested && m_newPlayTime == m_startMarker))
+                {
+                    isWaitForCue = false;
+                    WaitForCue();
+                }
+
+                #endregion
+
+
+                #region Read samples from file
+                
                 // Change current play position
                 lock (CurrentPlayTimeLock)
-                {
+                {               
                     if (m_newPlayTimeRequested)
                     {
-                        m_waveChannel.CurrentTime = m_newPlayTime;
-
                         m_newPlayTimeRequested = false;
+                        m_waveChannel.CurrentTime = m_newPlayTime;
+                        m_soundTouchSharp.Clear();
+                        m_waveChannel.Flush();
+                        m_inputProvider.Flush();
+                        continue;
                     }
                 }
 
@@ -652,8 +668,6 @@ namespace BigMansStuff.PracticeSharp.Core
                     {
                         while (!m_stopWorker && samplesProcessed != 0)
                         {
-                            SetSoundSharpValues();
-
                             samplesProcessed = m_soundTouchSharp.ReceiveSamples(convertOutputBuffer.Floats, outBufferSizeFloats);
 
                             if (samplesProcessed > 0)
@@ -661,20 +675,20 @@ namespace BigMansStuff.PracticeSharp.Core
                                 TimeSpan currentBufferTime = m_waveChannel.CurrentTime;
                                 m_inputProvider.AddSamples(convertOutputBuffer.Bytes, 0, (int)samplesProcessed * sizeof(float) * format.Channels, currentBufferTime);
                             }
-
-                            samplesProcessed = m_soundTouchSharp.ReceiveSamples(convertOutputBuffer.Floats, outBufferSizeFloats);
                         }
                     }
 
                     #endregion
 
-                    #region Handle Loop & Cue
+                    #region Handle Loop
                     loop = this.Loop;
                     if (loop)
                     {
                         m_waveChannel.CurrentTime = this.StartMarker;
-
-                        WaitForCue();
+                        m_soundTouchSharp.Flush();
+                        m_waveChannel.Flush();
+                        isWaitForCue = (Cue.TotalSeconds > 0);
+                        continue;
                     }
                     else
                     {
