@@ -82,6 +82,7 @@ namespace BigMansStuff.PracticeSharp.Core
             Cue = TimeSpan.Zero;
             Loop = false;
             Description = string.Empty;
+            RemoveVocals = false;
 
             LoEqValue = DefaultLoEq;
             MedEqValue = DefaultMedEq;
