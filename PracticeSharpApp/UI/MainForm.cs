@@ -503,7 +503,7 @@ namespace BigMansStuff.PracticeSharp.UI
                 playPauseButton.PerformClick();
                 e.Handled = true;
             }
-            // L - Jump to end of loop
+            // L - Jump to start of the loop
             else if (!e.Control && !e.Alt && !e.Shift && e.KeyCode == Keys.L)
             {
                 positionLabel.PerformClick();
