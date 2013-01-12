@@ -63,7 +63,7 @@ namespace BigMansStuff.PracticeSharp.UI
         {
             base.OnMouseLeave(e);
 
-            ForeColor = DefaultForeColor;
+            ForeColor = RegularColor;
         }
 
         /// <summary>
@@ -78,6 +78,11 @@ namespace BigMansStuff.PracticeSharp.UI
         [DefaultValue(typeof(Color), DefaultHoverColorName)]
         public Color HoverColor { get; set; }
 
+        [BrowsableAttribute(true)]
+        [DefaultValue(typeof(Color), DefaultRegularColorName)]
+        public Color RegularColor { get; set; }
+
         public const string DefaultHoverColorName = "Blue";
+        public const string DefaultRegularColorName = "Black";
     }
 }
