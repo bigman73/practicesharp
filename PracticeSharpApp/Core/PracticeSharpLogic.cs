@@ -684,9 +684,9 @@ namespace BigMansStuff.PracticeSharp.Core
                     loop = this.Loop;
                     if (loop)
                     {
-                        m_waveChannel.CurrentTime = this.StartMarker;
-                        m_soundTouchSharp.Flush();
+                        m_soundTouchSharp.Clear();
                         m_waveChannel.Flush();
+                        m_waveChannel.CurrentTime = this.StartMarker;
                         isWaitForCue = (Cue.TotalSeconds > 0);
                         continue;
                     }
