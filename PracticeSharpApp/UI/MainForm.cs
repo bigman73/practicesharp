@@ -767,6 +767,8 @@ namespace BigMansStuff.PracticeSharp.UI
         {
             m_currentPreset = sender as PresetControl;
 
+            // TODO: Check why start time is not kept properly when preset is saved
+
             foreach (PresetControl presetControl in m_presetControls.Values)
             {
                 if (presetControl != m_currentPreset)
@@ -1004,13 +1006,26 @@ namespace BigMansStuff.PracticeSharp.UI
                 else // ( newPitchSemiTones < 0 )
                     pitchValue = "-";
 
-                double intPart = Math.Truncate(newPitchSemiTones);
+                double intPart = Math.Abs(Math.Truncate(newPitchSemiTones));
                 float reminder = Math.Abs(newPitchSemiTones - (int)newPitchSemiTones);
 
-                pitchValue += intPart.ToString();
-                if (reminder == 0.5f)
+                // Add integer part
+                if (intPart > 0)
+                {
+                    pitchValue += intPart.ToString();
+                }
+
+                if (reminder == 0.25f)
+                {
+                    pitchValue += "¼";
+                }
+                else if (reminder == 0.5f)
                 {
                     pitchValue += "½";
+                }
+                else if (reminder == 0.75f)
+                {
+                    pitchValue += "¾";
                 }
             }
 
