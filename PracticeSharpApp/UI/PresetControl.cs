@@ -59,6 +59,10 @@ namespace BigMansStuff.PracticeSharp.UI
             ChangeState(PresetStates.Off);
             PresetData = new PresetData();
             presetIdLabel.Text = this.Id.ToString();
+            presetIdLabel.ForeColor = LABEL_INACTIVE_COLOR;
+            presetIdLabel.HoverColor = LABEL_HOVER_COLOR;
+            presetIdLabel.RegularColor = LABEL_INACTIVE_COLOR;
+
             presetButton.ButtonText = Resources.PresetNoDesc;
         }
 
@@ -290,6 +294,9 @@ namespace BigMansStuff.PracticeSharp.UI
                     {
                         ShowSelectedLed();
 
+                        presetIdLabel.ForeColor = LABEL_ACTIVE_COLOR;
+                        presetIdLabel.RegularColor = LABEL_ACTIVE_COLOR;
+
                         // Don't fire event in case this is a Cancel of WaitForSave
                         if (prevState == PresetStates.WaitForSave)
                         {
@@ -326,10 +333,11 @@ namespace BigMansStuff.PracticeSharp.UI
 
                 default:
                     ShowRegularLed();
+                    presetIdLabel.ForeColor = LABEL_INACTIVE_COLOR;
+                    presetIdLabel.RegularColor = LABEL_INACTIVE_COLOR;
+
                     break;
             }
-
-
         }
     
         #endregion
@@ -339,5 +347,12 @@ namespace BigMansStuff.PracticeSharp.UI
         private PresetStates m_state;
 
         #endregion     
+
+        #region Constants
+        private static Color LABEL_ACTIVE_COLOR = Color.FromArgb(0xFBB063);
+        private static Color LABEL_INACTIVE_COLOR = Color.Black;
+        private static Color LABEL_HOVER_COLOR = Color.LightBlue;
+        #endregion
+
     }
 }

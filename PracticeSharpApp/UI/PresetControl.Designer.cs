@@ -51,28 +51,25 @@ namespace BigMansStuff.PracticeSharp.UI
         /// </summary>
         private void InitializeComponent()
         {
-            this.presetIdLabel = new BigMansStuff.PracticeSharp.UI.HoverLabel();
-            this.presetButton = new BigMansStuff.PracticeSharp.UI.UltraButton();
             this.ledPictureBox = new System.Windows.Forms.PictureBox();
+            this.presetButton = new BigMansStuff.PracticeSharp.UI.UltraButton();
+            this.presetIdLabel = new BigMansStuff.PracticeSharp.UI.HoverLabel();
             ((System.ComponentModel.ISupportInitialize)(this.ledPictureBox)).BeginInit();
             this.SuspendLayout();
             // 
-            // presetIdLabel
+            // ledPictureBox
             // 
-            this.presetIdLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.presetIdLabel.AutoSize = true;
-            this.presetIdLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 21.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.presetIdLabel.Location = new System.Drawing.Point(80, 25);
-            this.presetIdLabel.Name = "presetIdLabel";
-            this.presetIdLabel.Size = new System.Drawing.Size(31, 33);
-            this.presetIdLabel.TabIndex = 48;
-            this.presetIdLabel.Text = "1";
-            this.presetIdLabel.Click += new System.EventHandler(this.presetIdLabel_Click);
+            this.ledPictureBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.ledPictureBox.Location = new System.Drawing.Point(87, 5);
+            this.ledPictureBox.Name = "ledPictureBox";
+            this.ledPictureBox.Size = new System.Drawing.Size(16, 16);
+            this.ledPictureBox.TabIndex = 50;
+            this.ledPictureBox.TabStop = false;
             // 
             // presetButton
             // 
-            this.presetButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.presetButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.presetButton.BackColor = System.Drawing.Color.Transparent;
             this.presetButton.ButtonText = "";
             this.presetButton.CornerRadius = 2;
@@ -84,14 +81,18 @@ namespace BigMansStuff.PracticeSharp.UI
             this.presetButton.TabIndex = 49;
             this.presetButton.Click += new System.EventHandler(this.presetButton_Click);
             // 
-            // ledPictureBox
+            // presetIdLabel
             // 
-            this.ledPictureBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.ledPictureBox.Location = new System.Drawing.Point(87, 5);
-            this.ledPictureBox.Name = "ledPictureBox";
-            this.ledPictureBox.Size = new System.Drawing.Size(16, 16);
-            this.ledPictureBox.TabIndex = 50;
-            this.ledPictureBox.TabStop = false;
+            this.presetIdLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.presetIdLabel.AutoSize = true;
+            this.presetIdLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 21.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.presetIdLabel.ForeColor = System.Drawing.Color.Black;
+            this.presetIdLabel.Location = new System.Drawing.Point(80, 25);
+            this.presetIdLabel.Name = "presetIdLabel";
+            this.presetIdLabel.Size = new System.Drawing.Size(31, 33);
+            this.presetIdLabel.TabIndex = 48;
+            this.presetIdLabel.Text = "1";
+            this.presetIdLabel.Click += new System.EventHandler(this.presetIdLabel_Click);
             // 
             // PresetControl
             // 
