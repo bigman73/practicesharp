@@ -70,6 +70,21 @@ namespace BigMansStuff.PracticeSharp.UI
             PresetText = textBox.Text;
         }
 
+        /// <summary>
+        /// Keyboard event handler
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void textBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            // Handle Ctrl+Enter as OK click
+            if (e.Control && e.KeyCode == Keys.Return)
+            {
+                okButton.PerformClick();
+            }
+        }
+
         #endregion
+
     }
 }

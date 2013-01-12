@@ -67,15 +67,16 @@
             this.textBox.Name = "textBox";
             this.textBox.Size = new System.Drawing.Size(110, 90);
             this.textBox.TabIndex = 0;
+            this.textBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBox_KeyDown);
             // 
             // descLabel
             // 
             this.descLabel.AutoSize = true;
             this.descLabel.Location = new System.Drawing.Point(17, 14);
             this.descLabel.Name = "descLabel";
-            this.descLabel.Size = new System.Drawing.Size(92, 13);
+            this.descLabel.Size = new System.Drawing.Size(124, 13);
             this.descLabel.TabIndex = 3;
-            this.descLabel.Text = "Enter Preset Text:";
+            this.descLabel.Text = "Enter Preset Description:";
             // 
             // PresetTextInputDialog
             // 
