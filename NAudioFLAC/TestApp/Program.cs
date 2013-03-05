@@ -10,7 +10,7 @@ namespace BigMansStuff.NAudio.FLAC
         {
             IWavePlayer waveOutDevice;
             WaveStream mainOutputStream;
-            string fileName = @"duel.flac";
+            string fileName = @"test.flac";
 
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("Initiailizing NAudio");
