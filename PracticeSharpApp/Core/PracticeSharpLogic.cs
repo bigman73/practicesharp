@@ -24,7 +24,6 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using NAudio.Wave;
 using System.ComponentModel;
 using System.Threading;
 using System.IO;
@@ -33,6 +32,7 @@ using BigMansStuff.NAudio.FLAC;
 using BigMansStuff.PracticeSharp.SoundTouch;
 using NAudio.WindowsMediaFormat;
 using NLog;
+using NAudio.Wave;
 
 namespace BigMansStuff.PracticeSharp.Core
 {
@@ -40,14 +40,14 @@ namespace BigMansStuff.PracticeSharp.Core
     /// Core Logic (Back-End) for PracticeSharp application
     /// Acts as a mediator between the User Interface, NAudio and SoundSharp layers
     /// </summary>
-    public class PracticeSharpLogic: IDisposable
+    public class PracticeSharpLogic : IDisposable
     {
         #region Logger
         private static Logger m_logger = LogManager.GetCurrentClassLogger();
         #endregion
 
         #region Public Methods
-        
+
         /// <summary>
         /// Initialize the PracticeSharp core logic layer
         /// </summary>
@@ -78,13 +78,13 @@ namespace BigMansStuff.PracticeSharp.Core
             m_status = Statuses.Loading;
 
             // Create the Audio Processing Worker (Thread)
-            m_audioProcessingThread = new Thread( new ThreadStart( audioProcessingWorker_DoWork) );
-            m_audioProcessingThread.Name = "AudioProcessingThread";
+            m_audioProcessingThread = new Thread(new ThreadStart(audioProcessingWorker_DoWork));
+            m_audioProcessingThread.Name = "AudioProcessingThread-" + filename;
             m_audioProcessingThread.IsBackground = true;
             m_audioProcessingThread.Priority = ThreadPriority.Highest;
             // Important: MTA is needed for WMFSDK to function properly (for WMA support)
             // All WMA (COM) related actions MUST be done within the Thread's MTA otherwise there is a COM exception
-            m_audioProcessingThread.SetApartmentState( ApartmentState.MTA );
+            m_audioProcessingThread.SetApartmentState(ApartmentState.MTA);
 
             // Allow initialization to start >>Inside<< the thread, the thread will stop and wait for a pulse
             m_audioProcessingThread.Start();
@@ -112,7 +112,7 @@ namespace BigMansStuff.PracticeSharp.Core
                 lock (FirstPlayLock)
                 {
                     m_logger.Debug("Monitor: Play(), Pulse FirstPlayLock");
-                    Monitor.Pulse(FirstPlayLock);
+                    Monitor.PulseAll(FirstPlayLock);
                 }
             }
             else if (m_status == Statuses.Pausing)
@@ -145,9 +145,9 @@ namespace BigMansStuff.PracticeSharp.Core
             // Stop the audio processing thread
             m_stopWorker = true;
 
-            // Wait for audio thread to stop (Up to 500 msec), if not just give up
-            int counter = 25;
-            while (m_audioProcessingThread != null && counter>0)
+            // Wait for audio thread to stop (Up to 2000 msec), if not just give up
+            int counter = 100;
+            while (m_audioProcessingThread != null && counter > 0)
             {
                 Thread.Sleep(20);
                 counter--;
@@ -160,8 +160,9 @@ namespace BigMansStuff.PracticeSharp.Core
         public void Pause()
         {
             // Playback status changed to -> Pausing
-            ChangeStatus(Statuses.Pausing);
             m_waveOutDevice.Pause();
+            Thread.Sleep(20); // Allow the audio to pause and settle
+            ChangeStatus(Statuses.Pausing);
         }
 
         /// <summary>
@@ -184,10 +185,10 @@ namespace BigMansStuff.PracticeSharp.Core
         public static bool IsAudioFile(string filename)
         {
             filename = filename.ToLower();
-            bool result = filename.EndsWith(MP3Extension) || 
-                          filename.EndsWith(WAVExtension) || 
+            bool result = filename.EndsWith(MP3Extension) ||
+                          filename.EndsWith(WAVExtension) ||
                           filename.EndsWith(OGGVExtension) ||
-                          filename.EndsWith(FLACExtension) || 
+                          filename.EndsWith(FLACExtension) ||
                           filename.EndsWith(WMAExtension) ||
                           filename.EndsWith(AIFFExtension);
 
@@ -250,7 +251,11 @@ namespace BigMansStuff.PracticeSharp.Core
             }
             set
             {
-                lock (PropertiesLock) { m_volume = value; }
+                lock (PropertiesLock)
+                {
+                    m_volume = value;
+                    m_volumeChanged = true;
+                }
             }
         }
 
@@ -262,13 +267,13 @@ namespace BigMansStuff.PracticeSharp.Core
             }
             set
             {
-                lock (PropertiesLock) 
-                { 
+                lock (PropertiesLock)
+                {
                     m_eqLo = value;
                     m_eqParamsChanged = true;
                 }
             }
-        }        
+        }
 
         public float EqualizerMedBand
         {
@@ -278,8 +283,8 @@ namespace BigMansStuff.PracticeSharp.Core
             }
             set
             {
-                lock (PropertiesLock) 
-                { 
+                lock (PropertiesLock)
+                {
                     m_eqMed = value;
                     m_eqParamsChanged = true;
                 }
@@ -294,8 +299,8 @@ namespace BigMansStuff.PracticeSharp.Core
             }
             set
             {
-                lock (PropertiesLock) 
-                { 
+                lock (PropertiesLock)
+                {
                     m_eqHi = value;
                     m_eqParamsChanged = true;
                 }
@@ -492,10 +497,15 @@ namespace BigMansStuff.PracticeSharp.Core
 
                     InitializeEqualizerEffect();
 
-                    // Special case handling for re-playing after last playing stopped in non-loop mode: 
-                    //   Reset current play time to begining of file in case the previous play has reached the end of file
-                    if (!m_newPlayTimeRequested && m_currentPlayTime >= m_waveChannel.TotalTime)
-                        m_currentPlayTime = TimeSpan.Zero;
+                    lock (CurrentPlayTimeLock)
+                    {
+                        // Special case handling for re-playing after last playing stopped in non-loop mode: 
+                        //   Reset current play time to begining of file in case the previous play has reached the end of file
+                        if (!m_newPlayTimeRequested && m_currentPlayTime >= m_waveChannel.TotalTime)
+                        {                       
+                            m_currentPlayTime = TimeSpan.Zero;
+                        }
+                    }
 
                     // Playback status changed to -> Initialized
                     ChangeStatus(Statuses.Ready);
@@ -506,7 +516,7 @@ namespace BigMansStuff.PracticeSharp.Core
                     lock (InitializedLock)
                     {
                         m_logger.Debug("Monitor: Pulse InitializedLock");
-                        Monitor.Pulse(InitializedLock);
+                        Monitor.PulseAll(InitializedLock);
                     }
                 }
 
@@ -518,10 +528,14 @@ namespace BigMansStuff.PracticeSharp.Core
                 }
                 m_logger.Debug("Monitor: FirstPlayLock got pulsed");
 
-                // Safety guard - if thread never really started playing but PracticeSharpLogic was terminated ore started terminating
-                if (m_status == Statuses.Terminating || m_status == Statuses.Terminated)
+                // Safety guard - if thread never r8eally started playing but PracticeSharpLogic was terminated ore started terminating
+                if (m_waveOutDevice == null || m_status == Statuses.Terminating || m_status == Statuses.Terminated)
+                {
+                    m_logger.Warn("SHOULD NOT GET HERE - Terminated before play started");
                     return;
+                }
 
+                m_logger.Debug("waveOutDevice.Play()");
                 // Command NAudio to start playing
                 m_waveOutDevice.Play();
                 // Playback status changed to -> Playing
@@ -545,7 +559,7 @@ namespace BigMansStuff.PracticeSharp.Core
             catch (Exception ex)
             {
                 m_logger.ErrorException("Exception in audioProcessingWorker_DoWork, ", ex);
-                ChangeStatus( Statuses.Error );
+                ChangeStatus(Statuses.Error);
             }
         }
 
@@ -586,9 +600,16 @@ namespace BigMansStuff.PracticeSharp.Core
 
             while (!m_stopWorker && m_waveChannel.Position < m_waveChannel.Length)
             {
-                lock (PropertiesLock)
+                if (m_volumeChanged) // Double checked locking
                 {
-                    m_waveChannel.Volume = m_volume;
+                    lock (PropertiesLock)
+                    {
+                        if (m_volumeChanged)
+                        {
+                            m_waveChannel.Volume = m_volume;
+                            m_volumeChanged = false;
+                        }
+                    }
                 }
 
                 #region Wait for Cue
@@ -603,18 +624,25 @@ namespace BigMansStuff.PracticeSharp.Core
 
 
                 #region Read samples from file
-                
+
                 // Change current play position
-                lock (CurrentPlayTimeLock)
-                {               
-                    if (m_newPlayTimeRequested)
+                if (m_newPlayTimeRequested) // Double checked locking
+                {
+                    lock (CurrentPlayTimeLock)
                     {
-                        m_newPlayTimeRequested = false;
-                        m_waveChannel.CurrentTime = m_newPlayTime;
-                        m_soundTouchSharp.Clear();
-                        m_waveChannel.Flush();
-                        m_inputProvider.Flush();
-                        continue;
+                        if (m_newPlayTimeRequested)
+                        {
+                            m_logger.Debug("newPlayTimeRequested");
+
+                            m_newPlayTimeRequested = false;
+                            m_waveOutDevice.Pause();
+                            m_waveChannel.CurrentTime = m_newPlayTime;
+                            m_soundTouchSharp.Clear();
+                            m_waveChannel.Flush();
+                            m_inputProvider.Flush();
+                            m_waveOutDevice.Play();
+                            continue;
+                        }
                     }
                 }
 
@@ -635,13 +663,17 @@ namespace BigMansStuff.PracticeSharp.Core
 
                 #region Apply Time Stretch Profile
 
-                lock (PropertiesLock)
+                // Double checked locking
+                if (m_timeStretchProfileChanged)
                 {
-                    if (m_timeStretchProfileChanged)
+                    lock (PropertiesLock)
                     {
-                        ApplySoundTouchTimeStretchProfile();
-                            
-                        m_timeStretchProfileChanged = false;
+                        if (m_timeStretchProfileChanged)
+                        {
+                            ApplySoundTouchTimeStretchProfile();
+
+                            m_timeStretchProfileChanged = false;
+                        }
                     }
                 }
 
@@ -737,8 +769,8 @@ namespace BigMansStuff.PracticeSharp.Core
                 #endregion
             } // while
 
-            #region Stop PlayBack 
-           
+            #region Stop PlayBack
+
             m_logger.Debug("ProcessAudio() finished - stop playback");
             m_waveOutDevice.Stop();
             // Stop listening to PlayPositionChanged events
@@ -767,7 +799,7 @@ namespace BigMansStuff.PracticeSharp.Core
         /// </summary>
         /// <param name="buffer"></param>
         /// <param name="count"></param>
-        private void ApplyDSPEffects( float[] buffer, int count)
+        private void ApplyDSPEffects(float[] buffer, int count)
         {
             int samples = count * 2;
 
@@ -779,21 +811,27 @@ namespace BigMansStuff.PracticeSharp.Core
 
                 if (m_eqParamsChanged)
                 {
-                    m_eqEffect.LoGainFactor.Value = m_eqEffect.LoGainFactor.Maximum * m_eqLo;
-                    //m_eqEffect.LoDriveFactor.Value = (m_eqLo + 1.0f) / 2 * 100.0f;
-                    m_eqEffect.MedGainFactor.Value = m_eqEffect.MedGainFactor.Maximum * m_eqMed;
-                    // m_eqEffect.MedDriveFactor.Value = (m_eqMed + 1.0f) / 2 * 100.0f;
-                    m_eqEffect.HiGainFactor.Value = m_eqEffect.HiGainFactor.Maximum * m_eqHi;
-                    //m_eqEffect.HiDriveFactor.Value = (m_eqHi + 1.0f) / 2 * 100.0f;
+                    lock (PropertiesLock)
+                    {
+                        if (m_eqParamsChanged) // Double check locking
+                        {
+                            m_eqEffect.LoGainFactor.Value = m_eqEffect.LoGainFactor.Maximum * m_eqLo;
+                            //m_eqEffect.LoDriveFactor.Value = (m_eqLo + 1.0f) / 2 * 100.0f;
+                            m_eqEffect.MedGainFactor.Value = m_eqEffect.MedGainFactor.Maximum * m_eqMed;
+                            // m_eqEffect.MedDriveFactor.Value = (m_eqMed + 1.0f) / 2 * 100.0f;
+                            m_eqEffect.HiGainFactor.Value = m_eqEffect.HiGainFactor.Maximum * m_eqHi;
+                            //m_eqEffect.HiDriveFactor.Value = (m_eqHi + 1.0f) / 2 * 100.0f;
 
-                    m_eqEffect.OnFactorChanges();
+                            m_eqEffect.OnFactorChanges();
 
-                    m_eqParamsChanged = false;
+                            m_eqParamsChanged = false;
+                        }
+                    }
                 }
             }
 
             // Run each sample in the buffer through the equalizer effect
-            for(int sample = 0; sample < samples; sample += 2)
+            for (int sample = 0; sample < samples; sample += 2)
             {
                 // Get the samples, per audio channel
                 float sampleLeft = buffer[sample];
@@ -816,7 +854,7 @@ namespace BigMansStuff.PracticeSharp.Core
                 buffer[sample + 1] = sampleRight;
             }
         }
-    
+
         /// <summary>
         /// Initialize the file play back audio infrastructure
         /// </summary>
@@ -862,8 +900,8 @@ namespace BigMansStuff.PracticeSharp.Core
                 pulseCount = 0;
                 while (!m_stopWorker && pulseCount < 4)
                 {
-                    RaiseEventCueWaitPulsed(); 
-                   
+                    RaiseEventCueWaitPulsed();
+
                     Thread.Sleep(250);
                     pulseCount++;
                 }
@@ -894,7 +932,7 @@ namespace BigMansStuff.PracticeSharp.Core
         {
             m_status = newStatus;
 
-            if ( m_logger.IsDebugEnabled ) m_logger.Debug("PracticeSharpLogic - Status changed: " + m_status);
+            if (m_logger.IsDebugEnabled) m_logger.Debug("PracticeSharpLogic - Status changed: " + m_status);
             // Raise StatusChanged Event
             if (StatusChanged != null)
             {
@@ -965,21 +1003,33 @@ namespace BigMansStuff.PracticeSharp.Core
         {
             if (m_tempoChanged)
             {
-                float tempo = this.Tempo;
-                // Assign updated tempo
-                m_soundTouchSharp.SetTempo(tempo);
-                m_tempoChanged = false;
+                lock (PropertiesLock)
+                {
+                    if (m_tempoChanged) // Double Check Locking
+                    {
+                        float tempo = this.Tempo;
+                        // Assign updated tempo
+                        m_soundTouchSharp.SetTempo(tempo);
+                        m_tempoChanged = false;
 
-                ApplySoundTouchTimeStretchProfile();
+                        ApplySoundTouchTimeStretchProfile();
+                    }
+                }
             }
 
             if (m_pitchChanged)
             {
-                float pitch = this.Pitch;
-                // Assign updated pitch
-                // m_soundTouchSharp.SetPitchOctaves(pitch);
-                m_soundTouchSharp.SetPitchSemiTones(pitch);
-                m_pitchChanged = false;
+                lock (PropertiesLock)
+                {
+                    if (m_pitchChanged) // Double Check Locking
+                    {
+                        float pitch = this.Pitch;
+                        // Assign updated pitch
+                        // m_soundTouchSharp.SetPitchOctaves(pitch);
+                        m_soundTouchSharp.SetPitchSemiTones(pitch);
+                        m_pitchChanged = false;
+                    }
+                }
             }
         }
 
@@ -1020,15 +1070,15 @@ namespace BigMansStuff.PracticeSharp.Core
         /// <param name="filename"></param>
         private void CreateInputWaveChannel(string filename)
         {
-            string fileExt = Path.GetExtension( filename.ToLower() );
-            if ( fileExt == MP3Extension )
+            string fileExt = Path.GetExtension(filename.ToLower());
+            if (fileExt == MP3Extension)
             {
                 m_waveReader = new Mp3FileReader(filename);
                 m_blockAlignedStream = new BlockAlignReductionStream(m_waveReader);
                 // Wave channel - reads from file and returns raw wave blocks
                 m_waveChannel = new WaveChannel32(m_blockAlignedStream);
             }
-            else if ( fileExt == WAVExtension )
+            else if (fileExt == WAVExtension)
             {
                 m_waveReader = new WaveFileReader(filename);
                 if (m_waveReader.WaveFormat.Encoding != WaveFormatEncoding.Pcm)
@@ -1042,7 +1092,7 @@ namespace BigMansStuff.PracticeSharp.Core
                        16, m_waveReader.WaveFormat.Channels);
                     m_waveReader = new WaveFormatConversionStream(format, m_waveReader);
                 }
-                
+
                 m_waveChannel = new WaveChannel32(m_waveReader);
             }
             else if (fileExt == OGGVExtension)
@@ -1120,18 +1170,11 @@ namespace BigMansStuff.PracticeSharp.Core
             {
                 m_latency = Properties.Settings.Default.Latency;
 
-                string soundOutput;
-
                 m_logger.Info("OS Info: " + Environment.OSVersion.ToString());
 
-                if (Environment.OSVersion.Version.Major < 6)
-                    soundOutput = "WaveOut"; // XP
-                else
-                    soundOutput = "WasapiOut"; // Vista/7
-                
-                // Properties.Settings.Default.SoundOutput;
-                m_logger.Info("Wave Output Device that was requested: {0}", soundOutput);
-                
+                // string soundOutput = "WasapiOut";
+                string soundOutput = "WaveOut";
+
                 // Set the wave output device based on the configuration setting
                 switch (soundOutput)
                 {
@@ -1149,6 +1192,7 @@ namespace BigMansStuff.PracticeSharp.Core
                         break;
                 }
 
+                m_waveOutDevice.PlaybackStopped += waveOutDevice_PlaybackStopped;
                 m_logger.Info("Wave Output Device that is actually being used: {0}", m_waveOutDevice.GetType().ToString());
             }
             catch (Exception driverCreateException)
@@ -1156,6 +1200,14 @@ namespace BigMansStuff.PracticeSharp.Core
                 m_logger.ErrorException("NAudio Driver Creation Failed", driverCreateException);
                 throw driverCreateException;
             }
+        }
+
+        void waveOutDevice_PlaybackStopped(object sender, StoppedEventArgs e)
+        {
+            if (e == null || e.Exception == null)
+                return;
+
+            m_logger.ErrorException("waveOutDevice_PlaybackStopped", e.Exception);
         }
 
         /// <summary>
@@ -1193,9 +1245,9 @@ namespace BigMansStuff.PracticeSharp.Core
         /// <summary>
         /// Disposes of the current allocated resources
         /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2213:DisposableFieldsShouldBeDisposed", MessageId = "m_waveReader"), 
-        System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2213:DisposableFieldsShouldBeDisposed", MessageId = "m_blockAlignedStream"), 
-        System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2213:DisposableFieldsShouldBeDisposed", MessageId = "m_waveChannel"), 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2213:DisposableFieldsShouldBeDisposed", MessageId = "m_waveReader"),
+        System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2213:DisposableFieldsShouldBeDisposed", MessageId = "m_blockAlignedStream"),
+        System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2213:DisposableFieldsShouldBeDisposed", MessageId = "m_waveChannel"),
         System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2213:DisposableFieldsShouldBeDisposed", MessageId = "m_waveOutDevice")]
         public void Dispose()
         {
@@ -1221,7 +1273,7 @@ namespace BigMansStuff.PracticeSharp.Core
             lock (FirstPlayLock)
             {
                 m_logger.Debug("Monitor: Pulse FirstPlayLock");
-                Monitor.Pulse(FirstPlayLock);
+                Monitor.PulseAll(FirstPlayLock);
             }
 
             // Dispose of SoundTouchSharp
@@ -1284,7 +1336,7 @@ namespace BigMansStuff.PracticeSharp.Core
                 m_logger.Debug("SoundTouch terminated");
             }
         }
-        
+
         #endregion
 
         #region Private Members
@@ -1292,7 +1344,7 @@ namespace BigMansStuff.PracticeSharp.Core
         private Statuses m_status = Statuses.None;
         private string m_filename;
         private int m_latency = 125; // msec
-        
+
         private SoundTouchSharp m_soundTouchSharp;
         private IWavePlayer m_waveOutDevice;
         private AdvancedBufferedWaveProvider m_inputProvider;
@@ -1305,14 +1357,15 @@ namespace BigMansStuff.PracticeSharp.Core
         private float m_pitch = 0f;
         private bool m_loop;
         private float m_volume;
+        private volatile bool m_volumeChanged = false;
         private float m_eqLo;
         private float m_eqMed;
         private float m_eqHi;
-        private bool m_eqParamsChanged;
+        private volatile bool m_eqParamsChanged;
         private EqualizerEffect m_eqEffect;
 
         private TimeStretchProfile m_timeStretchProfile;
-        private bool m_timeStretchProfileChanged;
+        private volatile bool m_timeStretchProfileChanged;
 
         private Thread m_audioProcessingThread;
         private volatile bool m_stopWorker = false;
@@ -1326,10 +1379,9 @@ namespace BigMansStuff.PracticeSharp.Core
 
         private TimeSpan m_currentPlayTime;
         private TimeSpan m_newPlayTime;
-        private bool m_newPlayTimeRequested;
-
-        private bool m_tempoChanged = true;
-        private bool m_pitchChanged = true;
+        private volatile bool m_newPlayTimeRequested; // Double checked locking - http://www.cs.colorado.edu/~kena/classes/5828/s12/presentation-materials/goldbergdrew.pdf
+        private volatile bool m_tempoChanged = true;
+        private volatile bool m_pitchChanged = true;
 
         private List<DSPEffect> m_dspEffects = new List<DSPEffect>();
 
@@ -1353,7 +1405,7 @@ namespace BigMansStuff.PracticeSharp.Core
         const string AIFFExtension = ".aiff";
 
         const int BusyQueuedBuffersThreshold = 3;
-            
+
         const int BufferSamples = 5 * 2048; // floats, not bytes
 
         #endregion
