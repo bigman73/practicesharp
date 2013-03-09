@@ -972,6 +972,10 @@ namespace BigMansStuff.PracticeSharp.UI
             m_practiceSharpLogic.Tempo = newTempo;
             
             // Update speed value label
+            if (newTempo != 1.0f)
+                speedValueLabel.ForeColor = Color.Blue;
+            else
+                speedValueLabel.ForeColor = Color.Black;
             speedValueLabel.Text = string.Format("x{0}", newTempo);
         }
 
@@ -1028,6 +1032,11 @@ namespace BigMansStuff.PracticeSharp.UI
                     pitchValue += "¾";
                 }
             }
+
+            if (newPitchSemiTones != 0)
+                pitchValueLabel.ForeColor = Color.Blue;
+            else
+                pitchValueLabel.ForeColor = Color.Black;
 
             pitchValueLabel.Text = pitchValue;
         } 
