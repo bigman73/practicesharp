@@ -1,7 +1,7 @@
-﻿@ECHO OFF
+@ECHO OFF
 REM Practice Sharp
 REM 
-REM    © Copyright 2010, Yuval Naveh.
+REM    � Copyright 2010, Yuval Naveh.
 REM     All rights reserved.
 REM
 REM    This file is part of Practice Sharp.
@@ -38,9 +38,9 @@ XCOPY /Y ..\PracticeSharpApp\bin\Release\LICENSES.txt Source\
 XCOPY /Y ..\PracticeSharpApp\bin\Release\NLog.dll Source\
 XCOPY /Y ..\PracticeSharpApp\bin\Release\NLog.config Source\
 
-REM NOTE: ** Download once wix35-binaries.zip and unzip it into this folder, before running this batch file ** 
+REM NOTE: ** Download once wix37-binaries.zip and unzip it into this folder, before running this batch file ** 
 REM Download URL: http://wix.sourceforge.net/
-SET PATH=%PATH%;.\wix35-binaries
+SET PATH=%PATH%;.\wix37-binaries
 
 ECHO+
 ECHO ==== Candle ====
