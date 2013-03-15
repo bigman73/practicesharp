@@ -345,19 +345,24 @@ namespace BigMansStuff.PracticeSharp.Core
             }
             set
             {
-                lock (CurrentPlayTimeLock)
+                TimeSpan newPlayTime = value;
+                lock (NewPlayTimeLock)
                 {
-                    m_newPlayTime = value;
+                    // Limit minimum and maximum
+                    if (newPlayTime < TimeSpan.Zero)
+                        newPlayTime = TimeSpan.Zero;
+                    else if (newPlayTime > m_filePlayDuration)
+                        newPlayTime = m_filePlayDuration;
                     m_newPlayTimeRequested = true;
+                    m_newPlayTime = newPlayTime;
+                }
 
-                    if (m_status == Statuses.Pausing || m_status == Statuses.Ready || m_status == Statuses.Stopped)
+                // For normal non-playing statuses updated the current playing time immediately
+                if (m_status == Statuses.Pausing || m_status == Statuses.Ready || m_status == Statuses.Stopped) 
+                {
+                    lock (CurrentPlayTimeLock)
                     {
-                        m_currentPlayTime = m_newPlayTime;
-                        // Limit minimum and maximum
-                        if (m_currentPlayTime < TimeSpan.Zero)
-                            m_currentPlayTime = TimeSpan.Zero;
-                        else if (m_currentPlayTime > m_filePlayDuration)
-                            m_currentPlayTime = m_filePlayDuration;
+                        m_currentPlayTime = newPlayTime;
                     }
                 }
             }
@@ -497,11 +502,17 @@ namespace BigMansStuff.PracticeSharp.Core
 
                     InitializeEqualizerEffect();
 
+                    bool newPlayTimeRequested;
+                    lock (NewPlayTimeLock)
+                    {
+                         newPlayTimeRequested = m_newPlayTimeRequested;
+                    }
+
                     lock (CurrentPlayTimeLock)
                     {
                         // Special case handling for re-playing after last playing stopped in non-loop mode: 
                         //   Reset current play time to begining of file in case the previous play has reached the end of file
-                        if (!m_newPlayTimeRequested && m_currentPlayTime >= m_waveChannel.TotalTime)
+                        if (!newPlayTimeRequested && m_currentPlayTime >= m_waveChannel.TotalTime)
                         {                       
                             m_currentPlayTime = TimeSpan.Zero;
                         }
@@ -600,6 +611,7 @@ namespace BigMansStuff.PracticeSharp.Core
 
             while (!m_stopWorker && m_waveChannel.Position < m_waveChannel.Length)
             {
+                #region Handle Volume Change request
                 if (m_volumeChanged) // Double checked locking
                 {
                     lock (PropertiesLock)
@@ -611,10 +623,34 @@ namespace BigMansStuff.PracticeSharp.Core
                         }
                     }
                 }
+                #endregion
+
+                #region Handle New play position request
+
+                TimeSpan newPlayTime = TimeSpan.MinValue;
+                if (m_newPlayTimeRequested) // Double checked locking
+                {
+                    lock (NewPlayTimeLock)
+                    {
+                        if (m_newPlayTimeRequested)
+                        {
+                            m_logger.Debug("newPlayTimeRequested: " + m_newPlayTime);
+                            if (m_newPlayTime == m_startMarker)
+                            {
+                                isWaitForCue = true;
+                            }
+
+                            newPlayTime = m_newPlayTime;
+                            m_newPlayTimeRequested = false;
+                        }
+                    }
+                }
+
+                #endregion
 
                 #region Wait for Cue
 
-                if (isWaitForCue || (m_newPlayTimeRequested && m_newPlayTime == m_startMarker))
+                if (isWaitForCue)
                 {
                     isWaitForCue = false;
                     WaitForCue();
@@ -622,29 +658,23 @@ namespace BigMansStuff.PracticeSharp.Core
 
                 #endregion
 
+                #region [Only when new play position requested] Change current play position
+
+                if (newPlayTime != TimeSpan.MinValue)
+                {
+                    // Perform the change of play position outside of the lock() block, to avoid dead locks
+                    m_waveOutDevice.Pause();
+                    m_waveChannel.CurrentTime = newPlayTime;
+                    m_soundTouchSharp.Clear();
+                    m_waveChannel.Flush();
+                    m_inputProvider.Flush();
+                    m_waveOutDevice.Play();
+                    continue;
+                }
+
+                #endregion
 
                 #region Read samples from file
-
-                // Change current play position
-                if (m_newPlayTimeRequested) // Double checked locking
-                {
-                    lock (CurrentPlayTimeLock)
-                    {
-                        if (m_newPlayTimeRequested)
-                        {
-                            m_logger.Debug("newPlayTimeRequested");
-
-                            m_newPlayTimeRequested = false;
-                            m_waveOutDevice.Pause();
-                            m_waveChannel.CurrentTime = m_newPlayTime;
-                            m_soundTouchSharp.Clear();
-                            m_waveChannel.Flush();
-                            m_inputProvider.Flush();
-                            m_waveOutDevice.Play();
-                            continue;
-                        }
-                    }
-                }
 
                 // *** Read one chunk from input file ***
                 bytesRead = m_waveChannel.Read(convertInputBuffer.Bytes, 0, convertInputBuffer.Bytes.Length);
@@ -653,7 +683,6 @@ namespace BigMansStuff.PracticeSharp.Core
                 floatsRead = bytesRead / ((sizeof(float)) * format.Channels);
 
                 #endregion
-
 
                 #region Apply DSP Effects (Equalizer, Vocal Removal, etc.)
 
@@ -679,6 +708,7 @@ namespace BigMansStuff.PracticeSharp.Core
 
                 #endregion
 
+                #region Handle End Marker
                 actualEndMarker = this.EndMarker;
                 loop = this.Loop;
 
@@ -712,7 +742,7 @@ namespace BigMansStuff.PracticeSharp.Core
 
                     #endregion
 
-                    #region Handle Loop
+                    #region Perform Loop
                     loop = this.Loop;
                     if (loop)
                     {
@@ -724,11 +754,13 @@ namespace BigMansStuff.PracticeSharp.Core
                     }
                     else
                     {
+                        // Exit playback gracefully
                         break;
                     }
 
                     #endregion
                 }
+                #endregion
 
                 #region Put samples in SoundTouch
 
@@ -1388,6 +1420,7 @@ namespace BigMansStuff.PracticeSharp.Core
         // Thread Locks
         private readonly object LoopLock = new object();
         private readonly object CurrentPlayTimeLock = new object();
+        private readonly object NewPlayTimeLock = new object();
         private readonly object InitializedLock = new object();
         private readonly object FirstPlayLock = new object();
         private readonly object TempoLock = new object();
