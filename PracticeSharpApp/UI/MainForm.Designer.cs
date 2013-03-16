@@ -307,7 +307,7 @@ namespace BigMansStuff.PracticeSharp.UI
             // startLoopMinuteUpDown
             // 
             this.startLoopMinuteUpDown.BackColor = System.Drawing.Color.LimeGreen;
-            this.startLoopMinuteUpDown.Location = new System.Drawing.Point(132, 3);
+            this.startLoopMinuteUpDown.Location = new System.Drawing.Point(127, 3);
             this.startLoopMinuteUpDown.Maximum = new decimal(new int[] {
             999,
             0,
@@ -319,14 +319,15 @@ namespace BigMansStuff.PracticeSharp.UI
             0,
             -2147483648});
             this.startLoopMinuteUpDown.Name = "startLoopMinuteUpDown";
-            this.startLoopMinuteUpDown.Size = new System.Drawing.Size(38, 20);
+            this.startLoopMinuteUpDown.Size = new System.Drawing.Size(51, 20);
             this.startLoopMinuteUpDown.TabIndex = 0;
+            this.startLoopMinuteUpDown.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.startLoopMinuteUpDown.ValueChanged += new System.EventHandler(this.startLoopMinuteUpDown_ValueChanged);
             // 
             // startLoopSecondUpDown
             // 
             this.startLoopSecondUpDown.BackColor = System.Drawing.Color.LimeGreen;
-            this.startLoopSecondUpDown.Location = new System.Drawing.Point(176, 3);
+            this.startLoopSecondUpDown.Location = new System.Drawing.Point(185, 3);
             this.startLoopSecondUpDown.Maximum = new decimal(new int[] {
             60,
             0,
@@ -338,8 +339,9 @@ namespace BigMansStuff.PracticeSharp.UI
             0,
             -2147483648});
             this.startLoopSecondUpDown.Name = "startLoopSecondUpDown";
-            this.startLoopSecondUpDown.Size = new System.Drawing.Size(38, 20);
+            this.startLoopSecondUpDown.Size = new System.Drawing.Size(51, 20);
             this.startLoopSecondUpDown.TabIndex = 2;
+            this.startLoopSecondUpDown.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.startLoopSecondUpDown.ValueChanged += new System.EventHandler(this.startLoopSecondUpDown_ValueChanged);
             // 
             // startLoopMilliUpDown
@@ -350,7 +352,7 @@ namespace BigMansStuff.PracticeSharp.UI
             0,
             0,
             0});
-            this.startLoopMilliUpDown.Location = new System.Drawing.Point(220, 3);
+            this.startLoopMilliUpDown.Location = new System.Drawing.Point(240, 3);
             this.startLoopMilliUpDown.Maximum = new decimal(new int[] {
             1000,
             0,
@@ -364,12 +366,13 @@ namespace BigMansStuff.PracticeSharp.UI
             this.startLoopMilliUpDown.Name = "startLoopMilliUpDown";
             this.startLoopMilliUpDown.Size = new System.Drawing.Size(51, 20);
             this.startLoopMilliUpDown.TabIndex = 4;
+            this.startLoopMilliUpDown.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.startLoopMilliUpDown.ValueChanged += new System.EventHandler(this.startLoopMilliUpDown_ValueChanged);
             // 
             // endLoopMinuteUpDown
             // 
             this.endLoopMinuteUpDown.BackColor = System.Drawing.Color.Turquoise;
-            this.endLoopMinuteUpDown.Location = new System.Drawing.Point(132, 28);
+            this.endLoopMinuteUpDown.Location = new System.Drawing.Point(127, 28);
             this.endLoopMinuteUpDown.Maximum = new decimal(new int[] {
             999,
             0,
@@ -381,14 +384,15 @@ namespace BigMansStuff.PracticeSharp.UI
             0,
             -2147483648});
             this.endLoopMinuteUpDown.Name = "endLoopMinuteUpDown";
-            this.endLoopMinuteUpDown.Size = new System.Drawing.Size(38, 20);
+            this.endLoopMinuteUpDown.Size = new System.Drawing.Size(51, 20);
             this.endLoopMinuteUpDown.TabIndex = 1;
+            this.endLoopMinuteUpDown.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.endLoopMinuteUpDown.ValueChanged += new System.EventHandler(this.endLoopMinuteUpDown_ValueChanged);
             // 
             // endLoopSecondUpDown
             // 
             this.endLoopSecondUpDown.BackColor = System.Drawing.Color.Turquoise;
-            this.endLoopSecondUpDown.Location = new System.Drawing.Point(176, 28);
+            this.endLoopSecondUpDown.Location = new System.Drawing.Point(185, 28);
             this.endLoopSecondUpDown.Maximum = new decimal(new int[] {
             60,
             0,
@@ -400,8 +404,9 @@ namespace BigMansStuff.PracticeSharp.UI
             0,
             -2147483648});
             this.endLoopSecondUpDown.Name = "endLoopSecondUpDown";
-            this.endLoopSecondUpDown.Size = new System.Drawing.Size(38, 20);
+            this.endLoopSecondUpDown.Size = new System.Drawing.Size(51, 20);
             this.endLoopSecondUpDown.TabIndex = 3;
+            this.endLoopSecondUpDown.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.endLoopSecondUpDown.ValueChanged += new System.EventHandler(this.endLoopSecondUpDown_ValueChanged);
             // 
             // endLoopMilliUpDown
@@ -412,7 +417,7 @@ namespace BigMansStuff.PracticeSharp.UI
             0,
             0,
             0});
-            this.endLoopMilliUpDown.Location = new System.Drawing.Point(220, 28);
+            this.endLoopMilliUpDown.Location = new System.Drawing.Point(240, 28);
             this.endLoopMilliUpDown.Maximum = new decimal(new int[] {
             1000,
             0,
@@ -426,13 +431,14 @@ namespace BigMansStuff.PracticeSharp.UI
             this.endLoopMilliUpDown.Name = "endLoopMilliUpDown";
             this.endLoopMilliUpDown.Size = new System.Drawing.Size(51, 20);
             this.endLoopMilliUpDown.TabIndex = 5;
+            this.endLoopMilliUpDown.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.endLoopMilliUpDown.ValueChanged += new System.EventHandler(this.endLoopMilliUpDown_ValueChanged);
             // 
             // startLoopLabel
             // 
             this.startLoopLabel.AutoSize = true;
             this.startLoopLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.startLoopLabel.Location = new System.Drawing.Point(64, 3);
+            this.startLoopLabel.Location = new System.Drawing.Point(58, 3);
             this.startLoopLabel.Name = "startLoopLabel";
             this.startLoopLabel.Size = new System.Drawing.Size(66, 15);
             this.startLoopLabel.TabIndex = 16;
@@ -442,7 +448,7 @@ namespace BigMansStuff.PracticeSharp.UI
             // 
             this.endLoopLabel.AutoSize = true;
             this.endLoopLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.endLoopLabel.Location = new System.Drawing.Point(64, 28);
+            this.endLoopLabel.Location = new System.Drawing.Point(58, 28);
             this.endLoopLabel.Name = "endLoopLabel";
             this.endLoopLabel.Size = new System.Drawing.Size(63, 15);
             this.endLoopLabel.TabIndex = 17;
@@ -452,7 +458,7 @@ namespace BigMansStuff.PracticeSharp.UI
             // 
             this.loopCheckBox.AutoSize = true;
             this.loopCheckBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.loopCheckBox.Location = new System.Drawing.Point(2, 27);
+            this.loopCheckBox.Location = new System.Drawing.Point(3, 27);
             this.loopCheckBox.Name = "loopCheckBox";
             this.loopCheckBox.Size = new System.Drawing.Size(54, 19);
             this.loopCheckBox.TabIndex = 18;
@@ -464,7 +470,7 @@ namespace BigMansStuff.PracticeSharp.UI
             // 
             this.currentLabel.AutoSize = true;
             this.currentLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.currentLabel.Location = new System.Drawing.Point(196, 3);
+            this.currentLabel.Location = new System.Drawing.Point(190, 3);
             this.currentLabel.Name = "currentLabel";
             this.currentLabel.Size = new System.Drawing.Size(66, 20);
             this.currentLabel.TabIndex = 3;
@@ -478,7 +484,7 @@ namespace BigMansStuff.PracticeSharp.UI
             0,
             0,
             0});
-            this.currentMilliUpDown.Location = new System.Drawing.Point(353, 1);
+            this.currentMilliUpDown.Location = new System.Drawing.Point(373, 1);
             this.currentMilliUpDown.Maximum = new decimal(new int[] {
             1000,
             0,
@@ -492,12 +498,13 @@ namespace BigMansStuff.PracticeSharp.UI
             this.currentMilliUpDown.Name = "currentMilliUpDown";
             this.currentMilliUpDown.Size = new System.Drawing.Size(51, 26);
             this.currentMilliUpDown.TabIndex = 6;
+            this.currentMilliUpDown.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.currentMilliUpDown.ValueChanged += new System.EventHandler(this.currentUpDown_ValueChanged);
             // 
             // currentSecondUpDown
             // 
             this.currentSecondUpDown.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.currentSecondUpDown.Location = new System.Drawing.Point(309, 1);
+            this.currentSecondUpDown.Location = new System.Drawing.Point(317, 1);
             this.currentSecondUpDown.Maximum = new decimal(new int[] {
             60,
             0,
@@ -509,14 +516,15 @@ namespace BigMansStuff.PracticeSharp.UI
             0,
             -2147483648});
             this.currentSecondUpDown.Name = "currentSecondUpDown";
-            this.currentSecondUpDown.Size = new System.Drawing.Size(38, 26);
+            this.currentSecondUpDown.Size = new System.Drawing.Size(51, 26);
             this.currentSecondUpDown.TabIndex = 5;
+            this.currentSecondUpDown.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.currentSecondUpDown.ValueChanged += new System.EventHandler(this.currentUpDown_ValueChanged);
             // 
             // currentMinuteUpDown
             // 
             this.currentMinuteUpDown.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.currentMinuteUpDown.Location = new System.Drawing.Point(265, 1);
+            this.currentMinuteUpDown.Location = new System.Drawing.Point(260, 1);
             this.currentMinuteUpDown.Maximum = new decimal(new int[] {
             999,
             0,
@@ -528,8 +536,9 @@ namespace BigMansStuff.PracticeSharp.UI
             0,
             -2147483648});
             this.currentMinuteUpDown.Name = "currentMinuteUpDown";
-            this.currentMinuteUpDown.Size = new System.Drawing.Size(38, 26);
+            this.currentMinuteUpDown.Size = new System.Drawing.Size(51, 26);
             this.currentMinuteUpDown.TabIndex = 4;
+            this.currentMinuteUpDown.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.currentMinuteUpDown.ValueChanged += new System.EventHandler(this.currentUpDown_ValueChanged);
             // 
             // volume100Label
@@ -717,7 +726,7 @@ namespace BigMansStuff.PracticeSharp.UI
             "2",
             "5",
             "10"});
-            this.cueComboBox.Location = new System.Drawing.Point(366, 3);
+            this.cueComboBox.Location = new System.Drawing.Point(370, 3);
             this.cueComboBox.Name = "cueComboBox";
             this.cueComboBox.Size = new System.Drawing.Size(42, 21);
             this.cueComboBox.TabIndex = 8;
@@ -727,7 +736,7 @@ namespace BigMansStuff.PracticeSharp.UI
             // 
             this.cueLabel.AutoSize = true;
             this.cueLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cueLabel.Location = new System.Drawing.Point(341, 6);
+            this.cueLabel.Location = new System.Drawing.Point(345, 6);
             this.cueLabel.Name = "cueLabel";
             this.cueLabel.Size = new System.Drawing.Size(26, 13);
             this.cueLabel.TabIndex = 51;
@@ -755,7 +764,7 @@ namespace BigMansStuff.PracticeSharp.UI
             // cuePictureBox
             // 
             this.cuePictureBox.Image = global::BigMansStuff.PracticeSharp.Resources.blue_off_16;
-            this.cuePictureBox.Location = new System.Drawing.Point(20, 6);
+            this.cuePictureBox.Location = new System.Drawing.Point(1, 6);
             this.cuePictureBox.Name = "cuePictureBox";
             this.cuePictureBox.Size = new System.Drawing.Size(18, 18);
             this.cuePictureBox.TabIndex = 55;
@@ -790,7 +799,7 @@ namespace BigMansStuff.PracticeSharp.UI
             this.cueSecondsLabel.AutoSize = true;
             this.cueSecondsLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cueSecondsLabel.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.cueSecondsLabel.Location = new System.Drawing.Point(410, 7);
+            this.cueSecondsLabel.Location = new System.Drawing.Point(414, 7);
             this.cueSecondsLabel.Name = "cueSecondsLabel";
             this.cueSecondsLabel.Size = new System.Drawing.Size(23, 12);
             this.cueSecondsLabel.TabIndex = 90;
@@ -1424,7 +1433,7 @@ namespace BigMansStuff.PracticeSharp.UI
             this.endLoopNowButton.HighlightColor = System.Drawing.Color.Black;
             this.endLoopNowButton.ImageAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.endLoopNowButton.ImageSize = new System.Drawing.Size(48, 48);
-            this.endLoopNowButton.Location = new System.Drawing.Point(281, 28);
+            this.endLoopNowButton.Location = new System.Drawing.Point(296, 28);
             this.endLoopNowButton.Name = "endLoopNowButton";
             this.endLoopNowButton.Size = new System.Drawing.Size(46, 21);
             this.endLoopNowButton.TabIndex = 56;
@@ -1442,7 +1451,7 @@ namespace BigMansStuff.PracticeSharp.UI
             this.startLoopNowButton.HighlightColor = System.Drawing.Color.Black;
             this.startLoopNowButton.ImageAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.startLoopNowButton.ImageSize = new System.Drawing.Size(48, 48);
-            this.startLoopNowButton.Location = new System.Drawing.Point(281, 1);
+            this.startLoopNowButton.Location = new System.Drawing.Point(296, 1);
             this.startLoopNowButton.Name = "startLoopNowButton";
             this.startLoopNowButton.Size = new System.Drawing.Size(46, 22);
             this.startLoopNowButton.TabIndex = 14;
