@@ -77,17 +77,7 @@ namespace BigMansStuff.PracticeSharp.Core
             m_filename = filename;
             m_status = Statuses.Loading;
 
-            // Create the Audio Processing Worker (Thread)
-            m_audioProcessingThread = new Thread(new ThreadStart(audioProcessingWorker_DoWork));
-            m_audioProcessingThread.Name = "AudioProcessingThread-" + filename;
-            m_audioProcessingThread.IsBackground = true;
-            m_audioProcessingThread.Priority = ThreadPriority.Highest;
-            // Important: MTA is needed for WMFSDK to function properly (for WMA support)
-            // All WMA (COM) related actions MUST be done within the Thread's MTA otherwise there is a COM exception
-            m_audioProcessingThread.SetApartmentState(ApartmentState.MTA);
-
-            // Allow initialization to start >>Inside<< the thread, the thread will stop and wait for a pulse
-            m_audioProcessingThread.Start();
+            StartAudioThread(filename);
 
             // Wait for thread for finish initialization
             lock (InitializedLock)
@@ -145,6 +135,13 @@ namespace BigMansStuff.PracticeSharp.Core
             // Stop the audio processing thread
             m_stopWorker = true;
 
+            // Release lock, if current thread has not started playback
+            lock (FirstPlayLock)
+            {
+                m_logger.Debug("Stop: Pulse FirstPlayLock");
+                Monitor.PulseAll(FirstPlayLock);
+            }
+         
             // Wait for audio thread to stop (Up to 2000 msec), if not just give up
             int counter = 100;
             while (m_audioProcessingThread != null && counter > 0)
@@ -493,6 +490,8 @@ namespace BigMansStuff.PracticeSharp.Core
         /// </summary>
         private void audioProcessingWorker_DoWork()
         {
+            m_stopWorker = false;
+
             try
             {
                 // Initialize audio playback
@@ -539,21 +538,27 @@ namespace BigMansStuff.PracticeSharp.Core
                 }
                 m_logger.Debug("Monitor: FirstPlayLock got pulsed");
 
-                // Safety guard - if thread never r8eally started playing but PracticeSharpLogic was terminated ore started terminating
+                // Safety guard - if thread never really started playing but PracticeSharpLogic was terminated ore started terminating
                 if (m_waveOutDevice == null || m_status == Statuses.Terminating || m_status == Statuses.Terminated)
                 {
                     m_logger.Warn("SHOULD NOT GET HERE - Terminated before play started");
                     return;
                 }
 
-                m_logger.Debug("waveOutDevice.Play()");
-                // Command NAudio to start playing
-                m_waveOutDevice.Play();
-                // Playback status changed to -> Playing
-                ChangeStatus(Statuses.Playing);
-
                 try
                 {
+                    if (m_stopWorker)
+                    {
+                        m_logger.Debug("Stopped before playing ever started");
+                        return;
+                    }
+
+                    m_logger.Debug("waveOutDevice.Play()");
+                    // Command NAudio to start playing
+                    m_waveOutDevice.Play();
+                    // Playback status changed to -> Playing
+                    ChangeStatus(Statuses.Playing);
+               
                     // ==============================================
                     // ====  Perform the actual audio processing ====
                     ProcessAudio();
@@ -585,7 +590,6 @@ namespace BigMansStuff.PracticeSharp.Core
         /// </summary>
         private void ProcessAudio()
         {
-            m_stopWorker = false;
             m_logger.Debug("ProcessAudio() started");
 
             #region Setup
@@ -1270,6 +1274,25 @@ namespace BigMansStuff.PracticeSharp.Core
             m_eqEffect.OnFactorChanges();
         }
 
+        /// <summary>
+        /// Creates and starts the audio thread for the given audio filename
+        /// </summary>
+        /// <param name="filename"></param>
+        private void StartAudioThread(string filename)
+        {
+            // Create the Audio Processing Worker (Thread)
+            m_audioProcessingThread = new Thread(new ThreadStart(audioProcessingWorker_DoWork));
+            m_audioProcessingThread.Name = "AudioProcessingThread-" + filename;
+            m_audioProcessingThread.IsBackground = true;
+            m_audioProcessingThread.Priority = ThreadPriority.Highest;
+            // Important: MTA is needed for WMFSDK to function properly (for WMA support)
+            // All WMA (COM) related actions MUST be done within the Thread's MTA otherwise there is a COM exception
+            m_audioProcessingThread.SetApartmentState(ApartmentState.MTA);
+
+            // Allow initialization to start >>Inside<< the thread, the thread will stop and wait for a pulse
+            m_audioProcessingThread.Start();
+        }
+
         #endregion
 
         #region Termination
@@ -1300,13 +1323,6 @@ namespace BigMansStuff.PracticeSharp.Core
             ChangeStatus(Statuses.Terminating);
 
             Stop();
-
-            // Release lock, just in case the thread is locked
-            lock (FirstPlayLock)
-            {
-                m_logger.Debug("Monitor: Pulse FirstPlayLock");
-                Monitor.PulseAll(FirstPlayLock);
-            }
 
             // Dispose of SoundTouchSharp
             TerminateSoundTouchSharp();
