@@ -409,49 +409,49 @@ namespace BigMansStuff.PracticeSharp.UI
             }
 
             // 1 - Preset #1
-            else if (!e.Control && !e.Alt && !e.Shift && e.KeyCode == Keys.D1)
+            else if (isPresetSelectKey(e, Keys.D1))
             {
                 presetControl1.State = PresetControl.PresetStates.Selected;
                 e.Handled = true;
             }
             // 2 - Preset #2
-            else if (!e.Control && !e.Alt && !e.Shift && e.KeyCode == Keys.D2)
+            else if (isPresetSelectKey(e, Keys.D2))
             {
                 presetControl2.State = PresetControl.PresetStates.Selected;
                 e.Handled = true;
             }
             // 3 - Preset #3
-            else if (!e.Control && !e.Alt && !e.Shift && e.KeyCode == Keys.D3)
+            else if (isPresetSelectKey(e, Keys.D3))
             {
                 presetControl3.State = PresetControl.PresetStates.Selected;
                 e.Handled = true;
             }
             // 4 - Preset #4
-            else if (!e.Control && !e.Alt && !e.Shift && e.KeyCode == Keys.D4)
+            else if (isPresetSelectKey(e, Keys.D4))
             {
                 presetControl4.State = PresetControl.PresetStates.Selected;
                 e.Handled = true;
             }
             // 5 - Preset #5
-            else if (!e.Control && !e.Alt && !e.Shift && e.KeyCode == Keys.D5)
+            else if (isPresetSelectKey(e, Keys.D5))
             {
                 presetControl5.State = PresetControl.PresetStates.Selected;
                 e.Handled = true;
             }
             // 6 - Preset #6
-            else if (!e.Control && !e.Alt && !e.Shift && e.KeyCode == Keys.D6)
+            else if (isPresetSelectKey(e, Keys.D6))
             {
                 presetControl6.State = PresetControl.PresetStates.Selected;
                 e.Handled = true;
             }
             // 7 - Preset #7
-            else if (!e.Control && !e.Alt && !e.Shift && e.KeyCode == Keys.D7)
+            else if (isPresetSelectKey(e, Keys.D7))
             {
                 presetControl7.State = PresetControl.PresetStates.Selected;
                 e.Handled = true;
             }
             // 8 - Preset #8
-            else if (!e.Control && !e.Alt && !e.Shift && e.KeyCode == Keys.D8)
+            else if (isPresetSelectKey(e, Keys.D8))
             {
                 presetControl8.State = PresetControl.PresetStates.Selected;
                 e.Handled = true;
@@ -536,6 +536,11 @@ namespace BigMansStuff.PracticeSharp.UI
 
                 e.Handled = true;
             }
+        }
+
+        private bool isPresetSelectKey(KeyEventArgs e, Keys keyCode)
+        {
+            return !e.Control && !e.Alt && !e.Shift && e.KeyCode == keyCode && !(this.ActiveControl is NumericUpDown);
         }
         #endregion
 
