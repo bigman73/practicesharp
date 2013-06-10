@@ -130,20 +130,24 @@ namespace BigMansStuff.NAudio.FLAC
         /// <summary>
         /// Reads decompressed PCM data from our FLAC file into the NAudio playback sample buffer
         /// </summary>
+        /// <remarks>
+        /// 1. The original code did not stop on end of stream. tomislavtustonic applied a fix using FLAC__stream_decoder_get_state. <seealso cref="https://code.google.com/p/practicesharp/issues/detail?id=14"/>
+        /// </remarks>
         public override int Read(byte[] playbackSampleBuffer, int offset, int numBytes)
         {
+            int flacBytesCopied = 0;
+
             lock (m_repositionLock)
             {
                 m_NAudioSampleBuffer = playbackSampleBuffer;
                 m_playbackBufferOffset = offset;
-                
-                int flacBytesCopied = 0;
+
                 // If there are still samples in the flac buffer, use them first before reading the next FLAC frame
                 if (m_flacSampleIndex > 0)
                 {
                     flacBytesCopied = CopyFlacBufferToNAudioBuffer();
                 }
-
+                var decoderState = LibFLACSharp.FLAC__stream_decoder_get_state(m_decoderContext);
                 // Keep reading flac packets until enough bytes have been copied
                 while (flacBytesCopied < numBytes)
                 {
@@ -151,12 +155,14 @@ namespace BigMansStuff.NAudio.FLAC
                     FLACCheck(
                             LibFLACSharp.FLAC__stream_decoder_process_single(m_decoderContext),
                             "process single");
-
-                    flacBytesCopied += CopyFlacBufferToNAudioBuffer();
+                    decoderState = LibFLACSharp.FLAC__stream_decoder_get_state(m_decoderContext);
+                    if (decoderState == LibFLACSharp.StreamDecoderState.EndOfStream)
+                        break;
+                    else
+                        flacBytesCopied += CopyFlacBufferToNAudioBuffer();
                 }
             }
-            
-            return numBytes;
+            return flacBytesCopied;
         }
 
         #endregion 

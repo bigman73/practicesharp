@@ -23,6 +23,20 @@ namespace BigMansStuff.NAudio.FLAC
 
         const string DLLName = "LibFlac";
 
+        public enum StreamDecoderState
+        {
+            SearchForMetadata = 0,
+            ReadMetadata,
+            SearchForFrameSync,
+            ReadFrame,
+            EndOfStream,
+            OggError,
+            SeekError,
+            Aborted,
+            MemoryAllocationError,
+            Uninitialized
+        }		        
+
         #endregion
 
         #region Decoder API
@@ -65,7 +79,10 @@ namespace BigMansStuff.NAudio.FLAC
 
         [DllImport(DLLName)]
         public static extern int FLAC__stream_decoder_get_sample_rate(IntPtr context);
-        
+
+        [DllImport(DLLName)]
+        public static extern StreamDecoderState FLAC__stream_decoder_get_state(IntPtr context);
+
         // Callbacks
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public delegate void Decoder_WriteCallback(IntPtr context, IntPtr frame, IntPtr buffer, IntPtr userData);
