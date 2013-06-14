@@ -41,46 +41,46 @@ namespace BigMansStuff.NAudio.FLAC
 
         #region Decoder API
 
-        [DllImport(DLLName)]
+        [DllImport(DLLName, CallingConvention = CallingConvention.Cdecl)]
         public static extern IntPtr FLAC__stream_decoder_new();
 
-        [DllImport(DLLName)]
+        [DllImport(DLLName, CallingConvention = CallingConvention.Cdecl)]
         public static extern bool FLAC__stream_decoder_finish(IntPtr context);
 
-        [DllImport(DLLName)]
+        [DllImport(DLLName, CallingConvention = CallingConvention.Cdecl)]
         public static extern bool FLAC__stream_decoder_delete(IntPtr context);
 
-        [DllImport(DLLName)]
+        [DllImport(DLLName, CallingConvention = CallingConvention.Cdecl)]
         public static extern int FLAC__stream_decoder_init_file(IntPtr context, string filename, Decoder_WriteCallback write, Decoder_MetadataCallback metadata, Decoder_ErrorCallback error, IntPtr userData);
 
-        [DllImport(DLLName)]
+        [DllImport(DLLName, CallingConvention = CallingConvention.Cdecl)]
         public static extern bool FLAC__stream_decoder_process_single(IntPtr context);
 
-        [DllImport(DLLName)]
+        [DllImport(DLLName, CallingConvention = CallingConvention.Cdecl)]
         public static extern bool FLAC__stream_decoder_process_until_end_of_metadata(IntPtr context);
         
-        [DllImport(DLLName)]
+        [DllImport(DLLName, CallingConvention = CallingConvention.Cdecl)]
         public static extern bool FLAC__stream_decoder_process_until_end_of_stream(IntPtr context);
 
-        [DllImport(DLLName)]
+        [DllImport(DLLName, CallingConvention = CallingConvention.Cdecl)]
         public static extern bool FLAC__stream_decoder_seek_absolute(IntPtr context, long newSamplePosition);
         
-        [DllImport(DLLName)]
+        [DllImport(DLLName, CallingConvention = CallingConvention.Cdecl)]
         public static extern bool FLAC__stream_decoder_get_decode_position(IntPtr context, ref long position);
 
-        [DllImport(DLLName)]
+        [DllImport(DLLName, CallingConvention = CallingConvention.Cdecl)]
         public static extern long FLAC__stream_decoder_get_total_samples(IntPtr context);
 
-        [DllImport(DLLName)]
+        [DllImport(DLLName, CallingConvention = CallingConvention.Cdecl)]
         public static extern int FLAC__stream_decoder_get_channels(IntPtr context);
 
-        [DllImport(DLLName)]
+        [DllImport(DLLName, CallingConvention = CallingConvention.Cdecl)]
         public static extern int FLAC__stream_decoder_get_bits_per_sample(IntPtr context);
 
-        [DllImport(DLLName)]
+        [DllImport(DLLName, CallingConvention = CallingConvention.Cdecl)]
         public static extern int FLAC__stream_decoder_get_sample_rate(IntPtr context);
 
-        [DllImport(DLLName)]
+        [DllImport(DLLName, CallingConvention = CallingConvention.Cdecl)]
         public static extern StreamDecoderState FLAC__stream_decoder_get_state(IntPtr context);
 
         // Callbacks
@@ -203,55 +203,55 @@ namespace BigMansStuff.NAudio.FLAC
 
         #region Encoder API
 
-        [DllImport(DLLName)]
+        [DllImport(DLLName, CallingConvention = CallingConvention.Cdecl)]
         public static extern IntPtr FLAC__stream_encoder_new();
 
-        [DllImport(DLLName)]
+        [DllImport(DLLName, CallingConvention = CallingConvention.Cdecl)]
         public static extern bool FLAC__stream_encoder_finish(IntPtr context);
 
-        [DllImport(DLLName)]
+        [DllImport(DLLName, CallingConvention = CallingConvention.Cdecl)]
         public static extern bool FLAC__stream_encoder_delete(IntPtr context);
 
-        [DllImport(DLLName)]
+        [DllImport(DLLName, CallingConvention = CallingConvention.Cdecl)]
         public static extern bool FLAC__stream_encoder_set_channels(IntPtr context, int value);
 
-        [DllImport(DLLName)]
+        [DllImport(DLLName, CallingConvention = CallingConvention.Cdecl)]
         public static extern bool FLAC__stream_encoder_set_bits_per_sample(IntPtr context, int value);
 
-        [DllImport(DLLName)]
+        [DllImport(DLLName, CallingConvention = CallingConvention.Cdecl)]
         public static extern bool FLAC__stream_encoder_set_sample_rate(IntPtr context, int value);
 
-        [DllImport(DLLName)]
+        [DllImport(DLLName, CallingConvention = CallingConvention.Cdecl)]
         public static extern bool FLAC__stream_encoder_set_compression_level(IntPtr context, int value);
 
-        [DllImport(DLLName)]
+        [DllImport(DLLName, CallingConvention = CallingConvention.Cdecl)]
         public static extern bool FLAC__stream_encoder_set_blocksize(IntPtr context, int value);
 
-        [DllImport(DLLName)]
+        [DllImport(DLLName, CallingConvention = CallingConvention.Cdecl)]
         public static extern int FLAC__stream_encoder_init_stream(IntPtr context, Encoder_WriteCallback write, Encoder_SeekCallback seek, Encoder_TellCallback tell, Encoder_MetadataCallback metadata, IntPtr userData);
 
-        [DllImport(DLLName)]
+        [DllImport(DLLName, CallingConvention = CallingConvention.Cdecl)]
         public static extern int FLAC__stream_encoder_init_file(IntPtr context, string filename, IntPtr progress, IntPtr userData);
 
-        [DllImport(DLLName)]
+        [DllImport(DLLName, CallingConvention = CallingConvention.Cdecl)]
         public static extern bool FLAC__stream_encoder_process_interleaved(IntPtr context, IntPtr buffer, int samples);
 
-        [DllImport(DLLName)]
+        [DllImport(DLLName, CallingConvention = CallingConvention.Cdecl)]
         public static extern bool FLAC__stream_encoder_process(IntPtr context, IntPtr buffer, int samples);
 
-        [DllImport(DLLName)]
+        [DllImport(DLLName, CallingConvention = CallingConvention.Cdecl)]
         public static extern bool FLAC__stream_encoder_set_verify(IntPtr context, bool value);
 
-        [DllImport(DLLName)]
+        [DllImport(DLLName, CallingConvention = CallingConvention.Cdecl)]
         public static extern bool FLAC__stream_encoder_set_streamable_subset(IntPtr context, bool value);
 
-        [DllImport(DLLName)]
+        [DllImport(DLLName, CallingConvention = CallingConvention.Cdecl)]
         public static extern bool FLAC__stream_encoder_set_do_mid_side_stereo(IntPtr context, bool value);
 
-        [DllImport(DLLName)]
+        [DllImport(DLLName, CallingConvention = CallingConvention.Cdecl)]
         public static extern bool FLAC__stream_encoder_set_loose_mid_side_stereo(IntPtr context, bool value);
 
-        [DllImport(DLLName)]
+        [DllImport(DLLName, CallingConvention = CallingConvention.Cdecl)]
         public static extern int FLAC__stream_encoder_get_state(IntPtr context);
 
         // Callbacks
