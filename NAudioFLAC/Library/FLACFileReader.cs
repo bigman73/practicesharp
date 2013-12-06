@@ -210,9 +210,14 @@ namespace BigMansStuff.NAudio.FLAC
 
                             break;
 
-        //                case 24: // 24-bit
-                            // TODO: Write to buffer
-          //                  break;
+                        case 24: // 24-bit
+                            // Note: Code contributed by Mathew1800, https://code.google.com/p/practicesharp/issues/detail?id=16#c2
+                            m_NAudioSampleBuffer[m_playbackBufferOffset++] = (byte)((sample >>  0) & 0xFF);
+                            m_NAudioSampleBuffer[m_playbackBufferOffset++] = (byte)((sample >>  8) & 0xFF);
+                            m_NAudioSampleBuffer[m_playbackBufferOffset++] = (byte)((sample >> 16) & 0xFF);
+
+                            nAudioBufferFull = m_playbackBufferOffset >= m_NAudioSampleBuffer.Length;
+                            break;
 
                         default:
                             throw new NotSupportedException("Input FLAC bit depth is not supported!");

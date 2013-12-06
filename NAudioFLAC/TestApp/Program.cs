@@ -10,7 +10,10 @@ namespace BigMansStuff.NAudio.FLAC
         {
             IWavePlayer waveOutDevice;
             WaveStream mainOutputStream;
+            // 16 bit FLAC
             string fileName = @"test.flac";
+            // 24 bit FLAC
+            //string fileName = @"PASC183_24test.flac"; 
 
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("Initiailizing NAudio");
@@ -95,14 +98,6 @@ namespace BigMansStuff.NAudio.FLAC
             {
                 readerStream = WaveFormatConversionStream.CreatePcmStream(readerStream);
                 readerStream = new BlockAlignReductionStream(readerStream);
-            }
-
-            // Provide conversion to 16 bits if needed
-            if (readerStream.WaveFormat.BitsPerSample != 16)
-            {
-                var format = new WaveFormat(readerStream.WaveFormat.SampleRate,
-                16, readerStream.WaveFormat.Channels);
-                readerStream = new WaveFormatConversionStream(format, readerStream);
             }
 
             inputStream = new WaveChannel32(readerStream);
