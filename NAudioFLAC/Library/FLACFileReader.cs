@@ -42,8 +42,9 @@ namespace BigMansStuff.NAudio.FLAC
         #region Constructors
 
         /// <summary>Constructor - Supports opening a FLAC file</summary>
-        public FLACFileReader(string flacFileName) 
+        public FLACFileReader(string flacFileName)
         {
+            Console.WriteLine("FLACFileReader: " + flacFileName);
             // Open the flac file for reading through a binary reader
             m_stream = File.OpenRead(flacFileName);
             m_reader = new BinaryReader(m_stream);
@@ -66,11 +67,13 @@ namespace BigMansStuff.NAudio.FLAC
 
             // Process the meta-data (but not the audio frames) so we can prepare the NAudio wave format
             FLACCheck(
-                LibFLACSharp.FLAC__stream_decoder_process_until_end_of_metadata(m_decoderContext), 
+                LibFLACSharp.FLAC__stream_decoder_process_until_end_of_metadata(m_decoderContext),
                 "Could not process until end of metadata");
-            
+
             // Initialize NAudio wave format
             m_waveFormat = new WaveFormat(m_flacStreamInfo.SampleRate, m_flacStreamInfo.BitsPerSample, m_flacStreamInfo.Channels);
+
+            Console.WriteLine("Total FLAC Samples: {0}", LibFLACSharp.FLAC__stream_decoder_get_total_samples(m_decoderContext));
         }
 
         #endregion
@@ -87,7 +90,7 @@ namespace BigMansStuff.NAudio.FLAC
             get
             {
                 // Note: Workaround to fix NAudio calculation of position (which takes channels into account) and FLAC (which ignores channels for sample position)
-                return (long) m_totalSamples * m_waveFormat.BlockAlign;
+                return (long)m_totalSamples * m_waveFormat.BlockAlign;
             }
         }
 
@@ -106,23 +109,28 @@ namespace BigMansStuff.NAudio.FLAC
         {
             get
             {
-                long flacPosition = 0;
+                long lastSampleNumber;
                 lock (m_repositionLock)
                 {
-                    FLACCheck(LibFLACSharp.FLAC__stream_decoder_get_decode_position(m_decoderContext, ref flacPosition), "Could not get decoder position");
+                    // NOTE: FLAC__stream_decoder_get_decode_position() function returns byte index which is useless as it returns the position of the *uncompressed* decoded stream, not the compressed sample source position! 
+                    // Instead the last sample number of frame from write_callback is being used
+                    // See also: http://comments.gmane.org/gmane.comp.audio.compression.flac.devel/2252
+
+                    lastSampleNumber = m_lastSampleNumber;
                 }
-                // Note: Workaround to fix NAudio calculation of position (which takes channels into account) and FLAC (which ignores channels for sample position)
-                return flacPosition * m_waveFormat.Channels;
+                // Note: Adjust FLAW raw sample number to NAudio position (which takes block align into account)
+                return lastSampleNumber * m_waveFormat.BlockAlign;
             }
             set
             {
                 lock (m_repositionLock)
                 {
                     m_flacSampleIndex = 0;
-                    
-                    // Note: Workaround to fix NAudio calculation of position (which takes channels and block align into account) and FLAC (which ignores channels for sample position)
-                    long flacPosition = value / m_waveFormat.BlockAlign; 
-                    FLACCheck(LibFLACSharp.FLAC__stream_decoder_seek_absolute(m_decoderContext, flacPosition ), "Could not seek absolute");
+
+                    // Note: Adjust NAudio position to FLAC sample number (which is raw and ignores takes block align)
+                    m_repositionRequested = true;
+                    m_flacReposition = value / (m_waveFormat.BlockAlign);
+                    m_lastSampleNumber = m_flacReposition;
                 }
             }
         }
@@ -137,35 +145,36 @@ namespace BigMansStuff.NAudio.FLAC
         {
             int flacBytesCopied = 0;
 
+            m_NAudioSampleBuffer = playbackSampleBuffer;
+            m_playbackBufferOffset = offset;
+
             lock (m_repositionLock)
             {
-                m_NAudioSampleBuffer = playbackSampleBuffer;
-                m_playbackBufferOffset = offset;
-
                 // If there are still samples in the flac buffer, use them first before reading the next FLAC frame
                 if (m_flacSampleIndex > 0)
                 {
                     flacBytesCopied = CopyFlacBufferToNAudioBuffer();
                 }
-                var decoderState = LibFLACSharp.FLAC__stream_decoder_get_state(m_decoderContext);
-                // Keep reading flac packets until enough bytes have been copied
-                while (flacBytesCopied < numBytes)
-                {
-                    // Read the next PCM bytes from the FLAC File into the sample buffer
-                    FLACCheck(
-                            LibFLACSharp.FLAC__stream_decoder_process_single(m_decoderContext),
-                            "process single");
-                    decoderState = LibFLACSharp.FLAC__stream_decoder_get_state(m_decoderContext);
-                    if (decoderState == LibFLACSharp.StreamDecoderState.EndOfStream)
-                        break;
-                    else
-                        flacBytesCopied += CopyFlacBufferToNAudioBuffer();
-                }
             }
+            var decoderState = LibFLACSharp.FLAC__stream_decoder_get_state(m_decoderContext);
+            // Keep reading flac packets until enough bytes have been copied
+            while (flacBytesCopied < numBytes)
+            {
+                // Read the next PCM bytes from the FLAC File into the sample buffer
+                FLACCheck(
+                        LibFLACSharp.FLAC__stream_decoder_process_single(m_decoderContext),
+                        "process single");
+                decoderState = LibFLACSharp.FLAC__stream_decoder_get_state(m_decoderContext);
+                if (decoderState == LibFLACSharp.StreamDecoderState.EndOfStream)
+                    break;
+                else
+                    flacBytesCopied += CopyFlacBufferToNAudioBuffer();
+            }
+
             return flacBytesCopied;
         }
 
-        #endregion 
+        #endregion
 
         #region Private Methods
 
@@ -177,7 +186,7 @@ namespace BigMansStuff.NAudio.FLAC
         private void FLACCheck(bool result, string operation)
         {
             if (!result)
-                 throw new ApplicationException(string.Format("FLAC: Could not {0}!", operation));
+                throw new ApplicationException(string.Format("FLAC: Could not {0}!", operation));
         }
 
         /// <summary>
@@ -212,8 +221,8 @@ namespace BigMansStuff.NAudio.FLAC
 
                         case 24: // 24-bit
                             // Note: Code contributed by Mathew1800, https://code.google.com/p/practicesharp/issues/detail?id=16#c2
-                            m_NAudioSampleBuffer[m_playbackBufferOffset++] = (byte)((sample >>  0) & 0xFF);
-                            m_NAudioSampleBuffer[m_playbackBufferOffset++] = (byte)((sample >>  8) & 0xFF);
+                            m_NAudioSampleBuffer[m_playbackBufferOffset++] = (byte)((sample >> 0) & 0xFF);
+                            m_NAudioSampleBuffer[m_playbackBufferOffset++] = (byte)((sample >> 8) & 0xFF);
                             m_NAudioSampleBuffer[m_playbackBufferOffset++] = (byte)((sample >> 16) & 0xFF);
 
                             nAudioBufferFull = m_playbackBufferOffset >= m_NAudioSampleBuffer.Length;
@@ -239,8 +248,6 @@ namespace BigMansStuff.NAudio.FLAC
         #endregion
 
         #region libFlac Callbacks
-
-        //private 
 
         /// <summary>
         /// FLAC Write Call Back - libFlac notifies back on a frame that was read from the source file and written as a frame
@@ -271,6 +278,18 @@ namespace BigMansStuff.NAudio.FLAC
                 // Copy the unmanaged bits to managed memory
                 Marshal.Copy(pChannelBits, m_flacSamples, inputChannel * m_samplesPerChannel, m_samplesPerChannel);
             }
+
+            lock (m_repositionLock)
+            {
+                // Keep the current sample number for reporting purposes (See: Position property of FlacFileReader)
+                m_lastSampleNumber = flacFrame.Header.FrameOrSampleNumber;
+
+                if (m_repositionRequested)
+                {
+                    m_repositionRequested = false;
+                    FLACCheck(LibFLACSharp.FLAC__stream_decoder_seek_absolute(m_decoderContext, m_flacReposition), "Could not seek absolute: " + m_flacReposition);
+                }
+            }
         }
 
         /// <summary>
@@ -292,7 +311,7 @@ namespace BigMansStuff.NAudio.FLAC
                     m_flacStreamInfo = (LibFLACSharp.FLACStreamInfo)Marshal.PtrToStructure(
                         pinnedStreamInfo.AddrOfPinnedObject(),
                         typeof(LibFLACSharp.FLACStreamInfo));
-                    m_totalSamples = ( long ) ( m_flacStreamInfo.TotalSamplesHi << 32 ) + ( long ) m_flacStreamInfo.TotalSamplesLo;
+                    m_totalSamples = (long)(m_flacStreamInfo.TotalSamplesHi << 32) + (long)m_flacStreamInfo.TotalSamplesLo;
                 }
                 finally
                 {
@@ -367,11 +386,16 @@ namespace BigMansStuff.NAudio.FLAC
         private int m_samplesPerChannel;
         private long m_totalSamples = 0;
 
+        private long m_lastSampleNumber = 0;
+
         private int[] m_flacSamples;
         private int m_flacSampleIndex;
 
         private byte[] m_NAudioSampleBuffer;
         private int m_playbackBufferOffset;
+
+        private bool m_repositionRequested = false;
+        private long m_flacReposition = 0;
 
         private LibFLACSharp.Decoder_WriteCallback m_writeCallback;
         private LibFLACSharp.Decoder_MetadataCallback m_metadataCallback;

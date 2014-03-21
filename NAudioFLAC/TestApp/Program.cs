@@ -11,7 +11,7 @@ namespace BigMansStuff.NAudio.FLAC
             IWavePlayer waveOutDevice;
             WaveStream mainOutputStream;
             // 16 bit FLAC
-            string fileName = @"test.flac";
+            string fileName = @"Spark2.flac";
             // 24 bit FLAC
             //string fileName = @"PASC183_24test.flac"; 
 
@@ -49,13 +49,11 @@ namespace BigMansStuff.NAudio.FLAC
             waveOutDevice.Volume = 1.0f;
             waveOutDevice.Play();
 
-            Console.WriteLine("Hit key to reposition..");
-            Console.ReadKey();
-
-            Console.ForegroundColor = ConsoleColor.Blue;
-            Console.WriteLine("Seeking to new time: 00:00:10..");
-            (mainOutputStream as WaveChannel32).CurrentTime = new TimeSpan(0, 0, 10);
-            Console.ResetColor();
+            TestSeekPosition(mainOutputStream, new TimeSpan(0, 0, 10));
+            TestSeekPosition(mainOutputStream, new TimeSpan(0, 0, 30));
+            TestSeekPosition(mainOutputStream, new TimeSpan(0, 0, 00));
+            TestSeekPosition(mainOutputStream, new TimeSpan(0, 4, 04));
+            TestSeekPosition(mainOutputStream, new TimeSpan(0, 0, 09));
 
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine("Hit key to stop..");
@@ -72,6 +70,19 @@ namespace BigMansStuff.NAudio.FLAC
 
             Console.WriteLine("Press key to exit...");
             Console.ReadKey();
+        }
+
+        private static void TestSeekPosition(WaveStream mainOutputStream, TimeSpan timeSpan)
+        {
+            Console.WriteLine("Hit key to reposition..");
+            Console.ReadKey();
+
+            Console.ForegroundColor = ConsoleColor.Blue;
+            Console.WriteLine("Seeking to new time: {0}...", timeSpan);
+            (mainOutputStream as WaveChannel32).CurrentTime = timeSpan;
+            Console.WriteLine("New position after seek: " + (mainOutputStream as WaveChannel32).CurrentTime);
+
+            Console.ResetColor();
         }
 
         private static WaveStream CreateInputStream(string fileName)
