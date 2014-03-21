@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>BigMansStuff.NAudio.Ogg</RootNamespace>
     <AssemblyName>NAudioOggVorbisTestpApp</AssemblyName>
-    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
@@ -36,7 +36,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="NAudio">
-      <HintPath>..\..\..\naudio\NAudio\bin\Debug\NAudio.dll</HintPath>
+      <HintPath>..\..\PracticeSharpApp\3rdPartyDLL\NAudioDLL\NAudio.dll</HintPath>
     </Reference>
     <Reference Include="System" />
   </ItemGroup>

@@ -354,7 +354,7 @@ namespace BigMansStuff.PracticeSharp.Core
                     m_newPlayTime = newPlayTime;
                 }
 
-                // For normal non-playing statuses updated the current playing time immediately
+                // For normal non-playing statuses update the current playing time immediately
                 if (m_status == Statuses.Pausing || m_status == Statuses.Ready || m_status == Statuses.Stopped) 
                 {
                     lock (CurrentPlayTimeLock)

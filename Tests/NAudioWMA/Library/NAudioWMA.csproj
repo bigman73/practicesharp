@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>NAudioWMA</RootNamespace>
     <AssemblyName>NAudioWMA</AssemblyName>
-    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -76,7 +76,7 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="NAudio">
-      <HintPath>..\..\..\3rdParty\naudio\NAudio\bin\x86\Release\NAudio.dll</HintPath>
+      <HintPath>..\..\..\PracticeSharpApp\3rdPartyDLL\NAudioDLL\NAudio.dll</HintPath>
     </Reference>
     <Reference Include="NAudio.WindowsMediaFormat">
       <HintPath>..\..\..\PracticeSharpApp\3rdPartyDLL\NAudioDLL\NAudio.WindowsMediaFormat.dll</HintPath>

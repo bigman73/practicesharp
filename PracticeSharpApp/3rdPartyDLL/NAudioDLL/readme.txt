@@ -11,35 +11,52 @@ id, so if you want me to put your full name here, please also get in touch.
 in alphabetical order:
 Alexandre Mutel
 AmandaTarafaMas
-Brandon Hansen (kg6ypi)
 balistof
 biermeester
+borman11
+bradb
+Brandon Hansen (kg6ypi)
 ChunkWare Music Software
 CKing
 DaMacc
 eejake52
+Florian Rosmann (filoe)
 Giawa
 Hfuy
+Iain McCowan
 Idael Cardaso 
+ioctlLR
 jbaker8935
+jcameron23
 jonahoffmann
+jontdelorme
+Kassoul
+kevinxxx
 Lustild
+Lucian Wischik (ljw1004)
 ManuN
+MeelMarcel
 Michael Feld 
 Michael J
+Nigel Redmon
 Nikolaos Georgiou
+Owen Skriloff
+owoudenb
+painmailer
 Pygmy
 Ray Molenkamp
 Robert Bristow-Johnson
 Scott Fleischman 
 Sirish Bajpai
+sporn
 Steve Underwood
 Ted Murphy
-Thefiloe
 Tiny Simple Tools
 Tobias Fleming
 Tony Cabello
+TuneBlade
 topher3683
+Vladimir Rokovanov
 Ville Koskinen
 Wyatt Rice
 Yuval Naveh
