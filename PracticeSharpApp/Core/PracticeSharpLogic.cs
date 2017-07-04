@@ -183,6 +183,7 @@ namespace BigMansStuff.PracticeSharp.Core
         {
             filename = filename.ToLower();
             bool result = filename.EndsWith(MP3Extension) ||
+                          filename.EndsWith(M4AExtension) ||
                           filename.EndsWith(WAVExtension) ||
                           filename.EndsWith(OGGVExtension) ||
                           filename.EndsWith(FLACExtension) ||
@@ -1114,6 +1115,13 @@ namespace BigMansStuff.PracticeSharp.Core
                 // Wave channel - reads from file and returns raw wave blocks
                 m_waveChannel = new WaveChannel32(m_blockAlignedStream);
             }
+            else if (fileExt == M4AExtension)
+            {
+                m_waveReader = new MediaFoundationReader(filename);
+                m_blockAlignedStream = new BlockAlignReductionStream(m_waveReader);
+                // Wave channel - reads from file and returns raw wave blocks
+                m_waveChannel = new WaveChannel32(m_blockAlignedStream);
+            }
             else if (fileExt == WAVExtension)
             {
                 m_waveReader = new WaveFileReader(filename);
@@ -1447,6 +1455,7 @@ namespace BigMansStuff.PracticeSharp.Core
         #region Constants
 
         const string MP3Extension = ".mp3";
+        const string M4AExtension = ".m4a";
         const string WAVExtension = ".wav";
         const string OGGVExtension = ".ogg";
         const string FLACExtension = ".flac";
