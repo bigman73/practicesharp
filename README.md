@@ -6,3 +6,5 @@ Current Version: 2.0.0
 ![alt screenshot](https://github.com/bigman73/practicesharp/blob/master/Docs/Practice%23_ScreenShot.png)
 
 Code Project article: https://www.codeproject.com/Articles/129929/PracticeSharp-or-Practice-A-Utility-for-Practicing
+
+License: ![alt LGPLV3](http://www.gnu.org/copyleft/lesser.html)
