@@ -162,7 +162,7 @@ namespace BigMansStuff.PracticeSharp.UI
             catch (Exception ex)
             {
                 // Ignore errors, we're just checking for a new version - the internet connection might be off
-                m_logger.ErrorException("Failed getting application version from the internet", ex);
+                m_logger.Error(ex, "Failed getting application version from the internet");
             }
         }
 

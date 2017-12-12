@@ -174,7 +174,7 @@ namespace BigMansStuff.PracticeSharp.UI
             }
             catch (Exception ex)
             {
-                m_logger.ErrorException("Failed loading Presets Bank for file: " + m_currentAudioFilename, ex);
+                m_logger.Error(ex, "Failed loading Presets Bank for file: " + m_currentAudioFilename);
                 MessageBox.Show(null, "Failed loading Presets Bank for file: " + m_currentAudioFilename, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 

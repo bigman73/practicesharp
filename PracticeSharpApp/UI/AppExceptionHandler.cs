@@ -73,7 +73,7 @@ namespace BigMansStuff.PracticeSharp.UI
         private static void AppDomain_UnhandledException(object sender, UnhandledExceptionEventArgs args)
         {
             Exception ex = (Exception)args.ExceptionObject;
-            m_logger.FatalException("AppDomain - Unhandled Exception", ex);
+            m_logger.Fatal(ex, "AppDomain - Unhandled Exception");
 
             HandleUnhandledException(ex);
         }
@@ -82,7 +82,7 @@ namespace BigMansStuff.PracticeSharp.UI
         // or not they wish to abort execution.
         private static void Application_ThreadException(object sender, ThreadExceptionEventArgs t)
         {
-            m_logger.FatalException("Application - Thread Exception" + t.Exception.ToString(), t.Exception);
+            m_logger.Fatal(t.Exception, "Application - Thread Exception" + t.Exception.ToString());
 
             HandleUnhandledException(t.Exception);
         }

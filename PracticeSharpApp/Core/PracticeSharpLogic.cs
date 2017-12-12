@@ -30,7 +30,6 @@ using System.IO;
 using BigMansStuff.NAudio.Ogg;
 using BigMansStuff.NAudio.FLAC;
 using BigMansStuff.PracticeSharp.SoundTouch;
-using NAudio.WindowsMediaFormat;
 using NLog;
 using NAudio.Wave;
 
@@ -574,7 +573,7 @@ namespace BigMansStuff.PracticeSharp.Core
             }
             catch (Exception ex)
             {
-                m_logger.ErrorException("Exception in audioProcessingWorker_DoWork, ", ex);
+                m_logger.Error(ex, "Exception in audioProcessingWorker_DoWork, ");
                 ChangeStatus(Statuses.Error);
             }
         }
@@ -906,7 +905,7 @@ namespace BigMansStuff.PracticeSharp.Core
             }
             catch (Exception initException)
             {
-                m_logger.ErrorException("Exception in InitializeFileAudio - m_waveOutDevice.Init", initException);
+                m_logger.Error(initException, "Exception in InitializeFileAudio - m_waveOutDevice.Init");
 
                 throw;
             }
@@ -1165,6 +1164,7 @@ namespace BigMansStuff.PracticeSharp.Core
 
                 m_waveChannel = new WaveChannel32(m_waveReader);
             }
+            /* TODO: Why is WMAFileRead not in NAudio 1.8.4??
             else if (fileExt == WMAExtension)
             {
                 m_waveReader = new WMAFileReader(filename);
@@ -1182,6 +1182,7 @@ namespace BigMansStuff.PracticeSharp.Core
 
                 m_waveChannel = new WaveChannel32(m_waveReader);
             }
+             */
             else if (fileExt == AIFFExtension)
             {
                 m_waveReader = new AiffFileReader(filename);
@@ -1233,7 +1234,7 @@ namespace BigMansStuff.PracticeSharp.Core
             }
             catch (Exception driverCreateException)
             {
-                m_logger.ErrorException("NAudio Driver Creation Failed", driverCreateException);
+                m_logger.Error(driverCreateException, "NAudio Driver Creation Failed");
                 throw driverCreateException;
             }
         }
@@ -1243,7 +1244,7 @@ namespace BigMansStuff.PracticeSharp.Core
             if (e == null || e.Exception == null)
                 return;
 
-            m_logger.ErrorException("waveOutDevice_PlaybackStopped", e.Exception);
+            m_logger.Error(e.Exception, "waveOutDevice_PlaybackStopped");
         }
 
         /// <summary>
