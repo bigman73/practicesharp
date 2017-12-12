@@ -45,6 +45,8 @@ namespace BigMansStuff.PracticeSharp.Core
         private static Logger m_logger = LogManager.GetCurrentClassLogger();
         #endregion
 
+        public enum InputChannelsModes {Left, Both, Right};
+
         #region Public Methods
 
         /// <summary>
@@ -57,6 +59,7 @@ namespace BigMansStuff.PracticeSharp.Core
             m_endMarker = TimeSpan.Zero;
             m_cue = TimeSpan.Zero;
             m_suppressVocals = false;
+            m_inputChannelsMode = InputChannelsModes.Both;
 
             InitializeSoundTouchSharp();
         }
@@ -298,6 +301,23 @@ namespace BigMansStuff.PracticeSharp.Core
                 lock (PropertiesLock)
                 {
                     m_eqHi = value;
+                    m_eqParamsChanged = true;
+                }
+            }
+        }
+
+        
+        public InputChannelsModes InputChannelMode
+        {
+            get
+            {
+                lock (PropertiesLock) { return m_inputChannelsMode; }
+            }
+            set
+            {
+                lock (PropertiesLock)
+                {
+                    m_inputChannelsMode = value;
                     m_eqParamsChanged = true;
                 }
             }
@@ -884,9 +904,9 @@ namespace BigMansStuff.PracticeSharp.Core
                     sampleRight = supressedVocalChannel;
                 }
 
-                // Put the modified samples back into the buffer
-                buffer[sample] = sampleLeft;
-                buffer[sample + 1] = sampleRight;
+                // Put the modified samples back into the buffer, with input channel selection mode
+                buffer[sample] = m_inputChannelsMode == InputChannelsModes.Right ? sampleRight : sampleLeft;
+                buffer[sample + 1] = m_inputChannelsMode == InputChannelsModes.Left ? sampleLeft : sampleRight;
             }
         }
 
@@ -1410,6 +1430,7 @@ namespace BigMansStuff.PracticeSharp.Core
         private float m_eqLo;
         private float m_eqMed;
         private float m_eqHi;
+        private InputChannelsModes m_inputChannelsMode;
         private volatile bool m_eqParamsChanged;
         private EqualizerEffect m_eqEffect;
 

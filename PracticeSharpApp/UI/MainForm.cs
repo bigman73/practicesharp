@@ -38,6 +38,9 @@ using NLog;
 
 namespace BigMansStuff.PracticeSharp.UI
 {
+
+    // TODO: Persist input channel selection in the preset file - Load and Save
+
     /// <summary>
     /// Practice# Main Form
     /// </summary>
@@ -1696,6 +1699,40 @@ namespace BigMansStuff.PracticeSharp.UI
         }
 
         #endregion Equalizer
+
+        #region Input Channel Selection
+
+        private void leftChannelStripButton_CheckedChanged(object sender, EventArgs e)
+        {
+            if (leftChannelStripButton.Checked)
+            {
+                bothChannelsStripButton.Checked = false;
+                rightChannelStripButton.Checked = false;
+                m_practiceSharpLogic.InputChannelMode = PracticeSharpLogic.InputChannelsModes.Left;
+            }
+        }
+
+        private void bothChannelsStripButton_CheckedChanged(object sender, EventArgs e)
+        {
+            if (bothChannelsStripButton.Checked)
+            {
+                leftChannelStripButton.Checked = false;
+                rightChannelStripButton.Checked = false;
+                m_practiceSharpLogic.InputChannelMode = PracticeSharpLogic.InputChannelsModes.Both;
+            }
+        }
+
+        private void rightChannelStripButton_CheckedChanged(object sender, EventArgs e)
+        {
+            if (rightChannelStripButton.Checked)
+            {
+                leftChannelStripButton.Checked = false;
+                bothChannelsStripButton.Checked = false;
+                m_practiceSharpLogic.InputChannelMode = PracticeSharpLogic.InputChannelsModes.Right;
+            }
+        }
+
+        #endregion
 
         #endregion
 
