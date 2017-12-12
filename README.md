@@ -7,4 +7,4 @@ Current Version: 2.0.0
 
 Code Project article: https://www.codeproject.com/Articles/129929/PracticeSharp-or-Practice-A-Utility-for-Practicing
 
-License: ![alt LGPLV3](http://www.gnu.org/copyleft/lesser.html)
+License: ![alt LGPLV3](https://www.gnu.org/graphics/lgplv3-147x51.png)
