@@ -23,6 +23,7 @@ https://github.com/naudio/NAudio.Wma
 
 # Usage
 A youtube video that demonstrates Practice# usage:
+
 [![Practice# demo of usage](https://img.youtube.com/vi/rqWr7BJjhx8/0.jpg)](https://www.youtube.com/watch?v=rqWr7BJjhx8)
 
 # Code Project article
