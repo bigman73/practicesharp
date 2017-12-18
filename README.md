@@ -20,6 +20,12 @@ https://github.com/naudio/NAudio.Wma
 
 ![alt screenshot](https://github.com/bigman73/practicesharp/blob/master/Docs/Practice%23_ScreenShot.png)
 
+
+# Usage
+A youtube video that demonstrates Practice# usage:
+
+[![Practice# demo of usage](https://img.youtube.com/vi/rqWr7BJjhx8/0.jpg)](https://www.youtube.com/watch?v=rqWr7BJjhx8)
+
 # Code Project article
 Documentation of thd design can be found in:
 https://www.codeproject.com/Articles/129929/PracticeSharp-or-Practice-A-Utility-for-Practicing
