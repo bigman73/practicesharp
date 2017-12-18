@@ -107,8 +107,9 @@ namespace BigMansStuff.PracticeSharp.UI
             try
             {
                 Version newVersion;
-                DateTime lastVersionCheckDateTime = Properties.Settings.Default.LastVersionCheckDateTime;
-
+                DateTime lastVersionCheckDateTime = Properties.Settings.Default.LastVersionCheckDateTime; 
+                    // DateTime.Now.Subtract(TimeSpan.FromDays(60)); // FOR TESTING ONLY
+               
                 DateTime nextCheckDateTime;
                 if (lastVersionCheckDateTime == DateTime.MinValue)
                 {
@@ -129,7 +130,7 @@ namespace BigMansStuff.PracticeSharp.UI
                     }
                 }
 
-                if ( lastVersionCheckDateTime != DateTime.MinValue && DateTime.Now >= nextCheckDateTime)
+                if (lastVersionCheckDateTime != DateTime.MinValue && DateTime.Now >= nextCheckDateTime)
                 {
                     Properties.Settings.Default.SupressVersionCheck = false;
                     Properties.Settings.Default.Save();
@@ -205,7 +206,8 @@ namespace BigMansStuff.PracticeSharp.UI
                 string pageHtml = htmlStream.ReadToEnd();
 
                 // Match the latest version value by using a regular expression
-                Regex regEx = new Regex(@"Practice# latest Version is: (\d+.\d+.\d+.\d+)");
+                const string AssemblyVersionRegEx = @"AssemblyVersion\(""(\d+.\d+.\d+.\d+)""\)";
+                Regex regEx = new Regex(AssemblyVersionRegEx);
                 Match match = regEx.Match(pageHtml);
 
                 if (match != null)
@@ -233,8 +235,8 @@ namespace BigMansStuff.PracticeSharp.UI
 
         #region Constants
 
-        private const string DownloadsWebPageURL = "http://code.google.com/p/practicesharp/downloads/list";
-        private const string LatestVersionWebPageURL = "http://practicesharp.googlecode.com/svn/wiki/LatestVersion.wiki";
+        private const string DownloadsWebPageURL = "https://github.com/bigman73/practicesharp/tree/master/Installer/MSI";
+        private const string LatestVersionWebPageURL = "https://raw.githubusercontent.com/bigman73/practicesharp/master/PracticeSharpApp/Properties/AssemblyInfo.cs";
 
         #endregion  
     }
