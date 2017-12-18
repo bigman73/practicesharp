@@ -44,7 +44,7 @@ https://www.codeproject.com/Articles/129929/PracticeSharp-or-Practice-A-Utility-
 License: ![alt LGPLV3](https://www.gnu.org/graphics/lgplv3-147x51.png)
 
 # Credits
-NAudio - https://github.com/naudio/NAudio
-NAudioWMA - https://github.com/naudio/NAudio.Wma
-SoundTouch - https://www.surina.net/soundtouch
-WMA Sample File - http://samplephotovideo.com/2015/12/wma-windows-media-sample-audio-file-wma/
+* NAudio - https://github.com/naudio/NAudio
+* NAudioWMA - https://github.com/naudio/NAudio.Wma
+* SoundTouch - https://www.surina.net/soundtouch
+* WMA Sample File - http://samplephotovideo.com/2015/12/wma-windows-media-sample-audio-file-wma/
