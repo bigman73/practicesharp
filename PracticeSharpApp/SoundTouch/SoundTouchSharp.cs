@@ -500,71 +500,71 @@ SOUNDTOUCHDLL_API int __stdcall soundtouch_isEmpty(HANDLE h);
 */
         #endregion
 
-        [DllImport(SoundTouchDLLName)]
+        [DllImport(SoundTouchDLLName, CallingConvention = CallingConvention.Cdecl)]
         internal static extern IntPtr soundtouch_createInstance();
 
-        [DllImport(SoundTouchDLLName)]
+        [DllImport(SoundTouchDLLName, CallingConvention = CallingConvention.Cdecl)]
         internal static extern void soundtouch_destroyInstance(IntPtr h);
 
-        [DllImport(SoundTouchDLLName)]
+        [DllImport(SoundTouchDLLName, CallingConvention = CallingConvention.Cdecl)]
         internal static extern int soundtouch_getVersionId();
 
-        [DllImport(SoundTouchDLLName)]
+        [DllImport(SoundTouchDLLName, CallingConvention = CallingConvention.Cdecl)]
         internal static extern void soundtouch_getVersionString2(StringBuilder versionString, int bufferSize);
 
-        [DllImport(SoundTouchDLLName)]
+        [DllImport(SoundTouchDLLName, CallingConvention = CallingConvention.Cdecl)]
         internal static extern void soundtouch_setRate(IntPtr h, float newRate);
 
-        [DllImport(SoundTouchDLLName)]
+        [DllImport(SoundTouchDLLName, CallingConvention = CallingConvention.Cdecl)]
         internal static extern void soundtouch_setTempo(IntPtr h, float newTempo);
 
-        [DllImport(SoundTouchDLLName)]
+        [DllImport(SoundTouchDLLName, CallingConvention = CallingConvention.Cdecl)]
         internal static extern void soundtouch_setRateChange(IntPtr h, float newRate);
         
-        [DllImport(SoundTouchDLLName)]
+        [DllImport(SoundTouchDLLName, CallingConvention = CallingConvention.Cdecl)]
         internal static extern void soundtouch_setTempoChange(IntPtr h, float newTempo);
        
-        [DllImport(SoundTouchDLLName)]
+        [DllImport(SoundTouchDLLName, CallingConvention = CallingConvention.Cdecl)]
         internal static extern void soundtouch_setPitch(IntPtr h, float newPitch);
        
-        [DllImport(SoundTouchDLLName)]
+        [DllImport(SoundTouchDLLName, CallingConvention = CallingConvention.Cdecl)]
         internal static extern void soundtouch_setPitchOctaves(IntPtr h, float newPitch);
 
-        [DllImport(SoundTouchDLLName)]
+        [DllImport(SoundTouchDLLName, CallingConvention = CallingConvention.Cdecl)]
         internal static extern void soundtouch_setPitchSemiTones(IntPtr h, float newPitch);
 
-        [DllImport(SoundTouchDLLName)]
+        [DllImport(SoundTouchDLLName, CallingConvention = CallingConvention.Cdecl)]
         internal static extern void soundtouch_setChannels(IntPtr h, uint numChannels);
 
         /// Sets sample rate.
-        [DllImport(SoundTouchDLLName)]
+        [DllImport(SoundTouchDLLName, CallingConvention = CallingConvention.Cdecl)]
         internal static extern void soundtouch_setSampleRate(IntPtr h, uint srate);
 
-        [DllImport(SoundTouchDLLName)]
+        [DllImport(SoundTouchDLLName, CallingConvention = CallingConvention.Cdecl)]
         internal static extern void soundtouch_flush(IntPtr h);
         
-        [DllImport(SoundTouchDLLName)]
+        [DllImport(SoundTouchDLLName, CallingConvention = CallingConvention.Cdecl)]
         internal static extern void soundtouch_putSamples(IntPtr h, [MarshalAs(UnmanagedType.LPArray)] float[] samples, uint numSamples);
 
-        [DllImport(SoundTouchDLLName)]
+        [DllImport(SoundTouchDLLName, CallingConvention = CallingConvention.Cdecl)]
         internal static extern void soundtouch_clear(IntPtr h);
 
-        [DllImport(SoundTouchDLLName)]
+        [DllImport(SoundTouchDLLName, CallingConvention = CallingConvention.Cdecl)]
         internal static extern bool soundtouch_setSetting(IntPtr h, int settingId, int value);
 
-        [DllImport(SoundTouchDLLName)]
+        [DllImport(SoundTouchDLLName, CallingConvention = CallingConvention.Cdecl)]
         internal static extern int soundtouch_getSetting(IntPtr h, int settingId);
 
-        [DllImport(SoundTouchDLLName)]
+        [DllImport(SoundTouchDLLName, CallingConvention = CallingConvention.Cdecl)]
         internal static extern int soundtouch_numUnprocessedSamples(IntPtr h);
         
-        [DllImport(SoundTouchDLLName)]
+        [DllImport(SoundTouchDLLName, CallingConvention = CallingConvention.Cdecl)]
         internal static extern uint soundtouch_receiveSamples(IntPtr h, [MarshalAs(UnmanagedType.LPArray)] float[] outBuffer, uint maxSamples);
 
-        [DllImport(SoundTouchDLLName)]
+        [DllImport(SoundTouchDLLName, CallingConvention = CallingConvention.Cdecl)]
         internal static extern int soundtouch_numSamples(IntPtr h);
 
-        [DllImport(SoundTouchDLLName)]
+        [DllImport(SoundTouchDLLName, CallingConvention = CallingConvention.Cdecl)]
         internal static extern int soundtouch_isEmpty(IntPtr h);
 
         #endregion
