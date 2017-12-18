@@ -32,6 +32,7 @@ using BigMansStuff.NAudio.FLAC;
 using BigMansStuff.PracticeSharp.SoundTouch;
 using NLog;
 using NAudio.Wave;
+using NAudio.WindowsMediaFormat;
 
 namespace BigMansStuff.PracticeSharp.Core
 {
@@ -1184,7 +1185,6 @@ namespace BigMansStuff.PracticeSharp.Core
 
                 m_waveChannel = new WaveChannel32(m_waveReader);
             }
-            /* TODO: Why is WMAFileRead not in NAudio 1.8.4??
             else if (fileExt == WMAExtension)
             {
                 m_waveReader = new WMAFileReader(filename);
@@ -1202,7 +1202,6 @@ namespace BigMansStuff.PracticeSharp.Core
 
                 m_waveChannel = new WaveChannel32(m_waveReader);
             }
-             */
             else if (fileExt == AIFFExtension)
             {
                 m_waveReader = new AiffFileReader(filename);
