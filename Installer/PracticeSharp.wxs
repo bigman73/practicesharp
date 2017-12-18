@@ -28,13 +28,13 @@
 	3. Modify ProductName to contain new version
 	4. Modify ProductCode value (new GUID)
   -->
-  <?define RTMProductVersion="1.6.5" ?>
-  <?define ProductVersion="1.7.0" ?>
-  <?define ProductName="Practice# 1.7.0" ?>
+  <?define RTMProductVersion="1.7.0" ?>
+  <?define ProductVersion="2.0.3" ?>
+  <?define ProductName="Practice# 2.0.3" ?>
   <?define ProductTitle="Practice#" ?>
   <?define UpgradeCode="{698FDA6C-C8E8-4C2B-8705-28A99B39E171}"?>
   <?define Manufacturer="Yuval Naveh" ?> 
-  <?define ProductCode="{5D9A9361-5886-46AF-B86C-FE6549C808F5}"?>
+  <?define ProductCode="{B9DD9F2B-0E95-415B-8E13-1E65563B4064}"?>
   <!-- 1.6.5 ProductCode="{343457C9-3E82-4E37-9F1F-39F6CA2AD74F}" -->
   <!-- 1.6.4 ProductCode="{A3C5065E-1CAE-483F-B2B0-D28919B2F292}" -->
   <!-- 1.5.1 ProductCode="{4B8B9C04-4DDA-4CF9-AA01-27B160190439}" -->
@@ -80,50 +80,50 @@
          <Directory Id='INSTALLDIR' Name='$(var.ProductTitle)'>
 
             <Component Id='MainExecutable' Guid='487E7825-4A47-498A-A4E5-A117AE3B3BEA'>
-              <File Id='PracticeSharpEXE' Name='PracticeSharp.exe' DiskId='1' Source='Source\PracticeSharp.exe' KeyPath='yes'>
+              <File Id='PracticeSharpEXE' Name='PracticeSharp.exe' DiskId='1' Source='Deploy\PracticeSharp.exe' KeyPath='yes'>
                 <Shortcut Id="startmenuFoobar10" Directory="ProgramMenuDir" Name="$(var.ProductTitle)" WorkingDirectory='INSTALLDIR' Icon="PracticeSharp.exe" IconIndex="0" Advertise="yes" />
                 <Shortcut Id="desktopFoobar10" Directory="DesktopFolder" Name="$(var.ProductTitle)" WorkingDirectory='INSTALLDIR' Icon="PracticeSharp.exe" IconIndex="0" Advertise="yes" />
               </File>
             </Component>
 
             <Component Id='PracticeSharpConfiguration' Guid='F71657CD-9018-449C-ABE4-73CF15D0CBCB'>
-              <File Id='PracticeSharpConfigFile' Name='PracticeSharp.exe.config' DiskId='1' Source='Source\PracticeSharp.exe.config' KeyPath='yes' />
+              <File Id='PracticeSharpConfigFile' Name='PracticeSharp.exe.config' DiskId='1' Source='Deploy\PracticeSharp.exe.config' KeyPath='yes' />
             </Component>
 
             <Component Id='NAudioLibrary' Guid='BC45A422-81EC-4C4B-93F9-D7F9E0AB815D'>
-              <File Id='NAudioDLL' Name='NAudio.dll' DiskId='1' Source='Source\NAudio.dll' KeyPath='yes' />
+              <File Id='NAudioDLL' Name='NAudio.dll' DiskId='1' Source='Deploy\NAudio.dll' KeyPath='yes' />
             </Component>
 
             <Component Id='NAudioWMFLibrary' Guid='F763CF13-08C8-42D5-851C-8B9EBF884790'>
-              <File Id='NAudioWMFDLL' Name='NAudio.WindowsMediaFormat.dll' DiskId='1' Source='Source\NAudio.WindowsMediaFormat.dll' KeyPath='yes' />
+              <File Id='NAudioWMFDLL' Name='NAudio.WindowsMediaFormat.dll' DiskId='1' Source='Deploy\NAudio.WindowsMediaFormat.dll' KeyPath='yes' />
             </Component>
 
             <Component Id='NAudioOggLibrary' Guid='5DDD7580-0C86-4D16-8348-7776AD935721'>
-              <File Id='NAudioOggDLL' Name='NAudioOggVorbis.dll' DiskId='1' Source='Source\NAudioOggVorbis.dll' KeyPath='yes' />
+              <File Id='NAudioOggDLL' Name='NAudioOggVorbis.dll' DiskId='1' Source='Deploy\NAudioOggVorbis.dll' KeyPath='yes' />
             </Component>
 
 			<Component Id='LibFlacLibrary' Guid='7ACDE783-51A0-41B3-B495-46ACFF813911'>
-              <File Id='LibFlacDLL' Name='libFlac.dll' DiskId='1' Source='Source\libFlac.dll' KeyPath='yes' />
+              <File Id='LibFlacDLL' Name='libFlac.dll' DiskId='1' Source='Deploy\libFlac.dll' KeyPath='yes' />
             </Component>
 
 			<Component Id='NAudioFLACLibrary' Guid='E8A95406-75A0-4778-97BD-3E69BDAE22C3'>
-              <File Id='NAudioFLAC' Name='NAudioFLAC.dll' DiskId='1' Source='Source\NAudioFLAC.dll' KeyPath='yes' />
+              <File Id='NAudioFLAC' Name='NAudioFLAC.dll' DiskId='1' Source='Deploy\NAudioFLAC.dll' KeyPath='yes' />
             </Component>
 
             <Component Id='SoundTouchLibrary' Guid='391DC820-C466-40D1-9279-53AE27B38A1F'>
-              <File Id='SoundTouchDLL' Name='SoundTouch.dll' DiskId='1' Source='Source\SoundTouch.dll' KeyPath='yes' />
+              <File Id='SoundTouchDLL' Name='SoundTouch.dll' DiskId='1' Source='Deploy\SoundTouch.dll' KeyPath='yes' />
             </Component>
 
 			<Component Id='PracticeSharpLICENSES' Guid='B67C5B58-8174-4680-8C2A-9112A980B1CA'>
-              <File Id='LICENSES' Name='LICENSES.txt' DiskId='1' Source='Source\LICENSES.txt' KeyPath='yes' />
+              <File Id='LICENSES' Name='LICENSES.txt' DiskId='1' Source='Deploy\LICENSES.txt' KeyPath='yes' />
             </Component>
 
 			<Component Id='NLogLibrary' Guid='6FC0DCA8-EB41-4888-AA13-1DA780C10AE0'>
-              <File Id='NLogDLL' Name='NLog.dll' DiskId='1' Source='Source\NLog.dll' KeyPath='yes' />
+              <File Id='NLogDLL' Name='NLog.dll' DiskId='1' Source='Deploy\NLog.dll' KeyPath='yes' />
             </Component>
 
 			<Component Id='NLogConfiguration' Guid='665C69AE-42C0-4069-95D1-B5154301F0DC'>
-              <File Id='NLogConfigFile' Name='NLog.config' DiskId='1' Source='Source\NLog.config' KeyPath='yes' />
+              <File Id='NLogConfigFile' Name='NLog.config' DiskId='1' Source='Deploy\NLog.config' KeyPath='yes' />
             </Component>
 
 		</Directory>
@@ -184,6 +184,6 @@
 	<UIRef Id="WixUI_Mondo" />
     <UIRef Id="WixUI_ErrorProgressText" />
 
-    <Icon Id="PracticeSharp.exe" SourceFile="Source\PracticeSharp.exe" />
+    <Icon Id="PracticeSharp.exe" SourceFile="Deploy\PracticeSharp.exe" />
   </Product>
 </Wix>

@@ -1,11 +1,13 @@
-1. Get Wix Installer:
+1. Get Wix Installer, wix311-binaries:
 http://wixtoolset.org/
 
-As of 3/21/2014 Wix 3.7 was used
+As of 12/17/2017 Wix 3.11 is used
 
 2. Extract it to the Installer folder
-There should be a folder under the Installer folder named wix37-binaries
+There should be a folder under the Installer folder named wix311-binaries
 
-3. Run the batch file CompilePracticeSharpWix.bat
+3. Rebuild Practice# solution in Release mode
 
-Result: An MSI file should be generated under the MSI folder 
+4. Run the batch file CompilePracticeSharpWix.bat
+
+Expected Result: An MSI file PracticeSharp.msi is generated under the MSI folder 

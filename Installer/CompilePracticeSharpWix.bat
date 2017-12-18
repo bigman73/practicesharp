@@ -25,22 +25,22 @@ REM
 @ECHO ========================================
 
 ECHO+
-ECHO Copying latest Release files (Source Files)
-XCOPY /Y ..\PracticeSharpApp\bin\Release\PracticeSharp.exe Source\
-XCOPY /Y ..\PracticeSharpApp\bin\Release\PracticeSharp.exe.config Source\
-XCOPY /Y ..\PracticeSharpApp\bin\Release\NAudio.dll Source\
-XCOPY /Y ..\PracticeSharpApp\bin\Release\NAudio.WindowsMediaFormat.dll Source\
-XCOPY /Y ..\PracticeSharpApp\bin\Release\NAudioOggVorbis.dll Source\
-XCOPY /Y ..\PracticeSharpApp\bin\Release\libFlac.dll Source\
-XCOPY /Y ..\PracticeSharpApp\bin\Release\NAudioFLAC.dll Source\
-XCOPY /Y ..\PracticeSharpApp\bin\Release\SoundTouch.dll Source\
-XCOPY /Y ..\PracticeSharpApp\bin\Release\LICENSES.txt Source\
-XCOPY /Y ..\PracticeSharpApp\bin\Release\NLog.dll Source\
-XCOPY /Y ..\PracticeSharpApp\bin\Release\NLog.config Source\
+ECHO Copying latest Release files to Deploy folder
+XCOPY /Y ..\PracticeSharpApp\bin\Release\PracticeSharp.exe Deploy\
+XCOPY /Y ..\PracticeSharpApp\bin\Release\PracticeSharp.exe.config Deploy\
+XCOPY /Y ..\PracticeSharpApp\bin\Release\NAudio.dll Deploy\
+XCOPY /Y ..\PracticeSharpApp\bin\Release\NAudio.WindowsMediaFormat.dll Deploy\
+XCOPY /Y ..\PracticeSharpApp\bin\Release\NAudioOggVorbis.dll Deploy\
+XCOPY /Y ..\PracticeSharpApp\bin\Release\libFlac.dll Deploy\
+XCOPY /Y ..\PracticeSharpApp\bin\Release\NAudioFLAC.dll Deploy\
+XCOPY /Y ..\PracticeSharpApp\bin\Release\SoundTouch.dll Deploy\
+XCOPY /Y ..\PracticeSharpApp\bin\Release\LICENSES.txt Deploy\
+XCOPY /Y ..\PracticeSharpApp\bin\Release\NLog.dll Deploy\
+XCOPY /Y ..\PracticeSharpApp\bin\Release\NLog.config Deploy\
 
-REM NOTE: ** Download once wix37-binaries.zip and unzip it into this folder, before running this batch file ** 
+REM NOTE: ** Download once wix311-binaries.zip and unzip it into this folder, before running this batch file ** 
 REM Download URL: http://wix.sourceforge.net/
-SET PATH=%PATH%;.\wix37-binaries
+SET PATH=%PATH%;.\wix311-binaries
 
 ECHO+
 ECHO ==== Candle ====
