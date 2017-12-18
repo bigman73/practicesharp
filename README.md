@@ -3,7 +3,7 @@ A playback practice tool for musicians that allows slowing down, changing pitch,
 
 Current Version: 2.0.0
 
-## Features
+# Features
 * Playback of the following formats: MP3, WAV, WMA, AIFF, Ogg Vorbis and FLAC
 * Speed change - The ability to slow down or speed up music without changing its pitch
 * Pitch change - The ability to change the pitch of music up or down without changing its speed. New! (1.4.6) - Accurate half semi-tone increments
@@ -20,8 +20,11 @@ https://github.com/naudio/NAudio.Wma
 
 ![alt screenshot](https://github.com/bigman73/practicesharp/blob/master/Docs/Practice%23_ScreenShot.png)
 
-Code Project article: https://www.codeproject.com/Articles/129929/PracticeSharp-or-Practice-A-Utility-for-Practicing
+# Code Project article
+Documentation of thd design can be found in:
+https://www.codeproject.com/Articles/129929/PracticeSharp-or-Practice-A-Utility-for-Practicing
 
+#License 
 License: ![alt LGPLV3](https://www.gnu.org/graphics/lgplv3-147x51.png)
 
 # Credits
