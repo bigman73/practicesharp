@@ -3,12 +3,12 @@ A playback practice tool for musicians that allows slowing down, changing pitch,
 
 Current Version: 2.0.0
 
+## Features
+* File format playback: .mp3, .wav, .flac, .wma
+
 ## WMA Support
 As of Sep 2015 - naudio.wma has become project (github & nuget ) as an official part of the NAudio open source project
 https://github.com/naudio/NAudio.Wma
-
-To install naudio.wma nuget:
-install-package nuadio.wma
 
 ![alt screenshot](https://github.com/bigman73/practicesharp/blob/master/Docs/Practice%23_ScreenShot.png)
 
