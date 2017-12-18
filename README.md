@@ -24,7 +24,7 @@ https://github.com/naudio/NAudio.Wma
 Documentation of thd design can be found in:
 https://www.codeproject.com/Articles/129929/PracticeSharp-or-Practice-A-Utility-for-Practicing
 
-#License 
+# License 
 License: ![alt LGPLV3](https://www.gnu.org/graphics/lgplv3-147x51.png)
 
 # Credits
