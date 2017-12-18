@@ -26,6 +26,16 @@ A youtube video that demonstrates Practice# usage:
 
 [![Practice# demo of usage](https://img.youtube.com/vi/rqWr7BJjhx8/0.jpg)](https://www.youtube.com/watch?v=rqWr7BJjhx8)
 
+# Installation
+## Pre-conditions
+* Latest Windows OS - XP, Vista, 7, 10
+* .NET Framework 4.5 (the MSI installer doesn't install .NET Framework 4.5)
+
+## Installation steps
+1. Download the Practice# MSI installer to your local machine - https://github.com/bigman73/practicesharp/tree/master/Installer/MSI
+2. Run it
+3. That's it!
+
 # Code Project article
 Documentation of thd design can be found in:
 https://www.codeproject.com/Articles/129929/PracticeSharp-or-Practice-A-Utility-for-Practicing
