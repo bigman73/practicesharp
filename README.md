@@ -30,6 +30,7 @@ A youtube video that demonstrates Practice# usage:
 ## Pre-conditions
 * Latest Windows OS - XP, Vista, 7, 10
 * .NET Framework 4.5 (the MSI installer doesn't install .NET Framework 4.5)
+* Visual Studio Express for Desktop 2012+
 
 ## Installation steps
 1. Download the Practice# MSI installer to your local machine - https://github.com/bigman73/practicesharp/tree/master/Installer/MSI
