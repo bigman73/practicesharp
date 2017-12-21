@@ -73,7 +73,7 @@ namespace BigMansStuff.PracticeSharp.SoundTouch
                 throw new ApplicationException("SoundSharp Instance was already initialized but not destroyed. Use DestroyInstance().");
             }
 
-            m_handle = soundtouch_createInstance();
+            m_handle = NativeMethods.soundtouch_createInstance();
             GetVersionString();
             GetVersionId();
         }
@@ -85,7 +85,7 @@ namespace BigMansStuff.PracticeSharp.SoundTouch
         {
             if (m_handle != IntPtr.Zero)
             {
-                soundtouch_destroyInstance(m_handle);
+                NativeMethods.soundtouch_destroyInstance(m_handle);
                 m_handle = IntPtr.Zero;
             }
         }
@@ -97,7 +97,7 @@ namespace BigMansStuff.PracticeSharp.SoundTouch
         public string GetVersionString()
         {
             StringBuilder versionString = new StringBuilder(100);
-            soundtouch_getVersionString2(versionString, 100);
+            NativeMethods.soundtouch_getVersionString2(versionString, 100);
 
             return versionString.ToString();
         }
@@ -108,7 +108,7 @@ namespace BigMansStuff.PracticeSharp.SoundTouch
         /// <returns></returns>
         public int GetVersionId()
         {
-            SoundTouchVersionId = soundtouch_getVersionId();
+            SoundTouchVersionId = NativeMethods.soundtouch_getVersionId();
 
             return SoundTouchVersionId;
         }
@@ -122,7 +122,7 @@ namespace BigMansStuff.PracticeSharp.SoundTouch
         {
             VerifyInstanceInitialized();
 
-            soundtouch_setRate(m_handle, newRate);
+            NativeMethods.soundtouch_setRate(m_handle, newRate);
         }
 
         /// <summary>
@@ -134,7 +134,7 @@ namespace BigMansStuff.PracticeSharp.SoundTouch
         {
             VerifyInstanceInitialized();
 
-            soundtouch_setTempo(m_handle, newTempo);
+            NativeMethods.soundtouch_setTempo(m_handle, newTempo);
         }
 
         /// <summary>
@@ -146,7 +146,7 @@ namespace BigMansStuff.PracticeSharp.SoundTouch
         {
             VerifyInstanceInitialized();
 
-            soundtouch_setRateChange(m_handle, newRate);
+            NativeMethods.soundtouch_setRateChange(m_handle, newRate);
         }
 
         /// <summary>
@@ -158,7 +158,7 @@ namespace BigMansStuff.PracticeSharp.SoundTouch
         {
             VerifyInstanceInitialized();
 
-            soundtouch_setTempoChange(m_handle, newTempo);
+            NativeMethods.soundtouch_setTempoChange(m_handle, newTempo);
         }
 
         /// <summary>
@@ -170,7 +170,7 @@ namespace BigMansStuff.PracticeSharp.SoundTouch
         {
             VerifyInstanceInitialized();
 
-            soundtouch_setPitch(m_handle, newPitch);
+            NativeMethods.soundtouch_setPitch(m_handle, newPitch);
         }
 
         /// <summary>
@@ -181,7 +181,7 @@ namespace BigMansStuff.PracticeSharp.SoundTouch
         {
             VerifyInstanceInitialized();
 
-            soundtouch_setPitchOctaves(m_handle, newPitch);
+            NativeMethods.soundtouch_setPitchOctaves(m_handle, newPitch);
         }
 
         /// <summary>
@@ -192,7 +192,7 @@ namespace BigMansStuff.PracticeSharp.SoundTouch
         {
             VerifyInstanceInitialized();
 
-            soundtouch_setPitchSemiTones(m_handle, newPitch);
+            NativeMethods.soundtouch_setPitchSemiTones(m_handle, newPitch);
         }
 
 
@@ -204,7 +204,7 @@ namespace BigMansStuff.PracticeSharp.SoundTouch
         {
             VerifyInstanceInitialized();
 
-            soundtouch_setChannels(m_handle, (uint) numChannels);
+            NativeMethods.soundtouch_setChannels(m_handle, (uint) numChannels);
         }
 
         /// <summary>
@@ -215,7 +215,7 @@ namespace BigMansStuff.PracticeSharp.SoundTouch
         {
             VerifyInstanceInitialized();
 
-            soundtouch_setSampleRate(m_handle, (uint) srate);
+            NativeMethods.soundtouch_setSampleRate(m_handle, (uint) srate);
         }
 
         /// <summary>
@@ -231,7 +231,7 @@ namespace BigMansStuff.PracticeSharp.SoundTouch
         {
             VerifyInstanceInitialized();
 
-            soundtouch_flush(m_handle);
+            NativeMethods.soundtouch_flush(m_handle);
         }
 
         /// <summary>
@@ -245,9 +245,8 @@ namespace BigMansStuff.PracticeSharp.SoundTouch
         {
             VerifyInstanceInitialized();
 
-            soundtouch_putSamples(m_handle, pSamples, numSamples);
+            NativeMethods.soundtouch_putSamples(m_handle, pSamples, numSamples);
         }
-
 
         /// <summary>
         /// Clears all the samples in the object's output and internal processing buffers.
@@ -256,7 +255,7 @@ namespace BigMansStuff.PracticeSharp.SoundTouch
         {
             VerifyInstanceInitialized();
 
-            soundtouch_clear(m_handle);
+            NativeMethods.soundtouch_clear(m_handle);
         }
 
         /// <summary>
@@ -269,7 +268,7 @@ namespace BigMansStuff.PracticeSharp.SoundTouch
         {
             VerifyInstanceInitialized();
 
-            soundtouch_setSetting(m_handle, ( int ) settingId, value);
+            NativeMethods.soundtouch_setSetting(m_handle, ( int ) settingId, value);
         }
 
         /// <summary>
@@ -282,7 +281,7 @@ namespace BigMansStuff.PracticeSharp.SoundTouch
         {
             VerifyInstanceInitialized();
 
-            return soundtouch_getSetting(m_handle, ( int ) settingId);
+            return NativeMethods.soundtouch_getSetting(m_handle, ( int ) settingId);
         }
 
         /// <summary>
@@ -293,7 +292,7 @@ namespace BigMansStuff.PracticeSharp.SoundTouch
         {
             VerifyInstanceInitialized();
 
-            return soundtouch_numUnprocessedSamples(m_handle);
+            return NativeMethods.soundtouch_numUnprocessedSamples(m_handle);
         }
 
         /// <summary>
@@ -310,7 +309,7 @@ namespace BigMansStuff.PracticeSharp.SoundTouch
         {
             VerifyInstanceInitialized();
 
-            return soundtouch_receiveSamples(m_handle, pOutBuffer, maxSamples);
+            return NativeMethods.soundtouch_receiveSamples(m_handle, pOutBuffer, maxSamples);
         }
 
         /// <summary>
@@ -321,9 +320,8 @@ namespace BigMansStuff.PracticeSharp.SoundTouch
         {
             VerifyInstanceInitialized();
 
-            return soundtouch_numSamples(m_handle);
+            return NativeMethods.soundtouch_numSamples(m_handle);
         }
-
 
         /// <summary>
         /// Returns nonzero if there aren't any samples available for outputting.
@@ -333,7 +331,7 @@ namespace BigMansStuff.PracticeSharp.SoundTouch
         {
             VerifyInstanceInitialized();
 
-            return soundtouch_isEmpty(m_handle);
+            return NativeMethods.soundtouch_isEmpty(m_handle);
         }
 
         public enum SoundTouchSettings
@@ -385,196 +383,227 @@ namespace BigMansStuff.PracticeSharp.SoundTouch
 
         #region SoundSharp Native API - DLL Imports
 
-        public const string SoundTouchDLLName = "SoundTouch.dll";
+        class NativeMethods
+        {
+            public const string SoundTouchDLLName = "SoundTouch.dll";
 
-        #region C DLL Header
-        /*
+            #region C DLL Header
+            /*
 
-/// Create a new instance of SoundTouch processor.
-SOUNDTOUCHDLL_API HANDLE __stdcall soundtouch_createInstance();
+    /// Create a new instance of SoundTouch processor.
+    SOUNDTOUCHDLL_API HANDLE __stdcall soundtouch_createInstance();
 
-/// Destroys a SoundTouch processor instance.
-SOUNDTOUCHDLL_API void __stdcall soundtouch_destroyInstance(HANDLE h);
+    /// Destroys a SoundTouch processor instance.
+    SOUNDTOUCHDLL_API void __stdcall soundtouch_destroyInstance(HANDLE h);
 
-/// Get SoundTouch library version string
-SOUNDTOUCHDLL_API const char *__stdcall soundtouch_getVersionString();
+    /// Get SoundTouch library version string
+    SOUNDTOUCHDLL_API const char *__stdcall soundtouch_getVersionString();
 
-/// Get SoundTouch library version Id
-SOUNDTOUCHDLL_API unsigned int __stdcall soundtouch_getVersionId();
+    /// Get SoundTouch library version Id
+    SOUNDTOUCHDLL_API unsigned int __stdcall soundtouch_getVersionId();
 
-/// Sets new rate control value. Normal rate = 1.0, smaller values
-/// represent slower rate, larger faster rates.
-SOUNDTOUCHDLL_API void __stdcall soundtouch_setRate(HANDLE h, float newRate);
+    /// Sets new rate control value. Normal rate = 1.0, smaller values
+    /// represent slower rate, larger faster rates.
+    SOUNDTOUCHDLL_API void __stdcall soundtouch_setRate(HANDLE h, float newRate);
 
-/// Sets new tempo control value. Normal tempo = 1.0, smaller values
-/// represent slower tempo, larger faster tempo.
-SOUNDTOUCHDLL_API void __stdcall soundtouch_setTempo(HANDLE h, float newTempo);
+    /// Sets new tempo control value. Normal tempo = 1.0, smaller values
+    /// represent slower tempo, larger faster tempo.
+    SOUNDTOUCHDLL_API void __stdcall soundtouch_setTempo(HANDLE h, float newTempo);
 
-/// Sets new rate control value as a difference in percents compared
-/// to the original rate (-50 .. +100 %);
-SOUNDTOUCHDLL_API void __stdcall soundtouch_setRateChange(HANDLE h, float newRate);
+    /// Sets new rate control value as a difference in percents compared
+    /// to the original rate (-50 .. +100 %);
+    SOUNDTOUCHDLL_API void __stdcall soundtouch_setRateChange(HANDLE h, float newRate);
 
-/// Sets new tempo control value as a difference in percents compared
-/// to the original tempo (-50 .. +100 %);
-SOUNDTOUCHDLL_API void __stdcall soundtouch_setTempoChange(HANDLE h, float newTempo);
+    /// Sets new tempo control value as a difference in percents compared
+    /// to the original tempo (-50 .. +100 %);
+    SOUNDTOUCHDLL_API void __stdcall soundtouch_setTempoChange(HANDLE h, float newTempo);
 
-/// Sets new pitch control value. Original pitch = 1.0, smaller values
-/// represent lower pitches, larger values higher pitch.
-SOUNDTOUCHDLL_API void __stdcall soundtouch_setPitch(HANDLE h, float newPitch);
+    /// Sets new pitch control value. Original pitch = 1.0, smaller values
+    /// represent lower pitches, larger values higher pitch.
+    SOUNDTOUCHDLL_API void __stdcall soundtouch_setPitch(HANDLE h, float newPitch);
 
-/// Sets pitch change in octaves compared to the original pitch  
-/// (-1.00 .. +1.00);
-SOUNDTOUCHDLL_API void __stdcall soundtouch_setPitchOctaves(HANDLE h, float newPitch);
+    /// Sets pitch change in octaves compared to the original pitch  
+    /// (-1.00 .. +1.00);
+    SOUNDTOUCHDLL_API void __stdcall soundtouch_setPitchOctaves(HANDLE h, float newPitch);
 
-/// Sets pitch change in semi-tones compared to the original pitch
-/// (-12 .. +12);
-SOUNDTOUCHDLL_API void __stdcall soundtouch_setPitchSemiTones(HANDLE h, float newPitch);
-
-
-/// Sets the number of channels, 1 = mono, 2 = stereo
-SOUNDTOUCHDLL_API void __stdcall soundtouch_setChannels(HANDLE h, unsigned int numChannels);
-
-/// Sets sample rate.
-SOUNDTOUCHDLL_API void __stdcall soundtouch_setSampleRate(HANDLE h, unsigned int srate);
-
-/// Flushes the last samples from the processing pipeline to the output.
-/// Clears also the internal processing buffers.
-//
-/// Note: This function is meant for extracting the last samples of a sound
-/// stream. This function may introduce additional blank samples in the end
-/// of the sound stream, and thus it's not recommended to call this function
-/// in the middle of a sound stream.
-SOUNDTOUCHDLL_API void __stdcall soundtouch_flush(HANDLE h);
-
-/// Adds 'numSamples' pcs of samples from the 'samples' memory position into
-/// the input of the object. Notice that sample rate _has_to_ be set before
-/// calling this function, otherwise throws a runtime_error exception.
-SOUNDTOUCHDLL_API void __stdcall soundtouch_putSamples(HANDLE h, 
-        const float *samples,       ///< Pointer to sample buffer.
-        unsigned int numSamples     ///< Number of samples in buffer. Notice
-                                    ///< that in case of stereo-sound a single sample
-                                    ///< contains data for both channels.
-        );
-
-/// Clears all the samples in the object's output and internal processing
-/// buffers.
-SOUNDTOUCHDLL_API void __stdcall soundtouch_clear(HANDLE h);
-
-/// Changes a setting controlling the processing system behaviour. See the
-/// 'SETTING_...' defines for available setting ID's.
-/// 
-/// \return 'TRUE' if the setting was succesfully changed
-SOUNDTOUCHDLL_API BOOL __stdcall soundtouch_setSetting(HANDLE h, 
-                int settingId,   ///< Setting ID number. see SETTING_... defines.
-                int value        ///< New setting value.
-                );
-
-/// Reads a setting controlling the processing system behaviour. See the
-/// 'SETTING_...' defines for available setting ID's.
-///
-/// \return the setting value.
-SOUNDTOUCHDLL_API int __stdcall soundtouch_getSetting(HANDLE h, 
-                          int settingId    ///< Setting ID number, see SETTING_... defines.
-                );
+    /// Sets pitch change in semi-tones compared to the original pitch
+    /// (-12 .. +12);
+    SOUNDTOUCHDLL_API void __stdcall soundtouch_setPitchSemiTones(HANDLE h, float newPitch);
 
 
-/// Returns number of samples currently unprocessed.
-SOUNDTOUCHDLL_API unsigned int __stdcall soundtouch_numUnprocessedSamples(HANDLE h);
+    /// Sets the number of channels, 1 = mono, 2 = stereo
+    SOUNDTOUCHDLL_API void __stdcall soundtouch_setChannels(HANDLE h, unsigned int numChannels);
 
-/// Adjusts book-keeping so that given number of samples are removed from beginning of the 
-/// sample buffer without copying them anywhere. 
-///
-/// Used to reduce the number of samples in the buffer when accessing the sample buffer directly
-/// with 'ptrBegin' function.
-SOUNDTOUCHDLL_API unsigned int __stdcall soundtouch_receiveSamples(HANDLE h, 
-            float *outBuffer,           ///< Buffer where to copy output samples.
-            unsigned int maxSamples     ///< How many samples to receive at max.
+    /// Sets sample rate.
+    SOUNDTOUCHDLL_API void __stdcall soundtouch_setSampleRate(HANDLE h, unsigned int srate);
+
+    /// Flushes the last samples from the processing pipeline to the output.
+    /// Clears also the internal processing buffers.
+    //
+    /// Note: This function is meant for extracting the last samples of a sound
+    /// stream. This function may introduce additional blank samples in the end
+    /// of the sound stream, and thus it's not recommended to call this function
+    /// in the middle of a sound stream.
+    SOUNDTOUCHDLL_API void __stdcall soundtouch_flush(HANDLE h);
+
+    /// Adds 'numSamples' pcs of samples from the 'samples' memory position into
+    /// the input of the object. Notice that sample rate _has_to_ be set before
+    /// calling this function, otherwise throws a runtime_error exception.
+    SOUNDTOUCHDLL_API void __stdcall soundtouch_putSamples(HANDLE h, 
+            const float *samples,       ///< Pointer to sample buffer.
+            unsigned int numSamples     ///< Number of samples in buffer. Notice
+                                        ///< that in case of stereo-sound a single sample
+                                        ///< contains data for both channels.
             );
 
-/// Returns number of samples currently available.
-SOUNDTOUCHDLL_API unsigned int __stdcall soundtouch_numSamples(HANDLE h);
+    /// Clears all the samples in the object's output and internal processing
+    /// buffers.
+    SOUNDTOUCHDLL_API void __stdcall soundtouch_clear(HANDLE h);
 
-/// Returns nonzero if there aren't any samples available for outputting.
-SOUNDTOUCHDLL_API int __stdcall soundtouch_isEmpty(HANDLE h);
+    /// Changes a setting controlling the processing system behaviour. See the
+    /// 'SETTING_...' defines for available setting ID's.
+    /// 
+    /// \return 'TRUE' if the setting was succesfully changed
+    SOUNDTOUCHDLL_API BOOL __stdcall soundtouch_setSetting(HANDLE h, 
+                    int settingId,   ///< Setting ID number. see SETTING_... defines.
+                    int value        ///< New setting value.
+                    );
 
-*/
-        #endregion
+    /// Reads a setting controlling the processing system behaviour. See the
+    /// 'SETTING_...' defines for available setting ID's.
+    ///
+    /// \return the setting value.
+    SOUNDTOUCHDLL_API int __stdcall soundtouch_getSetting(HANDLE h, 
+                              int settingId    ///< Setting ID number, see SETTING_... defines.
+                    );
 
-        [DllImport(SoundTouchDLLName, CallingConvention = CallingConvention.Cdecl)]
-        internal static extern IntPtr soundtouch_createInstance();
 
-        [DllImport(SoundTouchDLLName, CallingConvention = CallingConvention.Cdecl)]
-        internal static extern void soundtouch_destroyInstance(IntPtr h);
+    /// Returns number of samples currently unprocessed.
+    SOUNDTOUCHDLL_API unsigned int __stdcall soundtouch_numUnprocessedSamples(HANDLE h);
 
-        [DllImport(SoundTouchDLLName, CallingConvention = CallingConvention.Cdecl)]
-        internal static extern int soundtouch_getVersionId();
+    /// Adjusts book-keeping so that given number of samples are removed from beginning of the 
+    /// sample buffer without copying them anywhere. 
+    ///
+    /// Used to reduce the number of samples in the buffer when accessing the sample buffer directly
+    /// with 'ptrBegin' function.
+    SOUNDTOUCHDLL_API unsigned int __stdcall soundtouch_receiveSamples(HANDLE h, 
+                float *outBuffer,           ///< Buffer where to copy output samples.
+                unsigned int maxSamples     ///< How many samples to receive at max.
+                );
 
-        [DllImport(SoundTouchDLLName, CallingConvention = CallingConvention.Cdecl)]
-        internal static extern void soundtouch_getVersionString2(StringBuilder versionString, int bufferSize);
+    /// Returns number of samples currently available.
+    SOUNDTOUCHDLL_API unsigned int __stdcall soundtouch_numSamples(HANDLE h);
 
-        [DllImport(SoundTouchDLLName, CallingConvention = CallingConvention.Cdecl)]
-        internal static extern void soundtouch_setRate(IntPtr h, float newRate);
+    /// Returns nonzero if there aren't any samples available for outputting.
+    SOUNDTOUCHDLL_API int __stdcall soundtouch_isEmpty(HANDLE h);
 
-        [DllImport(SoundTouchDLLName, CallingConvention = CallingConvention.Cdecl)]
-        internal static extern void soundtouch_setTempo(IntPtr h, float newTempo);
+    */
+            #endregion
 
-        [DllImport(SoundTouchDLLName, CallingConvention = CallingConvention.Cdecl)]
-        internal static extern void soundtouch_setRateChange(IntPtr h, float newRate);
-        
-        [DllImport(SoundTouchDLLName, CallingConvention = CallingConvention.Cdecl)]
-        internal static extern void soundtouch_setTempoChange(IntPtr h, float newTempo);
-       
-        [DllImport(SoundTouchDLLName, CallingConvention = CallingConvention.Cdecl)]
-        internal static extern void soundtouch_setPitch(IntPtr h, float newPitch);
-       
-        [DllImport(SoundTouchDLLName, CallingConvention = CallingConvention.Cdecl)]
-        internal static extern void soundtouch_setPitchOctaves(IntPtr h, float newPitch);
+#pragma warning disable IDE1006 // Naming Styles
 
-        [DllImport(SoundTouchDLLName, CallingConvention = CallingConvention.Cdecl)]
-        internal static extern void soundtouch_setPitchSemiTones(IntPtr h, float newPitch);
+            [DllImport(SoundTouchDLLName, CallingConvention = CallingConvention.Cdecl)]
+            internal static extern IntPtr soundtouch_createInstance();
 
-        [DllImport(SoundTouchDLLName, CallingConvention = CallingConvention.Cdecl)]
-        internal static extern void soundtouch_setChannels(IntPtr h, uint numChannels);
+            [DllImport(SoundTouchDLLName, CallingConvention = CallingConvention.Cdecl)]
+            internal static extern void soundtouch_destroyInstance(IntPtr h);
 
-        /// Sets sample rate.
-        [DllImport(SoundTouchDLLName, CallingConvention = CallingConvention.Cdecl)]
-        internal static extern void soundtouch_setSampleRate(IntPtr h, uint srate);
+            [DllImport(SoundTouchDLLName, CallingConvention = CallingConvention.Cdecl)]
+            internal static extern int soundtouch_getVersionId();
 
-        [DllImport(SoundTouchDLLName, CallingConvention = CallingConvention.Cdecl)]
-        internal static extern void soundtouch_flush(IntPtr h);
-        
-        [DllImport(SoundTouchDLLName, CallingConvention = CallingConvention.Cdecl)]
-        internal static extern void soundtouch_putSamples(IntPtr h, [MarshalAs(UnmanagedType.LPArray)] float[] samples, uint numSamples);
+            [DllImport(SoundTouchDLLName, CallingConvention = CallingConvention.Cdecl)]
+            internal static extern void soundtouch_getVersionString2(StringBuilder versionString, int bufferSize);
 
-        [DllImport(SoundTouchDLLName, CallingConvention = CallingConvention.Cdecl)]
-        internal static extern void soundtouch_clear(IntPtr h);
+            [DllImport(SoundTouchDLLName, CallingConvention = CallingConvention.Cdecl)]
+            internal static extern void soundtouch_setRate(IntPtr h, float newRate);
 
-        [DllImport(SoundTouchDLLName, CallingConvention = CallingConvention.Cdecl)]
-        internal static extern bool soundtouch_setSetting(IntPtr h, int settingId, int value);
+            [DllImport(SoundTouchDLLName, CallingConvention = CallingConvention.Cdecl)]
+            internal static extern void soundtouch_setTempo(IntPtr h, float newTempo);
 
-        [DllImport(SoundTouchDLLName, CallingConvention = CallingConvention.Cdecl)]
-        internal static extern int soundtouch_getSetting(IntPtr h, int settingId);
+            [DllImport(SoundTouchDLLName, CallingConvention = CallingConvention.Cdecl)]
+            internal static extern void soundtouch_setRateChange(IntPtr h, float newRate);
 
-        [DllImport(SoundTouchDLLName, CallingConvention = CallingConvention.Cdecl)]
-        internal static extern int soundtouch_numUnprocessedSamples(IntPtr h);
-        
-        [DllImport(SoundTouchDLLName, CallingConvention = CallingConvention.Cdecl)]
-        internal static extern uint soundtouch_receiveSamples(IntPtr h, [MarshalAs(UnmanagedType.LPArray)] float[] outBuffer, uint maxSamples);
+            [DllImport(SoundTouchDLLName, CallingConvention = CallingConvention.Cdecl)]
+            internal static extern void soundtouch_setTempoChange(IntPtr h, float newTempo);
 
-        [DllImport(SoundTouchDLLName, CallingConvention = CallingConvention.Cdecl)]
-        internal static extern int soundtouch_numSamples(IntPtr h);
+            [DllImport(SoundTouchDLLName, CallingConvention = CallingConvention.Cdecl)]
+            internal static extern void soundtouch_setPitch(IntPtr h, float newPitch);
 
-        [DllImport(SoundTouchDLLName, CallingConvention = CallingConvention.Cdecl)]
-        internal static extern int soundtouch_isEmpty(IntPtr h);
+            [DllImport(SoundTouchDLLName, CallingConvention = CallingConvention.Cdecl)]
+            internal static extern void soundtouch_setPitchOctaves(IntPtr h, float newPitch);
+
+            [DllImport(SoundTouchDLLName, CallingConvention = CallingConvention.Cdecl)]
+            internal static extern void soundtouch_setPitchSemiTones(IntPtr h, float newPitch);
+
+            [DllImport(SoundTouchDLLName, CallingConvention = CallingConvention.Cdecl)]
+            internal static extern void soundtouch_setChannels(IntPtr h, uint numChannels);
+
+            /// Sets sample rate.
+            [DllImport(SoundTouchDLLName, CallingConvention = CallingConvention.Cdecl)]
+            internal static extern void soundtouch_setSampleRate(IntPtr h, uint srate);
+
+            [DllImport(SoundTouchDLLName, CallingConvention = CallingConvention.Cdecl)]
+            internal static extern void soundtouch_flush(IntPtr h);
+
+            [DllImport(SoundTouchDLLName, CallingConvention = CallingConvention.Cdecl)]
+            internal static extern void soundtouch_putSamples(IntPtr h, [MarshalAs(UnmanagedType.LPArray)] float[] samples, uint numSamples);
+
+            [DllImport(SoundTouchDLLName, CallingConvention = CallingConvention.Cdecl)]
+            internal static extern void soundtouch_clear(IntPtr h);
+
+            [DllImport(SoundTouchDLLName, CallingConvention = CallingConvention.Cdecl)]
+            internal static extern bool soundtouch_setSetting(IntPtr h, int settingId, int value);
+
+            [DllImport(SoundTouchDLLName, CallingConvention = CallingConvention.Cdecl)]
+            internal static extern int soundtouch_getSetting(IntPtr h, int settingId);
+
+            [DllImport(SoundTouchDLLName, CallingConvention = CallingConvention.Cdecl)]
+            internal static extern int soundtouch_numUnprocessedSamples(IntPtr h);
+
+            [DllImport(SoundTouchDLLName, CallingConvention = CallingConvention.Cdecl)]
+            internal static extern uint soundtouch_receiveSamples(IntPtr h, [MarshalAs(UnmanagedType.LPArray)] float[] outBuffer, uint maxSamples);
+
+            [DllImport(SoundTouchDLLName, CallingConvention = CallingConvention.Cdecl)]
+            internal static extern int soundtouch_numSamples(IntPtr h);
+
+            [DllImport(SoundTouchDLLName, CallingConvention = CallingConvention.Cdecl)]
+            internal static extern int soundtouch_isEmpty(IntPtr h);
+
+#pragma warning restore IDE1006 // Naming Styles
+
+        }
 
         #endregion
 
         #region IDisposable Members
 
+        private bool disposed = false;
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposed)
+            {
+                // Dispose of resources held by this instance.
+                DestroyInstance();
+
+                disposed = true;
+
+                // Suppress finalization of this disposed instance.
+                if (disposing)
+                {
+                    GC.SuppressFinalize(this);
+                }
+            }
+        }
+
         public void Dispose()
         {
-            DestroyInstance();
-            GC.SuppressFinalize(this);
+            Dispose(true);
+        }
+
+        ~SoundTouchSharp()
+        {
+            Dispose(false);
         }
 
         #endregion

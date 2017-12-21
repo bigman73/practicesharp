@@ -40,7 +40,7 @@ namespace BigMansStuff.PracticeSharp.Core
     /// Core Logic (Back-End) for PracticeSharp application
     /// Acts as a mediator between the User Interface, NAudio and SoundSharp layers
     /// </summary>
-    public class PracticeSharpLogic : IDisposable
+    public sealed class PracticeSharpLogic : IDisposable
     {
         #region Logger
         private static Logger m_logger = LogManager.GetCurrentClassLogger();
@@ -506,7 +506,7 @@ namespace BigMansStuff.PracticeSharp.Core
         /// <summary>
         /// Audio processing thread procedure
         /// </summary>
-        private void audioProcessingWorker_DoWork()
+        private void AudioProcessingWorker_DoWork()
         {
             m_stopWorker = false;
 
@@ -828,7 +828,7 @@ namespace BigMansStuff.PracticeSharp.Core
             m_logger.Debug("ProcessAudio() finished - stop playback");
             m_waveOutDevice.Stop();
             // Stop listening to PlayPositionChanged events
-            m_inputProvider.PlayPositionChanged -= new EventHandler(inputProvider_PlayPositionChanged);
+            m_inputProvider.PlayPositionChanged -= new EventHandler(InputProvider_PlayPositionChanged);
 
             // Fix to current play time not finishing up at end marker (Wave channel uses positions)
             if (!m_stopWorker && CurrentPlayTime < actualEndMarker)
@@ -1009,7 +1009,7 @@ namespace BigMansStuff.PracticeSharp.Core
 
             WaveFormat format = m_waveChannel.WaveFormat;
             m_inputProvider = new AdvancedBufferedWaveProvider(format);
-            m_inputProvider.PlayPositionChanged += new EventHandler(inputProvider_PlayPositionChanged);
+            m_inputProvider.PlayPositionChanged += new EventHandler(InputProvider_PlayPositionChanged);
             m_inputProvider.MaxQueuedBuffers = 100;
 
             m_soundTouchSharp.SetSampleRate(format.SampleRate);
@@ -1092,7 +1092,7 @@ namespace BigMansStuff.PracticeSharp.Core
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void inputProvider_PlayPositionChanged(object sender, EventArgs e)
+        private void InputProvider_PlayPositionChanged(object sender, EventArgs e)
         {
             lock (CurrentPlayTimeLock)
             {
@@ -1246,17 +1246,17 @@ namespace BigMansStuff.PracticeSharp.Core
                         break;
                 }
 
-                m_waveOutDevice.PlaybackStopped += waveOutDevice_PlaybackStopped;
+                m_waveOutDevice.PlaybackStopped += WaveOutDevice_PlaybackStopped;
                 m_logger.Info("Wave Output Device that is actually being used: {0}", m_waveOutDevice.GetType().ToString());
             }
             catch (Exception driverCreateException)
             {
                 m_logger.Error(driverCreateException, "NAudio Driver Creation Failed");
-                throw driverCreateException;
+                throw;
             }
         }
 
-        void waveOutDevice_PlaybackStopped(object sender, StoppedEventArgs e)
+        void WaveOutDevice_PlaybackStopped(object sender, StoppedEventArgs e)
         {
             if (e == null || e.Exception == null)
                 return;
@@ -1280,8 +1280,11 @@ namespace BigMansStuff.PracticeSharp.Core
         private void InitializeEqualizerEffect()
         {
             // Initialize Equalizer
-            m_eqEffect = new EqualizerEffect();
-            m_eqEffect.SampleRate = m_waveChannel.WaveFormat.SampleRate;
+            m_eqEffect = new EqualizerEffect
+            {
+                SampleRate = m_waveChannel.WaveFormat.SampleRate
+            };
+
             m_eqEffect.LoDriveFactor.Value = 75;
             m_eqEffect.LoGainFactor.Value = 0;
             m_eqEffect.MedDriveFactor.Value = 40;
@@ -1299,10 +1302,12 @@ namespace BigMansStuff.PracticeSharp.Core
         private void StartAudioThread(string filename)
         {
             // Create the Audio Processing Worker (Thread)
-            m_audioProcessingThread = new Thread(new ThreadStart(audioProcessingWorker_DoWork));
-            m_audioProcessingThread.Name = "AudioProcessingThread-" + filename;
-            m_audioProcessingThread.IsBackground = true;
-            m_audioProcessingThread.Priority = ThreadPriority.Highest;
+            m_audioProcessingThread = new Thread(new ThreadStart(AudioProcessingWorker_DoWork))
+            {
+                Name = "AudioProcessingThread-" + filename,
+                IsBackground = true,
+                Priority = ThreadPriority.Highest
+            };
             // Important: MTA is needed for WMFSDK to function properly (for WMA support)
             // All WMA (COM) related actions MUST be done within the Thread's MTA otherwise there is a COM exception
             m_audioProcessingThread.SetApartmentState(ApartmentState.MTA);

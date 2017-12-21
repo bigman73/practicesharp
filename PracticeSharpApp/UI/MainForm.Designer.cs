@@ -234,10 +234,10 @@ namespace BigMansStuff.PracticeSharp.UI
             this.tempoTrackBar.TickFrequency = 10;
             this.tempoTrackBar.TickStyle = System.Windows.Forms.TickStyle.Both;
             this.tempoTrackBar.Value = 100;
-            this.tempoTrackBar.ValueChanged += new System.EventHandler(this.tempoTrackBar_ValueChanged);
-            this.tempoTrackBar.MouseDown += new System.Windows.Forms.MouseEventHandler(this.tempoTrackBar_MouseDown);
-            this.tempoTrackBar.MouseMove += new System.Windows.Forms.MouseEventHandler(this.tempoTrackBar_MouseMove);
-            this.tempoTrackBar.MouseUp += new System.Windows.Forms.MouseEventHandler(this.tempoTrackBar_MouseUp);
+            this.tempoTrackBar.ValueChanged += new System.EventHandler(this.TempoTrackBar_ValueChanged);
+            this.tempoTrackBar.MouseDown += new System.Windows.Forms.MouseEventHandler(this.TempoTrackBar_MouseDown);
+            this.tempoTrackBar.MouseMove += new System.Windows.Forms.MouseEventHandler(this.TempoTrackBar_MouseMove);
+            this.tempoTrackBar.MouseUp += new System.Windows.Forms.MouseEventHandler(this.TempoTrackBar_MouseUp);
             // 
             // openFileDialog
             // 
@@ -256,8 +256,8 @@ namespace BigMansStuff.PracticeSharp.UI
             this.volumeTrackBar.TickFrequency = 10;
             this.volumeTrackBar.TickStyle = System.Windows.Forms.TickStyle.Both;
             this.volumeTrackBar.Value = 25;
-            this.volumeTrackBar.ValueChanged += new System.EventHandler(this.volumeTrackBar_ValueChanged);
-            this.volumeTrackBar.MouseDown += new System.Windows.Forms.MouseEventHandler(this.volumeTrackBar_MouseDown);
+            this.volumeTrackBar.ValueChanged += new System.EventHandler(this.VolumeTrackBar_ValueChanged);
+            this.volumeTrackBar.MouseDown += new System.Windows.Forms.MouseEventHandler(this.VolumeTrackBar_MouseDown);
             // 
             // speed1XLabel
             // 
@@ -269,7 +269,7 @@ namespace BigMansStuff.PracticeSharp.UI
             this.speed1XLabel.Size = new System.Drawing.Size(15, 12);
             this.speed1XLabel.TabIndex = 4;
             this.speed1XLabel.Text = "x1";
-            this.speed1XLabel.Click += new System.EventHandler(this.speedLabel_Click);
+            this.speed1XLabel.Click += new System.EventHandler(this.SpeedLabel_Click);
             // 
             // playTimeTrackBar
             // 
@@ -283,10 +283,10 @@ namespace BigMansStuff.PracticeSharp.UI
             this.playTimeTrackBar.TabIndex = 6;
             this.playTimeTrackBar.TickFrequency = 5;
             this.playTimeTrackBar.TickStyle = System.Windows.Forms.TickStyle.TopLeft;
-            this.playTimeTrackBar.ValueChanged += new System.EventHandler(this.playTimeTrackBar_ValueChanged);
-            this.playTimeTrackBar.MouseDown += new System.Windows.Forms.MouseEventHandler(this.playPositionTrackBar_MouseDown);
-            this.playTimeTrackBar.MouseMove += new System.Windows.Forms.MouseEventHandler(this.playTimeTrackBar_MouseMove);
-            this.playTimeTrackBar.MouseUp += new System.Windows.Forms.MouseEventHandler(this.playTimeTrackBar_MouseUp);
+            this.playTimeTrackBar.ValueChanged += new System.EventHandler(this.PlayTimeTrackBar_ValueChanged);
+            this.playTimeTrackBar.MouseDown += new System.Windows.Forms.MouseEventHandler(this.PlayPositionTrackBar_MouseDown);
+            this.playTimeTrackBar.MouseMove += new System.Windows.Forms.MouseEventHandler(this.PlayTimeTrackBar_MouseMove);
+            this.playTimeTrackBar.MouseUp += new System.Windows.Forms.MouseEventHandler(this.PlayTimeTrackBar_MouseUp);
             // 
             // speed01XLabel
             // 
@@ -328,7 +328,7 @@ namespace BigMansStuff.PracticeSharp.UI
             this.startLoopMinuteUpDown.Size = new System.Drawing.Size(51, 20);
             this.startLoopMinuteUpDown.TabIndex = 0;
             this.startLoopMinuteUpDown.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.startLoopMinuteUpDown.ValueChanged += new System.EventHandler(this.startLoopMinuteUpDown_ValueChanged);
+            this.startLoopMinuteUpDown.ValueChanged += new System.EventHandler(this.StartLoopMinuteUpDown_ValueChanged);
             // 
             // startLoopSecondUpDown
             // 
@@ -348,7 +348,7 @@ namespace BigMansStuff.PracticeSharp.UI
             this.startLoopSecondUpDown.Size = new System.Drawing.Size(51, 20);
             this.startLoopSecondUpDown.TabIndex = 2;
             this.startLoopSecondUpDown.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.startLoopSecondUpDown.ValueChanged += new System.EventHandler(this.startLoopSecondUpDown_ValueChanged);
+            this.startLoopSecondUpDown.ValueChanged += new System.EventHandler(this.StartLoopSecondUpDown_ValueChanged);
             // 
             // startLoopMilliUpDown
             // 
@@ -373,7 +373,7 @@ namespace BigMansStuff.PracticeSharp.UI
             this.startLoopMilliUpDown.Size = new System.Drawing.Size(51, 20);
             this.startLoopMilliUpDown.TabIndex = 4;
             this.startLoopMilliUpDown.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.startLoopMilliUpDown.ValueChanged += new System.EventHandler(this.startLoopMilliUpDown_ValueChanged);
+            this.startLoopMilliUpDown.ValueChanged += new System.EventHandler(this.StartLoopMilliUpDown_ValueChanged);
             // 
             // endLoopMinuteUpDown
             // 
@@ -393,7 +393,7 @@ namespace BigMansStuff.PracticeSharp.UI
             this.endLoopMinuteUpDown.Size = new System.Drawing.Size(51, 20);
             this.endLoopMinuteUpDown.TabIndex = 1;
             this.endLoopMinuteUpDown.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.endLoopMinuteUpDown.ValueChanged += new System.EventHandler(this.endLoopMinuteUpDown_ValueChanged);
+            this.endLoopMinuteUpDown.ValueChanged += new System.EventHandler(this.EndLoopMinuteUpDown_ValueChanged);
             // 
             // endLoopSecondUpDown
             // 
@@ -413,7 +413,7 @@ namespace BigMansStuff.PracticeSharp.UI
             this.endLoopSecondUpDown.Size = new System.Drawing.Size(51, 20);
             this.endLoopSecondUpDown.TabIndex = 3;
             this.endLoopSecondUpDown.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.endLoopSecondUpDown.ValueChanged += new System.EventHandler(this.endLoopSecondUpDown_ValueChanged);
+            this.endLoopSecondUpDown.ValueChanged += new System.EventHandler(this.EndLoopSecondUpDown_ValueChanged);
             // 
             // endLoopMilliUpDown
             // 
@@ -438,7 +438,7 @@ namespace BigMansStuff.PracticeSharp.UI
             this.endLoopMilliUpDown.Size = new System.Drawing.Size(51, 20);
             this.endLoopMilliUpDown.TabIndex = 5;
             this.endLoopMilliUpDown.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.endLoopMilliUpDown.ValueChanged += new System.EventHandler(this.endLoopMilliUpDown_ValueChanged);
+            this.endLoopMilliUpDown.ValueChanged += new System.EventHandler(this.EndLoopMilliUpDown_ValueChanged);
             // 
             // startLoopLabel
             // 
@@ -470,7 +470,7 @@ namespace BigMansStuff.PracticeSharp.UI
             this.loopCheckBox.TabIndex = 18;
             this.loopCheckBox.Text = "Loop";
             this.loopCheckBox.UseVisualStyleBackColor = true;
-            this.loopCheckBox.CheckedChanged += new System.EventHandler(this.loopCheckBox_CheckedChanged);
+            this.loopCheckBox.CheckedChanged += new System.EventHandler(this.LoopCheckBox_CheckedChanged);
             // 
             // currentLabel
             // 
@@ -505,7 +505,7 @@ namespace BigMansStuff.PracticeSharp.UI
             this.currentMilliUpDown.Size = new System.Drawing.Size(51, 26);
             this.currentMilliUpDown.TabIndex = 6;
             this.currentMilliUpDown.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.currentMilliUpDown.ValueChanged += new System.EventHandler(this.currentUpDown_ValueChanged);
+            this.currentMilliUpDown.ValueChanged += new System.EventHandler(this.CurrentUpDown_ValueChanged);
             // 
             // currentSecondUpDown
             // 
@@ -525,7 +525,7 @@ namespace BigMansStuff.PracticeSharp.UI
             this.currentSecondUpDown.Size = new System.Drawing.Size(51, 26);
             this.currentSecondUpDown.TabIndex = 5;
             this.currentSecondUpDown.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.currentSecondUpDown.ValueChanged += new System.EventHandler(this.currentUpDown_ValueChanged);
+            this.currentSecondUpDown.ValueChanged += new System.EventHandler(this.CurrentUpDown_ValueChanged);
             // 
             // currentMinuteUpDown
             // 
@@ -545,7 +545,7 @@ namespace BigMansStuff.PracticeSharp.UI
             this.currentMinuteUpDown.Size = new System.Drawing.Size(51, 26);
             this.currentMinuteUpDown.TabIndex = 4;
             this.currentMinuteUpDown.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.currentMinuteUpDown.ValueChanged += new System.EventHandler(this.currentUpDown_ValueChanged);
+            this.currentMinuteUpDown.ValueChanged += new System.EventHandler(this.CurrentUpDown_ValueChanged);
             // 
             // volume100Label
             // 
@@ -715,12 +715,12 @@ namespace BigMansStuff.PracticeSharp.UI
             // resetBankTimer
             // 
             this.resetBankTimer.Interval = 1000;
-            this.resetBankTimer.Tick += new System.EventHandler(this.resetBankTimer_Tick);
+            this.resetBankTimer.Tick += new System.EventHandler(this.ResetBankTimer_Tick);
             // 
             // playTimeUpdateTimer
             // 
             this.playTimeUpdateTimer.Interval = 50;
-            this.playTimeUpdateTimer.Tick += new System.EventHandler(this.playTimeUpdateTimer_Tick);
+            this.playTimeUpdateTimer.Tick += new System.EventHandler(this.PlayTimeUpdateTimer_Tick);
             // 
             // cueComboBox
             // 
@@ -736,7 +736,7 @@ namespace BigMansStuff.PracticeSharp.UI
             this.cueComboBox.Name = "cueComboBox";
             this.cueComboBox.Size = new System.Drawing.Size(42, 21);
             this.cueComboBox.TabIndex = 8;
-            this.cueComboBox.SelectedValueChanged += new System.EventHandler(this.cueComboBox_SelectedValueChanged);
+            this.cueComboBox.SelectedValueChanged += new System.EventHandler(this.CueComboBox_SelectedValueChanged);
             // 
             // cueLabel
             // 
@@ -966,10 +966,10 @@ namespace BigMansStuff.PracticeSharp.UI
             this.pitchTrackBar.TabIndex = 1;
             this.pitchTrackBar.TickFrequency = 8;
             this.pitchTrackBar.TickStyle = System.Windows.Forms.TickStyle.Both;
-            this.pitchTrackBar.ValueChanged += new System.EventHandler(this.pitchTrackBar_ValueChanged);
-            this.pitchTrackBar.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pitchTrackBar_MouseDown);
-            this.pitchTrackBar.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pitchTrackBar_MouseMove);
-            this.pitchTrackBar.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pitchTrackBar_MouseUp);
+            this.pitchTrackBar.ValueChanged += new System.EventHandler(this.PitchTrackBar_ValueChanged);
+            this.pitchTrackBar.MouseDown += new System.Windows.Forms.MouseEventHandler(this.PitchTrackBar_MouseDown);
+            this.pitchTrackBar.MouseMove += new System.Windows.Forms.MouseEventHandler(this.PitchTrackBar_MouseMove);
+            this.pitchTrackBar.MouseUp += new System.Windows.Forms.MouseEventHandler(this.PitchTrackBar_MouseUp);
             // 
             // trackBarPanel
             // 
@@ -1059,7 +1059,7 @@ namespace BigMansStuff.PracticeSharp.UI
             this.leftChannelStripButton.Name = "leftChannelStripButton";
             this.leftChannelStripButton.Size = new System.Drawing.Size(36, 22);
             this.leftChannelStripButton.Text = "LEFT";
-            this.leftChannelStripButton.Click += new System.EventHandler(this.leftChannelStripButton_Click);
+            this.leftChannelStripButton.Click += new System.EventHandler(this.LeftChannelStripButton_Click);
             // 
             // bothChannelsStripButton
             // 
@@ -1072,7 +1072,7 @@ namespace BigMansStuff.PracticeSharp.UI
             this.bothChannelsStripButton.Name = "bothChannelsStripButton";
             this.bothChannelsStripButton.Size = new System.Drawing.Size(42, 22);
             this.bothChannelsStripButton.Text = "BOTH";
-            this.bothChannelsStripButton.Click += new System.EventHandler(this.bothChannelsStripButton_Click);
+            this.bothChannelsStripButton.Click += new System.EventHandler(this.BothChannelsStripButton_Click);
             // 
             // rightChannelStripButton
             // 
@@ -1083,7 +1083,7 @@ namespace BigMansStuff.PracticeSharp.UI
             this.rightChannelStripButton.Name = "rightChannelStripButton";
             this.rightChannelStripButton.Size = new System.Drawing.Size(45, 22);
             this.rightChannelStripButton.Text = "RIGHT";
-            this.rightChannelStripButton.Click += new System.EventHandler(this.rightChannelStripButton_Click);
+            this.rightChannelStripButton.Click += new System.EventHandler(this.RightChannelStripButton_Click);
             // 
             // removeVocalsCheckBox
             // 
@@ -1094,7 +1094,7 @@ namespace BigMansStuff.PracticeSharp.UI
             this.removeVocalsCheckBox.TabIndex = 90;
             this.removeVocalsCheckBox.Text = "Suppress vocals";
             this.removeVocalsCheckBox.UseVisualStyleBackColor = true;
-            this.removeVocalsCheckBox.CheckedChanged += new System.EventHandler(this.removeVocalsCheckBox_CheckedChanged);
+            this.removeVocalsCheckBox.CheckedChanged += new System.EventHandler(this.RemoveVocalsCheckBox_CheckedChanged);
             // 
             // label1
             // 
@@ -1116,7 +1116,7 @@ namespace BigMansStuff.PracticeSharp.UI
             this.timeStretchProfileComboBox.Size = new System.Drawing.Size(193, 21);
             this.timeStretchProfileComboBox.TabIndex = 88;
             this.timeStretchProfileComboBox.Visible = false;
-            this.timeStretchProfileComboBox.SelectedIndexChanged += new System.EventHandler(this.timeStretchProfileComboBox_SelectedIndexChanged);
+            this.timeStretchProfileComboBox.SelectedIndexChanged += new System.EventHandler(this.TimeStretchProfileComboBox_SelectedIndexChanged);
             // 
             // timeStretchProfileLabel
             // 
@@ -1205,8 +1205,8 @@ namespace BigMansStuff.PracticeSharp.UI
             this.hiEqTrackBar.SmallChange = 5;
             this.hiEqTrackBar.TabIndex = 5;
             this.hiEqTrackBar.TickFrequency = 20;
-            this.hiEqTrackBar.ValueChanged += new System.EventHandler(this.hiEqTrackBar_ValueChanged);
-            this.hiEqTrackBar.MouseDown += new System.Windows.Forms.MouseEventHandler(this.hiEqTrackBar_MouseDown);
+            this.hiEqTrackBar.ValueChanged += new System.EventHandler(this.HiEqTrackBar_ValueChanged);
+            this.hiEqTrackBar.MouseDown += new System.Windows.Forms.MouseEventHandler(this.HiEqTrackBar_MouseDown);
             // 
             // medEqTrackBar
             // 
@@ -1221,8 +1221,8 @@ namespace BigMansStuff.PracticeSharp.UI
             this.medEqTrackBar.SmallChange = 5;
             this.medEqTrackBar.TabIndex = 4;
             this.medEqTrackBar.TickFrequency = 20;
-            this.medEqTrackBar.ValueChanged += new System.EventHandler(this.medEqTrackBar_ValueChanged);
-            this.medEqTrackBar.MouseDown += new System.Windows.Forms.MouseEventHandler(this.medEqTrackBar_MouseDown);
+            this.medEqTrackBar.ValueChanged += new System.EventHandler(this.MedEqTrackBar_ValueChanged);
+            this.medEqTrackBar.MouseDown += new System.Windows.Forms.MouseEventHandler(this.MedEqTrackBar_MouseDown);
             // 
             // loEqTrackBar
             // 
@@ -1237,8 +1237,8 @@ namespace BigMansStuff.PracticeSharp.UI
             this.loEqTrackBar.SmallChange = 5;
             this.loEqTrackBar.TabIndex = 3;
             this.loEqTrackBar.TickFrequency = 20;
-            this.loEqTrackBar.ValueChanged += new System.EventHandler(this.loEqTrackBar_ValueChanged);
-            this.loEqTrackBar.MouseDown += new System.Windows.Forms.MouseEventHandler(this.loEqtrackBar_MouseDown);
+            this.loEqTrackBar.ValueChanged += new System.EventHandler(this.LoEqTrackBar_ValueChanged);
+            this.loEqTrackBar.MouseDown += new System.Windows.Forms.MouseEventHandler(this.LoEqtrackBar_MouseDown);
             // 
             // menuStrip
             // 
@@ -1264,7 +1264,7 @@ namespace BigMansStuff.PracticeSharp.UI
             this.recentFilesToolStripMenuItem.Name = "recentFilesToolStripMenuItem";
             this.recentFilesToolStripMenuItem.Size = new System.Drawing.Size(81, 20);
             this.recentFilesToolStripMenuItem.Text = "Recent Files";
-            this.recentFilesToolStripMenuItem.DropDownOpening += new System.EventHandler(this.recentFilesToolStripMenuItem_DropDownOpening);
+            this.recentFilesToolStripMenuItem.DropDownOpening += new System.EventHandler(this.RecentFilesToolStripMenuItem_DropDownOpening);
             // 
             // recent1ToolStripMenuItem
             // 
@@ -1330,7 +1330,7 @@ namespace BigMansStuff.PracticeSharp.UI
             this.keyboardShortcutsMenuItem.Name = "keyboardShortcutsMenuItem";
             this.keyboardShortcutsMenuItem.Size = new System.Drawing.Size(188, 22);
             this.keyboardShortcutsMenuItem.Text = "Keyboard Shortcuts..";
-            this.keyboardShortcutsMenuItem.Click += new System.EventHandler(this.keyboardShortcutsMenuItem_Click);
+            this.keyboardShortcutsMenuItem.Click += new System.EventHandler(this.KeyboardShortcutsMenuItem_Click);
             // 
             // showTechLogToolStripMenuItem
             // 
@@ -1338,7 +1338,7 @@ namespace BigMansStuff.PracticeSharp.UI
             this.showTechLogToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F12;
             this.showTechLogToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
             this.showTechLogToolStripMenuItem.Text = "Show Tech. Log..";
-            this.showTechLogToolStripMenuItem.Click += new System.EventHandler(this.showTechLogToolStripMenuItem_Click);
+            this.showTechLogToolStripMenuItem.Click += new System.EventHandler(this.ShowTechLogToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
@@ -1350,7 +1350,7 @@ namespace BigMansStuff.PracticeSharp.UI
             this.aboutMenuItem.Name = "aboutMenuItem";
             this.aboutMenuItem.Size = new System.Drawing.Size(188, 22);
             this.aboutMenuItem.Text = "About..";
-            this.aboutMenuItem.Click += new System.EventHandler(this.aboutMenuItem_Click);
+            this.aboutMenuItem.Click += new System.EventHandler(this.AboutMenuItem_Click);
             // 
             // toolTip
             // 
@@ -1368,7 +1368,7 @@ namespace BigMansStuff.PracticeSharp.UI
             this.equalizerHoverLabel.Size = new System.Drawing.Size(68, 15);
             this.equalizerHoverLabel.TabIndex = 80;
             this.equalizerHoverLabel.Text = "Equalizer";
-            this.equalizerHoverLabel.Click += new System.EventHandler(this.equalizerHoverLabel_Click);
+            this.equalizerHoverLabel.Click += new System.EventHandler(this.EqualizerHoverLabel_Click);
             // 
             // hiEqHoverLabel
             // 
@@ -1380,7 +1380,7 @@ namespace BigMansStuff.PracticeSharp.UI
             this.hiEqHoverLabel.Size = new System.Drawing.Size(19, 13);
             this.hiEqHoverLabel.TabIndex = 79;
             this.hiEqHoverLabel.Text = "Hi";
-            this.hiEqHoverLabel.Click += new System.EventHandler(this.hiEqHoverLabel_Click);
+            this.hiEqHoverLabel.Click += new System.EventHandler(this.HiEqHoverLabel_Click);
             // 
             // medEqHoverLabel
             // 
@@ -1392,7 +1392,7 @@ namespace BigMansStuff.PracticeSharp.UI
             this.medEqHoverLabel.Size = new System.Drawing.Size(31, 13);
             this.medEqHoverLabel.TabIndex = 78;
             this.medEqHoverLabel.Text = "Med";
-            this.medEqHoverLabel.Click += new System.EventHandler(this.medEqHoverLabel_Click);
+            this.medEqHoverLabel.Click += new System.EventHandler(this.MedEqHoverLabel_Click);
             // 
             // loEqHoverLabel
             // 
@@ -1404,7 +1404,7 @@ namespace BigMansStuff.PracticeSharp.UI
             this.loEqHoverLabel.Size = new System.Drawing.Size(21, 13);
             this.loEqHoverLabel.TabIndex = 77;
             this.loEqHoverLabel.Text = "Lo";
-            this.loEqHoverLabel.Click += new System.EventHandler(this.loEqHoverLabel_Click);
+            this.loEqHoverLabel.Click += new System.EventHandler(this.LoEqHoverLabel_Click);
             // 
             // positionMarkersPanel
             // 
@@ -1412,7 +1412,7 @@ namespace BigMansStuff.PracticeSharp.UI
             this.positionMarkersPanel.Name = "positionMarkersPanel";
             this.positionMarkersPanel.Size = new System.Drawing.Size(496, 5);
             this.positionMarkersPanel.TabIndex = 73;
-            this.positionMarkersPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.positionMarkersPanel_Paint);
+            this.positionMarkersPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.PositionMarkersPanel_Paint);
             // 
             // pitchLabel
             // 
@@ -1424,7 +1424,7 @@ namespace BigMansStuff.PracticeSharp.UI
             this.pitchLabel.Size = new System.Drawing.Size(39, 15);
             this.pitchLabel.TabIndex = 4;
             this.pitchLabel.Text = "Pitch";
-            this.pitchLabel.Click += new System.EventHandler(this.pitchLabel_Click);
+            this.pitchLabel.Click += new System.EventHandler(this.PitchLabel_Click);
             // 
             // speedLabel
             // 
@@ -1436,7 +1436,7 @@ namespace BigMansStuff.PracticeSharp.UI
             this.speedLabel.Size = new System.Drawing.Size(48, 15);
             this.speedLabel.TabIndex = 1;
             this.speedLabel.Text = "Speed";
-            this.speedLabel.Click += new System.EventHandler(this.speedLabel_Click);
+            this.speedLabel.Click += new System.EventHandler(this.SpeedLabel_Click);
             // 
             // volumeLabel
             // 
@@ -1448,7 +1448,7 @@ namespace BigMansStuff.PracticeSharp.UI
             this.volumeLabel.Size = new System.Drawing.Size(55, 15);
             this.volumeLabel.TabIndex = 7;
             this.volumeLabel.Text = "Volume";
-            this.volumeLabel.Click += new System.EventHandler(this.volumeLabel_Click);
+            this.volumeLabel.Click += new System.EventHandler(this.VolumeLabel_Click);
             // 
             // positionLabel
             // 
@@ -1460,7 +1460,7 @@ namespace BigMansStuff.PracticeSharp.UI
             this.positionLabel.Size = new System.Drawing.Size(59, 15);
             this.positionLabel.TabIndex = 9;
             this.positionLabel.Text = "Position";
-            this.positionLabel.Click += new System.EventHandler(this.positionLabel_Click);
+            this.positionLabel.Click += new System.EventHandler(this.PositionLabel_Click);
             // 
             // openFileButton
             // 
@@ -1473,7 +1473,7 @@ namespace BigMansStuff.PracticeSharp.UI
             this.openFileButton.Name = "openFileButton";
             this.openFileButton.Size = new System.Drawing.Size(56, 56);
             this.openFileButton.TabIndex = 13;
-            this.openFileButton.Click += new System.EventHandler(this.openFileButton_Click);
+            this.openFileButton.Click += new System.EventHandler(this.OpenFileButton_Click);
             // 
             // playPauseButton
             // 
@@ -1486,7 +1486,7 @@ namespace BigMansStuff.PracticeSharp.UI
             this.playPauseButton.Name = "playPauseButton";
             this.playPauseButton.Size = new System.Drawing.Size(56, 56);
             this.playPauseButton.TabIndex = 12;
-            this.playPauseButton.Click += new System.EventHandler(this.playPauseButton_Click);
+            this.playPauseButton.Click += new System.EventHandler(this.PlayPauseButton_Click);
             // 
             // endLoopNowButton
             // 
@@ -1504,7 +1504,7 @@ namespace BigMansStuff.PracticeSharp.UI
             this.endLoopNowButton.Size = new System.Drawing.Size(46, 21);
             this.endLoopNowButton.TabIndex = 56;
             this.endLoopNowButton.TextPadding = new System.Drawing.Size(1, 1);
-            this.endLoopNowButton.Click += new System.EventHandler(this.endLoopNowButton_Click);
+            this.endLoopNowButton.Click += new System.EventHandler(this.EndLoopNowButton_Click);
             // 
             // startLoopNowButton
             // 
@@ -1522,7 +1522,7 @@ namespace BigMansStuff.PracticeSharp.UI
             this.startLoopNowButton.Size = new System.Drawing.Size(46, 22);
             this.startLoopNowButton.TabIndex = 14;
             this.startLoopNowButton.TextPadding = new System.Drawing.Size(1, 1);
-            this.startLoopNowButton.Click += new System.EventHandler(this.startLoopNowButton_Click);
+            this.startLoopNowButton.Click += new System.EventHandler(this.StartLoopNowButton_Click);
             // 
             // resetPresetButton
             // 
@@ -1536,8 +1536,8 @@ namespace BigMansStuff.PracticeSharp.UI
             this.resetPresetButton.Name = "resetPresetButton";
             this.resetPresetButton.Size = new System.Drawing.Size(56, 56);
             this.resetPresetButton.TabIndex = 11;
-            this.resetPresetButton.MouseDown += new System.Windows.Forms.MouseEventHandler(this.resetBankButton_MouseDown);
-            this.resetPresetButton.MouseUp += new System.Windows.Forms.MouseEventHandler(this.resetBankButton_MouseUp);
+            this.resetPresetButton.MouseDown += new System.Windows.Forms.MouseEventHandler(this.ResetBankButton_MouseDown);
+            this.resetPresetButton.MouseUp += new System.Windows.Forms.MouseEventHandler(this.ResetBankButton_MouseUp);
             // 
             // writePresetButton
             // 
@@ -1551,7 +1551,7 @@ namespace BigMansStuff.PracticeSharp.UI
             this.writePresetButton.Name = "writePresetButton";
             this.writePresetButton.Size = new System.Drawing.Size(56, 56);
             this.writePresetButton.TabIndex = 10;
-            this.writePresetButton.Click += new System.EventHandler(this.writePresetButton_Click);
+            this.writePresetButton.Click += new System.EventHandler(this.WritePresetButton_Click);
             // 
             // presetControl7
             // 
@@ -1580,9 +1580,9 @@ namespace BigMansStuff.PracticeSharp.UI
             this.presetControl7.TabIndex = 8;
             this.presetControl7.Title = "[No Desc]";
             this.toolTip.SetToolTip(this.presetControl7, "Preset 7 (Alt+7)");
-            this.presetControl7.PresetSelected += new System.EventHandler(this.presetControl_PresetSelected);
-            this.presetControl7.PresetSaveSelected += new System.EventHandler(this.presetControl_PresetSaveSelected);
-            this.presetControl7.PresetDescriptionChanged += new System.EventHandler(this.presetControl_PresetDescriptionChanged);
+            this.presetControl7.PresetSelected += new System.EventHandler(this.PresetControl_PresetSelected);
+            this.presetControl7.PresetSaveSelected += new System.EventHandler(this.PresetControl_PresetSaveSelected);
+            this.presetControl7.PresetDescriptionChanged += new System.EventHandler(this.PresetControl_PresetDescriptionChanged);
             // 
             // presetControl5
             // 
@@ -1611,9 +1611,9 @@ namespace BigMansStuff.PracticeSharp.UI
             this.presetControl5.TabIndex = 6;
             this.presetControl5.Title = "[No Desc]";
             this.toolTip.SetToolTip(this.presetControl5, "Preset 5 (Alt+5)");
-            this.presetControl5.PresetSelected += new System.EventHandler(this.presetControl_PresetSelected);
-            this.presetControl5.PresetSaveSelected += new System.EventHandler(this.presetControl_PresetSaveSelected);
-            this.presetControl5.PresetDescriptionChanged += new System.EventHandler(this.presetControl_PresetDescriptionChanged);
+            this.presetControl5.PresetSelected += new System.EventHandler(this.PresetControl_PresetSelected);
+            this.presetControl5.PresetSaveSelected += new System.EventHandler(this.PresetControl_PresetSaveSelected);
+            this.presetControl5.PresetDescriptionChanged += new System.EventHandler(this.PresetControl_PresetDescriptionChanged);
             // 
             // presetControl6
             // 
@@ -1642,9 +1642,9 @@ namespace BigMansStuff.PracticeSharp.UI
             this.presetControl6.TabIndex = 7;
             this.presetControl6.Title = "[No Desc]";
             this.toolTip.SetToolTip(this.presetControl6, "Preset 6 (Alt+6)");
-            this.presetControl6.PresetSelected += new System.EventHandler(this.presetControl_PresetSelected);
-            this.presetControl6.PresetSaveSelected += new System.EventHandler(this.presetControl_PresetSaveSelected);
-            this.presetControl6.PresetDescriptionChanged += new System.EventHandler(this.presetControl_PresetDescriptionChanged);
+            this.presetControl6.PresetSelected += new System.EventHandler(this.PresetControl_PresetSelected);
+            this.presetControl6.PresetSaveSelected += new System.EventHandler(this.PresetControl_PresetSaveSelected);
+            this.presetControl6.PresetDescriptionChanged += new System.EventHandler(this.PresetControl_PresetDescriptionChanged);
             // 
             // presetControl8
             // 
@@ -1673,9 +1673,9 @@ namespace BigMansStuff.PracticeSharp.UI
             this.presetControl8.TabIndex = 9;
             this.presetControl8.Title = "[No Desc]";
             this.toolTip.SetToolTip(this.presetControl8, "Preset 8 (Alt+8)");
-            this.presetControl8.PresetSelected += new System.EventHandler(this.presetControl_PresetSelected);
-            this.presetControl8.PresetSaveSelected += new System.EventHandler(this.presetControl_PresetSaveSelected);
-            this.presetControl8.PresetDescriptionChanged += new System.EventHandler(this.presetControl_PresetDescriptionChanged);
+            this.presetControl8.PresetSelected += new System.EventHandler(this.PresetControl_PresetSelected);
+            this.presetControl8.PresetSaveSelected += new System.EventHandler(this.PresetControl_PresetSaveSelected);
+            this.presetControl8.PresetDescriptionChanged += new System.EventHandler(this.PresetControl_PresetDescriptionChanged);
             // 
             // presetControl3
             // 
@@ -1704,9 +1704,9 @@ namespace BigMansStuff.PracticeSharp.UI
             this.presetControl3.TabIndex = 4;
             this.presetControl3.Title = "[No Desc]";
             this.toolTip.SetToolTip(this.presetControl3, "Preset 3 (Alt+3)");
-            this.presetControl3.PresetSelected += new System.EventHandler(this.presetControl_PresetSelected);
-            this.presetControl3.PresetSaveSelected += new System.EventHandler(this.presetControl_PresetSaveSelected);
-            this.presetControl3.PresetDescriptionChanged += new System.EventHandler(this.presetControl_PresetDescriptionChanged);
+            this.presetControl3.PresetSelected += new System.EventHandler(this.PresetControl_PresetSelected);
+            this.presetControl3.PresetSaveSelected += new System.EventHandler(this.PresetControl_PresetSaveSelected);
+            this.presetControl3.PresetDescriptionChanged += new System.EventHandler(this.PresetControl_PresetDescriptionChanged);
             // 
             // presetControl1
             // 
@@ -1735,9 +1735,9 @@ namespace BigMansStuff.PracticeSharp.UI
             this.presetControl1.TabIndex = 2;
             this.presetControl1.Title = "[No Desc]";
             this.toolTip.SetToolTip(this.presetControl1, "Preset 1 (Alt+1)");
-            this.presetControl1.PresetSelected += new System.EventHandler(this.presetControl_PresetSelected);
-            this.presetControl1.PresetSaveSelected += new System.EventHandler(this.presetControl_PresetSaveSelected);
-            this.presetControl1.PresetDescriptionChanged += new System.EventHandler(this.presetControl_PresetDescriptionChanged);
+            this.presetControl1.PresetSelected += new System.EventHandler(this.PresetControl_PresetSelected);
+            this.presetControl1.PresetSaveSelected += new System.EventHandler(this.PresetControl_PresetSaveSelected);
+            this.presetControl1.PresetDescriptionChanged += new System.EventHandler(this.PresetControl_PresetDescriptionChanged);
             // 
             // presetControl2
             // 
@@ -1766,9 +1766,9 @@ namespace BigMansStuff.PracticeSharp.UI
             this.presetControl2.TabIndex = 3;
             this.presetControl2.Title = "[No Desc]";
             this.toolTip.SetToolTip(this.presetControl2, "Preset 2 (Alt+2)");
-            this.presetControl2.PresetSelected += new System.EventHandler(this.presetControl_PresetSelected);
-            this.presetControl2.PresetSaveSelected += new System.EventHandler(this.presetControl_PresetSaveSelected);
-            this.presetControl2.PresetDescriptionChanged += new System.EventHandler(this.presetControl_PresetDescriptionChanged);
+            this.presetControl2.PresetSelected += new System.EventHandler(this.PresetControl_PresetSelected);
+            this.presetControl2.PresetSaveSelected += new System.EventHandler(this.PresetControl_PresetSaveSelected);
+            this.presetControl2.PresetDescriptionChanged += new System.EventHandler(this.PresetControl_PresetDescriptionChanged);
             // 
             // presetControl4
             // 
@@ -1797,9 +1797,9 @@ namespace BigMansStuff.PracticeSharp.UI
             this.presetControl4.TabIndex = 5;
             this.presetControl4.Title = "[No Desc]";
             this.toolTip.SetToolTip(this.presetControl4, "Preset 4 (Alt+4)");
-            this.presetControl4.PresetSelected += new System.EventHandler(this.presetControl_PresetSelected);
-            this.presetControl4.PresetSaveSelected += new System.EventHandler(this.presetControl_PresetSaveSelected);
-            this.presetControl4.PresetDescriptionChanged += new System.EventHandler(this.presetControl_PresetDescriptionChanged);
+            this.presetControl4.PresetSelected += new System.EventHandler(this.PresetControl_PresetSelected);
+            this.presetControl4.PresetSaveSelected += new System.EventHandler(this.PresetControl_PresetSaveSelected);
+            this.presetControl4.PresetDescriptionChanged += new System.EventHandler(this.PresetControl_PresetDescriptionChanged);
             // 
             // MainForm
             // 

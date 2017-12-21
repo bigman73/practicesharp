@@ -117,9 +117,9 @@ namespace BigMansStuff.PracticeSharp.UI
             // Create the PracticeSharpLogic back end layer
             m_practiceSharpLogic = new PracticeSharpLogic();
             m_practiceSharpLogic.Initialize();
-            m_practiceSharpLogic.StatusChanged += new PracticeSharpLogic.StatusChangedEventHandler(practiceSharpLogic_StatusChanged);
-            m_practiceSharpLogic.PlayTimeChanged += new EventHandler(practiceSharpLogic_PlayTimeChanged);
-            m_practiceSharpLogic.CueWaitPulsed += new EventHandler(practiceSharpLogic_CueWaitPulsed);
+            m_practiceSharpLogic.StatusChanged += new PracticeSharpLogic.StatusChangedEventHandler(PracticeSharpLogic_StatusChanged);
+            m_practiceSharpLogic.PlayTimeChanged += new EventHandler(PracticeSharpLogic_PlayTimeChanged);
+            m_practiceSharpLogic.CueWaitPulsed += new EventHandler(PracticeSharpLogic_CueWaitPulsed);
 
             EnableControls( false );
 
@@ -132,21 +132,23 @@ namespace BigMansStuff.PracticeSharp.UI
             openFileButton.Image = Resources.OpenFile_icon;
 
             cueComboBox.SelectedIndex = 0;
-            m_presetControls = new Dictionary<string, PresetControl>();
-            m_presetControls.Add("1", presetControl1);
-            m_presetControls.Add("2", presetControl2);
-            m_presetControls.Add("3", presetControl3);
-            m_presetControls.Add("4", presetControl4);
-            m_presetControls.Add("5", presetControl5);
-            m_presetControls.Add("6", presetControl6);
-            m_presetControls.Add("7", presetControl7);
-            m_presetControls.Add("8", presetControl8);
+            m_presetControls = new Dictionary<string, PresetControl>
+            {
+                { "1", presetControl1 },
+                { "2", presetControl2 },
+                { "3", presetControl3 },
+                { "4", presetControl4 },
+                { "5", presetControl5 },
+                { "6", presetControl6 },
+                { "7", presetControl7 },
+                { "8", presetControl8 }
+            };
 
             // Set defaults
-            tempoTrackBar_ValueChanged(this, new EventArgs());
-            pitchTrackBar_ValueChanged(this, new EventArgs());
-            volumeTrackBar_ValueChanged(this, new EventArgs());
-            playTimeTrackBar_ValueChanged(this, new EventArgs());
+            TempoTrackBar_ValueChanged(this, new EventArgs());
+            PitchTrackBar_ValueChanged(this, new EventArgs());
+            VolumeTrackBar_ValueChanged(this, new EventArgs());
+            PlayTimeTrackBar_ValueChanged(this, new EventArgs());
 
             InitializeTimeStretchProfiles();
         }
@@ -188,7 +190,7 @@ namespace BigMansStuff.PracticeSharp.UI
                         recent6ToolStripMenuItem, recent7ToolStripMenuItem, recent8ToolStripMenuItem });
             foreach (ToolStripMenuItem recentMenuItem in m_recentFilesMenuItems)
             {
-                recentMenuItem.Click += new EventHandler(recentMenuItem_Click);
+                recentMenuItem.Click += new EventHandler(RecentMenuItem_Click);
             }
 
             m_mruFile = m_appDataFolder + "\\practicesharp_mru.txt";
@@ -272,9 +274,9 @@ namespace BigMansStuff.PracticeSharp.UI
             {
                 m_practiceSharpLogic.Terminate();
 
-                m_practiceSharpLogic.StatusChanged -= new PracticeSharpLogic.StatusChangedEventHandler(practiceSharpLogic_StatusChanged);
-                m_practiceSharpLogic.PlayTimeChanged -= new EventHandler(practiceSharpLogic_PlayTimeChanged);
-                m_practiceSharpLogic.CueWaitPulsed -= new EventHandler(practiceSharpLogic_CueWaitPulsed);
+                m_practiceSharpLogic.StatusChanged -= new PracticeSharpLogic.StatusChangedEventHandler(PracticeSharpLogic_StatusChanged);
+                m_practiceSharpLogic.PlayTimeChanged -= new EventHandler(PracticeSharpLogic_PlayTimeChanged);
+                m_practiceSharpLogic.CueWaitPulsed -= new EventHandler(PracticeSharpLogic_CueWaitPulsed);
 
                 m_practiceSharpLogic.Dispose();
                 m_practiceSharpLogic = null;
@@ -412,49 +414,49 @@ namespace BigMansStuff.PracticeSharp.UI
             }
 
             // 1 - Preset #1
-            else if (isPresetSelectKey(e, Keys.D1))
+            else if (IsPresetSelectKey(e, Keys.D1))
             {
                 presetControl1.State = PresetControl.PresetStates.Selected;
                 e.Handled = true;
             }
             // 2 - Preset #2
-            else if (isPresetSelectKey(e, Keys.D2))
+            else if (IsPresetSelectKey(e, Keys.D2))
             {
                 presetControl2.State = PresetControl.PresetStates.Selected;
                 e.Handled = true;
             }
             // 3 - Preset #3
-            else if (isPresetSelectKey(e, Keys.D3))
+            else if (IsPresetSelectKey(e, Keys.D3))
             {
                 presetControl3.State = PresetControl.PresetStates.Selected;
                 e.Handled = true;
             }
             // 4 - Preset #4
-            else if (isPresetSelectKey(e, Keys.D4))
+            else if (IsPresetSelectKey(e, Keys.D4))
             {
                 presetControl4.State = PresetControl.PresetStates.Selected;
                 e.Handled = true;
             }
             // 5 - Preset #5
-            else if (isPresetSelectKey(e, Keys.D5))
+            else if (IsPresetSelectKey(e, Keys.D5))
             {
                 presetControl5.State = PresetControl.PresetStates.Selected;
                 e.Handled = true;
             }
             // 6 - Preset #6
-            else if (isPresetSelectKey(e, Keys.D6))
+            else if (IsPresetSelectKey(e, Keys.D6))
             {
                 presetControl6.State = PresetControl.PresetStates.Selected;
                 e.Handled = true;
             }
             // 7 - Preset #7
-            else if (isPresetSelectKey(e, Keys.D7))
+            else if (IsPresetSelectKey(e, Keys.D7))
             {
                 presetControl7.State = PresetControl.PresetStates.Selected;
                 e.Handled = true;
             }
             // 8 - Preset #8
-            else if (isPresetSelectKey(e, Keys.D8))
+            else if (IsPresetSelectKey(e, Keys.D8))
             {
                 presetControl8.State = PresetControl.PresetStates.Selected;
                 e.Handled = true;
@@ -541,7 +543,7 @@ namespace BigMansStuff.PracticeSharp.UI
             }
         }
 
-        private bool isPresetSelectKey(KeyEventArgs e, Keys keyCode)
+        private bool IsPresetSelectKey(KeyEventArgs e, Keys keyCode)
         {
             return !e.Control && !e.Alt && !e.Shift && e.KeyCode == keyCode && !(this.ActiveControl is NumericUpDown);
         }
@@ -552,7 +554,7 @@ namespace BigMansStuff.PracticeSharp.UI
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void showTechLogToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ShowTechLogToolStripMenuItem_Click(object sender, EventArgs e)
         {
             NLog.Targets.FileTarget target = LogManager.Configuration.FindTargetByName("logfileError") as NLog.Targets.FileTarget;
             string appLogFilename = target.FileName.ToString();
@@ -565,7 +567,7 @@ namespace BigMansStuff.PracticeSharp.UI
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void playPauseButton_Click(object sender, EventArgs e)
+        private void PlayPauseButton_Click(object sender, EventArgs e)
         {
             if (m_practiceSharpLogic.Status == PracticeSharpLogic.Statuses.Playing)
             {
@@ -600,7 +602,7 @@ namespace BigMansStuff.PracticeSharp.UI
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void playPauseButton_MouseEnter(object sender, EventArgs e)
+        private void PlayPauseButton_MouseEnter(object sender, EventArgs e)
         {
             if (m_practiceSharpLogic.Status == PracticeSharpLogic.Statuses.Playing)
                 playPauseButton.Image = Resources.Pause_Hot;
@@ -614,7 +616,7 @@ namespace BigMansStuff.PracticeSharp.UI
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void playPauseButton_MouseLeave(object sender, EventArgs e)
+        private void PlayPauseButton_MouseLeave(object sender, EventArgs e)
         {
             if (m_practiceSharpLogic.Status == PracticeSharpLogic.Statuses.Playing)
                 playPauseButton.Image = Resources.Pause_Normal;
@@ -629,7 +631,7 @@ namespace BigMansStuff.PracticeSharp.UI
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void positionMarkersPanel_Paint(object sender, PaintEventArgs e)
+        private void PositionMarkersPanel_Paint(object sender, PaintEventArgs e)
         {
             // don't paint if we are initializing or terminating/ed
             if (m_practiceSharpLogic == null
@@ -672,7 +674,7 @@ namespace BigMansStuff.PracticeSharp.UI
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void writePresetButton_Click(object sender, EventArgs e)
+        private void WritePresetButton_Click(object sender, EventArgs e)
         {
             if (!m_writeMode)
             {
@@ -725,7 +727,7 @@ namespace BigMansStuff.PracticeSharp.UI
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void presetControl_PresetSelected(object sender, EventArgs e)
+        private void PresetControl_PresetSelected(object sender, EventArgs e)
         {
             bool isPlaying = (m_practiceSharpLogic.Status == PracticeSharpLogic.Statuses.Playing);
 
@@ -760,7 +762,7 @@ namespace BigMansStuff.PracticeSharp.UI
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void presetControl_PresetDescriptionChanged(object sender, EventArgs e)
+        private void PresetControl_PresetDescriptionChanged(object sender, EventArgs e)
         {
             RewritePresetsBankFile();
         }
@@ -771,7 +773,7 @@ namespace BigMansStuff.PracticeSharp.UI
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void presetControl_PresetSaveSelected(object sender, EventArgs e)
+        private void PresetControl_PresetSaveSelected(object sender, EventArgs e)
         {
             m_currentPreset = sender as PresetControl;
 
@@ -811,7 +813,7 @@ namespace BigMansStuff.PracticeSharp.UI
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void volumeTrackBar_ValueChanged(object sender, EventArgs e)
+        private void VolumeTrackBar_ValueChanged(object sender, EventArgs e)
         {
             float newVolume = volumeTrackBar.Value / 100.0f;
             m_practiceSharpLogic.Volume = newVolume;
@@ -824,7 +826,7 @@ namespace BigMansStuff.PracticeSharp.UI
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void tempoTrackBar_MouseDown(object sender, MouseEventArgs e)
+        private void TempoTrackBar_MouseDown(object sender, MouseEventArgs e)
         {
             tempoTrackBar.Tag = "MouseDown";
             UpdateHorizontalTrackBarByMousePosition(tempoTrackBar, e);
@@ -835,7 +837,7 @@ namespace BigMansStuff.PracticeSharp.UI
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void tempoTrackBar_MouseMove(object sender, MouseEventArgs e)
+        private void TempoTrackBar_MouseMove(object sender, MouseEventArgs e)
         {
             if (tempoTrackBar.Tag != null && tempoTrackBar.Tag.ToString() == "MouseDown")
             {
@@ -848,7 +850,7 @@ namespace BigMansStuff.PracticeSharp.UI
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void tempoTrackBar_MouseUp(object sender, MouseEventArgs e)
+        private void TempoTrackBar_MouseUp(object sender, MouseEventArgs e)
         {
             tempoTrackBar.Tag = string.Empty;
             UpdateHorizontalTrackBarByMousePosition(tempoTrackBar, e);
@@ -859,7 +861,7 @@ namespace BigMansStuff.PracticeSharp.UI
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void pitchTrackBar_MouseDown(object sender, MouseEventArgs e)
+        private void PitchTrackBar_MouseDown(object sender, MouseEventArgs e)
         {
             pitchTrackBar.Tag = "MouseDown";
             UpdateHorizontalTrackBarByMousePosition(pitchTrackBar, e);
@@ -870,7 +872,7 @@ namespace BigMansStuff.PracticeSharp.UI
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void pitchTrackBar_MouseMove(object sender, MouseEventArgs e)
+        private void PitchTrackBar_MouseMove(object sender, MouseEventArgs e)
         {
             if (pitchTrackBar.Tag != null && pitchTrackBar.Tag.ToString() == "MouseDown")
             {
@@ -884,7 +886,7 @@ namespace BigMansStuff.PracticeSharp.UI
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void pitchTrackBar_MouseUp(object sender, MouseEventArgs e)
+        private void PitchTrackBar_MouseUp(object sender, MouseEventArgs e)
         {
             pitchTrackBar.Tag = string.Empty;
             UpdateHorizontalTrackBarByMousePosition(pitchTrackBar, e);
@@ -895,7 +897,7 @@ namespace BigMansStuff.PracticeSharp.UI
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void volumeTrackBar_MouseDown(object sender, MouseEventArgs e)
+        private void VolumeTrackBar_MouseDown(object sender, MouseEventArgs e)
         {
             UpdateVerticalTrackBarByMousePosition(volumeTrackBar, e);
         }
@@ -905,7 +907,7 @@ namespace BigMansStuff.PracticeSharp.UI
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void currentUpDown_ValueChanged(object sender, EventArgs e)
+        private void CurrentUpDown_ValueChanged(object sender, EventArgs e)
         {
             // Don't allow re-entry of UI events when the track bar is being programmatically changed
             if (m_ignorePlayTimeUIEvents)
@@ -929,7 +931,7 @@ namespace BigMansStuff.PracticeSharp.UI
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void openFileButton_Click(object sender, EventArgs e)
+        private void OpenFileButton_Click(object sender, EventArgs e)
         {
             // Temporary Pause play until save has completed
             if (m_practiceSharpLogic.Status == PracticeSharpLogic.Statuses.Playing)
@@ -972,7 +974,7 @@ namespace BigMansStuff.PracticeSharp.UI
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void tempoTrackBar_ValueChanged(object sender, EventArgs e)
+        private void TempoTrackBar_ValueChanged(object sender, EventArgs e)
         {
             // Convert to Percent 
             float newTempo = tempoTrackBar.Value / 100.0f;
@@ -993,7 +995,7 @@ namespace BigMansStuff.PracticeSharp.UI
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void pitchTrackBar_ValueChanged(object sender, EventArgs e)
+        private void PitchTrackBar_ValueChanged(object sender, EventArgs e)
         {
             if ( m_practiceSharpLogic == null)
                 return;
@@ -1054,7 +1056,7 @@ namespace BigMansStuff.PracticeSharp.UI
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void speedLabel_Click(object sender, EventArgs e)
+        private void SpeedLabel_Click(object sender, EventArgs e)
         {
             tempoTrackBar.Value = Convert.ToInt32( PresetData.DefaultTempo * 100 );
         }
@@ -1064,7 +1066,7 @@ namespace BigMansStuff.PracticeSharp.UI
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void volumeLabel_Click(object sender, EventArgs e)
+        private void VolumeLabel_Click(object sender, EventArgs e)
         {
             volumeTrackBar.Value = Convert.ToInt32(Properties.Settings.Default.DefaultVolume * 100);
         }
@@ -1074,7 +1076,7 @@ namespace BigMansStuff.PracticeSharp.UI
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void pitchLabel_Click(object sender, EventArgs e)
+        private void PitchLabel_Click(object sender, EventArgs e)
         {
               pitchTrackBar.Value = Convert.ToInt32( PresetData.DefaultPitch );
         }
@@ -1084,7 +1086,7 @@ namespace BigMansStuff.PracticeSharp.UI
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void positionLabel_Click(object sender, EventArgs e)
+        private void PositionLabel_Click(object sender, EventArgs e)
         {        
             m_practiceSharpLogic.ResetCurrentPlayTime();
 
@@ -1100,7 +1102,7 @@ namespace BigMansStuff.PracticeSharp.UI
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void loopCheckBox_CheckedChanged(object sender, EventArgs e)
+        private void LoopCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             m_practiceSharpLogic.Loop = loopCheckBox.Checked;
         }
@@ -1110,7 +1112,7 @@ namespace BigMansStuff.PracticeSharp.UI
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void cueComboBox_SelectedValueChanged(object sender, EventArgs e)
+        private void CueComboBox_SelectedValueChanged(object sender, EventArgs e)
         {
             if (m_practiceSharpLogic != null)
             {
@@ -1118,7 +1120,7 @@ namespace BigMansStuff.PracticeSharp.UI
             }
         }
 
-        private void timeStretchProfileComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        private void TimeStretchProfileComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (m_practiceSharpLogic != null)
             {
@@ -1131,7 +1133,7 @@ namespace BigMansStuff.PracticeSharp.UI
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void keyboardShortcutsMenuItem_Click(object sender, EventArgs e)
+        private void KeyboardShortcutsMenuItem_Click(object sender, EventArgs e)
         {
             using (KeyboardShortcutsForm form = new KeyboardShortcutsForm())
             {
@@ -1144,7 +1146,7 @@ namespace BigMansStuff.PracticeSharp.UI
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void removeVocalsCheckBox_CheckedChanged(object sender, EventArgs e)
+        private void RemoveVocalsCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             m_practiceSharpLogic.SuppressVocals = removeVocalsCheckBox.Checked;
         }
@@ -1157,7 +1159,7 @@ namespace BigMansStuff.PracticeSharp.UI
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void aboutMenuItem_Click(object sender, EventArgs e)
+        private void AboutMenuItem_Click(object sender, EventArgs e)
         {
             using (AboutForm aboutForm = new AboutForm())
             {
@@ -1172,7 +1174,7 @@ namespace BigMansStuff.PracticeSharp.UI
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void exitMenuItem_Click(object sender, EventArgs e)
+        private void ExitMenuItem_Click(object sender, EventArgs e)
         {
             this.Close();
         }
@@ -1181,7 +1183,7 @@ namespace BigMansStuff.PracticeSharp.UI
 
         #region Play Time - Event handlers
 
-        private void playTimeTrackBar_ValueChanged(object sender, EventArgs e)
+        private void PlayTimeTrackBar_ValueChanged(object sender, EventArgs e)
         {
             // Don't allow re-entry of UI events when the track bar is being programmtically changed
             if (m_ignorePlayTimeUIEvents)
@@ -1200,7 +1202,7 @@ namespace BigMansStuff.PracticeSharp.UI
             }
         }
 
-        private void playPositionTrackBar_MouseDown(object sender, MouseEventArgs e)
+        private void PlayPositionTrackBar_MouseDown(object sender, MouseEventArgs e)
         {
             m_isUpdatePlayTimeNeeded = false;
             m_playTimeTrackBarIsChanging = true;
@@ -1213,7 +1215,7 @@ namespace BigMansStuff.PracticeSharp.UI
             UpdateNewPlayTimeByMousePos(e);
         }
 
-        private void playTimeTrackBar_MouseMove(object sender, MouseEventArgs e)
+        private void PlayTimeTrackBar_MouseMove(object sender, MouseEventArgs e)
         {
             if (m_playTimeTrackBarIsChanging)
             {
@@ -1221,14 +1223,17 @@ namespace BigMansStuff.PracticeSharp.UI
             }
         }
 
-        private void playTimeTrackBar_MouseUp(object sender, MouseEventArgs e)
+        private void PlayTimeTrackBar_MouseUp(object sender, MouseEventArgs e)
         {
             m_playTimeTrackBarIsChanging = false;
         }
 
-        private void playTimeUpdateTimer_Tick(object sender, EventArgs e)
+        private object _timerLock = new object();
+
+        private void PlayTimeUpdateTimer_Tick(object sender, EventArgs e)
         {
-            lock (this)
+            // TODO: Why is this still needed??
+            lock (_timerLock)
             {
                 if (!m_isUpdatePlayTimeNeeded)
                     return;
@@ -1270,7 +1275,7 @@ namespace BigMansStuff.PracticeSharp.UI
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void recentFilesToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
+        private void RecentFilesToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
         {
             List<string> mruItems = m_mruManager.Items;
 
@@ -1321,7 +1326,7 @@ namespace BigMansStuff.PracticeSharp.UI
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void recentMenuItem_Click(object sender, EventArgs e)
+        private void RecentMenuItem_Click(object sender, EventArgs e)
         {
             ToolStripMenuItem menuItem = sender as ToolStripMenuItem;
             string selectedRecentFilename = (string)menuItem.Tag;
@@ -1385,7 +1390,7 @@ namespace BigMansStuff.PracticeSharp.UI
 
         #region Start & End Loop Markers
 
-        private void startLoopSecondUpDown_ValueChanged(object sender, EventArgs e)
+        private void StartLoopSecondUpDown_ValueChanged(object sender, EventArgs e)
         {
             if (m_practiceSharpLogic == null)
                 return;
@@ -1407,7 +1412,7 @@ namespace BigMansStuff.PracticeSharp.UI
             UpdateCoreStartMarker(startMarker);
         }
 
-        private void startLoopMilliUpDown_ValueChanged(object sender, EventArgs e)
+        private void StartLoopMilliUpDown_ValueChanged(object sender, EventArgs e)
         {
             if (m_practiceSharpLogic == null)
                 return;
@@ -1430,7 +1435,7 @@ namespace BigMansStuff.PracticeSharp.UI
             UpdateCoreStartMarker(startMarker);
         }
 
-        private void startLoopMinuteUpDown_ValueChanged(object sender, EventArgs e)
+        private void StartLoopMinuteUpDown_ValueChanged(object sender, EventArgs e)
         {
             if (m_practiceSharpLogic == null)
                 return;
@@ -1453,7 +1458,7 @@ namespace BigMansStuff.PracticeSharp.UI
             UpdateCoreStartMarker(startMarker);
         }
 
-        private void endLoopSecondUpDown_ValueChanged(object sender, EventArgs e)
+        private void EndLoopSecondUpDown_ValueChanged(object sender, EventArgs e)
         {
             if (m_practiceSharpLogic == null)
                 return;
@@ -1476,7 +1481,7 @@ namespace BigMansStuff.PracticeSharp.UI
             UpdateCoreEndMarker(endMarker);
         }
 
-        private void endLoopMinuteUpDown_ValueChanged(object sender, EventArgs e)
+        private void EndLoopMinuteUpDown_ValueChanged(object sender, EventArgs e)
         {
             if (m_practiceSharpLogic == null)
                 return;
@@ -1499,7 +1504,7 @@ namespace BigMansStuff.PracticeSharp.UI
             UpdateCoreEndMarker(endMarker);
         }
 
-        private void endLoopMilliUpDown_ValueChanged(object sender, EventArgs e)
+        private void EndLoopMilliUpDown_ValueChanged(object sender, EventArgs e)
         {
             if (m_practiceSharpLogic == null)
                 return;
@@ -1528,7 +1533,7 @@ namespace BigMansStuff.PracticeSharp.UI
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void startLoopNowButton_Click(object sender, EventArgs e)
+        private void StartLoopNowButton_Click(object sender, EventArgs e)
         {
             // Handle special case when Now is clicked after the End marker
             if (m_practiceSharpLogic.CurrentPlayTime > m_practiceSharpLogic.EndMarker)
@@ -1548,7 +1553,7 @@ namespace BigMansStuff.PracticeSharp.UI
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void endLoopNowButton_Click(object sender, EventArgs e)
+        private void EndLoopNowButton_Click(object sender, EventArgs e)
         {
             endLoopMinuteUpDown.Value = currentMinuteUpDown.Value;
             endLoopSecondUpDown.Value = currentSecondUpDown.Value;
@@ -1565,7 +1570,7 @@ namespace BigMansStuff.PracticeSharp.UI
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void resetBankButton_MouseDown(object sender, MouseEventArgs e)
+        private void ResetBankButton_MouseDown(object sender, MouseEventArgs e)
         {
             resetBankTimer.Start();
         }
@@ -1575,7 +1580,7 @@ namespace BigMansStuff.PracticeSharp.UI
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void resetBankTimer_Tick(object sender, EventArgs e)
+        private void ResetBankTimer_Tick(object sender, EventArgs e)
         {
             resetBankTimer.Stop();
 
@@ -1592,7 +1597,7 @@ namespace BigMansStuff.PracticeSharp.UI
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void resetBankButton_MouseUp(object sender, MouseEventArgs e)
+        private void ResetBankButton_MouseUp(object sender, MouseEventArgs e)
         {
             if (resetBankTimer.Enabled)
             {
@@ -1605,7 +1610,7 @@ namespace BigMansStuff.PracticeSharp.UI
 
         #region Equalizer
 
-        private void loEqTrackBar_ValueChanged(object sender, EventArgs e)
+        private void LoEqTrackBar_ValueChanged(object sender, EventArgs e)
         {
             if (m_practiceSharpLogic == null)
                 return;
@@ -1617,7 +1622,7 @@ namespace BigMansStuff.PracticeSharp.UI
             loEqValueLabel.Text = (newEqLo * 100).ToString() + "%";
         }
 
-        private void medEqTrackBar_ValueChanged(object sender, EventArgs e)
+        private void MedEqTrackBar_ValueChanged(object sender, EventArgs e)
         {
             if (m_practiceSharpLogic == null)
                 return;
@@ -1629,7 +1634,7 @@ namespace BigMansStuff.PracticeSharp.UI
             medEqValueLabel.Text = (newEqMed * 100).ToString() + "%";
         }
 
-        private void hiEqTrackBar_ValueChanged(object sender, EventArgs e)
+        private void HiEqTrackBar_ValueChanged(object sender, EventArgs e)
         {
             if (m_practiceSharpLogic == null)
                 return;
@@ -1646,7 +1651,7 @@ namespace BigMansStuff.PracticeSharp.UI
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void equalizerHoverLabel_Click(object sender, EventArgs e)
+        private void EqualizerHoverLabel_Click(object sender, EventArgs e)
         {
             loEqHoverLabel.PerformClick();
             medEqHoverLabel.PerformClick();
@@ -1658,7 +1663,7 @@ namespace BigMansStuff.PracticeSharp.UI
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void loEqHoverLabel_Click(object sender, EventArgs e)
+        private void LoEqHoverLabel_Click(object sender, EventArgs e)
         {
             loEqTrackBar.Value = Convert.ToInt32(PresetData.DefaultLoEq);
         }
@@ -1668,7 +1673,7 @@ namespace BigMansStuff.PracticeSharp.UI
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void medEqHoverLabel_Click(object sender, EventArgs e)
+        private void MedEqHoverLabel_Click(object sender, EventArgs e)
         {
             medEqTrackBar.Value = Convert.ToInt32(PresetData.DefaultMedEq);
         }
@@ -1678,22 +1683,22 @@ namespace BigMansStuff.PracticeSharp.UI
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void hiEqHoverLabel_Click(object sender, EventArgs e)
+        private void HiEqHoverLabel_Click(object sender, EventArgs e)
         {
             hiEqTrackBar.Value = Convert.ToInt32(PresetData.DefaultHiEq);
         }
 
-        private void loEqtrackBar_MouseDown(object sender, MouseEventArgs e)
+        private void LoEqtrackBar_MouseDown(object sender, MouseEventArgs e)
         {
             UpdateVerticalTrackBarByMousePosition(loEqTrackBar, e);
         }
 
-        private void medEqTrackBar_MouseDown(object sender, MouseEventArgs e)
+        private void MedEqTrackBar_MouseDown(object sender, MouseEventArgs e)
         {
             UpdateVerticalTrackBarByMousePosition(medEqTrackBar, e);
         }
 
-        private void hiEqTrackBar_MouseDown(object sender, MouseEventArgs e)
+        private void HiEqTrackBar_MouseDown(object sender, MouseEventArgs e)
         {
             UpdateVerticalTrackBarByMousePosition(hiEqTrackBar, e);
         }
@@ -1702,7 +1707,7 @@ namespace BigMansStuff.PracticeSharp.UI
 
         #region Input Channel Selection
 
-        private void leftChannelStripButton_Click(object sender, EventArgs e)
+        private void LeftChannelStripButton_Click(object sender, EventArgs e)
         {
             leftChannelStripButton.Checked = true;
             bothChannelsStripButton.Checked = false;
@@ -1710,7 +1715,7 @@ namespace BigMansStuff.PracticeSharp.UI
             m_practiceSharpLogic.InputChannelsMode = InputChannelsModes.Left;
         }
 
-        private void bothChannelsStripButton_Click(object sender, EventArgs e)
+        private void BothChannelsStripButton_Click(object sender, EventArgs e)
         {
             leftChannelStripButton.Checked = false;
             bothChannelsStripButton.Checked = true;
@@ -1718,7 +1723,7 @@ namespace BigMansStuff.PracticeSharp.UI
             m_practiceSharpLogic.InputChannelsMode = InputChannelsModes.Both;
         }
 
-        private void rightChannelStripButton_Click(object sender, EventArgs e)
+        private void RightChannelStripButton_Click(object sender, EventArgs e)
         {
             leftChannelStripButton.Checked = false;
             bothChannelsStripButton.Checked = false;
@@ -1737,7 +1742,7 @@ namespace BigMansStuff.PracticeSharp.UI
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="newStatus"></param>
-        private void practiceSharpLogic_StatusChanged(object sender, PracticeSharpLogic.Statuses newStatus)
+        private void PracticeSharpLogic_StatusChanged(object sender, PracticeSharpLogic.Statuses newStatus)
         {
             if ( m_jumpMode || m_practiceSharpLogic == null || m_practiceSharpLogic.Status == PracticeSharpLogic.Statuses.Terminating || m_practiceSharpLogic.Status == PracticeSharpLogic.Statuses.Terminated)
                 return;
@@ -1778,7 +1783,7 @@ namespace BigMansStuff.PracticeSharp.UI
             );
         }
 
-        private void practiceSharpLogic_PlayTimeChanged(object sender, EventArgs e)
+        private void PracticeSharpLogic_PlayTimeChanged(object sender, EventArgs e)
         {
             if (m_practiceSharpLogic == null || m_practiceSharpLogic.Status == PracticeSharpLogic.Statuses.Terminating || m_practiceSharpLogic.Status == PracticeSharpLogic.Statuses.Terminated)
                 return;
@@ -1790,7 +1795,7 @@ namespace BigMansStuff.PracticeSharp.UI
                 }));
         }
 
-        private void practiceSharpLogic_CueWaitPulsed(object sender, EventArgs e)
+        private void PracticeSharpLogic_CueWaitPulsed(object sender, EventArgs e)
         {
             if (m_practiceSharpLogic == null || m_practiceSharpLogic.Status == PracticeSharpLogic.Statuses.Terminating || m_practiceSharpLogic.Status == PracticeSharpLogic.Statuses.Terminated)
                 return;
@@ -1999,9 +2004,9 @@ namespace BigMansStuff.PracticeSharp.UI
         /// <param name="startMarker"></param>
         private void ApplyLoopStartMarkerUI(TimeSpan startMarker)
         {
-            startLoopMinuteUpDown.ValueChanged -= startLoopMinuteUpDown_ValueChanged;
-            startLoopSecondUpDown.ValueChanged -= startLoopSecondUpDown_ValueChanged;
-            startLoopMilliUpDown.ValueChanged -= startLoopMilliUpDown_ValueChanged;
+            startLoopMinuteUpDown.ValueChanged -= StartLoopMinuteUpDown_ValueChanged;
+            startLoopSecondUpDown.ValueChanged -= StartLoopSecondUpDown_ValueChanged;
+            startLoopMilliUpDown.ValueChanged -= StartLoopMilliUpDown_ValueChanged;
             try
             {
                 startLoopMinuteUpDown.Value = startMarker.Minutes;
@@ -2010,9 +2015,9 @@ namespace BigMansStuff.PracticeSharp.UI
             }
             finally
             {
-                startLoopMinuteUpDown.ValueChanged += startLoopMinuteUpDown_ValueChanged;
-                startLoopSecondUpDown.ValueChanged += startLoopSecondUpDown_ValueChanged;
-                startLoopMilliUpDown.ValueChanged += startLoopMilliUpDown_ValueChanged;
+                startLoopMinuteUpDown.ValueChanged += StartLoopMinuteUpDown_ValueChanged;
+                startLoopSecondUpDown.ValueChanged += StartLoopSecondUpDown_ValueChanged;
+                startLoopMilliUpDown.ValueChanged += StartLoopMilliUpDown_ValueChanged;
             }
         }
 
@@ -2022,9 +2027,9 @@ namespace BigMansStuff.PracticeSharp.UI
         /// <param name="endMarker"></param>
         private void ApplyLoopEndMarkerUI(TimeSpan endMarker)
         {
-            endLoopMinuteUpDown.ValueChanged -= endLoopMinuteUpDown_ValueChanged;
-            endLoopSecondUpDown.ValueChanged -= endLoopSecondUpDown_ValueChanged;
-            endLoopMilliUpDown.ValueChanged -= endLoopMilliUpDown_ValueChanged;
+            endLoopMinuteUpDown.ValueChanged -= EndLoopMinuteUpDown_ValueChanged;
+            endLoopSecondUpDown.ValueChanged -= EndLoopSecondUpDown_ValueChanged;
+            endLoopMilliUpDown.ValueChanged -= EndLoopMilliUpDown_ValueChanged;
             try
             {
                 endLoopMinuteUpDown.Value = endMarker.Minutes;
@@ -2033,9 +2038,9 @@ namespace BigMansStuff.PracticeSharp.UI
             }
             finally
             {
-                endLoopMinuteUpDown.ValueChanged += endLoopMinuteUpDown_ValueChanged;
-                endLoopSecondUpDown.ValueChanged += endLoopSecondUpDown_ValueChanged;
-                endLoopMilliUpDown.ValueChanged += endLoopMilliUpDown_ValueChanged;
+                endLoopMinuteUpDown.ValueChanged += EndLoopMinuteUpDown_ValueChanged;
+                endLoopSecondUpDown.ValueChanged += EndLoopSecondUpDown_ValueChanged;
+                endLoopMilliUpDown.ValueChanged += EndLoopMilliUpDown_ValueChanged;
             }
         }
 
@@ -2045,9 +2050,9 @@ namespace BigMansStuff.PracticeSharp.UI
         /// <param name="playTime"></param>
         private void UpdateCurrentUpDownControls(TimeSpan playTime)
         {
-            currentMinuteUpDown.ValueChanged -= currentUpDown_ValueChanged;
-            currentSecondUpDown.ValueChanged -= currentUpDown_ValueChanged;
-            currentMilliUpDown.ValueChanged -= currentUpDown_ValueChanged;
+            currentMinuteUpDown.ValueChanged -= CurrentUpDown_ValueChanged;
+            currentSecondUpDown.ValueChanged -= CurrentUpDown_ValueChanged;
+            currentMilliUpDown.ValueChanged -= CurrentUpDown_ValueChanged;
             try
             {
                 // Update current play time controls
@@ -2057,9 +2062,9 @@ namespace BigMansStuff.PracticeSharp.UI
             }
             finally
             {
-                currentMinuteUpDown.ValueChanged += currentUpDown_ValueChanged;
-                currentSecondUpDown.ValueChanged += currentUpDown_ValueChanged;
-                currentMilliUpDown.ValueChanged += currentUpDown_ValueChanged;
+                currentMinuteUpDown.ValueChanged += CurrentUpDown_ValueChanged;
+                currentSecondUpDown.ValueChanged += CurrentUpDown_ValueChanged;
+                currentMilliUpDown.ValueChanged += CurrentUpDown_ValueChanged;
             }
         }
 
@@ -2241,11 +2246,11 @@ namespace BigMansStuff.PracticeSharp.UI
             pitchTrackBar.Value = Convert.ToInt32(presetData.Pitch * TicksPerSemitone);
             volumeTrackBar.Value = Convert.ToInt32(presetData.Volume * 100.0f);
             loEqTrackBar.Value = Convert.ToInt32(presetData.LoEqValue * 100.0f);
-            loEqTrackBar_ValueChanged(this, new EventArgs());
+            LoEqTrackBar_ValueChanged(this, new EventArgs());
             medEqTrackBar.Value = Convert.ToInt32(presetData.MedEqValue * 100.0f);
-            medEqTrackBar_ValueChanged(this, new EventArgs());
+            MedEqTrackBar_ValueChanged(this, new EventArgs());
             hiEqTrackBar.Value = Convert.ToInt32(presetData.HiEqValue * 100.0f);
-            hiEqTrackBar_ValueChanged(this, new EventArgs());
+            HiEqTrackBar_ValueChanged(this, new EventArgs());
 
             if (m_practiceSharpLogic.FilePlayDuration == TimeSpan.Zero)
             {
