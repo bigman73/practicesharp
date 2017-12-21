@@ -45,7 +45,12 @@ https://www.codeproject.com/Articles/129929/PracticeSharp-or-Practice-A-Utility-
 License: ![alt LGPLV3](https://www.gnu.org/graphics/lgplv3-147x51.png)
 
 # Credits
-* NAudio - https://github.com/naudio/NAudio
-* NAudioWMA - https://github.com/naudio/NAudio.Wma
-* SoundTouch - https://www.surina.net/soundtouch
+* NAudio - https://github.com/naudio/NAudio (Ms-PL)
+* NAudioWMA - https://github.com/naudio/NAudio.Wma (Ms-PL)
+* SoundTouch - https://www.surina.net/soundtouch (LGPL)
+* Vorbis# (csvorbis) - https://github.com/mono/csvorbis (LGPL) 
+* Some ideas are based on DragonOgg - https://sourceforge.net/projects/dragonogg/ (LGPL)
+* WMA playback support is based on a Code Project article by Idael Cardoso - "C# Windows Media Format SDK Translation", http://www.codeproject.com/KB/audio-video/ManWMF.aspx 
+* FLAC playback supportis based on libFlac (http://flac.sourceforge.net/) (BSD), and based on some .NET Interop code by Stanimir Stoyanov (http://stoyanoff.info/blog/2010/07/26/decoding-flac-audio-files-in-c/)
+* WiX - The Windows Installer XML (WiX) http://wix.codeplex.com/ (Common Public License Version 1.0)
 * WMA Sample File - http://samplephotovideo.com/2015/12/wma-windows-media-sample-audio-file-wma/
