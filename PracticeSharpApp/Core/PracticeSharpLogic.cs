@@ -46,8 +46,6 @@ namespace BigMansStuff.PracticeSharp.Core
         private static Logger m_logger = LogManager.GetCurrentClassLogger();
         #endregion
 
-        public enum InputChannelsModes {Left, Both, Right};
-
         #region Public Methods
 
         /// <summary>
@@ -308,7 +306,7 @@ namespace BigMansStuff.PracticeSharp.Core
         }
 
         
-        public InputChannelsModes InputChannelMode
+        public InputChannelsModes InputChannelsMode
         {
             get
             {

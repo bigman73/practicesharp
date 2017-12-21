@@ -29,8 +29,8 @@
 	4. Modify ProductCode value (new GUID)
   -->
   <?define RTMProductVersion="1.7.0" ?>
-  <?define ProductVersion="2.0.3" ?>
-  <?define ProductName="Practice# 2.0.3" ?>
+  <?define ProductVersion="2.0.4" ?>
+  <?define ProductName="Practice# 2.0.4" ?>
   <?define ProductTitle="Practice#" ?>
   <?define UpgradeCode="{698FDA6C-C8E8-4C2B-8705-28A99B39E171}"?>
   <?define Manufacturer="Yuval Naveh" ?> 

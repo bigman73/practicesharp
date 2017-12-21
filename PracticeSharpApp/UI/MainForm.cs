@@ -482,7 +482,7 @@ namespace BigMansStuff.PracticeSharp.UI
             // Ctrl + W - Immediate write of current preset
             else if (e.Control && !e.Alt && !e.Shift && e.KeyCode == Keys.W)
             {
-                ImmeidatelyWriteCurrentPreset();
+                ImmediatelyWriteCurrentPreset();
                 e.Handled = true;
             }
 
@@ -1702,34 +1702,28 @@ namespace BigMansStuff.PracticeSharp.UI
 
         #region Input Channel Selection
 
-        private void leftChannelStripButton_CheckedChanged(object sender, EventArgs e)
+        private void leftChannelStripButton_Click(object sender, EventArgs e)
         {
-            if (leftChannelStripButton.Checked)
-            {
-                bothChannelsStripButton.Checked = false;
-                rightChannelStripButton.Checked = false;
-                m_practiceSharpLogic.InputChannelMode = PracticeSharpLogic.InputChannelsModes.Left;
-            }
+            leftChannelStripButton.Checked = true;
+            bothChannelsStripButton.Checked = false;
+            rightChannelStripButton.Checked = false;
+            m_practiceSharpLogic.InputChannelsMode = InputChannelsModes.Left;
         }
 
-        private void bothChannelsStripButton_CheckedChanged(object sender, EventArgs e)
+        private void bothChannelsStripButton_Click(object sender, EventArgs e)
         {
-            if (bothChannelsStripButton.Checked)
-            {
-                leftChannelStripButton.Checked = false;
-                rightChannelStripButton.Checked = false;
-                m_practiceSharpLogic.InputChannelMode = PracticeSharpLogic.InputChannelsModes.Both;
-            }
+            leftChannelStripButton.Checked = false;
+            bothChannelsStripButton.Checked = true;
+            rightChannelStripButton.Checked = false;
+            m_practiceSharpLogic.InputChannelsMode = InputChannelsModes.Both;
         }
 
-        private void rightChannelStripButton_CheckedChanged(object sender, EventArgs e)
+        private void rightChannelStripButton_Click(object sender, EventArgs e)
         {
-            if (rightChannelStripButton.Checked)
-            {
-                leftChannelStripButton.Checked = false;
-                bothChannelsStripButton.Checked = false;
-                m_practiceSharpLogic.InputChannelMode = PracticeSharpLogic.InputChannelsModes.Right;
-            }
+            leftChannelStripButton.Checked = false;
+            bothChannelsStripButton.Checked = false;
+            rightChannelStripButton.Checked = true;
+            m_practiceSharpLogic.InputChannelsMode = InputChannelsModes.Right;
         }
 
         #endregion
@@ -2296,12 +2290,24 @@ namespace BigMansStuff.PracticeSharp.UI
             timeStretchProfileComboBox.SelectedValue = presetData.TimeStretchProfile;
 
             removeVocalsCheckBox.Checked = presetData.RemoveVocals;
+            switch (presetData.InputChannelsMode)
+            {
+                case InputChannelsModes.Left:
+                    leftChannelStripButton.PerformClick();
+                    break;
+                case InputChannelsModes.Right:
+                    rightChannelStripButton.PerformClick();
+                    break;
+                default:
+                    bothChannelsStripButton.PerformClick();
+                    break;
+            }
         }
 
         /// <summary>
         /// Immediately writes the state into the currently selected preset, without going through the two-phase button write mechanism
         /// </summary>
-        private void ImmeidatelyWriteCurrentPreset()
+        private void ImmediatelyWriteCurrentPreset()
         {
             if (m_currentPreset == null)
                 return;
@@ -2346,6 +2352,7 @@ namespace BigMansStuff.PracticeSharp.UI
             presetControl.PresetData.Description = presetControl.PresetDescription;
             presetControl.PresetData.TimeStretchProfile = m_practiceSharpLogic.TimeStretchProfile;
             presetControl.PresetData.RemoveVocals = m_practiceSharpLogic.SuppressVocals;
+            presetControl.PresetData.InputChannelsMode = m_practiceSharpLogic.InputChannelsMode;
         }
 
         #endregion
@@ -2411,5 +2418,11 @@ namespace BigMansStuff.PracticeSharp.UI
         const int TicksPerSemitone = 8;
 
         #endregion
+
+ 
+
+ 
+
+    
     }
 }

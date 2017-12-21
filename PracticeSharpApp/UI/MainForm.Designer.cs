@@ -1059,7 +1059,7 @@ namespace BigMansStuff.PracticeSharp.UI
             this.leftChannelStripButton.Name = "leftChannelStripButton";
             this.leftChannelStripButton.Size = new System.Drawing.Size(36, 22);
             this.leftChannelStripButton.Text = "LEFT";
-            this.leftChannelStripButton.CheckedChanged += new System.EventHandler(this.leftChannelStripButton_CheckedChanged);
+            this.leftChannelStripButton.Click += new System.EventHandler(this.leftChannelStripButton_Click);
             // 
             // bothChannelsStripButton
             // 
@@ -1072,7 +1072,7 @@ namespace BigMansStuff.PracticeSharp.UI
             this.bothChannelsStripButton.Name = "bothChannelsStripButton";
             this.bothChannelsStripButton.Size = new System.Drawing.Size(42, 22);
             this.bothChannelsStripButton.Text = "BOTH";
-            this.bothChannelsStripButton.CheckedChanged += new System.EventHandler(this.bothChannelsStripButton_CheckedChanged);
+            this.bothChannelsStripButton.Click += new System.EventHandler(this.bothChannelsStripButton_Click);
             // 
             // rightChannelStripButton
             // 
@@ -1083,7 +1083,7 @@ namespace BigMansStuff.PracticeSharp.UI
             this.rightChannelStripButton.Name = "rightChannelStripButton";
             this.rightChannelStripButton.Size = new System.Drawing.Size(45, 22);
             this.rightChannelStripButton.Text = "RIGHT";
-            this.rightChannelStripButton.CheckedChanged += new System.EventHandler(this.rightChannelStripButton_CheckedChanged);
+            this.rightChannelStripButton.Click += new System.EventHandler(this.rightChannelStripButton_Click);
             // 
             // removeVocalsCheckBox
             // 
@@ -1563,6 +1563,7 @@ namespace BigMansStuff.PracticeSharp.UI
             presetData1.Description = "";
             presetData1.EndMarker = System.TimeSpan.Parse("00:00:00");
             presetData1.HiEqValue = 0F;
+            presetData1.InputChannelsMode = BigMansStuff.PracticeSharp.Core.InputChannelsModes.Both;
             presetData1.LoEqValue = 0F;
             presetData1.Loop = false;
             presetData1.MedEqValue = 0F;
@@ -1593,6 +1594,7 @@ namespace BigMansStuff.PracticeSharp.UI
             presetData2.Description = "";
             presetData2.EndMarker = System.TimeSpan.Parse("00:00:00");
             presetData2.HiEqValue = 0F;
+            presetData2.InputChannelsMode = BigMansStuff.PracticeSharp.Core.InputChannelsModes.Both;
             presetData2.LoEqValue = 0F;
             presetData2.Loop = false;
             presetData2.MedEqValue = 0F;
@@ -1623,6 +1625,7 @@ namespace BigMansStuff.PracticeSharp.UI
             presetData3.Description = "";
             presetData3.EndMarker = System.TimeSpan.Parse("00:00:00");
             presetData3.HiEqValue = 0F;
+            presetData3.InputChannelsMode = BigMansStuff.PracticeSharp.Core.InputChannelsModes.Both;
             presetData3.LoEqValue = 0F;
             presetData3.Loop = false;
             presetData3.MedEqValue = 0F;
@@ -1653,6 +1656,7 @@ namespace BigMansStuff.PracticeSharp.UI
             presetData4.Description = "";
             presetData4.EndMarker = System.TimeSpan.Parse("00:00:00");
             presetData4.HiEqValue = 0F;
+            presetData4.InputChannelsMode = BigMansStuff.PracticeSharp.Core.InputChannelsModes.Both;
             presetData4.LoEqValue = 0F;
             presetData4.Loop = false;
             presetData4.MedEqValue = 0F;
@@ -1683,6 +1687,7 @@ namespace BigMansStuff.PracticeSharp.UI
             presetData5.Description = "";
             presetData5.EndMarker = System.TimeSpan.Parse("00:00:00");
             presetData5.HiEqValue = 0F;
+            presetData5.InputChannelsMode = BigMansStuff.PracticeSharp.Core.InputChannelsModes.Both;
             presetData5.LoEqValue = 0F;
             presetData5.Loop = false;
             presetData5.MedEqValue = 0F;
@@ -1713,6 +1718,7 @@ namespace BigMansStuff.PracticeSharp.UI
             presetData6.Description = "";
             presetData6.EndMarker = System.TimeSpan.Parse("00:00:00");
             presetData6.HiEqValue = 0F;
+            presetData6.InputChannelsMode = BigMansStuff.PracticeSharp.Core.InputChannelsModes.Both;
             presetData6.LoEqValue = 0F;
             presetData6.Loop = false;
             presetData6.MedEqValue = 0F;
@@ -1743,6 +1749,7 @@ namespace BigMansStuff.PracticeSharp.UI
             presetData7.Description = "";
             presetData7.EndMarker = System.TimeSpan.Parse("00:00:00");
             presetData7.HiEqValue = 0F;
+            presetData7.InputChannelsMode = BigMansStuff.PracticeSharp.Core.InputChannelsModes.Both;
             presetData7.LoEqValue = 0F;
             presetData7.Loop = false;
             presetData7.MedEqValue = 0F;
@@ -1773,6 +1780,7 @@ namespace BigMansStuff.PracticeSharp.UI
             presetData8.Description = "";
             presetData8.EndMarker = System.TimeSpan.Parse("00:00:00");
             presetData8.HiEqValue = 0F;
+            presetData8.InputChannelsMode = BigMansStuff.PracticeSharp.Core.InputChannelsModes.Both;
             presetData8.LoEqValue = 0F;
             presetData8.Loop = false;
             presetData8.MedEqValue = 0F;

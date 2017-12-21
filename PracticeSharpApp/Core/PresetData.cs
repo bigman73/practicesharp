@@ -27,6 +27,8 @@ using System.Text;
 
 namespace BigMansStuff.PracticeSharp.Core
 {
+     public enum InputChannelsModes {Left, Both, Right};
+
     /// <summary>
     /// Data class for containing preset values
     /// </summary>
@@ -64,6 +66,8 @@ namespace BigMansStuff.PracticeSharp.Core
 
         public bool RemoveVocals { get; set; }
 
+        public InputChannelsModes InputChannelsMode { get; set; }
+
         #endregion
 
         #region Public Methods
@@ -83,6 +87,7 @@ namespace BigMansStuff.PracticeSharp.Core
             Loop = false;
             Description = string.Empty;
             RemoveVocals = false;
+            InputChannelsMode = InputChannelsModes.Both;
 
             LoEqValue = DefaultLoEq;
             MedEqValue = DefaultMedEq;
