@@ -4,7 +4,7 @@ A playback practice tool for musicians that allows slowing down, changing pitch,
 Current Version: 2.0.4
 
 # Features
-* Playback of the following formats: MP3, WAV, WMA, AIFF, Ogg Vorbis and FLAC
+* Playback of the following formats: MP3, WAV, WMA, AIFF, Ogg Vorbis, FLAC and M4A
 * Speed change - The ability to slow down or speed up music without changing its pitch
 * Pitch change - The ability to change the pitch of music up or down without changing its speed. New! (1.4.6) - Accurate half semi-tone increments
 * Loops - Start and End Marker with Cue (waiting a few seconds before the loop starts, useful to get hands back into position)
