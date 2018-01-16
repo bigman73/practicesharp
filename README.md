@@ -1,7 +1,7 @@
 # practicesharp
 A playback practice tool for musicians that allows slowing down, changing pitch, defining presets and loops on music files.
 
-Current Version: 2.0.6
+Current stable version: 2.0.6
 
 # Features
 * Playback of the following formats: MP3, WAV, WMA, AIFF, Ogg Vorbis, FLAC and M4A

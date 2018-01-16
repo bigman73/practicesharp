@@ -61,6 +61,9 @@
     <Reference Include="NAudio">
       <HintPath>packages\NAudio.1.8.4\lib\net35\NAudio.dll</HintPath>
     </Reference>
+    <Reference Include="NAudio.Flac">
+      <HintPath>packages\NAudio.Flac.1.0.5702.29018\lib\net45\NAudio.Flac.dll</HintPath>
+    </Reference>
     <Reference Include="NAudio.WindowsMediaFormat">
       <HintPath>packages\NAudio.Wma.1.0.1\lib\net35\NAudio.WindowsMediaFormat.dll</HintPath>
     </Reference>
@@ -260,10 +263,6 @@
     <Content Include="Res\PracticeSharp.png" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\NAudioFLAC\Library\NAudioFLAC.csproj">
-      <Project>{A589C62F-4A8B-447D-BD85-6D6E4F985B80}</Project>
-      <Name>NAudioFLAC</Name>
-    </ProjectReference>
     <ProjectReference Include="..\NAudioOggVorbis\Library\NAudioOggVorbis.csproj">
       <Project>{B2D3B85A-252C-4A0E-BB07-816A62AB20A8}</Project>
       <Name>NAudioOggVorbis</Name>

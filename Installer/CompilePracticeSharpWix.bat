@@ -32,7 +32,7 @@ XCOPY /Y ..\PracticeSharpApp\bin\Release\NAudio.dll Deploy\
 XCOPY /Y ..\PracticeSharpApp\bin\Release\NAudio.WindowsMediaFormat.dll Deploy\
 XCOPY /Y ..\PracticeSharpApp\bin\Release\NAudioOggVorbis.dll Deploy\
 XCOPY /Y ..\PracticeSharpApp\bin\Release\libFlac.dll Deploy\
-XCOPY /Y ..\PracticeSharpApp\bin\Release\NAudioFLAC.dll Deploy\
+XCOPY /Y ..\PracticeSharpApp\bin\Release\NAudio.Flac.dll Deploy\
 XCOPY /Y ..\PracticeSharpApp\bin\Release\SoundTouch.dll Deploy\
 XCOPY /Y ..\PracticeSharpApp\bin\Release\LICENSES.txt Deploy\
 XCOPY /Y ..\PracticeSharpApp\bin\Release\NLog.dll Deploy\

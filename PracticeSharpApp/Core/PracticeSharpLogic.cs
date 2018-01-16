@@ -28,11 +28,11 @@ using System.ComponentModel;
 using System.Threading;
 using System.IO;
 using BigMansStuff.NAudio.Ogg;
-using BigMansStuff.NAudio.FLAC;
 using BigMansStuff.PracticeSharp.SoundTouch;
 using NLog;
 using NAudio.Wave;
 using NAudio.WindowsMediaFormat;
+using NAudio.Flac;
 
 namespace BigMansStuff.PracticeSharp.Core
 {
@@ -1176,7 +1176,7 @@ namespace BigMansStuff.PracticeSharp.Core
             }
             else if (fileExt == FLACExtension)
             {
-                m_waveReader = new FLACFileReader(filename);
+                m_waveReader = new FlacReader(filename);
                 if (m_waveReader.WaveFormat.Encoding != WaveFormatEncoding.Pcm)
                 {
                     m_waveReader = WaveFormatConversionStream.CreatePcmStream(m_waveReader);
