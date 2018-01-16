@@ -2422,12 +2422,6 @@ namespace BigMansStuff.PracticeSharp.UI
         // 96 ticks are 12 semitones => each 8 ticks is one semitone
         const int TicksPerSemitone = 8;
 
-        #endregion
-
- 
-
- 
-
-    
+        #endregion   
     }
 }
