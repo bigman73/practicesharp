@@ -59,6 +59,7 @@ namespace BigMansStuff.PracticeSharp.Core
             m_cue = TimeSpan.Zero;
             m_suppressVocals = false;
             m_inputChannelsMode = InputChannelsModes.Both;
+            m_swapLeftRightSpeakers = false;
 
             InitializeSoundTouchSharp();
         }
@@ -318,10 +319,27 @@ namespace BigMansStuff.PracticeSharp.Core
                 lock (PropertiesLock)
                 {
                     m_inputChannelsMode = value;
-                    m_eqParamsChanged = true;
                 }
             }
         }
+
+        /// <summary>
+        /// Sets the Swap Speakers (Left<->Right) mode on or off
+        /// </summary>
+        public bool SwapLeftRightSpeakers
+        {
+            get
+            {
+                lock (PropertiesLock) { return m_swapLeftRightSpeakers; }
+            }
+            set
+            {
+                lock (PropertiesLock) {
+                    m_swapLeftRightSpeakers = value;
+                }
+            }
+        }
+
 
         public TimeStretchProfile TimeStretchProfile
         {
@@ -905,8 +923,28 @@ namespace BigMansStuff.PracticeSharp.Core
                 }
 
                 // Put the modified samples back into the buffer, with input channel selection mode
-                buffer[sample] = m_inputChannelsMode == InputChannelsModes.Right ? sampleRight : sampleLeft;
-                buffer[sample + 1] = m_inputChannelsMode == InputChannelsModes.Left ? sampleLeft : sampleRight;
+                float finalRightSample; 
+                float finalLeftSample;
+                if (m_inputChannelsMode == InputChannelsModes.DualMono) 
+                {
+                    finalRightSample = ( sampleRight + sampleLeft ) * 0.7f; 
+                    finalLeftSample = finalRightSample;
+                }
+                else 
+                {
+                    finalRightSample = m_inputChannelsMode == InputChannelsModes.Right ? sampleRight : sampleLeft; 
+                    finalLeftSample = m_inputChannelsMode == InputChannelsModes.Left ? sampleLeft : sampleRight;
+                }
+
+                if (m_swapLeftRightSpeakers)
+                {
+                    var temp = finalRightSample;
+                    finalRightSample = finalLeftSample;
+                    finalLeftSample = temp;
+                }
+
+                buffer[sample] = finalRightSample;
+                buffer[sample + 1] = finalLeftSample;
             }
         }
 
@@ -1441,6 +1479,7 @@ namespace BigMansStuff.PracticeSharp.Core
         private float m_eqMed;
         private float m_eqHi;
         private InputChannelsModes m_inputChannelsMode;
+        private bool m_swapLeftRightSpeakers;
         private volatile bool m_eqParamsChanged;
         private EqualizerEffect m_eqEffect;
 

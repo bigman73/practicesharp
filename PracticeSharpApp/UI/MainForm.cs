@@ -1152,6 +1152,9 @@ namespace BigMansStuff.PracticeSharp.UI
         }
 
 
+
+
+
         #region Menu Items
 
         /// <summary>
@@ -1711,6 +1714,7 @@ namespace BigMansStuff.PracticeSharp.UI
         {
             leftChannelStripButton.Checked = true;
             bothChannelsStripButton.Checked = false;
+            dualMonoToolStripButton.Checked = false;
             rightChannelStripButton.Checked = false;
             m_practiceSharpLogic.InputChannelsMode = InputChannelsModes.Left;
         }
@@ -1719,19 +1723,35 @@ namespace BigMansStuff.PracticeSharp.UI
         {
             leftChannelStripButton.Checked = false;
             bothChannelsStripButton.Checked = true;
+            dualMonoToolStripButton.Checked = false;
             rightChannelStripButton.Checked = false;
             m_practiceSharpLogic.InputChannelsMode = InputChannelsModes.Both;
+        }
+
+        private void dualMonoToolStripButton_Click(object sender, EventArgs e)
+        {
+            leftChannelStripButton.Checked = false;
+            bothChannelsStripButton.Checked = false;
+            dualMonoToolStripButton.Checked = true;
+            rightChannelStripButton.Checked = false;
+            m_practiceSharpLogic.InputChannelsMode = InputChannelsModes.DualMono;
         }
 
         private void RightChannelStripButton_Click(object sender, EventArgs e)
         {
             leftChannelStripButton.Checked = false;
             bothChannelsStripButton.Checked = false;
+            dualMonoToolStripButton.Checked = false;
             rightChannelStripButton.Checked = true;
             m_practiceSharpLogic.InputChannelsMode = InputChannelsModes.Right;
         }
 
         #endregion
+
+        private void swapLRCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            m_practiceSharpLogic.SwapLeftRightSpeakers = swapLRCheckBox.Checked;
+        }
 
         #endregion
 
@@ -2303,10 +2323,14 @@ namespace BigMansStuff.PracticeSharp.UI
                 case InputChannelsModes.Right:
                     rightChannelStripButton.PerformClick();
                     break;
+                case InputChannelsModes.DualMono:
+                    dualMonoToolStripButton.PerformClick();
+                    break;
                 default:
                     bothChannelsStripButton.PerformClick();
                     break;
             }
+            swapLRCheckBox.Checked = presetData.SwapLeftRightSpeakers;
         }
 
         /// <summary>
@@ -2358,6 +2382,7 @@ namespace BigMansStuff.PracticeSharp.UI
             presetControl.PresetData.TimeStretchProfile = m_practiceSharpLogic.TimeStretchProfile;
             presetControl.PresetData.RemoveVocals = m_practiceSharpLogic.SuppressVocals;
             presetControl.PresetData.InputChannelsMode = m_practiceSharpLogic.InputChannelsMode;
+            presetControl.PresetData.SwapLeftRightSpeakers = m_practiceSharpLogic.SwapLeftRightSpeakers;
         }
 
         #endregion
@@ -2423,5 +2448,8 @@ namespace BigMansStuff.PracticeSharp.UI
         const int TicksPerSemitone = 8;
 
         #endregion   
+
+      
+
     }
 }

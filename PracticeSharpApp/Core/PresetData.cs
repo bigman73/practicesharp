@@ -27,7 +27,7 @@ using System.Text;
 
 namespace BigMansStuff.PracticeSharp.Core
 {
-     public enum InputChannelsModes {Left, Both, Right};
+     public enum InputChannelsModes {Left, Both, DualMono, Right};
 
     /// <summary>
     /// Data class for containing preset values
@@ -65,8 +65,10 @@ namespace BigMansStuff.PracticeSharp.Core
         public TimeStretchProfile TimeStretchProfile { get; set; }
 
         public bool RemoveVocals { get; set; }
-
+        
         public InputChannelsModes InputChannelsMode { get; set; }
+
+        public bool SwapLeftRightSpeakers { get; set; }
 
         #endregion
 
@@ -88,6 +90,7 @@ namespace BigMansStuff.PracticeSharp.Core
             Description = string.Empty;
             RemoveVocals = false;
             InputChannelsMode = InputChannelsModes.Both;
+            SwapLeftRightSpeakers= false;
 
             LoEqValue = DefaultLoEq;
             MedEqValue = DefaultMedEq;
