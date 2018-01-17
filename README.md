@@ -51,7 +51,7 @@ License: ![alt LGPLV3](https://www.gnu.org/graphics/lgplv3-147x51.png)
 * Vorbis# (csvorbis) - https://github.com/mono/csvorbis (LGPL) 
 * Some ideas are based on DragonOgg - https://sourceforge.net/projects/dragonogg/ (LGPL)
 * WMA playback support is based on a Code Project article by Idael Cardoso - "C# Windows Media Format SDK Translation", http://www.codeproject.com/KB/audio-video/ManWMF.aspx 
-* FLAC playback supportis based on libFlac (http://flac.sourceforge.net/) (BSD), and based on some .NET Interop code by Stanimir Stoyanov (http://stoyanoff.info/blog/2010/07/26/decoding-flac-audio-files-in-c/)
+* FLAC playback support is using NAudioFlac - https://www.nuget.org/packages/NAudio.Flac/ 
 * WiX - The Windows Installer XML (WiX) http://wix.codeplex.com/ (Common Public License Version 1.0)
 * WMA Sample file - http://samplephotovideo.com/2015/12/wma-windows-media-sample-audio-file-wma/
 * M4A Sample file - https://github.com/robovm/apple-ios-samples

@@ -66,9 +66,9 @@ namespace BigMansStuff.PracticeSharp.UI
 
         #region GUI Event Handlers
 
-        private void googleCodeProjectLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void githubLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            LaunchWebSite("http://code.google.com/p/practicesharp/");
+            LaunchWebSite("https://github.com/bigman73/practicesharp");
         }
 
         private void codeProjectLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -78,7 +78,7 @@ namespace BigMansStuff.PracticeSharp.UI
 
         private void naudioLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            LaunchWebSite("http://naudio.codeplex.com/");
+            LaunchWebSite("https://github.com/naudio/NAudio/");
         }
 
         private void soundTouchLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -91,9 +91,9 @@ namespace BigMansStuff.PracticeSharp.UI
             LaunchWebSite("https://github.com/mono/csvorbis/");
         }
 
-        private void libFlacLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void naudioFlacLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            LaunchWebSite("http://flac.sourceforge.net/");
+            LaunchWebSite("https://www.nuget.org/packages/NAudio.Flac/");
         }
 
         

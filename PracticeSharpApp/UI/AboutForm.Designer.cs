@@ -30,7 +30,7 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AboutForm));
             this.closeButton = new System.Windows.Forms.Button();
-            this.googleCodeProjectLinkLabel = new System.Windows.Forms.LinkLabel();
+            this.githubLinkLabel = new System.Windows.Forms.LinkLabel();
             this.aboutLabel = new System.Windows.Forms.Label();
             this.naudioLinkLabel = new System.Windows.Forms.LinkLabel();
             this.soundTouchLinkLabel = new System.Windows.Forms.LinkLabel();
@@ -42,7 +42,7 @@
             this.label2 = new System.Windows.Forms.Label();
             this.codeProjectLinkLabel = new System.Windows.Forms.LinkLabel();
             this.csVorbisLinkLabel = new System.Windows.Forms.LinkLabel();
-            this.libFlacLinkLabel = new System.Windows.Forms.LinkLabel();
+            this.naudioFlacLinkLabel = new System.Windows.Forms.LinkLabel();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.SuspendLayout();
@@ -58,16 +58,16 @@
             this.closeButton.Text = "&Close";
             this.closeButton.UseVisualStyleBackColor = true;
             // 
-            // googleCodeProjectLinkLabel
+            // githubLinkLabel
             // 
-            this.googleCodeProjectLinkLabel.AutoSize = true;
-            this.googleCodeProjectLinkLabel.Location = new System.Drawing.Point(12, 121);
-            this.googleCodeProjectLinkLabel.Name = "googleCodeProjectLinkLabel";
-            this.googleCodeProjectLinkLabel.Size = new System.Drawing.Size(126, 13);
-            this.googleCodeProjectLinkLabel.TabIndex = 1;
-            this.googleCodeProjectLinkLabel.TabStop = true;
-            this.googleCodeProjectLinkLabel.Text = "Google Code Project Site";
-            this.googleCodeProjectLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.googleCodeProjectLinkLabel_LinkClicked);
+            this.githubLinkLabel.AutoSize = true;
+            this.githubLinkLabel.Location = new System.Drawing.Point(12, 121);
+            this.githubLinkLabel.Name = "githubLinkLabel";
+            this.githubLinkLabel.Size = new System.Drawing.Size(76, 13);
+            this.githubLinkLabel.TabIndex = 1;
+            this.githubLinkLabel.TabStop = true;
+            this.githubLinkLabel.Text = "GitHub Project";
+            this.githubLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.githubLinkLabel_LinkClicked);
             // 
             // aboutLabel
             // 
@@ -76,7 +76,7 @@
             this.aboutLabel.Size = new System.Drawing.Size(157, 58);
             this.aboutLabel.TabIndex = 2;
             this.aboutLabel.Text = "Practice# is a tool for practicing a musical instrument with playback music. It w" +
-                "ill turn your playing skills sharper!";
+    "ill turn your playing skills sharper!";
             // 
             // naudioLinkLabel
             // 
@@ -177,16 +177,16 @@
             this.csVorbisLinkLabel.Text = "Vorbis#";
             this.csVorbisLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.csVorbisLinkLabel_LinkClicked);
             // 
-            // libFlacLinkLabel
+            // naudioFlacLinkLabel
             // 
-            this.libFlacLinkLabel.AutoSize = true;
-            this.libFlacLinkLabel.Location = new System.Drawing.Point(12, 225);
-            this.libFlacLinkLabel.Name = "libFlacLinkLabel";
-            this.libFlacLinkLabel.Size = new System.Drawing.Size(37, 13);
-            this.libFlacLinkLabel.TabIndex = 13;
-            this.libFlacLinkLabel.TabStop = true;
-            this.libFlacLinkLabel.Text = "libFlac";
-            this.libFlacLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.libFlacLinkLabel_LinkClicked);
+            this.naudioFlacLinkLabel.AutoSize = true;
+            this.naudioFlacLinkLabel.Location = new System.Drawing.Point(12, 225);
+            this.naudioFlacLinkLabel.Name = "naudioFlacLinkLabel";
+            this.naudioFlacLinkLabel.Size = new System.Drawing.Size(62, 13);
+            this.naudioFlacLinkLabel.TabIndex = 13;
+            this.naudioFlacLinkLabel.TabStop = true;
+            this.naudioFlacLinkLabel.Text = "NAudioFlac";
+            this.naudioFlacLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.naudioFlacLinkLabel_LinkClicked);
             // 
             // AboutForm
             // 
@@ -195,7 +195,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.closeButton;
             this.ClientSize = new System.Drawing.Size(338, 283);
-            this.Controls.Add(this.libFlacLinkLabel);
+            this.Controls.Add(this.naudioFlacLinkLabel);
             this.Controls.Add(this.csVorbisLinkLabel);
             this.Controls.Add(this.codeProjectLinkLabel);
             this.Controls.Add(this.label2);
@@ -207,7 +207,7 @@
             this.Controls.Add(this.soundTouchLinkLabel);
             this.Controls.Add(this.naudioLinkLabel);
             this.Controls.Add(this.aboutLabel);
-            this.Controls.Add(this.googleCodeProjectLinkLabel);
+            this.Controls.Add(this.githubLinkLabel);
             this.Controls.Add(this.closeButton);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
@@ -226,7 +226,7 @@
         #endregion
 
         private System.Windows.Forms.Button closeButton;
-        private System.Windows.Forms.LinkLabel googleCodeProjectLinkLabel;
+        private System.Windows.Forms.LinkLabel githubLinkLabel;
         private System.Windows.Forms.Label aboutLabel;
         private System.Windows.Forms.LinkLabel naudioLinkLabel;
         private System.Windows.Forms.LinkLabel soundTouchLinkLabel;
@@ -238,6 +238,6 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.LinkLabel codeProjectLinkLabel;
         private System.Windows.Forms.LinkLabel csVorbisLinkLabel;
-        private System.Windows.Forms.LinkLabel libFlacLinkLabel;
+        private System.Windows.Forms.LinkLabel naudioFlacLinkLabel;
     }
 }
