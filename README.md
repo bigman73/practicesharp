@@ -55,3 +55,4 @@ License: ![alt LGPLV3](https://www.gnu.org/graphics/lgplv3-147x51.png)
 * WiX - The Windows Installer XML (WiX) http://wix.codeplex.com/ (Common Public License Version 1.0)
 * WMA Sample file - http://samplephotovideo.com/2015/12/wma-windows-media-sample-audio-file-wma/
 * M4A Sample file - https://github.com/robovm/apple-ios-samples
+* Ogg Sample file- https://en.wikipedia.org/wiki/File:ACDC_-_Back_In_Black-sample.ogg
