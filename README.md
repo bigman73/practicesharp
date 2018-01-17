@@ -14,9 +14,6 @@ Current stable version: 2.0.6
 * Voice Suppression
 * Input channel selection (<NEW> - Version 2.0.1.0) - Select if the left, right or both channels are used from the input file. Very useful for double mono practice files that have for example drums on the left channel and guitar or bass on the right channel (common in instrument teaching books)
 
-## WMA Support
-As of Sep 2015 - naudio.wma has become project (github & nuget ) as an official part of the NAudio open source project
-https://github.com/naudio/NAudio.Wma
 
 ![alt screenshot](https://github.com/bigman73/practicesharp/blob/master/Docs/Practice%23_ScreenShot.png)
 
@@ -36,6 +33,10 @@ A youtube video that demonstrates Practice# usage:
 1. Download the Practice# MSI installer to your local machine - https://github.com/bigman73/practicesharp/tree/master/Installer/MSI
 2. Run it
 3. That's it!
+
+## WMA Support
+As of Sep 2015 - naudio.wma has become an official Nuget project under NAudio open source project
+https://github.com/naudio/NAudio.Wma
 
 # Code Project article
 Documentation of thd design can be found in:
