@@ -1,4 +1,4 @@
-/* csvorbis
+ /* csvorbis
  * Copyright (C) 2000 ymnk, JCraft,Inc.
  *  
  * Written by: 2000 ymnk<ymnk@jcraft.com>
