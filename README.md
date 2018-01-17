@@ -1,7 +1,8 @@
 # practicesharp
 A playback practice tool for musicians that allows slowing down, changing pitch, defining presets and loops on music files.
 
-Current stable version: 2.0.6
+Current stable release: 2.0.6
+![alt screenshot](https://github.com/bigman73/practicesharp/blob/master/Docs/Practice%23_ScreenShot.png)
 
 # Features
 * Playback of the following formats: MP3, WAV, WMA, AIFF, Ogg Vorbis, FLAC and M4A
@@ -13,9 +14,6 @@ Current stable version: 2.0.6
 * 3 Band Equalizer
 * Voice Suppression
 * Input channel selection (<NEW> - Version 2.0.1.0) - Select if the left, right or both channels are used from the input file. Very useful for double mono practice files that have for example drums on the left channel and guitar or bass on the right channel (common in instrument teaching books)
-
-
-![alt screenshot](https://github.com/bigman73/practicesharp/blob/master/Docs/Practice%23_ScreenShot.png)
 
 
 # Usage
