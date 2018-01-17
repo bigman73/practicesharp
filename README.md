@@ -37,7 +37,7 @@ As of Sep 2015 - naudio.wma has become an official Nuget project under NAudio op
 https://github.com/naudio/NAudio.Wma
 
 # Code Project article
-Documentation of thd design can be found in:
+Documentation of the design can be found in:
 https://www.codeproject.com/Articles/129929/PracticeSharp-or-Practice-A-Utility-for-Practicing
 
 # License 
