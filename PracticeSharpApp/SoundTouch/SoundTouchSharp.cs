@@ -74,8 +74,9 @@ namespace BigMansStuff.PracticeSharp.SoundTouch
             }
 
             m_handle = NativeMethods.soundtouch_createInstance();
-            GetVersionString();
-            GetVersionId();
+            var soundTouchVersion = GetVersionString();
+            var soundTouchVersionId = GetVersionId();
+            Console.Out.WriteLine("SoundTouch version: {0}, {1}", soundTouchVersion, SoundTouchVersionId);
         }
 
         /// <summary>
@@ -511,7 +512,8 @@ namespace BigMansStuff.PracticeSharp.SoundTouch
             [DllImport(SoundTouchDLLName, CallingConvention = CallingConvention.Cdecl)]
             internal static extern int soundtouch_getVersionId();
 
-            [DllImport(SoundTouchDLLName, CallingConvention = CallingConvention.Cdecl)]
+            [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA2101:SpecifyMarshalingForPInvokeStringArguments", MessageId = "0")]
+            [DllImport(SoundTouchDLLName, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
             internal static extern void soundtouch_getVersionString2(StringBuilder versionString, int bufferSize);
 
             [DllImport(SoundTouchDLLName, CallingConvention = CallingConvention.Cdecl)]

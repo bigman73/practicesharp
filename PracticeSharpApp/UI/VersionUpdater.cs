@@ -199,7 +199,7 @@ namespace BigMansStuff.PracticeSharp.UI
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(LatestVersionWebPageURL);
             HttpWebResponse response = (HttpWebResponse)request.GetResponse();
 
-            using (Stream responseStream = response.GetResponseStream())
+            Stream responseStream = response.GetResponseStream();
             using (StreamReader htmlStream = new StreamReader(responseStream, Encoding.UTF8))
             {
                 string pageHtml = htmlStream.ReadToEnd();

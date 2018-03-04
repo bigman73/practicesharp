@@ -165,8 +165,9 @@ namespace BigMansStuff.PracticeSharp.UI
             ClearItems();
 
             // Open MRU file with read access
-            using ( FileStream fileStream = File.OpenRead( m_mruFilename ) )
-            using ( StreamReader reader = new StreamReader( fileStream ) )
+            FileStream fileStream = File.OpenRead(m_mruFilename);
+
+            using (StreamReader reader = new StreamReader(fileStream))
             {
                 while (!reader.EndOfStream && m_items.Count < m_limit)
                 {
