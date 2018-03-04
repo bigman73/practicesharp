@@ -35,6 +35,7 @@ using System.Xml;
 using System.Configuration;
 using System.Diagnostics;
 using NLog;
+using static BigMansStuff.PracticeSharp.Core.PracticeSharpLogic;
 
 namespace BigMansStuff.PracticeSharp.UI
 {
@@ -299,25 +300,44 @@ namespace BigMansStuff.PracticeSharp.UI
         /// <param name="e"></param>
         private void MainForm_KeyDown(object sender, KeyEventArgs e)
         {
+            bool handled = true;
+
+            // S - Slower tempo
+            if ((!e.Control && !e.Alt && !e.Shift && (e.KeyCode == Keys.S)) ||
+                (!e.Control && !e.Alt && !e.Shift && (e.KeyCode == Keys.F7)))
+            {
+                tempoTrackBar.Value = Math.Max(tempoTrackBar.Value - tempoTrackBar.SmallChange, tempoTrackBar.Minimum);
+            }
+            // F - Faster tempo
+            else if ((!e.Control && !e.Alt && !e.Shift && (e.KeyCode == Keys.F)) ||
+                     (!e.Control && !e.Alt && !e.Shift && (e.KeyCode == Keys.F8))
+                 )
+            {
+                tempoTrackBar.Value = Math.Min(tempoTrackBar.Value + tempoTrackBar.SmallChange, tempoTrackBar.Maximum);
+            }
+            // [ Pitch Down
+            else if ((int)e.KeyCode == 219) // Opening square bracke ([]
+            {
+                pitchTrackBar.Value = Math.Max(pitchTrackBar.Value - pitchTrackBar.SmallChange, pitchTrackBar.Minimum);
+            }
+            // ] Pitch Up
+            else if ((int)e.KeyCode == 221) // Closing square bracket (])
+            {
+                pitchTrackBar.Value = Math.Min(pitchTrackBar.Value + pitchTrackBar.SmallChange, pitchTrackBar.Maximum);
+            }
+            else
+            {
+                handled = false;
+            }
+
+            e.Handled = handled;
         }
 
         private void MainForm_KeyPress(object sender, KeyPressEventArgs e)
         {
-            // [ Pitch Down
-            if (e.KeyChar == '[' )
-            {              
-                pitchTrackBar.Value = Math.Max(pitchTrackBar.Value - pitchTrackBar.SmallChange, pitchTrackBar.Minimum);
-                e.Handled = true;
-            }
-            // ] Pitch Up
-            else if (e.KeyChar == ']' )
-            {
-                pitchTrackBar.Value = Math.Min(pitchTrackBar.Value + pitchTrackBar.SmallChange, pitchTrackBar.Maximum);
-
-                e.Handled = true;
-            }
+            // TODO Move handling to Key Down
             // > - Jump forward: Start
-            else if ( e.KeyChar == '>' || e.KeyChar == '.')
+            if ( e.KeyChar == '>' || e.KeyChar == '.')
             {
                 if (!m_jumpMode)
                 {
@@ -335,34 +355,10 @@ namespace BigMansStuff.PracticeSharp.UI
             // < - Jump Backward: Start
             else if (e.KeyChar == '<' || e.KeyChar == ',')
             {
-                if (!m_jumpMode)
-                {
-                    m_jumpMode = true;
-                    m_preJumpStatus = m_practiceSharpLogic.Status;
-
-                    if (m_preJumpStatus == PracticeSharpLogic.Statuses.Playing)
-                    {
-                        m_practiceSharpLogic.Pause();
-                    }
-                }
-
-                JumpBackward();
+                HandleJumpBack();               
                 e.Handled = true;
             }
-            // S - Slower tempo
-            else if (e.KeyChar.ToString().ToUpper() == "S")
-            {
-                tempoTrackBar.Value = Math.Max(tempoTrackBar.Value - tempoTrackBar.SmallChange, tempoTrackBar.Minimum);
-
-                e.Handled = true;
-            }
-            // F - Faster tempo
-            else if (e.KeyChar.ToString().ToUpper() == "F")
-            {
-                tempoTrackBar.Value = Math.Min(tempoTrackBar.Value + tempoTrackBar.SmallChange, tempoTrackBar.Maximum);
-
-                e.Handled = true;
-            }
+        
             // - Volume Down
             else if (e.KeyChar == '-')
             {
@@ -462,6 +458,21 @@ namespace BigMansStuff.PracticeSharp.UI
                 e.Handled = true;
             }
 
+            // < - Jump Backward: Start
+            else if (!e.Control && !e.Alt && !e.Shift && e.KeyCode == Keys.F4)
+            {
+                HandleJumpBack();
+                e.Handled = true;
+            }
+
+            // TODO: N or Media Next Track - Select next preset 
+            else if (!e.Control && !e.Alt && !e.Shift && (e.KeyCode == Keys.N || e.KeyCode == Keys.MediaNextTrack))
+            {   
+                // TODO: Implement!
+
+                e.Handled = true;
+            }
+
             // A - Set start marker Now
             else if (!e.Control && !e.Alt && !e.Shift && e.KeyCode == Keys.A)
             {
@@ -502,14 +513,14 @@ namespace BigMansStuff.PracticeSharp.UI
                 e.Handled = true;
             }
 
-            // Space - Pause/Play
-            else if (!e.Control && !e.Alt && !e.Shift && e.KeyCode == Keys.Space)
+            // Pause/Play
+            else if (!e.Control && !e.Alt && !e.Shift && (e.KeyCode == Keys.Space || e.KeyCode == Keys.F6))
             {
                 playPauseButton.PerformClick();
                 e.Handled = true;
             }
-            // L - Jump to start of the loop
-            else if (!e.Control && !e.Alt && !e.Shift && e.KeyCode == Keys.L)
+            // L or Media previous track - Jump to start of the loop
+            else if (!e.Control && !e.Alt && !e.Shift && (e.KeyCode == Keys.L || e.KeyCode == Keys.F3))
             {
                 positionLabel.PerformClick();
                 e.Handled = true;
@@ -541,6 +552,22 @@ namespace BigMansStuff.PracticeSharp.UI
 
                 e.Handled = true;
             }
+        }
+
+        private void HandleJumpBack()
+        {
+            if (!m_jumpMode)
+            {
+                m_jumpMode = true;
+                m_preJumpStatus = m_practiceSharpLogic.Status;
+
+                if (m_preJumpStatus == PracticeSharpLogic.Statuses.Playing)
+                {
+                    m_practiceSharpLogic.Pause();
+                }
+            }
+
+            JumpBackward();
         }
 
         private bool IsPresetSelectKey(KeyEventArgs e, Keys keyCode)
@@ -1728,7 +1755,7 @@ namespace BigMansStuff.PracticeSharp.UI
             m_practiceSharpLogic.InputChannelsMode = InputChannelsModes.Both;
         }
 
-        private void dualMonoToolStripButton_Click(object sender, EventArgs e)
+        private void DualMonoToolStripButton_Click(object sender, EventArgs e)
         {
             leftChannelStripButton.Checked = false;
             bothChannelsStripButton.Checked = false;
@@ -1748,7 +1775,7 @@ namespace BigMansStuff.PracticeSharp.UI
 
         #endregion
 
-        private void swapLRCheckBox_CheckedChanged(object sender, EventArgs e)
+        private void SwapLRCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             m_practiceSharpLogic.SwapLeftRightSpeakers = swapLRCheckBox.Checked;
         }
@@ -1762,7 +1789,7 @@ namespace BigMansStuff.PracticeSharp.UI
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="newStatus"></param>
-        private void PracticeSharpLogic_StatusChanged(object sender, PracticeSharpLogic.Statuses newStatus)
+        private void PracticeSharpLogic_StatusChanged(object sender, StatusChangedEventArgs e)
         {
             if ( m_jumpMode || m_practiceSharpLogic == null || m_practiceSharpLogic.Status == PracticeSharpLogic.Statuses.Terminating || m_practiceSharpLogic.Status == PracticeSharpLogic.Statuses.Terminated)
                 return;
@@ -1772,11 +1799,11 @@ namespace BigMansStuff.PracticeSharp.UI
                 if (m_practiceSharpLogic == null || m_practiceSharpLogic.Status == PracticeSharpLogic.Statuses.Terminating || m_practiceSharpLogic.Status == PracticeSharpLogic.Statuses.Terminated)
                     return;
 
-                appStatusLabel.Text = newStatus.ToString();
+                appStatusLabel.Text = e.NewStatus.ToString();
 
-                if ( (newStatus == PracticeSharpLogic.Statuses.Stopped)
-                   || (newStatus == PracticeSharpLogic.Statuses.Pausing)
-                   || (newStatus == PracticeSharpLogic.Statuses.Error) )
+                if ( (e.NewStatus == PracticeSharpLogic.Statuses.Stopped)
+                   || (e.NewStatus == PracticeSharpLogic.Statuses.Pausing)
+                   || (e.NewStatus == PracticeSharpLogic.Statuses.Error) )
                 {
                     playPauseButton.Image = Resources.Play_Normal;
                     playTimeUpdateTimer.Enabled = false;
@@ -1794,7 +1821,7 @@ namespace BigMansStuff.PracticeSharp.UI
                     playTimeTrackBar.Value = currentPlayTimeValue;
                     positionMarkersPanel.Refresh();
                 }
-                else if (newStatus == PracticeSharpLogic.Statuses.Playing)
+                else if (e.NewStatus == PracticeSharpLogic.Statuses.Playing)
                 {
                     playPauseButton.Image = Resources.Pause_Normal;
                     playTimeUpdateTimer.Enabled = true;
@@ -2448,8 +2475,5 @@ namespace BigMansStuff.PracticeSharp.UI
         const int TicksPerSemitone = 8;
 
         #endregion   
-
-      
-
-    }
+     }
 }

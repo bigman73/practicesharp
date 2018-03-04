@@ -106,7 +106,6 @@ namespace BigMansStuff.PracticeSharp.UI
         {
             try
             {
-                Version newVersion;
                 DateTime lastVersionCheckDateTime = Properties.Settings.Default.LastVersionCheckDateTime; 
                     // DateTime.Now.Subtract(TimeSpan.FromDays(60)); // FOR TESTING ONLY
                
@@ -134,22 +133,22 @@ namespace BigMansStuff.PracticeSharp.UI
                 {
                     Properties.Settings.Default.SupressVersionCheck = false;
                     Properties.Settings.Default.Save();
-                
+
                     // Check if the new version is actually newer than the installed version
-                    if (IsNewVersionReleased(out newVersion))
+                    if (IsNewVersionReleased(out Version newVersion))
                     {
                         DialogResult dialogResult = DialogResult.None;
                         if (m_mainForm.Disposing || m_mainForm.IsDisposed)
                             return;
-                        m_mainForm.Invoke( new MethodInvoker( delegate() 
-                        {
-                            dialogResult = MessageBox.Show(m_mainForm, string.Format(Resources.NewVersionFound, newVersion.ToString()), "Practice#", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                        } ) );
+                        m_mainForm.Invoke(new MethodInvoker(delegate ()
+                      {
+                          dialogResult = MessageBox.Show(m_mainForm, string.Format(Resources.NewVersionFound, newVersion.ToString()), "Practice#", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                      }));
 
-                        if ( dialogResult == DialogResult.Yes )
+                        if (dialogResult == DialogResult.Yes)
                         {
                             // Launch the Practice# GoogleCode Downloads web page
-                            System.Diagnostics.Process.Start( DownloadsWebPageURL );
+                            System.Diagnostics.Process.Start(DownloadsWebPageURL);
                         }
                         else
                         {
@@ -219,7 +218,7 @@ namespace BigMansStuff.PracticeSharp.UI
                     }
                 }
             }
-                
+
             return false; 
         }
 

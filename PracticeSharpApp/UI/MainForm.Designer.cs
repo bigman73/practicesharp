@@ -1039,7 +1039,7 @@ namespace BigMansStuff.PracticeSharp.UI
             this.swapLRCheckBox.TabIndex = 92;
             this.swapLRCheckBox.Text = "Swap L/R";
             this.swapLRCheckBox.UseVisualStyleBackColor = true;
-            this.swapLRCheckBox.CheckedChanged += new System.EventHandler(this.swapLRCheckBox_CheckedChanged);
+            this.swapLRCheckBox.CheckedChanged += new System.EventHandler(this.SwapLRCheckBox_CheckedChanged);
             // 
             // channelsToolStrip
             // 
@@ -1100,7 +1100,7 @@ namespace BigMansStuff.PracticeSharp.UI
             this.dualMonoToolStripButton.Size = new System.Drawing.Size(82, 22);
             this.dualMonoToolStripButton.Text = "DUAL MONO";
             this.dualMonoToolStripButton.ToolTipText = "Dual Mono";
-            this.dualMonoToolStripButton.Click += new System.EventHandler(this.dualMonoToolStripButton_Click);
+            this.dualMonoToolStripButton.Click += new System.EventHandler(this.DualMonoToolStripButton_Click);
             // 
             // rightChannelStripButton
             // 

@@ -507,8 +507,18 @@ namespace BigMansStuff.PracticeSharp.Core
 
         #region Events
 
+        public class StatusChangedEventArgs: EventArgs
+        {
+            public StatusChangedEventArgs(Statuses newStatus)
+            {
+                NewStatus = newStatus;
+            }
+
+            public Statuses NewStatus { get; private set; }
+        }
+
         public event EventHandler PlayTimeChanged;
-        public delegate void StatusChangedEventHandler(object sender, Statuses newStatus);
+        public delegate void StatusChangedEventHandler(object sender, StatusChangedEventArgs e);
         public event StatusChangedEventHandler StatusChanged;
         public event EventHandler CueWaitPulsed;
 
@@ -1033,7 +1043,7 @@ namespace BigMansStuff.PracticeSharp.Core
                 foreach (StatusChangedEventHandler subscriber in StatusChanged.GetInvocationList())
                 {
                     // Event is unidirectional - No call back (i.e. EndInvoke) needed
-                    subscriber.BeginInvoke(this, newStatus, null, subscriber);
+                    subscriber.BeginInvoke(this, new StatusChangedEventArgs(newStatus), null, subscriber);
                 }
             }
         }
