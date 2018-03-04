@@ -100,11 +100,11 @@ namespace BigMansStuff.PracticeSharp.Core
             {
                 int required = count - read;
                 AudioBuffer audioBuffer = null;
-                lock (this.m_queue)
+                lock (m_queue)
                 {
-                    if (this.m_queue.Count > 0)
+                    if (m_queue.Count > 0)
                     {
-                        audioBuffer = this.m_queue.Peek();
+                        audioBuffer = m_queue.Peek();
                     }
                 }
 
@@ -132,9 +132,12 @@ namespace BigMansStuff.PracticeSharp.Core
                         Buffer.BlockCopy(audioBuffer.Buffer, audioBuffer.Position, buffer, offset + read, nread);
                         read += nread;
 
-                        lock (this.m_queue)
+                        lock (m_queue)
                         {
-                            this.m_queue.Dequeue();
+                            if (m_queue.Count > 0)
+                            {
+                                m_queue.Dequeue();
+                            }
                         }
                     }
                     else // the number of bytes that can be read is greater than that required
