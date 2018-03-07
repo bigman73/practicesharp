@@ -97,6 +97,7 @@ namespace BigMansStuff.PracticeSharp.UI
                 elPreset.SetAttribute(PresetBankFile.XML_Attr_TimeStretchProfileId, presetData.TimeStretchProfile.Id);
                 elPreset.SetAttribute(PresetBankFile.XML_Attr_RemoveVocals, presetData.RemoveVocals.ToString());
                 elPreset.SetAttribute(PresetBankFile.XML_Attr_InputChannelsMode, presetData.InputChannelsMode.ToString());
+                elPreset.SetAttribute(PresetBankFile.XML_Attr_SwapLeftRightSpeakers, presetData.SwapLeftRightSpeakers.ToString());
             }
 
             // Write to XML file
@@ -171,10 +172,15 @@ namespace BigMansStuff.PracticeSharp.UI
 
                     if (presetNode.Attributes[PresetBankFile.XML_Attr_InputChannelsMode] != null) {
                         Enum.TryParse(presetNode.Attributes[PresetBankFile.XML_Attr_InputChannelsMode].Value, out inputChannelsMode);
-                    }                    
-                   
+                    }
+
                     presetData.InputChannelsMode = inputChannelsMode;
 
+                    if (presetNode.Attributes[PresetBankFile.XML_Attr_SwapLeftRightSpeakers] != null)
+                    {
+                        presetData.SwapLeftRightSpeakers = Convert.ToBoolean(presetNode.Attributes[PresetBankFile.XML_Attr_SwapLeftRightSpeakers].Value);
+                    }
+                    
                     PresetControl presetControl = presetControls[presetId];
                     presetControl.PresetDescription = presetData.Description;
                 }
@@ -255,6 +261,7 @@ namespace BigMansStuff.PracticeSharp.UI
         const string XML_Attr_TimeStretchProfileId = "TimeStretchProfileId";
         const string XML_Attr_RemoveVocals = "RemoveVocals";
         const string XML_Attr_InputChannelsMode = "InputChannelsMode";
+        const string XML_Attr_SwapLeftRightSpeakers = "SwapLeftRightSpeakers";
 
         #endregion
     }

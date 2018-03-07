@@ -90,7 +90,7 @@ namespace BigMansStuff.PracticeSharp.Core
             Description = string.Empty;
             RemoveVocals = false;
             InputChannelsMode = InputChannelsModes.Both;
-            SwapLeftRightSpeakers= false;
+            SwapLeftRightSpeakers = false;
 
             LoEqValue = DefaultLoEq;
             MedEqValue = DefaultMedEq;
