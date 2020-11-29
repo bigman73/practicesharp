@@ -4,6 +4,7 @@
 + .NET 4.6.2
 + Nuget updated dependencies (NAudio)
 + Latest soundtouch library dll (2.1.1)
++ Improved installer build documentation
 
 ## 1.6.4, 2013-03-20
 + SoundTouch library updated to 1.7 (optimizations and fixes by library author)
